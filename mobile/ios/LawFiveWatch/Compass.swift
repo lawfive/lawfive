@@ -170,9 +170,12 @@ struct KickoffArrow: View {
 
     var body: some View {
         let team = match.kickoffFor(match.period + 1)
+        // In the kit's color, as on Garmin and Wear OS; white when there's none or it wouldn't show on black.
+        let color = match.teamColor(team)
+        let arrow = color >= 0 && !needsOutline(color) ? teamColor(color) ?? .white : .white
         ZStack {
             if let heading = compass.heading {
-                DirectionArrow(angle: target - heading, color: .white)
+                DirectionArrow(angle: target - heading, color: arrow)
                     .frame(width: size.width * 0.11, height: size.width * 0.11)
                     .at(0.5, 0.84, size)
                 Text("\(match.teamName(team)) attacks").font(.barlow(size.width * 0.055, .regular)).foregroundStyle(C.dim).at(0.5, 0.95, size)
