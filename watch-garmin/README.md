@@ -23,6 +23,7 @@ KEY="${SIM_KEY:-$HOME/.lawfive/garmin/developer_key}"
 |---|---|
 | Build for one watch (strict type checks) | `"$SDK/bin/monkeyc" -f monkey.jungle -d fr965 -y "$KEY" -o bin/LawFive.prg -l 3` |
 | Build every target (release package) | `"$SDK/bin/monkeyc" -e -r -f monkey.jungle -y "$KEY" -o bin/LawFive.iq -l 3` (expect "46 OUT OF 46 DEVICES BUILT": regional variants make 28 models into 46 builds) |
+| Package for the Connect IQ Store | `tools/store/export.sh` (the version from git, committed code only), or `tools/store/export.sh --beta` for a private Beta App under its own app ID, kept in `~/.lawfive/garmin/beta-app-id`. Writes `bin/store/LawFive-<version>.iq` |
 | Run in the simulator | `open "$SDK/bin/ConnectIQ.app"`, then `"$SDK/bin/monkeydo" bin/LawFive.prg fr965` |
 | Build, load and switch the simulator to a watch | `tools/sim/run.sh venu3` (the simulator has no device menu; loading the app for a device switches it) |
 | Install on a real watch over USB | `tools/device/install.sh venu2` (your watch's exact model id) |
