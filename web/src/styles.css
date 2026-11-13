@@ -694,7 +694,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .kit-home { clip-path: polygon(0 0, 100% 0, calc(100% - var(--cut)) 100%, 0 100%); }
 .kit-away { clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%); align-items: flex-end; text-align: right; padding: 10px 22px 10px calc(var(--cut) + 14px); }
 .kits:not(.with-middle) .kit-away { margin-left: calc(var(--cut) * -1 + 7px); }
-.kit-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; font-family: var(--display); font-style: italic; font-weight: 900; font-size: min(var(--kit-size, 28px), 22cqi); line-height: 0.92; text-transform: uppercase; overflow-wrap: anywhere; padding-right: 0.06em; }
+.kit-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; font-family: var(--display); font-style: italic; font-weight: 900; font-size: min(var(--kit-size, 28px), 22cqi); line-height: 0.92; text-transform: uppercase; overflow-wrap: anywhere; padding-right: 0.06em; padding-bottom: 0.08em; }
 .kit-label { font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
 .kits-large { --cut: 34px; min-height: 108px; }
 .kits-large .kit-name { --kit-size: 42px; }
@@ -840,7 +840,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 /* The row's edge (at night) drawn once over everything in it, so the kits and the panel meet it cleanly at the corners. */
 .match-row::before { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--board-edge); pointer-events: none; }
-.match-row:hover .kit-name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+/* Close under each line, so a name on two lines underlines both without the first crossing the second; the box's padding keeps the last line's underline from being clipped. */
+.match-row:hover .kit-name { text-decoration: underline; text-decoration-thickness: 0.06em; text-underline-offset: 0.04em; }
 /* The whole row opens the match; links and buttons inside it sit above that. */
 .match-link::after { content: ""; position: absolute; inset: 0; }
 .match-link:focus-visible { outline: none; }
