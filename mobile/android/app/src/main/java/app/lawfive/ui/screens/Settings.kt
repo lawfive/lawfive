@@ -73,8 +73,7 @@ import app.lawfive.ui.components.PrimaryButton
 import app.lawfive.ui.components.Screen
 import app.lawfive.ui.components.SecondaryButton
 import app.lawfive.ui.components.SectionTitle
-import app.lawfive.ui.formatShortDay
-import app.lawfive.ui.formatTime
+import app.lawfive.ui.whenText
 import app.lawfive.ui.instantOf
 import app.lawfive.ui.roleNamesInFull
 import app.lawfive.ui.theme.colors
@@ -455,13 +454,6 @@ fun SettingsScreen(at: String? = null) {
             onDismiss = { erasing = false },
         )
     }
-}
-
-/** A time as the website's formatWhen: "8:12 PM", "yesterday, 8:12 PM", "tomorrow, 8:12 PM" or "Sat, Nov 7, 8:12 PM". */
-internal fun whenText(t: java.time.ZonedDateTime, context: Context): String {
-    val days = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDate.now(app.lawfive.data.AppClock.clock(t.zone)), t.toLocalDate())
-    val time = formatTime(t, context)
-    return when (days) { 0L -> time; -1L -> "yesterday, $time"; 1L -> "tomorrow, $time"; else -> "${formatShortDay(t)}, $time" }
 }
 
 /** WEB-33: how many phones and browsers show before Show all. */

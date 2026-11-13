@@ -54,7 +54,7 @@ Match reminders are scheduled on the phone after each sync, so they work on any 
 
 ## Weather risks
 
-On Android, **Tell me about weather risks** in Settings, under Match reminders, sends a notification when the forecast shows a new risk to a match in the next 3 days. It's off until you turn it on, and the iPhone will follow. Tapping one opens the match, and a match with a place has a **Directions** button. See [Notifications](/run/notifications/) for how this reaches your phone and what passes through the relay on the way.
+On Android, **Tell me about weather risks** in Settings, under Match reminders, sends a notification when the forecast shows a new risk to a match in the next 3 days, with its day and kickoff ("tomorrow, 9:00 AM"). It's off until you turn it on, and the iPhone will follow. Tapping one opens the match, and a match with a place has a **Directions** button. See [Notifications](/run/notifications/) for how this reaches your phone and what passes through the relay on the way.
 
 ## Matches from integrations
 

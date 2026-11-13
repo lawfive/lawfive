@@ -26,9 +26,9 @@ import app.lawfive.schema.Match
 import app.lawfive.schema.MatchWeather
 import app.lawfive.schema.Venue
 import app.lawfive.ui.components.riskTitle
-import app.lawfive.ui.formatTime
 import app.lawfive.ui.kickoffAt
 import app.lawfive.ui.matchTitle
+import app.lawfive.ui.whenText
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.FirebaseMessaging
@@ -49,6 +49,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
+import java.time.ZonedDateTime
 import kotlin.coroutines.resume
 
 // Notifications from the server (PUSH-4, PUSH-5, NOTE-4). The phone gets a Firebase token, swaps it
@@ -66,6 +67,10 @@ private val RENEW_AFTER: Duration = Duration.ofDays(30)
 
 /** "Lightning likely, Rain possible": the likeliest first. */
 internal fun riskLine(w: MatchWeather): String = w.risks.sortedBy { it.level != "likely" }.joinToString(", ") { riskTitle(it) }
+
+/** PUSH-5: under the match's name, "Lightning likely · tomorrow, 9:00 AM", or "Sat, Nov 14, 9:00 AM" further off. */
+internal fun riskText(w: MatchWeather, kickoff: ZonedDateTime?, use24Hour: Boolean): String =
+    listOfNotNull(riskLine(w), kickoff?.let { whenText(it, use24Hour, today = true) }).joinToString(" · ")
 
 class Push(private val context: Context, private val graph: AppGraph) {
     private object Keys {
@@ -218,12 +223,11 @@ class RiskWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             runCatching { json.decodeFromString(Match.serializer(), row.json) }.getOrNull()?.takeIf { it.id == id }
         } ?: return Result.success()
         Push.ensureChannel(applicationContext)
-        val time = kickoffAt(record)?.let { formatTime(it, applicationContext) }
         val venue = graph.db.records().all("venues").firstNotNullOfOrNull { row ->
             runCatching { json.decodeFromString(Venue.serializer(), row.json) }.getOrNull()?.takeIf { it.id == record.venueId }
         }
         val place = venue?.pitches?.firstOrNull { it.id == record.pitchId }?.position ?: venue?.position
-        val notification = matchNotification(applicationContext, Push.CHANNEL, id, "Weather risk: ${matchTitle(record)}", listOfNotNull(riskLine(weather), time).joinToString(" · "), place?.lat, place?.lon, graph.records.settings.first()?.mapsApp)
+        val notification = matchNotification(applicationContext, Push.CHANNEL, id, "Weather risk: ${matchTitle(record)}", riskText(weather, kickoffAt(record), android.text.format.DateFormat.is24HourFormat(applicationContext)), place?.lat, place?.lon, graph.records.settings.first()?.mapsApp)
         try {
             NotificationManagerCompat.from(applicationContext).notify("risk".hashCode() xor id.hashCode(), notification)
         } catch (_: SecurityException) {

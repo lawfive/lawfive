@@ -32,7 +32,7 @@ The push relay at `push.lawfive.app` ([relay/](../../relay/), [ARCHITECTURE.md](
 ## On the phone
 
 - **PUSH-5** **Weather risks** (WX-11), beside the match reminders (APP-6), off until turned on.
-  - For a match kicking off in the next 3 days, a risk the server hasn't told this person about before, or one that becomes likely, sends one notification naming the match and the risk.
+  - For a match kicking off in the next 3 days, a risk the server hasn't told this person about before, or one that becomes likely, sends one notification naming the match, the risk, and the kickoff's day and time in the person's terms: "Storms likely · tomorrow, 9:00 AM", "today, 4:00 PM" or "Mon, Nov 16, 9:00 AM".
   - Tapping it opens the match, asking first if a form has unsaved changes. A match with a place has a **Directions** button.
   - A risk that clears and comes back doesn't notify again, and a match moved to another day starts over.
   - It needs the app's Firebase settings, so a build without them doesn't offer it.

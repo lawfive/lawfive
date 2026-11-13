@@ -26,7 +26,7 @@ Your server → LawFive's relay → Firebase → the LawFive app → back to you
 |---|---|
 | Your phones' Firebase tokens, sealed so only the relay can read them | Names, teams or accounts |
 | Your server's address | Venues, kickoff times or forecasts |
-| The kind of notification, and a random ID for the match or the change | What the notification will say |
+| The kind of notification (a weather risk, matches from integrations, or a test), and a random ID for the match or the change | What the notification will say |
 | The address your server sends from | Anything else in your database |
 
 The relay stores no copy of the tokens. It keeps a scrambled form of each one and your server's address, to count the day's notifications, and clears them the next day.

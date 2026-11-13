@@ -221,6 +221,18 @@ fun formatDay(t: ZonedDateTime): String {
     }
 }
 
+/**
+ * A time as the website's formatWhen: "8:12 PM", "yesterday, 8:12 PM", "tomorrow, 8:12 PM" or "Sat, Nov 7, 8:12 PM".
+ * PUSH-5: a notification, read some time after it came, says "today, 8:12 PM" too.
+ */
+fun whenText(t: ZonedDateTime, use24Hour: Boolean, today: Boolean = false): String {
+    val days = ChronoUnit.DAYS.between(LocalDate.now(app.lawfive.data.AppClock.clock(t.zone)), t.toLocalDate())
+    val time = formatTime(t, use24Hour)
+    return when (days) { 0L -> if (today) "today, $time" else time; -1L -> "yesterday, $time"; 1L -> "tomorrow, $time"; else -> "${formatShortDay(t)}, $time" }
+}
+
+fun whenText(t: ZonedDateTime, context: android.content.Context, today: Boolean = false): String = whenText(t, DateFormat.is24HourFormat(context), today)
+
 /** "Sat, Nov 7" (with the year when it isn't this one). */
 fun formatShortDay(t: ZonedDateTime): String {
     val days = ChronoUnit.DAYS.between(java.time.LocalDate.now(app.lawfive.data.AppClock.clock(t.zone)), t.toLocalDate())
