@@ -8,7 +8,7 @@ How each part of LawFive gets its version, where it shows, and how apps and serv
   - A version is the day (UTC) of the last commit that changed the part, as `2026.10.30`, with `.2`, `.3`… for its second and later changes that day, and that commit's short hash.
   - Each part that ships on its own has one: the server (with the web app and the schema in it, as the server serves that web app), the Android app (with the schema's generated Kotlin), the iPhone app (with its generated Swift), and the Garmin watch app.
   - A build with uncommitted changes adds "+" (to the watch's version, to the phone's commit).
-  - Android's versionCode is the number of commits that changed the app, so it only grows. The Wear OS app's is a million more, as Google Play needs them to differ under one listing.
+  - Android's versionCode, and the iPhone's build number, is the number of commits that changed the app, so it only grows. It counts the commits from before the repository's history began again too, so it never falls below a build already on a device or in a store. The Wear OS app's is a million more, as Google Play needs them to differ under one listing.
 
 ## Where they show
 
