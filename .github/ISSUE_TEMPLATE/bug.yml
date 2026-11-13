@@ -1,0 +1,32 @@
+name: Something's wrong
+description: A bug in a watch app, a phone app, the website or the server.
+labels: [bug]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: Where
+      options:
+        - Garmin watch
+        - Wear OS watch
+        - Apple Watch
+        - Android app
+        - iPhone app
+        - Website (the web app)
+        - A self-hosted server
+        - lawfive.app or lawfive.dev
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: From Settings → About, and the watch or phone model if it's on one.
+      placeholder: 2026.11.13, Garmin Venu 2
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what happened, and what you expected instead. Screenshots help.
+    validations:
+      required: true

@@ -1,0 +1,16 @@
+name: An idea
+description: Something LawFive could do, or do better.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What you're trying to do
+      description: The situation, at the ground or around the match, and what gets in the way today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How it could work
+      description: Optional. Which watch, phone or page it would be on, and what it would show.

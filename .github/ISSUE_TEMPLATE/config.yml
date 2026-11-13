@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: A security problem
+    url: https://github.com/lawfive/lawfive/security/advisories/new
+    about: Report it privately, not in an issue (SECURITY.md).
+  - name: Running your own server
+    url: https://lawfive.dev
+    about: Installing, HTTPS, settings, upgrades and backups.
+  - name: Help with your account on lawfive.app
+    url: https://lawfive.app/support
+    about: Questions about the hosted service go to support.
