@@ -34,7 +34,7 @@ data class Ask(val permission: String, val name: String, val why: String, val wi
 
 /** Everything the app asks for on this watch, in the order it's explained. */
 fun asks(): List<Ask> = buildList {
-    add(Ask(Manifest.permission.ACCESS_FINE_LOCATION, "Location", "Your track, and the kickoff direction", "No track or kickoff direction"))
+    add(Ask(Manifest.permission.ACCESS_FINE_LOCATION, "Location", "Your track on the pitch", "No track"))
     add(Ask(Workout.heartRatePermission, "Heart rate", "Your heart rate in the track", "No heart rate in the track"))
     add(Ask(Manifest.permission.ACTIVITY_RECOGNITION, "Physical activity", "The distance you run", "No distance run"))
     if (Build.VERSION.SDK_INT >= 33) add(Ask(Manifest.permission.POST_NOTIFICATIONS, "Notifications", "The match clock while the screen is off", "No clock in the notifications"))

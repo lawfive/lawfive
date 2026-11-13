@@ -17,7 +17,7 @@ Your matches in your own calendar app, kept up to date, set up in Settings on th
   - **Events start** at kickoff or 15 minutes to 3 hours before, in 15-minute steps (30 minutes by default), for travel and warming up. They end at the final whistle (the format's periods and breaks).
   - **Reminders**, for matches still to come: up to 12, from 15 minutes to 3 hours before kickoff in 15-minute steps; and **the day before** and **the day of**, at times you choose (7:00 PM and 8:00 AM to start) in the match's time zone, the day-of one left out when the event has started by then. One reminder an hour before by default; an account that chose one reminder before several were offered keeps it until its reminders are changed. They're the account's, so the phone apps' match reminders (APP-6, IOS-6) use the same times, and changing them on a phone changes the feed's.
   - Google Calendar ignores reminders in subscribed calendars and uses its own.
-  - On the website, Events start and **Reminders in your calendar app** show once the feed is on, with a hint that they're the calendar app's alerts and that the LawFive phone apps' Match reminders (APP-6) use the same times where they're turned on.
+  - On the website, **Match reminders** in Settings under Match day shows whether or not the feed is on, with a hint that the LawFive phone apps (APP-6) remind at these times where they're turned on and that the feed's events carry them. Events start shows once the feed is on.
 - **CAL-4** Played matches stay, with the score in the title (and the shoot-out, "4–3 pens"); abandoned ones are marked "Abandoned:". Canceled and postponed matches stay, marked, as canceled events at kickoff that don't block the time.
 
 ## Status

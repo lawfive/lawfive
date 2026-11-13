@@ -812,7 +812,7 @@ struct PermissionsPage: View {
                     PillButton(label: "Done") { state.finishPermissions() }.padding(.top, 4)
                 } else {
                     Text("Before your first match").font(.barlow(17, .semibold)).foregroundStyle(C.text)
-                    reason(icon: "location", title: "Location", text: "Your track on the pitch, and the kickoff direction")
+                    reason(icon: "location", title: "Location", text: "Your track on the pitch")
                     reason(icon: "heart", title: "Heart rate and Health", text: "The match runs as a workout, so alerts vibrate with the screen off, and your heart rate is kept")
                     Text("Apple asks next. Say no and the match still runs.").font(.barlow(12, .regular)).foregroundStyle(C.dim)
                     PillButton(label: asking ? "Asking…" : "Continue") {

@@ -136,15 +136,16 @@ export function Settings() {
                     </SettingsGroup>
 
                     <SettingsGroup title="Match day" id="match-day">
-                        {/* CAL-3: the feed's own times, once there's a feed to have them. */}
+                        {/* CAL-3: the feed's own start time, once there's a feed to have it. */}
                         <CalendarFeedSettings>
                             <SettingsRow label="Events start" hint="When your calendar shows you as busy from, for travel and warming up. The description gives the kickoff.">
                                 <MinutesSelect label="Events start" value={settings.calendarArriveMin ?? 30} options={arriveOptions} onChange={(calendarArriveMin) => change({ calendarArriveMin })} />
                             </SettingsRow>
-                            <SettingsRow label="Reminders in your calendar app" hint="Alerts your calendar app gives before kickoff, for matches still to come: as many as you like, and the day before and the day of at times you choose (in the match's time zone). Google Calendar uses its own notification settings for calendars you subscribe to. The LawFive phone apps' Match reminders use these times too, on each phone where they're turned on.">
-                                <CalendarReminders settings={settings} onChange={change} />
-                            </SettingsRow>
                         </CalendarFeedSettings>
+                        {/* CAL-3, APP-6: the account's reminders, for the phones and the calendar feed alike, so shown with or without a feed. */}
+                        <SettingsRow label="Match reminders" hint="For matches still to come: as many as you like before kickoff, and the day before and the day of at times you choose (in the match's time zone). The LawFive phone apps remind you at these times on each phone where Remind me of matches is on, and your calendar feed's events carry them. Google Calendar uses its own notification settings for calendars you subscribe to.">
+                            <CalendarReminders settings={settings} onChange={change} />
+                        </SettingsRow>
                         <SettingsRow label="Directions open in" hint="On the website, the Android app and the iPhone app. Automatic is Apple Maps in the iPhone app and Google Maps everywhere else.">
                             <Segmented value={settings.mapsApp ?? "auto"} onChange={(mapsApp) => change({ mapsApp })} options={[["auto", "Automatic"], ["google", "Google"], ["apple", "Apple"]]} />
                         </SettingsRow>

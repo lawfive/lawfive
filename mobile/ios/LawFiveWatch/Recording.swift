@@ -35,7 +35,7 @@ final class Workout: NSObject {
 
     /// The location hasn't been asked about yet, or the answer hasn't come.
     var locationUndecided: Bool { locations.authorizationStatus == .notDetermined }
-    /// No location for LawFive: no track, and no kickoff direction's correction.
+    /// No location for LawFive: no track. The kickoff direction's compass reads the magnetic heading, which needs none.
     var locationRefused: Bool { [.denied, .restricted].contains(locations.authorizationStatus) }
 
     /// At first launch, after LawFive's own screen says why (AppState.askPermissions): Apple Health's

@@ -11,7 +11,11 @@ const read = (file) => readFileSync(join(root, file), "utf8").replace(/<!--[\s\S
 
 /** Android: every <uses-permission> (and the -sdk-23 form) in the app's own manifest. */
 function androidManifest(file) {
-    return [...read(file).matchAll(/<uses-permission(?:-sdk-23)?\b[^>]*android:name="([^"]+)"/g)].map((m) => m[1]);
+    // A tools:node="remove" entry takes a library's permission out of the built app, so it isn't declared.
+    return [...read(file).matchAll(/<uses-permission(?:-sdk-23)?\b([^>]*)>/g)]
+        .filter((m) => !/tools:node="remove"/.test(m[1]))
+        .map((m) => m[1].match(/android:name="([^"]+)"/)?.[1])
+        .filter(Boolean);
 }
 
 /** iPhone and Apple Watch: each NS…UsageDescription key, and each background mode, as `UIBackgroundModes:fetch`. */
@@ -50,8 +54,6 @@ const notDeclared = {
     android: {
         // Added to the built app by its libraries, as the merged manifest shows after a build
         // (app/build/intermediates/merged_manifest/). Check it there when a library is added or updated.
-        "android.permission.ACCESS_FINE_LOCATION": "MapLibre's, never asked for",
-        "android.permission.ACCESS_COARSE_LOCATION": "MapLibre's, never asked for",
         "android.permission.ACCESS_WIFI_STATE": "MapLibre's",
         "android.permission.WAKE_LOCK": "Firebase Cloud Messaging's and WorkManager's",
         "com.google.android.c2dm.permission.RECEIVE": "Firebase Cloud Messaging's",
