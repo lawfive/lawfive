@@ -1,0 +1,46 @@
+{
+  "$id": "WatchScreen.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "layout": {
+      "description": "For older watch builds: the nearest old layout, kept in step with the fields below.",
+      "$ref": "WatchLayout.json"
+    },
+    "secondClock": {
+      "description": "What the second clock shows (UI-22); down is the time left. Never the same as mainClock.",
+      "$ref": "ClockStyle.json"
+    },
+    "clocks": {
+      "description": "Missing in setups saved before the four choices (UI-21): worked out from layout.",
+      "$ref": "WatchClocks.json"
+    },
+    "mainClock": {
+      "description": "How the match clock counts (TMR-11); up (Match time) when missing.",
+      "$ref": "ClockStyle.json"
+    },
+    "breakClock": {
+      "description": "How the break clock counts (TMR-4); down when missing.",
+      "$ref": "BreakClockStyle.json"
+    },
+    "edge": {
+      "description": "Missing in older setups: worked out from layout.",
+      "$ref": "WatchEdge.json"
+    },
+    "names": {
+      "description": "The team names over the clock, or false for scores only. Missing in older setups: worked out from layout.",
+      "type": "boolean"
+    },
+    "changedAt": {
+      "description": "When it was last changed, wherever that was: the latest change wins (UI-24).",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "layout",
+    "secondClock",
+    "changedAt"
+  ],
+  "additionalProperties": false,
+  "description": "How the watch's running screen looks, for all the account's watches (UI-21, UI-24)."
+}

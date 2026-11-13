@@ -1,0 +1,70 @@
+{
+    "$comment": "WCH-2: the stoppage pill, which from the period's length counts down the added time left (TMR-16, UI-2, UI-4, VIB-7).",
+    "screen": [
+        { "name": "in added time the pill counts down what's left of it", "ids": ["TMR-16"], "at": { "phase": "running", "period": 1, "elapsed": "46:12", "stoppage": "2:00" }, "expect": { "stoppage": { "text": "0:48", "solid": false } } },
+        { "name": "past the added time, the time over it", "ids": ["TMR-16"], "at": { "phase": "running", "period": 0, "elapsed": "47:05", "stoppage": "1:00" }, "expect": { "stoppage": { "text": "+1:05", "solid": false } } },
+        { "name": "before the length, the total as before", "ids": ["TMR-16", "TMR-3"], "at": { "phase": "running", "period": 0, "elapsed": "44:59", "stoppage": "1:10" }, "expect": { "stoppage": { "text": "1:10", "solid": false } } }
+    ],
+    "match": [
+        {
+            "name": "the total until the length, then the added time left, holding still through a stoppage, 0:00 with the alert, then the time over",
+            "ids": ["TMR-16", "TMR-3", "VIB-7", "UI-4"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"], "expect": { "stoppage": null } },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "10:30", "expect": { "stoppage": { "text": "0:30", "solid": true } } },
+                { "at": "12:00", "do": "stoppage", "expect": { "stoppage": { "text": "2:00", "solid": false } } },
+                { "at": "44:59", "expect": { "stoppage": { "text": "2:00", "solid": false } } },
+                { "at": "45:00", "expect": { "alert": "fullTime", "stoppage": { "text": "2:00", "solid": false }, "added": "+0:00" } },
+                { "at": "45:00", "do": "acknowledge" },
+                { "at": "45:30.5", "expect": { "stoppage": { "text": "1:30", "solid": false }, "stoppageMs": 120000 } },
+                { "at": "46:00", "do": "stoppage" },
+                { "at": "46:30", "expect": { "stoppage": { "text": "1:00", "solid": true }, "stoppageMs": 150000 } },
+                { "at": "46:45", "do": "stoppage", "expect": { "stoppage": { "text": "1:00", "solid": false } } },
+                { "at": "47:44", "expect": { "stoppage": { "text": "0:01", "solid": false }, "alerting": false } },
+                { "at": "47:45", "expect": { "alert": "addedTime", "stoppage": { "text": "0:00", "solid": false } } },
+                { "at": "47:45.9", "do": "acknowledge", "expect": { "stoppage": { "text": "0:00", "solid": false } } },
+                { "at": "47:50", "expect": { "stoppage": { "text": "+0:05", "solid": false }, "added": "+2:50" } },
+                { "at": "48:00", "do": "stoppage" },
+                { "at": "48:10", "expect": { "stoppage": { "text": "+0:15", "solid": true } } },
+                { "at": "48:20", "do": "stoppage", "expect": { "stoppage": { "text": "+0:15", "solid": false } } },
+                { "at": "48:30", "expect": { "stoppage": { "text": "+0:25", "solid": false } } }
+            ]
+        },
+        {
+            "name": "the next period starts again with the total, and no pill until there's stoppage",
+            "ids": ["TMR-16", "TMR-3"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "20:00", "do": "stoppage" },
+                { "at": "21:00", "do": "stoppage" },
+                { "at": "47:00", "expect": { "stoppage": { "text": "+1:00", "solid": false } } },
+                { "at": "47:00", "do": ["acknowledge", "endPeriod"] },
+                { "at": "62:00", "do": ["endHalftime", "startNextPeriod"], "expect": { "stoppage": null } },
+                { "at": "107:30", "expect": { "stoppage": null, "added": "+0:30" } }
+            ]
+        },
+        {
+            "name": "Adjust added time moves what's left",
+            "ids": ["TMR-16", "TMR-14"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "11:00", "do": "stoppage" },
+                { "at": "45:20", "do": [{ "adjustAdded": 30 }], "expect": { "stoppage": { "text": "1:10", "solid": false } } }
+            ]
+        },
+        {
+            "name": "with stoppage not tracked there's no pill, in added time too",
+            "ids": ["TMR-16", "TMR-10"],
+            "format": { "trackStoppage": false },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "46:00", "expect": { "stoppage": null, "added": "+1:00" } }
+            ]
+        }
+    ]
+}

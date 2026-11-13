@@ -1,0 +1,58 @@
+{
+  "$id": "WebhookDelivery.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Also sent as X-LawFive-Delivery.",
+      "$ref": "Id.json"
+    },
+    "event": {
+      "type": "string",
+      "description": "match.created, matchRecord.updated, venue.deleted…"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "delivered",
+        "failed"
+      ],
+      "description": "pending: waiting for its next try; failed: gave up after five tries."
+    },
+    "attempts": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "responseCode": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "error": {
+      "description": "Why the last try failed, when it didn't get an answer.",
+      "type": "string"
+    },
+    "test": {
+      "type": "boolean",
+      "description": "Sent with Send test."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "deliveredAt": {
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "id",
+    "event",
+    "status",
+    "attempts",
+    "test",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "description": "One change sent to a webhook, with how it went."
+}

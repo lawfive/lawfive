@@ -1,0 +1,77 @@
+{
+  "$id": "MatchNotice.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "source": {
+      "type": "string",
+      "description": "Who made the changes: the API key's name, which is usually the integration's, or the assignor calendar's (FEED-8)."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "matchId": {
+            "$ref": "Id.json"
+          },
+          "changes": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "MatchNoticeChange.json"
+            },
+            "description": "What happened, most important first; added and removed come alone."
+          },
+          "title": {
+            "type": "string",
+            "description": "Home v Away, or the match's name."
+          },
+          "kickoff": {
+            "description": "When it kicks off now (or did, for a removed match).",
+            "$ref": "Timestamp.json"
+          },
+          "previousKickoff": {
+            "description": "With kickoff: when it was going to.",
+            "$ref": "Timestamp.json"
+          },
+          "timeZone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "IANA time zone name, for example America/Los_Angeles."
+          },
+          "venue": {
+            "description": "Where it is now: the venue, and pitch.",
+            "type": "string"
+          },
+          "previousVenue": {
+            "description": "With venue: where it was going to be.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "matchId",
+          "changes",
+          "title"
+        ],
+        "additionalProperties": false
+      },
+      "description": "The matches, soonest first."
+    }
+  },
+  "required": [
+    "id",
+    "source",
+    "createdAt",
+    "matches"
+  ],
+  "additionalProperties": false,
+  "description": "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification (NOTE-3)."
+}

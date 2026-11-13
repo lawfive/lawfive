@@ -1,0 +1,140 @@
+{
+  "id": "ab07cd69-ba22-563c-9776-a5c6c0c46bf2",
+  "version": 1,
+  "updatedAt": "2026-10-18T21:30:00Z",
+  "device": "garmin:fr965",
+  "outcome": "completed",
+  "periods": [
+    {
+      "period": 1,
+      "extraTime": false,
+      "playedSec": 2760
+    },
+    {
+      "period": 2,
+      "extraTime": false,
+      "playedSec": 2905
+    },
+    {
+      "period": 3,
+      "extraTime": true,
+      "playedSec": 915
+    },
+    {
+      "period": 4,
+      "extraTime": true,
+      "playedSec": 960
+    }
+  ],
+  "score": {
+    "home": 1,
+    "away": 1
+  },
+  "penalties": {
+    "home": 4,
+    "away": 3
+  },
+  "distanceM": 11980,
+  "events": [
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 1,
+      "periodSec": 1320,
+      "team": "away",
+      "player": 8
+    },
+    {
+      "type": "periodEnd",
+      "when": "play",
+      "period": 1,
+      "periodSec": 2760
+    },
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 2,
+      "periodSec": 2650,
+      "team": "home",
+      "player": 14
+    },
+    {
+      "type": "periodEnd",
+      "when": "play",
+      "period": 2,
+      "periodSec": 2905
+    },
+    {
+      "type": "periodEnd",
+      "when": "play",
+      "period": 3,
+      "periodSec": 915
+    },
+    {
+      "type": "periodEnd",
+      "when": "play",
+      "period": 4,
+      "periodSec": 960
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "home",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "away",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "home",
+      "scored": false
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "away",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "home",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "away",
+      "scored": false
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "home",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "away",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "home",
+      "scored": true
+    },
+    {
+      "type": "penaltyKick",
+      "when": "penalties",
+      "team": "away",
+      "scored": false
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "$id": "RefereeInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "shortName": {
+      "description": "What the officials line on match cards calls them (WEB-20); without it, their surname as guessed from the name.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "aliases": {
+      "description": "Other names they go by, such as the ones merged into this referee (DUP-3); imports and searches find the referee by them.",
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      }
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+    },
+    "phone": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "tags": {
+      "$ref": "Tags.json"
+    },
+    "distinctFrom": {
+      "description": "Referees the user said aren't the same person, so they aren't suggested as duplicates again (DUP-5).",
+      "maxItems": 500,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      }
+    },
+    "id": {
+      "description": "The id from the URL; can be left out.",
+      "$ref": "Id.json"
+    },
+    "version": {
+      "description": "The version last seen, when updating. Leave it out to create the record.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "description": "A Referee as a client sends it to save it: the server sets updatedAt and deletedAt, and version only goes with an update."
+}

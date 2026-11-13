@@ -1,0 +1,42 @@
+{
+  "$id": "PitchOutline.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "corners": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "$ref": "Position.json"
+        },
+        {
+          "$ref": "Position.json"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "The corners at the two ends of one touchline."
+    },
+    "centre": {
+      "description": "The center spot.",
+      "$ref": "Position.json"
+    },
+    "by": {
+      "type": "string",
+      "enum": [
+        "referee",
+        "corners",
+        "auto"
+      ],
+      "description": "Marked by the referee on the map, from corners walked on the watch (TRK-13), or found automatically."
+    }
+  },
+  "required": [
+    "corners",
+    "centre",
+    "by"
+  ],
+  "additionalProperties": false,
+  "description": "Where the pitch is and which way it lies, for heatmaps (TRK-9)."
+}

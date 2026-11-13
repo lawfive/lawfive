@@ -1,0 +1,12 @@
+{
+  "$id": "AbandonReason.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "weather",
+    "lightning",
+    "crowdTrouble",
+    "notEnoughPlayers",
+    "other"
+  ]
+}

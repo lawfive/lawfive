@@ -1,0 +1,19 @@
+---
+// The board across the top shows the L5 mark beside LAWFIVE, FIVE in mint, as the website's does
+// (DESIGN.md, the logo). The mark's shapes come from the website's own file, so the two never drift.
+import { markFive, markFold, markL, markTransform, markViewBox } from "../../../web/src/logo.ts";
+
+const { siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="site-title lf-wordmark" aria-label="LawFive docs">
+    <svg class="lf-mark" viewBox={markViewBox} aria-hidden="true">
+        <g transform={markTransform}>
+            <path class="l" d={markL} />
+            <path class="five" d={markFive} />
+            <path class="fold" d={markFold} />
+        </g>
+    </svg>
+    <span class="lf-name" aria-hidden="true" translate="no">LAW<span>FIVE</span></span>
+    <span class="lf-docs" aria-hidden="true">Docs</span>
+</a>

@@ -1,0 +1,68 @@
+<resources>
+    <properties>
+        <!-- The planned match (SET-1, SET-10). Durations are minutes; decimals such as 2.5 are allowed. -->
+        <property id="homeName" type="string"></property>
+        <property id="homeAlias" type="string"></property>
+        <property id="homeColor" type="string"></property>
+        <property id="awayName" type="string"></property>
+        <property id="awayAlias" type="string"></property>
+        <property id="awayColor" type="string"></property>
+        <!-- Match format, also the starting point for Quick match and Create match (SET-11). -->
+        <property id="numPeriods" type="number">2</property>
+        <property id="periodMin" type="float">45</property>
+        <property id="halftimeMin" type="float">15</property>
+        <property id="teamSize" type="number">11</property>
+        <property id="midBreak" type="boolean">false</property>
+        <property id="midBreakMin" type="float">2</property>
+        <property id="extraTime" type="boolean">false</property>
+        <property id="etPeriods" type="number">2</property>
+        <property id="etPeriodMin" type="float">15</property>
+        <property id="goldenGoal" type="boolean">false</property>
+        <property id="penalties" type="boolean">false</property>
+        <property id="trackStoppage" type="boolean">false</property>
+        <!-- TMR-15: the clock, 0 runs on (the Laws) or 1 stops when play stops (US high school and college),
+             which tracks stoppage whatever trackStoppage says; and whether a goal or card stops it. -->
+        <property id="clockKind" type="number">0</property>
+        <property id="stopForGoalsCards" type="boolean">true</property>
+        <property id="breakStoppage" type="boolean">true</property>
+        <!-- EVT-12: sin bins (temporary dismissals) and their length. -->
+        <property id="sinBins" type="boolean">false</property>
+        <property id="sinBinMin" type="float">10</property>
+        <!-- Before UI-21's choices: the match clock per match and one of six layouts. Read once into
+             the match screen's choices (Screen.migrate), and kept so that reading them never fails. -->
+        <property id="clockStyle" type="number">0</property>
+        <property id="faceLayout" type="number">0</property>
+        <!-- The match screen (UI-21 to UI-23, TMR-4, TMR-11): not part of the format, so Same as last
+             leaves it alone. screenClocks is -1 until the choices are first read from the old ones;
+             the default (UI-24) is two clocks stacked, time left over match time, with the time of day. -->
+        <property id="screenClocks" type="number">-1</property>
+        <property id="mainClock" type="number">2</property>
+        <property id="secondClock" type="number">0</property>
+        <property id="breakClock" type="number">0</property>
+        <property id="screenEdge" type="number">2</property>
+        <property id="screenNames" type="boolean">true</property>
+        <property id="goalScorers" type="boolean">true</property>
+        <property id="goalTypes" type="boolean">false</property>
+        <!-- Alerts and input. -->
+        <property id="alertRepeatSec" type="number">10</property>
+        <property id="stoppageReminderSec" type="number">10</property>
+        <property id="vibeFullTime" type="boolean">true</property>
+        <property id="vibeAdded" type="boolean">true</property>
+        <property id="vibeSinBin" type="boolean">true</property>
+        <property id="vibeStoppage" type="boolean">true</property>
+        <property id="vibeBreak" type="boolean">true</property>
+        <property id="tapStoppage" type="boolean">false</property>
+        <!-- EVT-14: ask for the card's reason (the misconduct code) after the number. -->
+        <property id="cardReasons" type="boolean">false</property>
+        <!-- INP-12: taps and swipes do nothing on the running screen; only on watches with Up and Down. -->
+        <property id="touchLock" type="boolean">false</property>
+        <property id="stoppageLabel" type="string">stoppage</property>
+        <property id="breakLabel" type="string">break</property>
+        <!-- SYNC-2: the LawFive server the watch links to; a linked watch keeps the one it was linked with. -->
+        <property id="serverUrl" type="string">https://api.lawfive.app</property>
+        <!-- TRK-7: keep GPS and heart rate for LawFive (only while linked). -->
+        <property id="recordTrack" type="boolean">true</property>
+        <!-- UI-16: sync quietly when the app opens (off: only with Sync now). -->
+        <property id="syncOnOpen" type="boolean">true</property>
+    </properties>
+</resources>

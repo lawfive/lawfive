@@ -1,0 +1,61 @@
+{
+  "$id": "VenueMerge.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      },
+      "description": "The venues to merge into this one; they're deleted."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "The name to keep: one of the venues' names or other names. The rest become other names."
+    },
+    "addressFrom": {
+      "description": "When they have different addresses or parking spots, the venue (this one or one of from) whose address and parking to keep; otherwise the ones there are.",
+      "$ref": "Id.json"
+    },
+    "pitches": {
+      "maxItems": 200,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "A pitch of one of the venues in from.",
+            "$ref": "Id.json"
+          },
+          "into": {
+            "description": "The pitch it's the same as: one of this venue's, or one kept from another. Its matches move to that pitch, its corners walked are added to it, and its name becomes another name of it.",
+            "$ref": "Id.json"
+          },
+          "name": {
+            "description": "Without into, the pitch is kept, under this name (its own, or a new one): no other pitch of the merged venue may have it.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "description": "What happens to each pitch of the venues in from: every one, once."
+    }
+  },
+  "required": [
+    "from",
+    "name",
+    "pitches"
+  ],
+  "additionalProperties": false,
+  "description": "Venues to merge into one (DUP-7): the venue's details, and what happens to each of the others' pitches."
+}

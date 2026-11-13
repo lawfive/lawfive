@@ -1,0 +1,100 @@
+{
+  "$id": "AssignorCalendar.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "system": {
+      "$ref": "AssignorSystem.json"
+    },
+    "link": {
+      "type": "string",
+      "description": "The start of the link, to recognize it by: the whole link is a password, so it's never sent back (FEED-2)."
+    },
+    "notify": {
+      "type": "boolean",
+      "description": "Tell the account's phones when it adds, moves or cancels a match (FEED-8, NOTE-1)."
+    },
+    "active": {
+      "type": "boolean",
+      "description": "false: paused, by the person or after the link stopped working (FEED-9); not read."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "lastReadAt": {
+      "description": "When it was last read, whatever happened.",
+      "$ref": "Timestamp.json"
+    },
+    "lastChangedAt": {
+      "description": "When a read last added or changed a match.",
+      "$ref": "Timestamp.json"
+    },
+    "lastResult": {
+      "description": "What the latest read that worked found and did.",
+      "type": "object",
+      "properties": {
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Games still to come in it."
+        },
+        "added": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "canceled": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "games",
+        "added",
+        "updated",
+        "canceled"
+      ],
+      "additionalProperties": false
+    },
+    "problem": {
+      "description": "Why the latest read didn't work, or why it's paused.",
+      "type": "string"
+    },
+    "stoppedAt": {
+      "description": "When it was paused because the link stopped working (FEED-9).",
+      "$ref": "Timestamp.json"
+    },
+    "skipped": {
+      "type": "array",
+      "items": {
+        "$ref": "AssignorCalendarSkipped.json"
+      },
+      "description": "Events the latest read couldn't save, at most 20."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "system",
+    "link",
+    "notify",
+    "active",
+    "createdAt",
+    "skipped"
+  ],
+  "additionalProperties": false,
+  "description": "An assignor's calendar link, read into the account's matches every 30 minutes (FEED-1 to FEED-9)."
+}

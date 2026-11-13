@@ -1,0 +1,4 @@
+<drawables>
+    <!-- UI-14: the app icon at 54 px, drawn by web/scripts/icons.ts (pnpm icons); flat colors, as dithering speckles an icon this small. -->
+    <bitmap id="LauncherIcon" filename="launcher_icon.png" dithering="none"/>
+</drawables>

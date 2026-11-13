@@ -1,0 +1,54 @@
+{
+  "$id": "CreatedApiKey.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "name": {
+      "type": "string",
+      "description": "What it's for, \"RefSix import\"."
+    },
+    "prefix": {
+      "type": "string",
+      "description": "The start of the key, to recognize it: lf_ and 8 characters."
+    },
+    "scopes": {
+      "type": "array",
+      "items": {
+        "$ref": "ApiKeyScope.json"
+      }
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "lastUsedAt": {
+      "description": "To within five minutes; none until it's used.",
+      "$ref": "Timestamp.json"
+    },
+    "expiresAt": {
+      "description": "None for a key that doesn't expire.",
+      "$ref": "Timestamp.json"
+    },
+    "notify": {
+      "type": "boolean",
+      "description": "Whether the user's phones are told when this key adds a match, or cancels, postpones, moves or removes one that hasn't kicked off (NOTE-1)."
+    },
+    "key": {
+      "type": "string",
+      "description": "The key itself, shown only this once: send it as Authorization: Bearer <key>."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "prefix",
+    "scopes",
+    "createdAt",
+    "notify",
+    "key"
+  ],
+  "additionalProperties": false,
+  "description": "A new key, with the key itself. The server keeps only a hash, so it can't show it again."
+}

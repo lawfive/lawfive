@@ -1,0 +1,135 @@
+{
+    "$comment": "WCH-2: correcting the clock during play (TMR-14): Adjust clock moves the period's kickoff time by the change, so every clock, the halfway break and the alerts follow, and Adjust added time the stoppage total; both are recorded (CK, CA, the change in extra) and undone like other events while their period is played (INP-6).",
+    "match": [
+        {
+            "name": "forward, for a clock started late: the clock and the period's end follow, earlier events keep their times",
+            "ids": ["TMR-14", "TMR-8"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "last": { "type": "G", "seconds": 600 } } },
+                { "at": "20:00", "do": { "adjustClock": 40 }, "expect": { "clock": "20:40", "events": 2, "last": { "type": "CK", "team": null, "seconds": 1240, "player": null, "extra": 40 } } },
+                { "at": "25:00", "expect": { "clock": "25:40", "score": [1, 0] } },
+                { "at": "44:20", "do": "endPeriod", "expect": { "phase": "break", "last": { "type": "E", "seconds": 2700 } } }
+            ]
+        },
+        {
+            "name": "back, in the second half: time left and match time follow",
+            "ids": ["TMR-14", "TMR-11"],
+            "screen": { "clocks": "stacked", "mainClock": "down", "secondClock": "up" },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "45:00", "do": "endPeriod" },
+                { "at": "60:00", "do": ["endHalftime", "startNextPeriod"] },
+                { "at": "70:00", "do": { "adjustClock": -65 }, "expect": { "clock": "36:05", "second": "53:55", "last": { "type": "CK", "seconds": 535, "extra": -65 } } },
+                { "at": "71:00", "expect": { "clock": "35:05", "second": "54:55", "periodLabel": "2H" } }
+            ]
+        },
+        {
+            "name": "never before the kickoff, and a change of nothing is not recorded",
+            "ids": ["TMR-14"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "0:30", "do": { "adjustClock": -60 }, "expect": { "clock": "0:00", "events": 1, "last": { "type": "CK", "seconds": 0, "extra": -30 } } },
+                { "at": "1:00", "do": { "adjustClock": 0 }, "expect": { "clock": "0:30", "events": 1 } },
+                { "at": "2:00", "do": { "adjustAdded": 30 }, "expect": { "events": 1 } }
+            ]
+        },
+        {
+            "name": "only during play: not before kickoff or at half-time",
+            "ids": ["TMR-14"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, { "adjustClock": 30 }, { "adjustAdded": 30 }], "expect": { "events": 0, "phase": "ready" } },
+                { "at": "0:00", "do": "start" },
+                { "at": "45:00", "do": "endPeriod" },
+                { "at": "46:00", "do": [{ "adjustClock": 30 }, { "adjustAdded": 30 }], "expect": { "events": 1, "last": { "type": "E" }, "breakClock": "14:00" } }
+            ]
+        },
+        {
+            "name": "the full-time alert moves with the clock, and comes again when the clock is put back before it",
+            "ids": ["TMR-14", "VIB-1"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "44:00", "do": { "adjustClock": 60 }, "expect": { "clock": "45:00", "added": "+0:00", "alert": "fullTime" } },
+                { "at": "44:10", "do": "acknowledge", "expect": { "alerting": false } },
+                { "at": "44:20", "do": { "adjustClock": -120 }, "expect": { "clock": "43:20", "added": null, "alerting": false } },
+                { "at": "46:00", "expect": { "clock": "45:00", "alert": "fullTime", "alerting": true } }
+            ]
+        },
+        {
+            "name": "the halfway break comes due earlier, and waits again when the clock is put back before it",
+            "ids": ["TMR-14", "TMR-7"],
+            "format": { "midBreak": true, "breakLenSec": 120 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "adjustClock": 600 }, "expect": { "clock": "20:00", "breakDueInMs": 90000 } },
+                { "at": "11:30", "expect": { "alert": "breakStart", "breakDue": true } },
+                { "at": "11:40", "do": { "adjustClock": -120 }, "expect": { "clock": "19:40", "breakDue": false, "breakDueInMs": 110000, "alerting": false } },
+                { "at": "13:30", "expect": { "alert": "breakStart", "breakDue": true } }
+            ]
+        },
+        {
+            "name": "added time: the stoppage total moves, and the added time alert with it",
+            "ids": ["TMR-14", "TMR-3", "VIB-7"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage" },
+                { "at": "6:00", "do": "stoppage", "expect": { "stoppageMs": 60000 } },
+                { "at": "10:00", "do": { "adjustAdded": 30 }, "expect": { "stoppageMs": 90000, "events": 2, "last": { "type": "CA", "team": null, "seconds": 600, "player": null, "extra": 30 } } },
+                { "at": "45:00", "expect": { "alert": "fullTime" } },
+                { "at": "45:05", "do": "acknowledge" },
+                { "at": "46:30", "expect": { "alert": "addedTime", "clock": "45:00", "added": "+1:30" } },
+                { "at": "46:35", "do": "acknowledge", "expect": { "alerting": false } }
+            ]
+        },
+        {
+            "name": "added time put back while a stoppage runs: it carries on, never below 0:00",
+            "ids": ["TMR-14", "TMR-3"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage" },
+                { "at": "5:20", "do": { "adjustAdded": -50 }, "expect": { "stoppageMs": 0, "stoppageRunning": true, "last": { "type": "CA", "seconds": 320, "extra": -20 } } },
+                { "at": "5:30", "expect": { "stoppageMs": 10000 } },
+                { "at": "6:00", "do": "stoppage", "expect": { "stoppageMs": 40000, "stoppageRunning": false, "last": { "type": "S", "seconds": 320, "extra": 40 } } },
+                { "at": "7:00", "do": { "adjustAdded": 25 }, "expect": { "stoppageMs": 65000 } }
+            ]
+        },
+        {
+            "name": "not tracked: no added time to adjust",
+            "ids": ["TMR-14", "TMR-10"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": { "adjustAdded": 30 }, "expect": { "events": 0 } }
+            ]
+        },
+        {
+            "name": "undo takes back a correction while its period is played; at half-time Undo passes over it",
+            "ids": ["TMR-14", "INP-6"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "adjustClock": 40 }, "expect": { "clock": "10:40" } },
+                { "at": "12:00", "do": "undo", "expect": { "clock": "12:00", "events": 0 } },
+                { "at": "15:00", "do": { "event": "G", "team": "home" } },
+                { "at": "16:00", "do": { "adjustAdded": 45 }, "expect": { "stoppageMs": 45000 } },
+                { "at": "17:00", "do": { "adjustClock": 30 }, "expect": { "clock": "17:30" } },
+                { "at": "20:00", "do": "undo", "expect": { "clock": "20:00", "events": 2, "last": { "type": "CA" }, "score": [1, 0] } },
+                { "at": "21:00", "do": "undo", "expect": { "stoppageMs": 0, "events": 1, "last": { "type": "G" } } },
+                { "at": "40:00", "do": { "adjustClock": 20 } },
+                { "at": "45:00", "do": "endPeriod" },
+                { "at": "46:00", "do": "undo", "expect": { "score": [0, 0], "events": 2, "last": { "type": "E", "seconds": 2720 } } }
+            ]
+        },
+        {
+            "name": "Restart match clears a correction with the rest",
+            "ids": ["TMR-14", "PRE-6"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "1:00", "do": { "adjustClock": 30 }, "expect": { "events": 1 } },
+                { "at": "1:30", "do": "restart", "expect": { "phase": "ready", "events": 0 } }
+            ]
+        }
+    ]
+}

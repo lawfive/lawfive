@@ -1,0 +1,87 @@
+{
+  "$id": "MatchWeather.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "matchId": {
+      "$ref": "Id.json"
+    },
+    "final": {
+      "type": "boolean",
+      "description": "true once the match is over: the weather it was played in, which no longer changes. false: a forecast, updated as kickoff gets closer."
+    },
+    "condition": {
+      "$ref": "WeatherCondition.json"
+    },
+    "isDay": {
+      "type": "boolean",
+      "description": "Daylight at kickoff, for a sun or moon icon."
+    },
+    "temperatureC": {
+      "type": "number",
+      "description": "At kickoff."
+    },
+    "feelsLikeC": {
+      "type": "number",
+      "description": "At kickoff: the temperature with humidity, wind and sun taken into account."
+    },
+    "precipitationChance": {
+      "description": "The highest chance of rain in any hour of the match.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "precipitationMm": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Expected rain from an hour before kickoff to the end of the match."
+    },
+    "precipitationBeforeMm": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Rain in the 24 hours before that."
+    },
+    "windGustKph": {
+      "description": "The strongest gust during the match.",
+      "type": "number",
+      "minimum": 0
+    },
+    "hours": {
+      "type": "array",
+      "items": {
+        "$ref": "WeatherHour.json"
+      },
+      "description": "Hour by hour from kickoff to the end of the match."
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "$ref": "WeatherRisk.json"
+      }
+    },
+    "updatedAt": {
+      "description": "When the forecast was fetched.",
+      "$ref": "Timestamp.json"
+    },
+    "source": {
+      "type": "string",
+      "description": "Whose data it is, to credit beside it (Open-Meteo)."
+    }
+  },
+  "required": [
+    "matchId",
+    "final",
+    "condition",
+    "isDay",
+    "temperatureC",
+    "feelsLikeC",
+    "precipitationMm",
+    "precipitationBeforeMm",
+    "hours",
+    "risks",
+    "updatedAt",
+    "source"
+  ],
+  "additionalProperties": false,
+  "description": "The weather for one match, from the forecast for its pitch (or venue) location."
+}

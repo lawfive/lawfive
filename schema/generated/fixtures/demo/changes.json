@@ -1,0 +1,3026 @@
+{
+  "changes": [
+    {
+      "collection": "settings",
+      "record": {
+        "currency": "USD",
+        "distanceUnit": "mi",
+        "maxHeartRate": 188,
+        "temperatureUnit": "f",
+        "misconductScheme": "ussf",
+        "id": "00000001-0000-4000-8000-000000000001",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-templates",
+      "record": {
+        "name": "U12 league: 2×30",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "defaults": {
+          "fee": {
+            "paid": false,
+            "amount": 40,
+            "currency": "USD"
+          }
+        },
+        "id": "00000002-0000-4000-8000-000000000001",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-templates",
+      "record": {
+        "name": "U14: 2×35",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "defaults": {
+          "fee": {
+            "paid": false,
+            "amount": 55,
+            "currency": "USD"
+          }
+        },
+        "id": "00000002-0000-4000-8000-000000000002",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-templates",
+      "record": {
+        "name": "Adult 2×45",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": true,
+          "penalties": false,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "defaults": {
+          "fee": {
+            "paid": false,
+            "amount": 70,
+            "currency": "USD"
+          }
+        },
+        "id": "00000002-0000-4000-8000-000000000003",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-templates",
+      "record": {
+        "name": "Cup: extra time and penalties",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": true,
+          "goalTypes": true,
+          "penalties": true,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "defaults": {},
+        "id": "00000002-0000-4000-8000-000000000004",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "competitions",
+      "record": {
+        "name": "Bay Youth League U12 Boys",
+        "type": "league",
+        "level": "Gold",
+        "season": "2026-27",
+        "ageGroup": "U12",
+        "organiser": "Bay Youth League",
+        "templateId": "00000002-0000-4000-8000-000000000001",
+        "misconductScheme": "ussf",
+        "id": "00000003-0000-4000-8000-000000000001",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "competitions",
+      "record": {
+        "name": "NorCal Premier U14 Girls",
+        "type": "league",
+        "level": "Premier",
+        "season": "2026-27",
+        "ageGroup": "U14",
+        "organiser": "NorCal Premier",
+        "templateId": "00000002-0000-4000-8000-000000000002",
+        "id": "00000003-0000-4000-8000-000000000002",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "competitions",
+      "record": {
+        "name": "Peninsula Sunday League",
+        "type": "league",
+        "level": "Division 1",
+        "season": "2026",
+        "templateId": "00000002-0000-4000-8000-000000000003",
+        "id": "00000003-0000-4000-8000-000000000003",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "competitions",
+      "record": {
+        "name": "Harvest Cup",
+        "type": "tournament",
+        "season": "2026",
+        "endDate": "2026-11-15",
+        "startDate": "2026-11-14",
+        "templateId": "00000002-0000-4000-8000-000000000004",
+        "id": "00000003-0000-4000-8000-000000000004",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "venues",
+      "record": {
+        "name": "Twin Creeks Sports Complex",
+        "tags": [
+          "turf"
+        ],
+        "notes": "Park in the north lot; fields 3 and 4 are past the snack bar.",
+        "address": "969 Caribbean Dr, Sunnyvale, CA 94089",
+        "pitches": [
+          {
+            "id": "00000005-0000-4000-8000-000000000001",
+            "name": "Field 1",
+            "position": {
+              "lat": 37.4149,
+              "lon": -122.0181
+            }
+          },
+          {
+            "id": "00000005-0000-4000-8000-000000000002",
+            "name": "Field 3",
+            "position": {
+              "lat": 37.4158,
+              "lon": -122.0162
+            }
+          },
+          {
+            "id": "00000005-0000-4000-8000-000000000003",
+            "name": "Field 4",
+            "position": {
+              "lat": 37.4161,
+              "lon": -122.0155
+            }
+          }
+        ],
+        "position": {
+          "lat": 37.4136,
+          "lon": -122.0167
+        },
+        "id": "00000004-0000-4000-8000-000000000001",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "venues",
+      "record": {
+        "name": "Ortega Park",
+        "tags": [
+          "grass"
+        ],
+        "address": "636 Harrow Way, Sunnyvale, CA 94087",
+        "pitches": [
+          {
+            "id": "00000005-0000-4000-8000-000000000004",
+            "name": "Main field",
+            "position": {
+              "lat": 37.3829,
+              "lon": -122.0095
+            }
+          }
+        ],
+        "id": "00000004-0000-4000-8000-000000000002",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "venues",
+      "record": {
+        "name": "Baylands Park",
+        "notes": "No shade; bring water. Lightning policy: 30 minutes after the last strike.",
+        "address": "999 E Caribbean Dr, Sunnyvale, CA 94089",
+        "pitches": [
+          {
+            "id": "00000005-0000-4000-8000-000000000005",
+            "name": "Field A",
+            "position": {
+              "lat": 37.4176,
+              "lon": -121.9997
+            }
+          },
+          {
+            "id": "00000005-0000-4000-8000-000000000006",
+            "name": "Field B",
+            "position": {
+              "lat": 37.4181,
+              "lon": -121.9989
+            }
+          }
+        ],
+        "id": "00000004-0000-4000-8000-000000000003",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "venues",
+      "record": {
+        "name": "Twin Creeks",
+        "tags": [
+          "lights"
+        ],
+        "address": "969 Caribbean Drive, Sunnyvale",
+        "pitches": [
+          {
+            "id": "00000005-0000-4000-8000-000000000007",
+            "name": "Field 3",
+            "position": {
+              "lat": 37.41583,
+              "lon": -122.01622
+            }
+          },
+          {
+            "id": "00000005-0000-4000-8000-000000000008",
+            "name": "Field A",
+            "position": {
+              "lat": 37.41495,
+              "lon": -122.01815
+            }
+          },
+          {
+            "id": "00000005-0000-4000-8000-000000000009",
+            "name": "Field 7"
+          },
+          {
+            "id": "00000005-0000-4000-8000-000000000010",
+            "name": "Field 1",
+            "position": {
+              "lat": 37.4213,
+              "lon": -122.0181
+            }
+          }
+        ],
+        "id": "00000004-0000-4000-8000-000000000004",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "referees",
+      "record": {
+        "name": "Sam Rivera",
+        "tags": [
+          "mentor"
+        ],
+        "email": "sam@example.com",
+        "phone": "+1 555 0100",
+        "id": "00000006-0000-4000-8000-000000000001",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "referees",
+      "record": {
+        "name": "Jordan Lee",
+        "email": "jordan@example.com",
+        "id": "00000006-0000-4000-8000-000000000002",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "referees",
+      "record": {
+        "name": "Priya Natarajan",
+        "tags": [
+          "assessor"
+        ],
+        "phone": "+1 555 0142",
+        "id": "00000006-0000-4000-8000-000000000003",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "referees",
+      "record": {
+        "name": "Chris O'Neill",
+        "notes": "Prefers the AR1 flag.",
+        "id": "00000006-0000-4000-8000-000000000004",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "referees",
+      "record": {
+        "name": "Rivera, Sam",
+        "email": "srivera@baylandsyouth.org",
+        "id": "00000006-0000-4000-8000-000000000005",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 35,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Galaxy SC",
+          "alias": "GAL",
+          "colour": "#6A2C91"
+        },
+        "crew": [
+          {
+            "role": "referee",
+            "refereeId": "00000006-0000-4000-8000-000000000003"
+          },
+          {
+            "role": "ar2",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          }
+        ],
+        "home": {
+          "name": "Thunder FC",
+          "alias": "THU",
+          "colour": "#FFD100"
+        },
+        "role": "ar1",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "female",
+        "status": "scheduled",
+        "kickoff": "2026-11-11T19:30:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000001",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "U14",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000002",
+        "id": "00000007-0000-4000-8000-000000000002",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 70,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Athletic",
+          "alias": "ATH",
+          "colour": "#FFFFFF"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          },
+          {
+            "role": "ar2",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          }
+        ],
+        "home": {
+          "name": "Old Boys",
+          "alias": "OBS",
+          "colour": "#000000"
+        },
+        "role": "referee",
+        "tags": [
+          "needs AR"
+        ],
+        "notes": "Bring the spare whistle and the coin.",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": true,
+          "penalties": false,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "scheduled",
+        "kickoff": "2026-11-12T22:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000004",
+        "venueId": "00000004-0000-4000-8000-000000000002",
+        "ageGroup": "O35",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000003",
+        "id": "00000007-0000-4000-8000-000000000003",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 30,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Strikers U12",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "crew": [
+          {
+            "role": "referee",
+            "refereeId": "00000006-0000-4000-8000-000000000005"
+          }
+        ],
+        "home": {
+          "name": "Cobras U12",
+          "alias": "COB",
+          "colour": "#1B7F3B"
+        },
+        "role": "ar1",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "scheduled",
+        "kickoff": "2026-11-17T18:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000007",
+        "venueId": "00000004-0000-4000-8000-000000000004",
+        "ageGroup": "U12",
+        "assignor": "Dana Whitfield",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000004",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Cobras U12",
+          "alias": "COB",
+          "colour": "#1B7F3B"
+        },
+        "crew": [],
+        "home": {
+          "name": "Rovers U12",
+          "alias": "ROV",
+          "colour": "#0057B8"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "scheduled",
+        "kickoff": "2026-11-25T17:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000008",
+        "venueId": "00000004-0000-4000-8000-000000000004",
+        "ageGroup": "U12",
+        "assignor": "Dana Whitfield",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000005",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "United U12",
+          "alias": "UTD",
+          "colour": "#00A651"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000005"
+          }
+        ],
+        "home": {
+          "name": "Rovers U12",
+          "alias": "ROV",
+          "colour": "#0057B8"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "scheduled",
+        "kickoff": "2026-11-18T18:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000005",
+        "venueId": "00000004-0000-4000-8000-000000000003",
+        "assignor": "Dana Whitfield",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000006",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 25,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "City",
+          "alias": "CTY",
+          "colour": "#0057B8"
+        },
+        "crew": [
+          {
+            "role": "referee",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          }
+        ],
+        "home": {
+          "name": "Dynamo",
+          "alias": "DYN",
+          "colour": "#FF7A00"
+        },
+        "name": "Harvest Cup semi-final",
+        "role": "fourth",
+        "tags": [
+          "tournament"
+        ],
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": true,
+          "goalTypes": true,
+          "penalties": true,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "coed",
+        "status": "scheduled",
+        "kickoff": "2026-11-25T16:30:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000003",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "Adult",
+        "assignor": "Marcus Bell",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000004",
+        "id": "00000007-0000-4000-8000-000000000007",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "away": {
+          "name": "Strikers U14",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "crew": [],
+        "home": {
+          "name": "Galaxy SC",
+          "alias": "GAL",
+          "colour": "#6A2C91"
+        },
+        "role": "referee",
+        "notes": "Field closed; new date to come.",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "postponed",
+        "kickoff": "2026-11-14T17:00:00.000Z",
+        "venueId": "00000004-0000-4000-8000-000000000003",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000002",
+        "id": "00000007-0000-4000-8000-000000000008",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Strikers U12",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          }
+        ],
+        "home": {
+          "name": "United U12",
+          "alias": "UTD",
+          "colour": "#00A651"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": true,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "played",
+        "kickoff": "2026-11-04T17:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000002",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "U12",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000009",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 3
+        },
+        "device": "garmin:006-B3703-00",
+        "events": [
+          {
+            "type": "clockAdjusted",
+            "when": "play",
+            "clock": "match",
+            "period": 1,
+            "changeSec": 40,
+            "periodSec": 95
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 9,
+            "periodSec": 420
+          },
+          {
+            "team": "away",
+            "type": "caution",
+            "when": "play",
+            "period": 1,
+            "offender": {
+              "kind": "player",
+              "number": 5
+            },
+            "periodSec": 1105,
+            "misconduct": {
+              "code": "UB",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 11,
+            "periodSec": 1530
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 1812
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 7,
+            "periodSec": 300
+          },
+          {
+            "team": "away",
+            "type": "sinBin",
+            "when": "play",
+            "period": 2,
+            "offender": {
+              "kind": "player",
+              "number": 6
+            },
+            "lengthSec": 600,
+            "periodSec": 540,
+            "misconduct": {
+              "code": "DT",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "team": "away",
+            "type": "injury",
+            "when": "play",
+            "period": 2,
+            "player": 3,
+            "lengthSec": 90,
+            "periodSec": 960
+          },
+          {
+            "team": "away",
+            "type": "secondSinBin",
+            "when": "play",
+            "period": 2,
+            "offender": {
+              "kind": "player",
+              "number": 6
+            },
+            "lengthSec": 600,
+            "periodSec": 1450,
+            "misconduct": {
+              "code": "DT",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 9,
+            "periodSec": 1700
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 1835
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000009",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 1812,
+            "startedAt": "2026-11-04T17:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 1835,
+            "startedAt": "2026-11-04T17:37:00.000Z"
+          }
+        ],
+        "distanceM": 4731,
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 84
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 79.2
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 78.2
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 73.3
+            }
+          ]
+        },
+        "kickoffDirection": {
+          "team": "home",
+          "bearingDeg": 30
+        },
+        "id": "00000008-0000-4000-8000-000000000001",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 70,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Rangers",
+          "alias": "RAN",
+          "colour": "#0057B8"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          },
+          {
+            "role": "ar2",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          }
+        ],
+        "home": {
+          "name": "Athletic",
+          "alias": "ATH",
+          "colour": "#FFFFFF"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": true,
+          "penalties": false,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "played",
+        "kickoff": "2026-11-03T22:00:00.000Z",
+        "venueId": "00000004-0000-4000-8000-000000000002",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000003",
+        "id": "00000007-0000-4000-8000-000000000010",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 2,
+          "home": 2
+        },
+        "device": "garmin:006-B3703-00",
+        "events": [
+          {
+            "team": "away",
+            "type": "caution",
+            "when": "beforeKickoff",
+            "offender": {
+              "kind": "teamOfficial",
+              "role": "headCoach"
+            },
+            "misconduct": {
+              "code": "DT",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 9,
+            "goalType": "goal",
+            "periodSec": 754
+          },
+          {
+            "type": "stoppage",
+            "when": "play",
+            "period": 1,
+            "lengthSec": 95,
+            "periodSec": 1210
+          },
+          {
+            "team": "away",
+            "type": "caution",
+            "when": "play",
+            "period": 1,
+            "offender": {
+              "kind": "player",
+              "number": 4
+            },
+            "periodSec": 1630,
+            "misconduct": {
+              "code": "UB",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 10,
+            "goalType": "directFreeKick",
+            "periodSec": 2512
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2820
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 9,
+            "goalType": "penalty",
+            "periodSec": 600
+          },
+          {
+            "team": "away",
+            "type": "secondCaution",
+            "when": "play",
+            "period": 2,
+            "offender": {
+              "kind": "player",
+              "number": 4
+            },
+            "periodSec": 1500,
+            "misconduct": {
+              "code": "DT",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 5,
+            "goalType": "ownGoal",
+            "periodSec": 2300
+          },
+          {
+            "team": "home",
+            "type": "sendOff",
+            "when": "play",
+            "period": 2,
+            "offender": {
+              "kind": "player",
+              "number": 3
+            },
+            "periodSec": 2510,
+            "misconduct": {
+              "code": "DGF",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2955
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000010",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2820,
+            "startedAt": "2026-11-03T22:02:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2955,
+            "startedAt": "2026-11-03T23:04:00.000Z"
+          }
+        ],
+        "distanceM": 9150,
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 93
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 84.5
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 81.8
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 73
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000002",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 25,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Wanderers",
+          "alias": "WAN",
+          "colour": "#FFD100"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000003"
+          }
+        ],
+        "home": {
+          "name": "City",
+          "alias": "CTY",
+          "colour": "#0057B8"
+        },
+        "name": "Harvest Cup quarter-final",
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": true,
+          "goalTypes": true,
+          "penalties": true,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "played",
+        "kickoff": "2026-10-28T23:00:00.000Z",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000004",
+        "id": "00000007-0000-4000-8000-000000000011",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 1
+        },
+        "device": "garmin:006-B4315-00",
+        "events": [
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 8,
+            "periodSec": 1320
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2760
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 14,
+            "periodSec": 2650
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2905
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 3,
+            "periodSec": 915
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 4,
+            "periodSec": 960
+          },
+          {
+            "team": "home",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "away",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "home",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": false
+          },
+          {
+            "team": "away",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "home",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "away",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": false
+          },
+          {
+            "team": "home",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "away",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "home",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": true
+          },
+          {
+            "team": "away",
+            "type": "penaltyKick",
+            "when": "penalties",
+            "scored": false
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000011",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2760,
+            "startedAt": "2026-10-28T23:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2905,
+            "startedAt": "2026-10-29T00:02:00.000Z"
+          },
+          {
+            "period": 3,
+            "extraTime": true,
+            "playedSec": 915,
+            "startedAt": "2026-10-29T00:56:00.000Z"
+          },
+          {
+            "period": 4,
+            "extraTime": true,
+            "playedSec": 960,
+            "startedAt": "2026-10-29T01:13:00.000Z"
+          }
+        ],
+        "distanceM": 11980,
+        "penalties": {
+          "away": 3,
+          "home": 4
+        },
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 81.5
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 76.8
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 75.3
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 70.4
+            },
+            {
+              "at": "kickoff",
+              "period": 3,
+              "percent": 69.8
+            },
+            {
+              "at": "end",
+              "period": 3,
+              "percent": 68.3
+            },
+            {
+              "at": "kickoff",
+              "period": 4,
+              "percent": 68.1
+            },
+            {
+              "at": "end",
+              "period": 4,
+              "percent": 66.5
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000003",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 25,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Athletic",
+          "alias": "ATH",
+          "colour": "#FFFFFF"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000003"
+          }
+        ],
+        "home": {
+          "name": "Dynamo",
+          "alias": "DYN",
+          "colour": "#FF7A00"
+        },
+        "name": "Harvest Cup quarter-final",
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": true,
+          "goalTypes": true,
+          "penalties": true,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": true,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "played",
+        "kickoff": "2026-10-28T20:00:00.000Z",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000004",
+        "id": "00000007-0000-4000-8000-000000000012",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 2
+        },
+        "device": "garmin:006-B4315-00",
+        "events": [
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 7,
+            "periodSec": 900
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2760
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 11,
+            "periodSec": 1500
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2880
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 3,
+            "player": 9,
+            "periodSec": 412
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 3,
+            "periodSec": 412
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000012",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2760,
+            "startedAt": "2026-10-28T20:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2880,
+            "startedAt": "2026-10-28T21:02:00.000Z"
+          },
+          {
+            "period": 3,
+            "extraTime": true,
+            "playedSec": 412,
+            "startedAt": "2026-10-28T21:55:00.000Z"
+          }
+        ],
+        "distanceM": 10140,
+        "goldenGoal": true,
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 97
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 92.6
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 91.2
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 86.6
+            },
+            {
+              "at": "kickoff",
+              "period": 3,
+              "percent": 86.2
+            },
+            {
+              "at": "end",
+              "period": 3,
+              "percent": 85.5
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000004",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Strikers U12",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "crew": [],
+        "home": {
+          "name": "Rovers U12",
+          "alias": "ROV",
+          "colour": "#0057B8"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "abandoned",
+        "kickoff": "2026-10-27T16:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000006",
+        "venueId": "00000004-0000-4000-8000-000000000003",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000013",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 0,
+          "home": 1
+        },
+        "device": "garmin:006-B3703-00",
+        "events": [
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 11,
+            "periodSec": 400
+          },
+          {
+            "note": "Lightning seen; 30-minute wait",
+            "type": "suspension",
+            "when": "play",
+            "period": 1,
+            "reason": "lightning",
+            "lengthSec": 1800,
+            "periodSec": 1100
+          },
+          {
+            "note": "Second strike within 10 miles",
+            "type": "suspension",
+            "when": "play",
+            "period": 1,
+            "reason": "lightning",
+            "periodSec": 1500
+          },
+          {
+            "type": "abandonment",
+            "when": "play",
+            "period": 1,
+            "reason": "lightning",
+            "periodSec": 1500
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000013",
+        "outcome": "abandoned",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 1500,
+            "startedAt": "2026-10-27T16:01:00.000Z"
+          }
+        ],
+        "distanceM": 3420,
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 88
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000005",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 35,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Galaxy SC",
+          "alias": "GAL",
+          "colour": "#6A2C91"
+        },
+        "crew": [
+          {
+            "role": "referee",
+            "refereeId": "00000006-0000-4000-8000-000000000003"
+          },
+          {
+            "role": "ar2",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          }
+        ],
+        "home": {
+          "name": "Thunder FC",
+          "alias": "THU",
+          "colour": "#FFD100"
+        },
+        "role": "ar1",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "female",
+        "status": "played",
+        "kickoff": "2026-11-01T18:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000001",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "U14",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000002",
+        "id": "00000007-0000-4000-8000-000000000014",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 2,
+          "home": 0
+        },
+        "device": "applewatch:Watch7,3",
+        "events": [
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 10,
+            "periodSec": 1290
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2130
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 8,
+            "periodSec": 600
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2160
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000014",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2130,
+            "startedAt": "2026-11-01T18:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2160,
+            "startedAt": "2026-11-01T18:47:00.000Z"
+          }
+        ],
+        "distanceM": 4017,
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 96
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 84
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 81
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 69
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000006",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 55,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Thunder FC",
+          "alias": "THU",
+          "colour": "#FFD100"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          }
+        ],
+        "home": {
+          "name": "Galaxy SC",
+          "alias": "GAL",
+          "colour": "#6A2C91"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "female",
+        "status": "played",
+        "kickoff": "2026-10-20T17:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000005",
+        "venueId": "00000004-0000-4000-8000-000000000003",
+        "ageGroup": "U14",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000002",
+        "id": "00000007-0000-4000-8000-000000000015",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 1
+        },
+        "device": "wearos:SM-R870",
+        "events": [
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 7,
+            "periodSec": 1630
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2165
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 10,
+            "periodSec": 840
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2190
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000015",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2165,
+            "startedAt": "2026-10-20T17:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2190,
+            "startedAt": "2026-10-20T17:48:00.000Z"
+          }
+        ],
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 91
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 78
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 75
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 62
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000007",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 70,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Old Boys",
+          "alias": "OBS",
+          "colour": "#000000"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          }
+        ],
+        "home": {
+          "name": "Rangers",
+          "alias": "RAN",
+          "colour": "#0057B8"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": true,
+          "penalties": false,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "played",
+        "kickoff": "2026-10-13T21:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000004",
+        "venueId": "00000004-0000-4000-8000-000000000002",
+        "ageGroup": "O35",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000003",
+        "id": "00000007-0000-4000-8000-000000000016",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 0
+        },
+        "device": "applewatch:Watch7,3",
+        "events": [
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 9,
+            "periodSec": 2210
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2790
+          },
+          {
+            "team": "home",
+            "type": "caution",
+            "when": "play",
+            "period": 2,
+            "offender": {
+              "kind": "player",
+              "number": 6
+            },
+            "periodSec": 1400,
+            "misconduct": {
+              "code": "UB",
+              "scheme": "ussf"
+            }
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2880
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000016",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2790,
+            "startedAt": "2026-10-13T21:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2880,
+            "startedAt": "2026-10-13T22:03:00.000Z"
+          }
+        ],
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 100
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 86
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 82
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 68
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000008",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Rovers U12",
+          "alias": "ROV",
+          "colour": "#0057B8"
+        },
+        "crew": [],
+        "home": {
+          "name": "Cobras U12",
+          "alias": "COB",
+          "colour": "#1B7F3B"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "played",
+        "kickoff": "2026-10-06T16:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000003",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "U12",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000017",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 2
+        },
+        "device": "wearos:SM-R870",
+        "events": [
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 9,
+            "periodSec": 610
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 1810
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 11,
+            "periodSec": 1200
+          },
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 4,
+            "periodSec": 1500
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 1820
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000017",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 1810,
+            "startedAt": "2026-10-06T16:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 1820,
+            "startedAt": "2026-10-06T16:37:00.000Z"
+          }
+        ],
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 88
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 76
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 74
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 63
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000009",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 70,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Old Boys",
+          "alias": "OBS",
+          "colour": "#000000"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          },
+          {
+            "role": "ar2",
+            "refereeId": "00000006-0000-4000-8000-000000000003"
+          }
+        ],
+        "home": {
+          "name": "Athletic",
+          "alias": "ATH",
+          "colour": "#FFFFFF"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": true,
+          "penalties": false,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "played",
+        "kickoff": "2026-09-29T21:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000004",
+        "venueId": "00000004-0000-4000-8000-000000000002",
+        "ageGroup": "O35",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000003",
+        "id": "00000007-0000-4000-8000-000000000018",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 0,
+          "home": 1
+        },
+        "device": "garmin:006-B3703-00",
+        "events": [
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2850
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 10,
+            "periodSec": 2700
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2940
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000018",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2850,
+            "startedAt": "2026-09-29T21:02:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2940,
+            "startedAt": "2026-09-29T22:04:00.000Z"
+          }
+        ],
+        "diagnostics": {
+          "battery": [
+            {
+              "at": "kickoff",
+              "period": 1,
+              "percent": 97
+            },
+            {
+              "at": "end",
+              "period": 1,
+              "percent": 89.7
+            },
+            {
+              "at": "kickoff",
+              "period": 2,
+              "percent": 87.5
+            },
+            {
+              "at": "end",
+              "period": 2,
+              "percent": 80
+            }
+          ]
+        },
+        "id": "00000008-0000-4000-8000-000000000010",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 35,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Strikers U14",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "crew": [
+          {
+            "role": "referee",
+            "refereeId": "00000006-0000-4000-8000-000000000003"
+          }
+        ],
+        "home": {
+          "name": "Thunder FC",
+          "alias": "THU",
+          "colour": "#FFD100"
+        },
+        "role": "ar2",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "female",
+        "status": "played",
+        "kickoff": "2026-09-15T18:30:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000001",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "U14",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000002",
+        "id": "00000007-0000-4000-8000-000000000019",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 0,
+          "home": 1
+        },
+        "device": "garmin:006-B3703-00",
+        "events": [
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 8,
+            "periodSec": 900
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2130
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2145
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000019",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2130,
+            "startedAt": "2026-09-15T18:31:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2145,
+            "startedAt": "2026-09-15T19:18:00.000Z"
+          }
+        ],
+        "id": "00000008-0000-4000-8000-000000000011",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Cobras U12",
+          "alias": "COB",
+          "colour": "#1B7F3B"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          }
+        ],
+        "home": {
+          "name": "Rovers U12",
+          "alias": "ROV",
+          "colour": "#0057B8"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "played",
+        "kickoff": "2026-09-01T16:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000006",
+        "venueId": "00000004-0000-4000-8000-000000000003",
+        "ageGroup": "U12",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000020",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 1,
+          "home": 1
+        },
+        "device": "garmin:006-B3703-00",
+        "events": [
+          {
+            "team": "away",
+            "type": "goal",
+            "when": "play",
+            "period": 1,
+            "player": 9,
+            "periodSec": 1250
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 1800
+          },
+          {
+            "team": "home",
+            "type": "goal",
+            "when": "play",
+            "period": 2,
+            "player": 7,
+            "periodSec": 300
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 1830
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000020",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 1800,
+            "startedAt": "2026-09-01T16:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 1830,
+            "startedAt": "2026-09-01T16:37:00.000Z"
+          }
+        ],
+        "id": "00000008-0000-4000-8000-000000000012",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": true,
+          "amount": 70,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Athletic",
+          "alias": "ATH",
+          "colour": "#FFFFFF"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          },
+          {
+            "role": "ar2",
+            "refereeId": "00000006-0000-4000-8000-000000000002"
+          }
+        ],
+        "home": {
+          "name": "Rangers",
+          "alias": "RAN",
+          "colour": "#0057B8"
+        },
+        "role": "referee",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 900,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": true,
+          "penalties": false,
+          "periodSec": 2700,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": true,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "played",
+        "kickoff": "2026-08-18T21:00:00.000Z",
+        "pitchId": "00000005-0000-4000-8000-000000000004",
+        "venueId": "00000004-0000-4000-8000-000000000002",
+        "ageGroup": "O35",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000003",
+        "id": "00000007-0000-4000-8000-000000000021",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "match-records",
+      "record": {
+        "score": {
+          "away": 0,
+          "home": 0
+        },
+        "device": "garmin:006-B4315-00",
+        "events": [
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 1,
+            "periodSec": 2760
+          },
+          {
+            "type": "periodEnd",
+            "when": "play",
+            "period": 2,
+            "periodSec": 2820
+          }
+        ],
+        "matchId": "00000007-0000-4000-8000-000000000021",
+        "outcome": "completed",
+        "periods": [
+          {
+            "period": 1,
+            "extraTime": false,
+            "playedSec": 2760,
+            "startedAt": "2026-08-18T21:01:00.000Z"
+          },
+          {
+            "period": 2,
+            "extraTime": false,
+            "playedSec": 2820,
+            "startedAt": "2026-08-18T22:02:00.000Z"
+          }
+        ],
+        "id": "00000008-0000-4000-8000-000000000013",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "away": {
+          "name": "Strikers U14",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "crew": [],
+        "home": {
+          "name": "Thunder FC",
+          "alias": "THU",
+          "colour": "#FFD100"
+        },
+        "role": "ar2",
+        "notes": "Away team forfeited.",
+        "format": {
+          "clock": "up",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 600,
+          "teamSize": 11,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 2100,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": false,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "status": "cancelled",
+        "kickoff": "2026-10-20T17:00:00.000Z",
+        "venueId": "00000004-0000-4000-8000-000000000002",
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000002",
+        "id": "00000007-0000-4000-8000-000000000022",
+        "version": 1,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    },
+    {
+      "collection": "matches",
+      "record": {
+        "fee": {
+          "paid": false,
+          "amount": 40,
+          "currency": "USD"
+        },
+        "away": {
+          "name": "Rovers U12",
+          "alias": "ROV",
+          "colour": "#0057B8"
+        },
+        "crew": [
+          {
+            "role": "ar1",
+            "refereeId": "00000006-0000-4000-8000-000000000001"
+          },
+          {
+            "name": "Club linesman",
+            "role": "ar2"
+          }
+        ],
+        "home": {
+          "name": "Strikers U12",
+          "alias": "STR",
+          "colour": "#D71920"
+        },
+        "role": "referee",
+        "tags": [
+          "league"
+        ],
+        "notes": "Moved to the far pitch.",
+        "format": {
+          "clock": "down",
+          "periods": 2,
+          "sinBins": false,
+          "breakSec": 300,
+          "teamSize": 9,
+          "extraTime": false,
+          "goalTypes": false,
+          "penalties": false,
+          "periodSec": 1800,
+          "sinBinSec": 600,
+          "goldenGoal": false,
+          "goalScorers": true,
+          "halfwayBreak": true,
+          "breakStoppage": true,
+          "stoppingClock": false,
+          "trackStoppage": false,
+          "halfwayBreakSec": 120,
+          "extraTimePeriods": 2,
+          "stopForGoalsCards": true,
+          "extraTimePeriodSec": 900
+        },
+        "gender": "male",
+        "status": "scheduled",
+        "kickoff": "2026-11-11T17:00:00.000Z",
+        "outlook": "Top of the table; last meeting was 4-3.",
+        "pitchId": "00000005-0000-4000-8000-000000000002",
+        "venueId": "00000004-0000-4000-8000-000000000001",
+        "ageGroup": "U12",
+        "assignor": "Dana Whitfield",
+        "external": {
+          "id": "BYL-2026-1142",
+          "source": "csv"
+        },
+        "timeZone": "America/Los_Angeles",
+        "competitionId": "00000003-0000-4000-8000-000000000001",
+        "id": "00000007-0000-4000-8000-000000000001",
+        "version": 2,
+        "updatedAt": "2026-11-09T16:00:00.000Z"
+      }
+    }
+  ],
+  "cursor": 54,
+  "more": false
+}

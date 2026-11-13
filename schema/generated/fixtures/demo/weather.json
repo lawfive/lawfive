@@ -1,0 +1,443 @@
+{
+  "items": [
+    {
+      "matchId": "00000007-0000-4000-8000-000000000002",
+      "final": false,
+      "condition": "drizzle",
+      "isDay": true,
+      "temperatureC": 18.8,
+      "feelsLikeC": 17.8,
+      "precipitationChance": 0.55,
+      "precipitationMm": 0.3,
+      "precipitationBeforeMm": 21.3,
+      "windGustKph": 18,
+      "hours": [
+        {
+          "time": "2026-11-11T19:00:00.000Z",
+          "condition": "drizzle",
+          "isDay": true,
+          "temperatureC": 18.2,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-11-11T20:00:00.000Z",
+          "condition": "cloudy",
+          "isDay": true,
+          "temperatureC": 18.8,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "risks": [
+        {
+          "kind": "wetField",
+          "level": "possible",
+          "amount": 21.3
+        }
+      ],
+      "updatedAt": "2026-11-09T16:00:00.000Z",
+      "source": "Open-Meteo"
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000003",
+      "final": false,
+      "condition": "clear",
+      "isDay": true,
+      "temperatureC": 33.8,
+      "feelsLikeC": 36.8,
+      "precipitationChance": 0.1,
+      "precipitationMm": 0,
+      "precipitationBeforeMm": 0,
+      "windGustKph": 18,
+      "hours": [
+        {
+          "time": "2026-11-12T22:00:00.000Z",
+          "condition": "clear",
+          "isDay": true,
+          "temperatureC": 33.8,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-11-12T23:00:00.000Z",
+          "condition": "clear",
+          "isDay": true,
+          "temperatureC": 33.2,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "risks": [
+        {
+          "kind": "heat",
+          "level": "possible",
+          "amount": 36.8
+        }
+      ],
+      "updatedAt": "2026-11-09T16:00:00.000Z",
+      "source": "Open-Meteo"
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000004",
+      "final": false,
+      "condition": "partlyCloudy",
+      "isDay": true,
+      "temperatureC": 17.3,
+      "feelsLikeC": 16.3,
+      "precipitationChance": 0.1,
+      "precipitationMm": 0,
+      "precipitationBeforeMm": 0,
+      "windGustKph": 18,
+      "hours": [
+        {
+          "time": "2026-11-17T18:00:00.000Z",
+          "condition": "partlyCloudy",
+          "isDay": true,
+          "temperatureC": 17.3,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-11-17T19:00:00.000Z",
+          "condition": "partlyCloudy",
+          "isDay": true,
+          "temperatureC": 18.2,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "risks": [],
+      "updatedAt": "2026-11-09T16:00:00.000Z",
+      "source": "Open-Meteo"
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000006",
+      "final": false,
+      "condition": "storm",
+      "isDay": true,
+      "temperatureC": 17.3,
+      "feelsLikeC": 16.3,
+      "precipitationChance": 0.8,
+      "precipitationMm": 12,
+      "precipitationBeforeMm": 4,
+      "windGustKph": 55,
+      "hours": [
+        {
+          "time": "2026-11-18T18:00:00.000Z",
+          "condition": "storm",
+          "isDay": true,
+          "temperatureC": 17.3,
+          "precipitationMm": 4,
+          "precipitationChance": 0.8
+        },
+        {
+          "time": "2026-11-18T19:00:00.000Z",
+          "condition": "storm",
+          "isDay": true,
+          "temperatureC": 18.2,
+          "precipitationMm": 4,
+          "precipitationChance": 0.8
+        }
+      ],
+      "risks": [
+        {
+          "kind": "storm",
+          "level": "likely"
+        },
+        {
+          "kind": "rain",
+          "level": "likely",
+          "amount": 12
+        }
+      ],
+      "updatedAt": "2026-11-09T16:00:00.000Z",
+      "source": "Open-Meteo"
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-11-04T17:00:00.000Z",
+          "isDay": true,
+          "condition": "clear",
+          "temperatureC": 20,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-11-04T18:00:00.000Z",
+          "isDay": true,
+          "condition": "clear",
+          "temperatureC": 21.3,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "isDay": true,
+      "risks": [],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000009",
+      "condition": "clear",
+      "updatedAt": "2026-11-04T17:00:00.000Z",
+      "feelsLikeC": 19,
+      "windGustKph": 18,
+      "temperatureC": 20,
+      "precipitationMm": 0,
+      "precipitationChance": 0.1,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-10-28T23:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 17.3,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-10-29T00:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 16,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "isDay": true,
+      "risks": [],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000011",
+      "condition": "partlyCloudy",
+      "updatedAt": "2026-10-28T23:00:00.000Z",
+      "feelsLikeC": 16.3,
+      "windGustKph": 18,
+      "temperatureC": 17.3,
+      "precipitationMm": 0,
+      "precipitationChance": 0.1,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-10-28T20:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 19,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-10-28T21:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 18.8,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "isDay": true,
+      "risks": [],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000012",
+      "condition": "partlyCloudy",
+      "updatedAt": "2026-10-28T20:00:00.000Z",
+      "feelsLikeC": 18,
+      "windGustKph": 18,
+      "temperatureC": 19,
+      "precipitationMm": 0,
+      "precipitationChance": 0.1,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-10-27T16:00:00.000Z",
+          "isDay": true,
+          "condition": "storm",
+          "temperatureC": 16,
+          "precipitationMm": 4,
+          "precipitationChance": 0.8
+        },
+        {
+          "time": "2026-10-27T17:00:00.000Z",
+          "isDay": true,
+          "condition": "storm",
+          "temperatureC": 17.3,
+          "precipitationMm": 4,
+          "precipitationChance": 0.8
+        }
+      ],
+      "isDay": true,
+      "risks": [
+        {
+          "kind": "storm",
+          "level": "likely"
+        },
+        {
+          "kind": "rain",
+          "level": "likely",
+          "amount": 12
+        }
+      ],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000013",
+      "condition": "storm",
+      "updatedAt": "2026-10-27T16:00:00.000Z",
+      "feelsLikeC": 15,
+      "windGustKph": 55,
+      "temperatureC": 16,
+      "precipitationMm": 12,
+      "precipitationChance": 0.8,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-11-01T18:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 17.3,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-11-01T19:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 18.2,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "isDay": true,
+      "risks": [],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000014",
+      "condition": "partlyCloudy",
+      "updatedAt": "2026-11-01T18:00:00.000Z",
+      "feelsLikeC": 16.3,
+      "windGustKph": 18,
+      "temperatureC": 17.3,
+      "precipitationMm": 0,
+      "precipitationChance": 0.1,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-10-20T17:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 17.3,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-10-20T18:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 18.2,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "isDay": true,
+      "risks": [],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000015",
+      "condition": "partlyCloudy",
+      "updatedAt": "2026-10-20T17:00:00.000Z",
+      "feelsLikeC": 16.3,
+      "windGustKph": 18,
+      "temperatureC": 17.3,
+      "precipitationMm": 0,
+      "precipitationChance": 0.1,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "final": true,
+      "hours": [
+        {
+          "time": "2026-10-13T21:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 18.8,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        },
+        {
+          "time": "2026-10-13T22:00:00.000Z",
+          "isDay": true,
+          "condition": "partlyCloudy",
+          "temperatureC": 18.2,
+          "precipitationMm": 0,
+          "precipitationChance": 0.1
+        }
+      ],
+      "isDay": true,
+      "risks": [],
+      "source": "Open-Meteo",
+      "matchId": "00000007-0000-4000-8000-000000000016",
+      "condition": "partlyCloudy",
+      "updatedAt": "2026-10-13T21:00:00.000Z",
+      "feelsLikeC": 17.8,
+      "windGustKph": 18,
+      "temperatureC": 18.8,
+      "precipitationMm": 0,
+      "precipitationChance": 0.1,
+      "precipitationBeforeMm": 0
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000001",
+      "final": false,
+      "condition": "rain",
+      "isDay": true,
+      "temperatureC": 16,
+      "feelsLikeC": 15,
+      "precipitationChance": 0.75,
+      "precipitationMm": 2.7,
+      "precipitationBeforeMm": 18.9,
+      "windGustKph": 18,
+      "hours": [
+        {
+          "time": "2026-11-11T17:00:00.000Z",
+          "condition": "rain",
+          "isDay": true,
+          "temperatureC": 16,
+          "precipitationMm": 1.2,
+          "precipitationChance": 0.75
+        },
+        {
+          "time": "2026-11-11T18:00:00.000Z",
+          "condition": "rain",
+          "isDay": true,
+          "temperatureC": 17.3,
+          "precipitationMm": 0.3,
+          "precipitationChance": 0.55
+        }
+      ],
+      "risks": [
+        {
+          "kind": "wetField",
+          "level": "possible",
+          "amount": 18.9
+        },
+        {
+          "kind": "rain",
+          "level": "possible",
+          "amount": 2.7
+        }
+      ],
+      "updatedAt": "2026-11-09T16:00:00.000Z",
+      "source": "Open-Meteo"
+    }
+  ]
+}

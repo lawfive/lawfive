@@ -1,0 +1,5 @@
+<!-- UI-25: the running screen's time of day, smaller than the watch's own smallest font. Sized for
+     416 x 416 here and for other screens in resources-* (tools/fonts/README.md). -->
+<fonts>
+    <font id="TimeOfDay" filename="time.fnt" antialias="true" filter="0123456789: APM" />
+</fonts>

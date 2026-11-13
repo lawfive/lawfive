@@ -1,0 +1,13 @@
+{
+  "$id": "SpeedBand.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "walking",
+    "jogging",
+    "running",
+    "highSpeed",
+    "sprinting"
+  ],
+  "description": "With the default sprint speed: walking under 7 km/h; jogging 7–13; running 13–18; highSpeed 18–21; sprinting 21 and over. A user's own sprint speed scales them all (TRK-11)."
+}

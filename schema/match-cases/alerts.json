@@ -1,0 +1,832 @@
+{
+    "$comment": "WCH-2: full time, the added time alert and the screen kept on (VIB-1, VIB-7, UI-12). Without stoppage tracked full time repeats until a button (VIB-6); with it and stoppage time when the period's length is reached, full time vibrates once, with nothing to answer, and the added time alert repeats until a button; with it but no stoppage time then, full time repeats until a button, as no added time alert follows, and stands for that alert for the period.",
+    "match": [
+        {
+            "name": "without stoppage tracked, full time fires, repeats until acknowledged, then stays quiet",
+            "ids": [
+                "VIB-1",
+                "VIB-6",
+                "UI-12"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "44:29",
+                    "expect": {
+                        "screenOn": false
+                    }
+                },
+                {
+                    "at": "44:30",
+                    "expect": {
+                        "screenOn": true
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:05",
+                    "expect": {
+                        "alert": null,
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:10",
+                    "expect": {
+                        "alert": "fullTime"
+                    }
+                },
+                {
+                    "at": "45:11",
+                    "do": "acknowledge",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:20",
+                    "expect": {
+                        "alert": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with stoppage tracked, full time vibrates once and waits for nothing, so a press is free to start a stoppage; the added time alert still repeats until a button",
+            "ids": [
+                "VIB-1",
+                "VIB-6",
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "11:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "44:59",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:05",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:10",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:20",
+                    "do": [
+                        "acknowledge",
+                        "stoppage"
+                    ],
+                    "expect": {
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "45:40",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageRunning": false,
+                        "stoppageMs": 80000
+                    }
+                },
+                {
+                    "at": "46:19",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:20",
+                    "expect": {
+                        "alert": "addedTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "46:25",
+                    "expect": {
+                        "alert": null,
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "46:30",
+                    "expect": {
+                        "alert": "addedTime"
+                    }
+                },
+                {
+                    "at": "46:31",
+                    "do": "acknowledge",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:45",
+                    "expect": {
+                        "alert": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with stoppage tracked but no stoppage time at the length, full time repeats until a button, and that press only silences it",
+            "ids": [
+                "VIB-1",
+                "VIB-6",
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "44:59",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:05",
+                    "expect": {
+                        "alert": null,
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:10",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:11",
+                    "do": "acknowledge",
+                    "expect": {
+                        "alerting": false,
+                        "stoppageRunning": false
+                    }
+                },
+                {
+                    "at": "45:20",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "47:00",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with no stoppage time at the length, a stoppage started after full time is silenced brings no added time alert, as full time stood for it",
+            "ids": [
+                "VIB-1",
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:05",
+                    "do": "acknowledge",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:30",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "45:31",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageRunning": false,
+                        "stoppageMs": 30000
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "47:00",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with no stoppage time at the length, added time put on after full time (Adjust added time) brings the added time alert when it's used up",
+            "ids": [
+                "VIB-1",
+                "VIB-7",
+                "TMR-14"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:05",
+                    "do": "acknowledge",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:30",
+                    "do": {
+                        "adjustAdded": 60
+                    },
+                    "expect": {
+                        "stoppageMs": 60000,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:59",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "expect": {
+                        "alert": "addedTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "46:01",
+                    "do": "acknowledge",
+                    "expect": {
+                        "alerting": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a stoppage running as the length is reached is stoppage time: full time vibrates once",
+            "ids": [
+                "VIB-1",
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "44:30",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": false,
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "45:10",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:30",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageMs": 60000
+                    }
+                },
+                {
+                    "at": "45:59",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "expect": {
+                        "alert": "addedTime",
+                        "alerting": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with no stoppage time at the length, a clock put back before it decides again when the length comes: one vibration once there's stoppage time",
+            "ids": [
+                "VIB-1",
+                "VIB-7",
+                "TMR-14"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:05",
+                    "do": "acknowledge"
+                },
+                {
+                    "at": "45:10",
+                    "do": {
+                        "adjustClock": -60
+                    },
+                    "expect": {
+                        "clock": "44:10",
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:20",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "45:40",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageMs": 20000
+                    }
+                },
+                {
+                    "at": "45:59",
+                    "expect": {
+                        "alert": null
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:19",
+                    "expect": {
+                        "alert": null,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:20",
+                    "expect": {
+                        "alert": "addedTime",
+                        "alerting": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with stoppage tracked, a clock put back before the length gives the one vibration again when it's reached",
+            "ids": [
+                "VIB-1",
+                "TMR-14"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "11:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:30",
+                    "do": {
+                        "adjustClock": -60
+                    },
+                    "expect": {
+                        "clock": "44:30",
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "45:59",
+                    "expect": {
+                        "alert": null
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "46:10",
+                    "expect": {
+                        "alert": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the added time alert, later for a stoppage in added time, once a period",
+            "ids": [
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "12:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime"
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": "acknowledge"
+                },
+                {
+                    "at": "46:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "46:30",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "46:59",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "47:15",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "47:30",
+                    "expect": {
+                        "alert": "addedTime"
+                    }
+                },
+                {
+                    "at": "47:30",
+                    "do": "acknowledge"
+                },
+                {
+                    "at": "48:30",
+                    "expect": {
+                        "alerting": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "no stoppage, no added time alert: full time repeats instead (VIB-1)",
+            "ids": [
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "expect": {
+                        "alert": "fullTime",
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": "acknowledge"
+                },
+                {
+                    "at": "50:00",
+                    "expect": {
+                        "alerting": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the added time alert switched off",
+            "ids": [
+                "VIB-7"
+            ],
+            "format": {
+                "trackStoppage": true,
+                "vibeAdded": false
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "11:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "45:00",
+                    "do": "acknowledge"
+                },
+                {
+                    "at": "47:00",
+                    "expect": {
+                        "alerting": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the screen stays on while the break is due and from 30 seconds before time is up",
+            "ids": [
+                "UI-12"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": {
+                        "kickoff": "home"
+                    },
+                    "expect": {
+                        "screenOn": false
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start"
+                },
+                {
+                    "at": "10:00",
+                    "expect": {
+                        "screenOn": false
+                    }
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:31",
+                    "expect": {
+                        "screenOn": true
+                    }
+                },
+                {
+                    "at": "21:31",
+                    "do": "skipBreak"
+                },
+                {
+                    "at": "21:32",
+                    "expect": {
+                        "screenOn": false
+                    }
+                },
+                {
+                    "at": "44:29",
+                    "expect": {
+                        "screenOn": false
+                    }
+                },
+                {
+                    "at": "44:30",
+                    "expect": {
+                        "screenOn": true
+                    }
+                },
+                {
+                    "at": "48:00",
+                    "expect": {
+                        "screenOn": true
+                    }
+                },
+                {
+                    "at": "48:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "48:01",
+                    "expect": {
+                        "screenOn": false
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "1eccc1f4-1cf4-5810-ad08-6356d442033e",
+  "version": 1,
+  "updatedAt": "2026-10-26T18:00:00Z",
+  "name": "U12 league: 2×30",
+  "format": {
+    "periods": 2,
+    "periodSec": 1800,
+    "breakSec": 300,
+    "halfwayBreak": true,
+    "halfwayBreakSec": 120,
+    "teamSize": 9,
+    "clock": "down",
+    "trackStoppage": false,
+    "goalTypes": false,
+    "extraTime": false,
+    "extraTimePeriods": 2,
+    "extraTimePeriodSec": 600,
+    "penalties": false
+  },
+  "defaults": {
+    "fee": {
+      "amount": 40,
+      "currency": "USD",
+      "paid": false
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$id": "SharedMatch.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "match": {
+      "description": "Only what a public page shows: without its notes, outlook, fee, crew, tags, match number, assignor or the ids of its venue, pitch, competition and template.",
+      "$ref": "Match.json"
+    },
+    "record": {
+      "description": "Its match report, when it's been played, without notes on events or team officials' names.",
+      "$ref": "MatchRecord.json"
+    },
+    "competition": {
+      "description": "The competition's name.",
+      "type": "string"
+    },
+    "venue": {
+      "description": "The venue's name.",
+      "type": "string"
+    },
+    "pitch": {
+      "description": "The pitch's name.",
+      "type": "string"
+    },
+    "distanceUnit": {
+      "description": "The sharer's, for the figures.",
+      "$ref": "DistanceUnit.json"
+    },
+    "track": {
+      "type": "boolean",
+      "description": "Whether GET /v1/shared/{token}/track has a track."
+    }
+  },
+  "required": [
+    "match",
+    "distanceUnit",
+    "track"
+  ],
+  "additionalProperties": false,
+  "description": "What a match's share link shows (DATA-7): never its notes, fee, crew, contacts, player names or photos."
+}

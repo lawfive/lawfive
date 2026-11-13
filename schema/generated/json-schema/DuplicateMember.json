@@ -1,0 +1,56 @@
+{
+  "$id": "DuplicateMember.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Its other names (DUP-6, DUP-9)."
+    },
+    "address": {
+      "description": "A venue's.",
+      "type": "string"
+    },
+    "pitches": {
+      "description": "A venue's number of pitches.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "email": {
+      "description": "A referee's.",
+      "type": "string"
+    },
+    "phone": {
+      "description": "A referee's.",
+      "type": "string"
+    },
+    "matches": {
+      "$ref": "MatchCount.json"
+    },
+    "reasons": {
+      "description": "Why it's likely the same as the one asked about (\"Same address\", \"Same name, in a different order\"), surest first; for the likeliest only.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "aliases",
+    "matches"
+  ],
+  "additionalProperties": false,
+  "description": "A venue or referee as the duplicate finder and merge preview show it (DUP-2, DUP-7)."
+}

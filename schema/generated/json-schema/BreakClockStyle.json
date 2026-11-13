@@ -1,0 +1,10 @@
+{
+  "$id": "BreakClockStyle.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "down",
+    "up"
+  ],
+  "description": "How the break clock counts (TMR-4): down is the time left, up the time taken."
+}

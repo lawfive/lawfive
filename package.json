@@ -1,0 +1,10 @@
+{
+  "name": "lawfive",
+  "private": true,
+  "packageManager": "pnpm@12.11.2",
+  "scripts": {
+    "test": "pnpm -r test && node tools/check-links.mjs",
+    "test:watches": "bash tools/test-watches.sh",
+    "test:links": "node tools/check-links.mjs"
+  }
+}

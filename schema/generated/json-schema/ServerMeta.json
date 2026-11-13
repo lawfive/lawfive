@@ -1,0 +1,155 @@
+{
+  "$id": "ServerMeta.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "product": {
+      "type": "string",
+      "const": "LawFive"
+    },
+    "apiUrl": {
+      "description": "The address apps should use for the API, which may differ from the one they came through (APP-13).",
+      "type": "string"
+    },
+    "apiVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Raised when the API changes in a way older apps can't follow."
+    },
+    "openApiUrl": {
+      "description": "Where this server describes its own API as OpenAPI (AGT-3); missing on servers from before it.",
+      "type": "string"
+    },
+    "version": {
+      "description": "The server's version (VER-1): the day of its last change, \"2026.10.30\" (\"2026.10.30.2\" for a second change that day), or \"dev\" when run from a checkout without git. Missing on servers from before it.",
+      "type": "string"
+    },
+    "commit": {
+      "description": "The commit it was built from, \"f5de635\".",
+      "type": "string"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What this server offers: accounts, records, changes, tracks and stats (missing on servers from before them), devices, link, watch, people, invites, calendar and import, then email, geocode, push, notices (with push, from servers that tell phones what integrations did, NOTE-1) and weather when they're switched on; merging, from servers that find duplicates and preview merges for the apps (DUP-11); plans, from servers with plans and the account's time zone (PLAN-6, PLAN-9); assignor-calendars, from servers that read assignors' calendar links (FEED-1). Ignore names you don't know."
+    },
+    "maps": {
+      "type": "object",
+      "properties": {
+        "style": {
+          "description": "A vector map, which apps that can draw one use instead of tileUrl (OpenFreeMap's by default).",
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "A MapLibre style for the map (vector tiles)."
+            },
+            "darkUrl": {
+              "description": "The style to use in dark mode, when there is one.",
+              "type": "string"
+            },
+            "attribution": {
+              "type": "string",
+              "description": "The credit the map provider asks for, as HTML."
+            }
+          },
+          "required": [
+            "url",
+            "attribution"
+          ],
+          "additionalProperties": false
+        },
+        "tileUrl": {
+          "type": "string",
+          "description": "Map tiles (raster images), with {z}, {x} and {y} in the URL: the map when there's no style, and for apps that can't draw vector maps."
+        },
+        "attribution": {
+          "type": "string",
+          "description": "The credit the tile provider asks for, as HTML."
+        },
+        "satellite": {
+          "description": "Satellite imagery, when the server has a provider.",
+          "type": "object",
+          "properties": {
+            "tileUrl": {
+              "type": "string"
+            },
+            "attribution": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "tileUrl",
+            "attribution"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "tileUrl",
+        "attribution"
+      ],
+      "additionalProperties": false
+    },
+    "geocoder": {
+      "description": "The address search service behind GET /v1/geocode, to credit it.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    },
+    "weather": {
+      "description": "Whose weather data GET /v1/weather uses, to credit it.",
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "firstAccount": {
+      "description": "Nobody has an account on this server yet (USR-8): the first one can be made whatever signUp says, with the setup code when setupCodeNeeded, and it's the server's admin.",
+      "type": "boolean",
+      "const": true
+    },
+    "setupCodeNeeded": {
+      "description": "The first account needs the code in the server's logs (ADM-5).",
+      "type": "boolean",
+      "const": true
+    },
+    "setupPending": {
+      "description": "The first account hasn't finished setting the server up (ADM-5).",
+      "type": "boolean",
+      "const": true
+    },
+    "publicUrl": {
+      "description": "The server's own address (PUBLIC_URL), for the website to say if it isn't HTTPS (ADM-5, ADM-6).",
+      "type": "string"
+    },
+    "signUp": {
+      "description": "Who can make an account (USR-2); missing on servers from before it, which were open or closed.",
+      "$ref": "SignUpMode.json"
+    }
+  },
+  "required": [
+    "product",
+    "apiVersion",
+    "capabilities",
+    "maps"
+  ],
+  "additionalProperties": false,
+  "description": "What this server is and offers, so apps can adapt to older or self-hosted servers."
+}

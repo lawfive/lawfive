@@ -1,0 +1,25 @@
+{
+  "$id": "SignUpTrial.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "plan": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z0-9-]+$",
+      "description": "A plan's short handle, unique on the server, to look it up by (PLAN-1): free, pro, friends-family."
+    },
+    "days": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 366
+    }
+  },
+  "required": [
+    "plan",
+    "days"
+  ],
+  "additionalProperties": false,
+  "description": "New accounts start in this plan for these days, then go to the default (PLAN-5)."
+}

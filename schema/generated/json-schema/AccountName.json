@@ -1,0 +1,8 @@
+{
+  "$id": "AccountName.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "minLength": 1,
+  "maxLength": 100,
+  "description": "An account's name (USR-10): 1 to 100 characters, spaces at either end trimmed."
+}

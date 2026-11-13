@@ -1,0 +1,35 @@
+{
+  "$id": "NewApiKey.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "scopes": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "ApiKeyScope.json"
+      },
+      "description": "At least one."
+    },
+    "expiresInDays": {
+      "description": "Leave out for a key that doesn't expire.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3650
+    },
+    "notify": {
+      "description": "Tell the user's phones when this key adds or changes matches (NOTE-1); off when left out.",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "scopes"
+  ],
+  "additionalProperties": false
+}

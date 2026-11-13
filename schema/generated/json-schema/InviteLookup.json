@@ -1,0 +1,26 @@
+{
+  "$id": "InviteLookup.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "email": {
+      "description": "The address it's for; the sign-up form uses it and doesn't let it be changed.",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "invitedBy": {
+      "type": "string"
+    },
+    "expiresAt": {
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "invitedBy",
+    "expiresAt"
+  ],
+  "additionalProperties": false,
+  "description": "What the invitation page shows before someone signs up with it."
+}

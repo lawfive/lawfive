@@ -1,0 +1,70 @@
+{
+  "$id": "RecordedResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "abandoned"
+      ]
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "home": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "away": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "home",
+        "away"
+      ],
+      "additionalProperties": false
+    },
+    "penalties": {
+      "type": "object",
+      "properties": {
+        "home": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "away": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "home",
+        "away"
+      ],
+      "additionalProperties": false
+    },
+    "goldenGoal": {
+      "type": "boolean"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "Event.json"
+      }
+    }
+  },
+  "required": [
+    "outcome",
+    "score",
+    "events"
+  ],
+  "additionalProperties": false,
+  "description": "A match's result as the watch recorded it, before any correction (RES-3)."
+}

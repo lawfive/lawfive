@@ -1,0 +1,49 @@
+---
+title: Run LawFive yourself
+description: Self-host a LawFive server, connect the apps and watches, use the API, and build it from source.
+template: splash
+editUrl: false
+hero:
+  title: Run LawFive yourself
+  tagline: The referee's record of their matches, on a server you control. Everything you need to host it, connect to it and build on it.
+  actions:
+    - text: Install a server
+      link: /run/install/
+      icon: right-arrow
+    - text: Use the API
+      link: /api/overview/
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+## A server in three commands
+
+You need Docker. Everything else is set up in the browser.
+
+```sh
+cp .env.example .env         # then set AUTH_SECRET (openssl rand -base64 32)
+docker compose up -d         # the server on port 3000, with Postgres beside it
+docker compose logs server   # the setup code that the first visit asks for
+```
+
+Watches and phones need HTTPS, so a public server also needs [a certificate in front of it](/run/https/). The full walk-through is [Install a server](/run/install/).
+
+## Where to go
+
+<CardGrid>
+  <Card title="Run a server" icon="server">
+    [Install it](/run/install/), [set up HTTPS](/run/https/), choose [who can join](/run/people/), and keep it [backed up](/run/backups/) and [up to date](/run/upgrades/).
+  </Card>
+  <Card title="Connect apps and watches" icon="watch">
+    Point [the phone apps](/apps/phones/) and [the watches](/apps/watches/) at your own server.
+  </Card>
+  <Card title="Use the API" icon="plug">
+    [API keys](/api/keys/), [webhooks](/api/webhooks/), [incremental sync](/api/sync/) and the full [reference](/api/reference/).
+  </Card>
+  <Card title="Contribute" icon="code">
+    [How it fits together](/contribute/architecture/), and building [the server and web app](/contribute/server-web/), [the Garmin app](/contribute/garmin/), [Android and Wear OS](/contribute/android/), and [iPhone and Apple Watch](/contribute/iphone/).
+  </Card>
+</CardGrid>
+
+Looking for the app itself? That's at [lawfive.app](https://lawfive.app).

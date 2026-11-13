@@ -1,0 +1,23 @@
+{
+  "$id": "AppSignInCheck.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "expiresAt": {
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "expiresAt"
+  ],
+  "additionalProperties": false,
+  "description": "Whose the code is, so the phone can ask before signing in."
+}

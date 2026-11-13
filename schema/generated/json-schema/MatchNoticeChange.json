@@ -1,0 +1,15 @@
+{
+  "$id": "MatchNoticeChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "added",
+    "canceled",
+    "postponed",
+    "backOn",
+    "kickoff",
+    "venue",
+    "removed"
+  ],
+  "description": "added: a new match; canceled, postponed; backOn: scheduled again after being canceled or postponed; kickoff: moved to another time; venue: moved to another venue; removed: deleted."
+}

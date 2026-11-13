@@ -1,0 +1,174 @@
+{
+    "$comment": "WCH-2: choosing and changing who kicks off (PRE-3, PRE-6), and restarting (PRE-6).",
+    "match": [
+        {
+            "name": "clearing the kickoff goes back to choosing, and the other team kicks off the second half",
+            "ids": [
+                "PRE-3",
+                "PRE-6"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": {
+                        "kickoff": "home"
+                    },
+                    "expect": {
+                        "phase": "ready",
+                        "kickoffOnScreen": "home"
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "clearKickoff",
+                    "expect": {
+                        "phase": "pre",
+                        "kickoff": null
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "away"
+                        },
+                        "start",
+                        "swapKickoff"
+                    ],
+                    "expect": {
+                        "kickoff": "home"
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ],
+                    "expect": {
+                        "phase": "nextKickoff",
+                        "kickoffOnScreen": "away"
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": {
+                        "kickoff": "home"
+                    },
+                    "expect": {
+                        "kickoffOnScreen": "home"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "restarting goes back to the kickoff, keeping cards from before it",
+            "ids": [
+                "PRE-6"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "event": "R",
+                            "team": "home",
+                            "player": 3
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "1:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home"
+                    },
+                    "expect": {
+                        "score": [
+                            1,
+                            0
+                        ]
+                    }
+                },
+                {
+                    "at": "1:30",
+                    "do": "restart",
+                    "expect": {
+                        "phase": "ready",
+                        "score": [
+                            0,
+                            0
+                        ],
+                        "events": 1,
+                        "last": {
+                            "type": "R",
+                            "seconds": -1
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "End HT shows the next kickoff, which can be changed; the half can't start before it",
+            "ids": [
+                "PRE-6",
+                "TMR-1"
+            ],
+            "format": {
+                "halftimeSec": 600
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "46:01",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "phase": "break"
+                    }
+                },
+                {
+                    "at": "46:02",
+                    "do": "endHalftime",
+                    "expect": {
+                        "phase": "nextKickoff",
+                        "kickoffOnScreen": "away",
+                        "breakLeftMs": null
+                    }
+                },
+                {
+                    "at": "46:02",
+                    "do": {
+                        "kickoff": "home"
+                    },
+                    "expect": {
+                        "kickoffOnScreen": "home"
+                    }
+                },
+                {
+                    "at": "56:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "phase": "running",
+                        "period": 1
+                    }
+                }
+            ]
+        }
+    ]
+}

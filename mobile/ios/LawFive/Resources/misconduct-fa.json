@@ -1,0 +1,24 @@
+{
+  "id": "fa",
+  "name": "England",
+  "source": "The FA's numbered misconduct codes; checked against halfline.app/codes on 2026-10-26.",
+  "cautions": [
+    { "code": "C1", "description": "Unsporting behaviour", "short": "Unsporting behavior" },
+    { "code": "C2", "description": "Dissent by word or action", "short": "Dissent" },
+    { "code": "C3", "description": "Persistent infringement", "short": "Persistent fouling" },
+    { "code": "C4", "description": "Delaying the restart of play", "short": "Delaying restart" },
+    { "code": "C5", "description": "Failure to respect the required distance at a restart", "short": "Distance at restart" },
+    { "code": "C6", "description": "Entering or re-entering the field of play without permission", "short": "Entered field" },
+    { "code": "C7", "description": "Deliberately leaving the field of play without permission", "short": "Left field" }
+  ],
+  "sendOffs": [
+    { "code": "S1", "description": "Serious foul play", "short": "Serious foul play" },
+    { "code": "S2", "description": "Violent conduct", "short": "Violent conduct" },
+    { "code": "S3", "description": "Spitting at an opponent or any other person", "short": "Spitting" },
+    { "code": "S4", "description": "Denying a goal or an obvious goal-scoring opportunity by a deliberate handball", "short": "DOGSO by handball" },
+    { "code": "S5", "description": "Denying an obvious goal-scoring opportunity by an offense punishable by a free kick or penalty", "short": "DOGSO by foul" },
+    { "code": "S6", "description": "Offensive, insulting or abusive language or gestures", "short": "Abusive language" },
+    { "code": "S7", "description": "Second caution in the same match", "short": "Second caution" }
+  ],
+  "secondCaution": "S7"
+}

@@ -1,0 +1,195 @@
+{
+    "$comment": "WCH-2: the clock that stops (TMR-15), for US high school (NFHS) and college (NCAA) games: the match clock stands still while a stoppage runs (Start/Stop starts and ends it, with the reminders), shown in orange, with no stoppage pill, no added time and no added time alert. Stoppage tracking goes with it, so it's on whatever the format says. Recording a goal or card stops it (on unless stopForGoalsCards is false), an injury does as ever (EVT-16), and the halfway break does whatever break as stoppage says. The period's clock holds at its length, where full time repeats until a press; events record the clock's time, a stoppage (S) the clock's time it began at and how long it stood still. Sin bins count the clock's time, so they hold while it stands still.",
+    "match": [
+        {
+            "name": "it stands still while a stoppage runs and goes on from there, with the reminders, no stoppage pill and no added time; full time repeats at the length",
+            "ids": ["TMR-15", "INP-4", "VIB-2", "VIB-1", "VIB-6", "TMR-2"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"], "expect": { "clockStopped": false, "stoppageRunning": false } },
+                { "at": "10:00", "do": "stoppage", "expect": { "clock": "10:00", "clockStopped": true, "stoppageRunning": true, "stoppage": null } },
+                { "at": "10:10", "expect": { "clock": "10:00", "alert": "reminder" } },
+                { "at": "11:00", "do": "stoppage", "expect": { "clock": "10:00", "clockStopped": false, "stoppageRunning": false, "stoppageMs": 60000, "events": 1, "last": { "type": "S", "team": null, "seconds": 600, "extra": 60 }, "stoppage": null } },
+                { "at": "12:00", "expect": { "clock": "11:00", "added": null, "stoppage": null } },
+                { "at": "45:59", "expect": { "clock": "44:59", "alert": null } },
+                { "at": "46:00", "expect": { "clock": "45:00", "added": null, "progress": 1, "alert": "fullTime", "alerting": true } },
+                { "at": "46:05", "expect": { "alert": null, "alerting": true } },
+                { "at": "46:10", "expect": { "alert": "fullTime" } },
+                { "at": "46:30", "expect": { "clock": "45:00", "added": null, "stoppage": null } },
+                { "at": "46:31", "do": "acknowledge", "expect": { "alerting": false } },
+                { "at": "47:00", "expect": { "alert": null, "clock": "45:00" } },
+                { "at": "47:00", "do": "endPeriod", "expect": { "phase": "break", "last": { "type": "E", "seconds": 2700 } } }
+            ]
+        },
+        {
+            "name": "a goal or card recorded stops it, one while it's stopped leaves it so, and Start/Stop starts it again at the restart",
+            "ids": ["TMR-15", "EVT-1", "EVT-5", "EVT-15"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "20:00", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "score": [1, 0], "last": { "type": "G", "team": "home", "seconds": 1200, "player": 9 }, "clockStopped": true, "stoppageRunning": true } },
+                { "at": "21:00", "do": "stoppage", "expect": { "clock": "20:00", "clockStopped": false, "last": { "type": "S", "seconds": 1200, "extra": 60 } } },
+                { "at": "30:00", "do": { "event": "Y", "team": "away", "player": 4 }, "expect": { "clock": "29:00", "last": { "type": "Y", "seconds": 1740 }, "clockStopped": true } },
+                { "at": "30:30", "do": { "event": "R", "team": "away", "player": 5 }, "expect": { "clock": "29:00", "last": { "type": "R", "seconds": 1740 }, "clockStopped": true, "events": 4 } },
+                { "at": "31:00", "do": "stoppage", "expect": { "last": { "type": "S", "seconds": 1740, "extra": 60 }, "events": 5 } },
+                { "at": "32:00", "do": { "official": "Y", "team": "home", "role": "headCoach" }, "expect": { "last": { "type": "TY", "team": "home", "seconds": 1800, "extra": 0 }, "clockStopped": true } },
+                { "at": "32:20", "do": "stoppage", "expect": { "last": { "type": "S", "seconds": 1800, "extra": 20 } } },
+                { "at": "33:00", "expect": { "clock": "30:40", "stoppageMs": 140000, "clockStopped": false } }
+            ]
+        },
+        {
+            "name": "with goals and cards set not to stop it, only Start/Stop and an injury do",
+            "ids": ["TMR-15", "EVT-16"],
+            "format": { "stoppingClock": true, "stopForGoalsCards": false },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "G", "team": "home", "player": 10 }, "expect": { "score": [1, 0], "clockStopped": false, "stoppageRunning": false } },
+                { "at": "15:00", "do": { "event": "Y", "team": "away", "player": 3 }, "expect": { "clock": "15:00", "clockStopped": false } },
+                { "at": "20:00", "do": { "event": "I", "team": "home", "player": 7 }, "expect": { "last": { "type": "I", "seconds": 1200, "player": 7 }, "clockStopped": true, "stoppageRunning": true } },
+                { "at": "21:30", "do": "stoppage", "expect": { "clock": "20:00", "last": { "type": "S", "seconds": 1200, "extra": 90 } } },
+                { "at": "22:30", "expect": { "clock": "21:00" } }
+            ]
+        },
+        {
+            "name": "a card before kickoff or at a break has no clock to stop",
+            "ids": ["TMR-15", "EVT-7"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "event": "Y", "team": "home", "player": 5 }, { "kickoff": "home" }, "start"], "expect": { "stoppageRunning": false, "clockStopped": false, "last": { "type": "Y", "seconds": -1 } } },
+                { "at": "45:00", "do": "endPeriod", "expect": { "phase": "break" } },
+                { "at": "50:00", "do": { "event": "Y", "team": "away", "player": 6 }, "expect": { "stoppageRunning": false, "last": { "type": "Y", "seconds": -2 } } },
+                { "at": "60:00", "do": ["endHalftime", "startNextPeriod"], "expect": { "clockStopped": false, "stoppageRunning": false } },
+                { "at": "61:00", "expect": { "clock": "46:00" } }
+            ]
+        },
+        {
+            "name": "the period ends when its clock reaches its length, held there with full time repeating and no added time alert; the next starts its stoppages again",
+            "ids": ["TMR-15", "VIB-1", "VIB-6", "VIB-7", "UI-12", "TMR-3"],
+            "format": { "stoppingClock": true, "periodSec": 2400, "halftimeSec": 600 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage" },
+                { "at": "7:00", "do": "stoppage" },
+                { "at": "41:29", "expect": { "clock": "39:29", "screenOn": false } },
+                { "at": "41:59", "expect": { "clock": "39:59", "alert": null, "screenOn": true } },
+                { "at": "42:00", "expect": { "clock": "40:00", "added": null, "alert": "fullTime", "alerting": true } },
+                { "at": "42:05", "expect": { "alert": null, "alerting": true } },
+                { "at": "42:10", "expect": { "alert": "fullTime" } },
+                { "at": "42:11", "do": "acknowledge", "expect": { "alerting": false } },
+                { "at": "44:30", "expect": { "alert": null, "clock": "40:00", "added": null, "progress": 1 } },
+                { "at": "44:30", "do": "endPeriod", "expect": { "phase": "break", "last": { "type": "E", "seconds": 2400 } } },
+                { "at": "54:30", "do": ["endHalftime", "startNextPeriod"], "expect": { "period": 1, "clock": "40:00", "stoppageMs": 0 } },
+                { "at": "55:30", "expect": { "clock": "41:00" } }
+            ]
+        },
+        {
+            "name": "Time left counts down from the length and holds while it's stopped",
+            "ids": ["TMR-15", "TMR-11"],
+            "format": { "stoppingClock": true, "periodSec": 2400 },
+            "screen": { "mainClock": "down" },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "12:00", "expect": { "clock": "30:00", "clockStopped": true } },
+                { "at": "12:00", "do": "stoppage" },
+                { "at": "13:00", "expect": { "clock": "29:00" } },
+                { "at": "42:00", "expect": { "clock": "0:00", "alert": "fullTime" } }
+            ]
+        },
+        {
+            "name": "no added time to correct: Adjust added time does nothing, Adjust clock still moves it",
+            "ids": ["TMR-15", "TMR-14"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "12:00", "do": "stoppage", "expect": { "stoppage": null, "events": 1 } },
+                { "at": "20:00", "do": { "adjustAdded": 60 }, "expect": { "events": 1, "stoppageMs": 120000, "clock": "18:00" } },
+                { "at": "20:00", "do": { "adjustClock": 30 }, "expect": { "clock": "18:30", "events": 2, "last": { "type": "CK", "seconds": 1110, "extra": 30 } } }
+            ]
+        },
+        {
+            "name": "the halfway break stops it, with no reminders, whatever break as stoppage says",
+            "ids": ["TMR-15", "TMR-7", "TMR-12", "VIB-2", "VIB-3"],
+            "format": { "stoppingClock": true, "midBreak": true, "breakLenSec": 120, "breakStoppage": false },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "21:30", "expect": { "alert": "breakStart", "breakDue": true } },
+                { "at": "21:40", "do": "startBreak", "expect": { "breakLeftMs": 120000, "clockStopped": true, "breakStoppageRunning": true, "clock": "21:40" } },
+                { "at": "22:40", "expect": { "alert": null, "clock": "21:40", "breakLeftMs": 60000 } },
+                { "at": "23:40", "expect": { "alert": "breakEnd", "clockStopped": false, "breakLeftMs": null, "last": { "type": "S", "seconds": 1300, "extra": 120 } } },
+                { "at": "24:40", "expect": { "clock": "22:40" } }
+            ]
+        },
+        {
+            "name": "sin bins count the clock's time, so they hold while it's stopped",
+            "ids": ["TMR-15", "EVT-12", "VIB-8"],
+            "format": { "stoppingClock": true, "sinBins": true, "sinBinSec": 300 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "away", "player": 7 }, "expect": { "last": { "type": "SB", "seconds": 600, "player": 7, "extra": 300 }, "clockStopped": true, "sinBinPill": "AWY 7 5:00" } },
+                { "at": "11:00", "expect": { "sinBinPill": "AWY 7 5:00", "clock": "10:00" } },
+                { "at": "11:00", "do": "stoppage" },
+                { "at": "13:00", "expect": { "sinBinPill": "AWY 7 3:00", "clock": "12:00" } },
+                { "at": "13:00", "do": "stoppage" },
+                { "at": "14:00", "expect": { "sinBinPill": "AWY 7 3:00" } },
+                { "at": "14:00", "do": "stoppage" },
+                { "at": "15:59", "expect": { "sinBinPill": "AWY 7 1:01", "clock": "13:59" } },
+                { "at": "17:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "away", "player": 7 }, "sinBinPill": null, "sinBins": 0, "clock": "15:00" } }
+            ]
+        },
+        {
+            "name": "the app closed and opened again mid-stop: still stopped where it was, and goals and cards still stop it",
+            "ids": ["TMR-15", "TMR-8"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "clockStopped": true } },
+                { "at": "12:00", "do": "reopen", "expect": { "clockStopped": true, "stoppageRunning": true, "clock": "10:00", "score": [1, 0], "events": 1 } },
+                { "at": "13:00", "do": "stoppage", "expect": { "last": { "type": "S", "seconds": 600, "extra": 180 } } },
+                { "at": "14:00", "do": "reopen", "expect": { "clock": "11:00", "clockStopped": false, "stoppageMs": 180000 } },
+                { "at": "14:00", "do": { "event": "Y", "team": "away", "player": 2 }, "expect": { "clockStopped": true, "last": { "type": "Y", "seconds": 660 } } }
+            ]
+        },
+        {
+            "name": "suspended while stopped: the stop carries on after Resume, its length leaving the suspension out",
+            "ids": ["TMR-15", "TMR-13"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "10:30", "do": { "suspend": 1 }, "expect": { "phase": "suspended", "clock": "10:00", "last": { "type": "SU", "seconds": 600, "extra": 1 } } },
+                { "at": "20:30", "do": "resume", "expect": { "phase": "running", "clockStopped": true, "clock": "10:00", "last": { "type": "RS", "seconds": 600, "extra": 600 } } },
+                { "at": "21:00", "do": "stoppage", "expect": { "clockStopped": false, "last": { "type": "S", "seconds": 600, "extra": 60 } } },
+                { "at": "22:00", "expect": { "clock": "11:00" } }
+            ]
+        },
+        {
+            "name": "undo takes back the goal and leaves the clock stopped for Start/Stop",
+            "ids": ["TMR-15", "INP-6"],
+            "format": { "stoppingClock": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "clockStopped": true } },
+                { "at": "10:20", "do": "undo", "expect": { "score": [0, 0], "events": 0, "clockStopped": true } },
+                { "at": "10:40", "do": "stoppage", "expect": { "events": 1, "last": { "type": "S", "seconds": 600, "extra": 40 } } },
+                { "at": "11:40", "expect": { "clock": "11:00" } }
+            ]
+        },
+        {
+            "name": "extra time stops the same way and ends at its length",
+            "ids": ["TMR-15", "ET-2", "SET-16"],
+            "format": { "stoppingClock": true, "numPeriods": 1, "periodSec": 600, "halftimeSec": 60, "extraTime": true, "etPeriods": 1, "etPeriodSec": 300 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "endPeriod", "expect": { "phase": "decide" } },
+                { "at": "10:00", "do": "chooseExtraTime", "expect": { "phase": "break" } },
+                { "at": "11:00", "do": ["endHalftime", { "kickoff": "away" }, "startNextPeriod"], "expect": { "period": 1, "phase": "running", "clock": "10:00" } },
+                { "at": "12:00", "do": { "event": "G", "team": "away", "player": 11 }, "expect": { "clockStopped": true, "last": { "type": "G", "seconds": 60 } } },
+                { "at": "13:00", "do": "stoppage" },
+                { "at": "16:59", "expect": { "clock": "14:59", "alert": null } },
+                { "at": "17:00", "expect": { "clock": "15:00", "added": null, "alert": "fullTime", "alerting": true } }
+            ]
+        }
+    ]
+}

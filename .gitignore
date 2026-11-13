@@ -1,0 +1,71 @@
+# Build output, the simulator test copy and the compiled simulator/device tools (rebuilt by the scripts)
+bin/
+*.prg
+*.prg.debug.xml
+*.iq
+gen/
+internal-mir/
+external-mir/
+
+# Node packages (pnpm workspace)
+node_modules/
+dist/
+
+# Signing keys: never commit (the developer key lives outside the repo)
+google-services.json
+*service-account*.json
+*firebase-adminsdk*.json
+developer_key*
+*.der
+*.pem
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+GoogleService-Info.plist
+
+# Editor and OS files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Local settings with secrets
+.env
+.env.*
+!.env.example
+
+# Uploaded photos from running the server outside Docker (UPLOADS_DIR)
+server/uploads/
+
+# Claude Code's local settings
+.claude/
+
+# Screenshots from `pnpm screenshots` with no folder given
+web/screenshots/
+
+# The Android app's build output and local settings (the SDK's place, a built-in server)
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
+mobile/android/.kotlin/
+mobile/android/keystore/
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcresult
+# The iPhone's snapshot pictures and their build (tools/snapshots.sh)
+mobile/ios/build/
+mobile/android/wear/build/
+
+# lawfive.app's playable parts, built by pnpm build:site in web/ (Cloudflare Pages builds them)
+site/public/play/
+
+# The snapshot sheet (tools/snapshot-sheet.mjs)
+/build/
+
+# The owner's own notes: a separate private repo, never part of this one
+/private/

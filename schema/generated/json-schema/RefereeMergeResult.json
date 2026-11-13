@@ -1,0 +1,29 @@
+{
+  "$id": "RefereeMergeResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "referee": {
+      "description": "The referee they were merged into, as saved.",
+      "$ref": "Referee.json"
+    },
+    "merged": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "How many referees were merged into it (and deleted)."
+    },
+    "matchesUpdated": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Matches whose crew now names it, including crew typed as one of its names."
+    }
+  },
+  "required": [
+    "referee",
+    "merged",
+    "matchesUpdated"
+  ],
+  "additionalProperties": false
+}

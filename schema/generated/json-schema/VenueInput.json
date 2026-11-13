@@ -1,0 +1,69 @@
+{
+  "$id": "VenueInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "aliases": {
+      "description": "Other names it goes by, such as the ones merged into this venue (DUP-7); imports and searches find the venue by them.",
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      }
+    },
+    "address": {
+      "description": "Street address; often where you park.",
+      "type": "string",
+      "maxLength": 300
+    },
+    "position": {
+      "description": "The address's position (parking), for directions.",
+      "$ref": "Position.json"
+    },
+    "pitches": {
+      "type": "array",
+      "items": {
+        "$ref": "Pitch.json"
+      },
+      "description": "Named pitches (\"Field 3\"), each with its own position."
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "tags": {
+      "$ref": "Tags.json"
+    },
+    "distinctFrom": {
+      "description": "Venues the user said aren't the same place, so they aren't suggested as duplicates again (DUP-7).",
+      "maxItems": 500,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      }
+    },
+    "id": {
+      "description": "The id from the URL; can be left out.",
+      "$ref": "Id.json"
+    },
+    "version": {
+      "description": "The version last seen, when updating. Leave it out to create the record.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "name",
+    "pitches"
+  ],
+  "additionalProperties": false,
+  "description": "A Venue as a client sends it to save it: the server sets updatedAt and deletedAt, and version only goes with an update."
+}

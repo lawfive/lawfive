@@ -1,0 +1,53 @@
+{
+  "$id": "WatchEvent.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "prefixItems": [
+    {
+      "type": "string"
+    },
+    {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  ],
+  "items": false,
+  "minItems": 6,
+  "maxItems": 6,
+  "description": "[code, team, period, seconds, player, extra]. code: G goal, GO own goal, GP penalty, GF direct free kick, Y caution, Y2 second caution, R send-off, SB a sin bin, with its length in seconds in extra, SB2 a second sin bin for the same number, which counts as a send-off (EVT-12), TY and TR a team official's caution and send-off, with the role in extra (0 head coach, 1 assistant coach, 2 other), I injury, S stoppage, CK and CA the match clock and the added time corrected during play (TMR-14), with the change in seconds in extra (negative for back), E end of period, A abandoned, with the reason in extra (0 weather, 1 lightning, 2 crowd trouble, 3 not enough players, 4 other), SU play suspended, with the reason in extra as for A (TMR-13), RS play resumed, with the whole seconds suspended in extra, both at the period time where play stopped, PG and PM shoot-out kick scored and missed. team: 0 home, 1 away, -1 neither. period counts from 0. seconds: into the period, or -1 before kickoff, -2 at a break, -3 after full time, -4 in the shoot-out. player: shirt number or null. extra: a stoppage's length in seconds."
+}

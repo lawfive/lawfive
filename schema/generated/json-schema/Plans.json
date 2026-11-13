@@ -1,0 +1,21 @@
+{
+  "$id": "Plans.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "plans": {
+      "type": "array",
+      "items": {
+        "$ref": "Plan.json"
+      },
+      "description": "By name."
+    },
+    "signUpTrial": {
+      "$ref": "SignUpTrial.json"
+    }
+  },
+  "required": [
+    "plans"
+  ],
+  "additionalProperties": false
+}

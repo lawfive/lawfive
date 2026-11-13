@@ -1,0 +1,23 @@
+{
+  "$id": "AppSignInStatus.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "used",
+        "expired"
+      ]
+    },
+    "deviceName": {
+      "description": "The phone that used it, when it said which.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status"
+  ],
+  "additionalProperties": false
+}

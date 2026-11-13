@@ -1,0 +1,31 @@
+{
+  "$id": "NewAssignorCalendar.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "The calendar link: https, http, or webcal (read as https)."
+    },
+    "system": {
+      "$ref": "AssignorSystem.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "notify": {
+      "description": "true when left out (FEED-8).",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "url",
+    "system",
+    "name"
+  ],
+  "additionalProperties": false
+}

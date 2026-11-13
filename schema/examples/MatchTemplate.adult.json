@@ -1,0 +1,22 @@
+{
+  "id": "a04f6d65-b3b1-543f-b9f4-50ed41b5141f",
+  "version": 1,
+  "updatedAt": "2026-10-26T18:00:00Z",
+  "name": "Adult 2×45",
+  "format": {
+    "periods": 2,
+    "periodSec": 2700,
+    "breakSec": 900,
+    "halfwayBreak": false,
+    "halfwayBreakSec": 120,
+    "teamSize": 11,
+    "clock": "up",
+    "trackStoppage": true,
+    "goalTypes": true,
+    "extraTime": false,
+    "extraTimePeriods": 2,
+    "extraTimePeriodSec": 900,
+    "penalties": false
+  },
+  "defaults": {}
+}

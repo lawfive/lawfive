@@ -1,0 +1,25 @@
+{
+  "$id": "Team.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "alias": {
+      "description": "A short name typed for the watch. With none, one is made from the two team names: the first three letters or digits of each in capitals, skipping the words both names start with when those would be the same (L84_Roach and L84_Smith show ROA and SMI), or HOM/AWY with no name (SET-5). Leave it out to have it follow the names.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4
+    },
+    "colour": {
+      "description": "The team's primary color; the watch picks black or white text for contrast.",
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A team as typed in for one match. Saved teams come later, tied to a competition."
+}

@@ -1,0 +1,25 @@
+{
+  "$id": "Fee.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "amount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "ISO 4217 currency code, for example USD."
+    },
+    "paid": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "amount",
+    "currency",
+    "paid"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,134 @@
+{
+  "$id": "UserSettingsInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "misconductScheme": {
+      "description": "The default scheme for cards; a competition can override it.",
+      "$ref": "SchemeId.json"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "Default currency for fees."
+    },
+    "distanceUnit": {
+      "$ref": "DistanceUnit.json"
+    },
+    "temperatureUnit": {
+      "$ref": "TemperatureUnit.json"
+    },
+    "timeZone": {
+      "description": "Where the person is (PLAN-9): a plan ends at the end of its last day here. Filled in from the first browser or phone that signs in.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "mapsApp": {
+      "description": "Where Directions open (WEB-14): auto (Apple Maps in the iPhone app, Google Maps everywhere else, the same when not set), or always Google Maps or Apple Maps.",
+      "type": "string",
+      "enum": [
+        "auto",
+        "google",
+        "apple"
+      ]
+    },
+    "maxHeartRate": {
+      "description": "Beats a minute, for heart-rate zones (TRK-4).",
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 240
+    },
+    "sprintKph": {
+      "description": "Where sprinting starts, in km/h, for the speed bands and sprints (TRK-11); the other bands scale with it. 21 when not set.",
+      "type": "number",
+      "minimum": 15,
+      "maximum": 35
+    },
+    "calendarArriveMin": {
+      "description": "Minutes before kickoff the calendar feed's events start, for travel and warming up (CAL-3); 0 starts them at kickoff. 30 when not set.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 180
+    },
+    "calendarReminderMin": {
+      "description": "Before several reminders (CAL-3): minutes before kickoff for the calendar feed's one reminder; 0 for none. Used only when none of calendarReminders, calendarDayBefore and calendarDayOf is set; 60 when nothing is.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2880
+    },
+    "calendarReminders": {
+      "description": "The calendar feed's reminders, in minutes before kickoff (CAL-3): 15-minute steps up to 3 hours.",
+      "maxItems": 12,
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 15,
+        "maximum": 180
+      }
+    },
+    "calendarDayBefore": {
+      "description": "A reminder the day before a match at this time (HH:MM, in the match's time zone); none when not set.",
+      "type": "string",
+      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+    },
+    "watchScreen": {
+      "description": "Missing until it's first chosen: watches then keep two clocks stacked (time left over match time) with the time of day and names, or their own choice.",
+      "$ref": "WatchScreen.json"
+    },
+    "teamSwipes": {
+      "description": "For Garmin and Apple watches (INP-10); upDown when not set. Wear OS watches always swipe sideways, as a swipe down from the top opens their quick settings.",
+      "$ref": "TeamSwipes.json"
+    },
+    "calendarDayOf": {
+      "description": "A reminder on the day of a match at this time (HH:MM, in the match's time zone), when that's before the event starts; none when not set.",
+      "type": "string",
+      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+    },
+    "nextMatchCollapsed": {
+      "description": "The match list's next match folded to a single strip (WEB-27); open when not set.",
+      "type": "boolean"
+    },
+    "usualRole": {
+      "description": "The role a new match starts with on the match forms (SET-17); referee when not set. An import, an integration or a quick match from the watch keeps its own.",
+      "$ref": "Role.json"
+    },
+    "usualFormat": {
+      "description": "The format a new match starts with on the match forms (SET-17): the last one saved on a form, or chosen in Settings. Not set until then: forms start from defaultFormat (2×45), offering the starter formats. A competition's template still wins.",
+      "$ref": "UsualFormat.json"
+    },
+    "getReady": {
+      "description": "Get ready on Matches (WEB-32), the same on the website and the phones: what the person chose there, so it follows them to another browser or phone.",
+      "type": "object",
+      "properties": {
+        "hidden": {
+          "description": "Hide this list was chosen.",
+          "type": "boolean"
+        },
+        "unitsConfirmed": {
+          "description": "They're right was chosen for the units and time zone guessed.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "id": {
+      "description": "The id from the URL; can be left out.",
+      "$ref": "Id.json"
+    },
+    "version": {
+      "description": "The version last seen, when updating. Leave it out to create the record.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "misconductScheme",
+    "currency",
+    "distanceUnit",
+    "temperatureUnit"
+  ],
+  "additionalProperties": false,
+  "description": "A UserSettings as a client sends it to save it: the server sets updatedAt and deletedAt, and version only goes with an update."
+}

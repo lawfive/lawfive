@@ -1,0 +1,11 @@
+{
+  "$id": "AccountStatus.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "active",
+    "pending",
+    "suspended"
+  ],
+  "description": "pending: made on a server that approves new accounts, and not approved yet (USR-4). It can sign in, but only GET /v1/account answers. suspended: an admin suspended it (USR-7); it can't sign in, and its API keys and calendar feed stop working, but its data is kept."
+}

@@ -1,0 +1,11 @@
+{
+  "$id": "WatchEdge.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "none",
+    "ring",
+    "time"
+  ],
+  "description": "What the edge of the running screen shows (UI-21): nothing, the ring (UI-23) or the time of day (UI-25)."
+}

@@ -1,0 +1,11 @@
+{
+  "$id": "ClockStyle.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "up",
+    "upEach",
+    "down"
+  ],
+  "description": "up: Match time, counting up through the match (second half 45:00 to 90:00); upEach: Each half from 0; down: Time left in each period (TMR-11)."
+}

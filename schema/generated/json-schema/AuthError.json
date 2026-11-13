@@ -1,0 +1,20 @@
+{
+  "$id": "AuthError.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string",
+      "description": "For example INVALID_EMAIL_OR_PASSWORD or INVALID_ORIGIN."
+    }
+  },
+  "required": [
+    "message",
+    "code"
+  ],
+  "additionalProperties": {},
+  "description": "An error from the account endpoints."
+}

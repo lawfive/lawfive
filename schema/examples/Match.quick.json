@@ -1,0 +1,25 @@
+{
+  "id": "d3ac0703-1115-55e0-a25f-62d2e69fa2ae",
+  "version": 1,
+  "updatedAt": "2026-10-25T19:40:00Z",
+  "status": "played",
+  "kickoff": "2026-10-25T10:00:00-07:00",
+  "format": {
+    "periods": 2,
+    "periodSec": 2700,
+    "breakSec": 900,
+    "halfwayBreak": false,
+    "halfwayBreakSec": 120,
+    "teamSize": 11,
+    "clock": "up",
+    "trackStoppage": true,
+    "goalTypes": true,
+    "extraTime": false,
+    "extraTimePeriods": 2,
+    "extraTimePeriodSec": 900,
+    "penalties": false
+  },
+  "home": {},
+  "away": {},
+  "crew": []
+}

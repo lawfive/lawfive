@@ -1,0 +1,44 @@
+{
+  "$id": "Plan.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z0-9-]+$",
+      "description": "A plan's short handle, unique on the server, to look it up by (PLAN-1): free, pro, friends-family."
+    },
+    "name": {
+      "type": "string"
+    },
+    "limits": {
+      "$ref": "PlanLimits.json"
+    },
+    "default": {
+      "type": "boolean",
+      "description": "New accounts join it, and accounts given no plan are in it."
+    },
+    "people": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "description": "Accounts in it now."
+    },
+    "inUse": {
+      "type": "boolean",
+      "description": "Something refers to it (an account, an account's next plan, an unused invitation, the sign-up trial, or it's the default), so it can't be deleted."
+    }
+  },
+  "required": [
+    "code",
+    "name",
+    "limits",
+    "default",
+    "people",
+    "inUse"
+  ],
+  "additionalProperties": false,
+  "description": "A named set of limits (PLAN-1)."
+}

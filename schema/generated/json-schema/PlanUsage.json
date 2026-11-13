@@ -1,0 +1,79 @@
+{
+  "$id": "PlanUsage.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "matches": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "referees": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "venues": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "storageMb": {
+      "type": "number",
+      "description": "Photos and tracks, in megabytes."
+    },
+    "devices": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Watches and phones signed in."
+    },
+    "pushPerDay": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Notifications sent today (UTC)."
+    },
+    "apiKeys": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "apiCallsPerDay": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Requests with the account's API keys today (UTC)."
+    },
+    "webhooks": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "assignorCalendars": {
+      "description": "Absent from older servers.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "addressSearchesPerDay": {
+      "description": "Address searches today (UTC); absent from older servers.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "matches",
+    "referees",
+    "venues",
+    "storageMb",
+    "devices",
+    "pushPerDay",
+    "apiKeys",
+    "apiCallsPerDay",
+    "webhooks"
+  ],
+  "additionalProperties": false,
+  "description": "How much of each limit the account is using; per-minute and per-file limits aren't counted."
+}

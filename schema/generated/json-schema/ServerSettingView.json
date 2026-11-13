@@ -1,0 +1,60 @@
+{
+  "$id": "ServerSettingView.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "enum": [
+        "signUp",
+        "smtpUrl",
+        "mailFrom",
+        "mapStyleUrl",
+        "mapStyleDarkUrl",
+        "mapStyleAttribution",
+        "mapTileUrl",
+        "mapAttribution",
+        "mapSatelliteUrl",
+        "mapSatelliteAttribution",
+        "geocoderUrl",
+        "weatherUrl",
+        "weatherHistoryUrl",
+        "weatherApiKey",
+        "weatherDailyLimit",
+        "webhookAllowPrivate"
+      ]
+    },
+    "env": {
+      "type": "string",
+      "description": "Its environment variable."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "environment",
+        "admin",
+        "default"
+      ],
+      "description": "environment: set there, so fixed; admin: set in the web app; default: neither."
+    },
+    "value": {
+      "description": "The value in use, when it's set and not a secret.",
+      "type": "string"
+    },
+    "secret": {
+      "description": "Never sent back: set says whether it has a value.",
+      "type": "boolean",
+      "const": true
+    },
+    "set": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "key",
+    "env",
+    "source"
+  ],
+  "additionalProperties": false,
+  "description": "A server setting as the admin page shows it (ADM-1)."
+}

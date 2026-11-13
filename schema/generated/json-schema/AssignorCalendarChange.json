@@ -1,0 +1,26 @@
+{
+  "$id": "AssignorCalendarChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "notify": {
+      "type": "boolean"
+    },
+    "active": {
+      "description": "false pauses it; true starts reading it again, straight away.",
+      "type": "boolean"
+    },
+    "url": {
+      "description": "A new link, such as one the assignor system made again (FEED-9); read straight away.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  },
+  "additionalProperties": false
+}

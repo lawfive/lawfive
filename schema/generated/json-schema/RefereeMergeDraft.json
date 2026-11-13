@@ -1,0 +1,36 @@
+{
+  "$id": "RefereeMergeDraft.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      },
+      "description": "The referees to merge into this one; they're deleted."
+    },
+    "name": {
+      "description": "The name chosen so far; left out, or not one of theirs, the kept referee's.",
+      "type": "string",
+      "maxLength": 100
+    },
+    "email": {
+      "description": "The email chosen so far, where they differ.",
+      "type": "string",
+      "maxLength": 254
+    },
+    "phone": {
+      "description": "The phone number chosen so far, where they differ.",
+      "type": "string",
+      "maxLength": 30
+    }
+  },
+  "required": [
+    "from"
+  ],
+  "additionalProperties": false,
+  "description": "A referee merge as chosen so far, to preview (DUP-4)."
+}

@@ -1,0 +1,702 @@
+{
+  "$id": "Event.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "goal"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "description": "The team the goal counts for; for an own goal, the player is from the other team.",
+          "$ref": "Side.json"
+        },
+        "player": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "goalType": {
+          "description": "When the match records goal types (EVT-8).",
+          "$ref": "GoalType.json"
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "caution"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "offender": {
+          "$ref": "Offender.json"
+        },
+        "misconduct": {
+          "description": "For a second caution, the reason for the second caution.",
+          "$ref": "MisconductCode.json"
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team",
+        "offender"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "secondCaution"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "offender": {
+          "$ref": "Offender.json"
+        },
+        "misconduct": {
+          "description": "For a second caution, the reason for the second caution.",
+          "$ref": "MisconductCode.json"
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team",
+        "offender"
+      ],
+      "additionalProperties": false,
+      "description": "Counts as a send-off (EVT-5)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "sendOff"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "offender": {
+          "$ref": "Offender.json"
+        },
+        "misconduct": {
+          "description": "For a second caution, the reason for the second caution.",
+          "$ref": "MisconductCode.json"
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team",
+        "offender"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "sinBin"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "offender": {
+          "$ref": "Offender.json"
+        },
+        "misconduct": {
+          "description": "For a second caution, the reason for the second caution.",
+          "$ref": "MisconductCode.json"
+        },
+        "lengthSec": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "How long the player was to be off, from the format (EVT-12)."
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team",
+        "offender",
+        "lengthSec"
+      ],
+      "additionalProperties": false,
+      "description": "A temporary dismissal (EVT-12): the player off for lengthSec of the match clock."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "secondSinBin"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "offender": {
+          "$ref": "Offender.json"
+        },
+        "misconduct": {
+          "description": "For a second caution, the reason for the second caution.",
+          "$ref": "MisconductCode.json"
+        },
+        "lengthSec": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team",
+        "offender",
+        "lengthSec"
+      ],
+      "additionalProperties": false,
+      "description": "A second sin bin for the same numbered player, which counts as a send-off (EVT-12)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "stoppage"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "lengthSec": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "lengthSec"
+      ],
+      "additionalProperties": false,
+      "description": "Time added for a stoppage, when stoppage is tracked (EVT-4); periodSec is when it began. With a stopping clock (TMR-15), how long the clock stood still from periodSec, adding nothing."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "periodEnd"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        }
+      },
+      "required": [
+        "type",
+        "when"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "penaltyKick"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "scored": {
+          "type": "boolean"
+        },
+        "player": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team",
+        "scored"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "injury"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "team": {
+          "$ref": "Side.json"
+        },
+        "player": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "lengthSec": {
+          "description": "How long play was stopped.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "team"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "suspension"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "weather",
+            "lightning",
+            "crowdTrouble",
+            "other"
+          ]
+        },
+        "lengthSec": {
+          "description": "How long until play resumed; absent if it never did (an abandonment follows).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "Play stopped for a while, for example a lightning delay, and the match continued."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "clockAdjusted"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "clock": {
+          "type": "string",
+          "enum": [
+            "match",
+            "added"
+          ],
+          "description": "What was corrected: the match clock (the period's time) or the added time (the stoppage total)."
+        },
+        "changeSec": {
+          "type": "integer",
+          "minimum": -6000,
+          "maximum": 6000,
+          "description": "How far it moved, in seconds: forward (more time played, or more added) or back (negative)."
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "clock",
+        "changeSec"
+      ],
+      "additionalProperties": false,
+      "description": "The referee corrected a clock during play (TMR-14); periodSec is the period's time just after. Events before it keep their times, and the added-time stats leave a period with its match clock corrected out (STAT-9)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "abandonment"
+        },
+        "when": {
+          "type": "string",
+          "enum": [
+            "play",
+            "beforeKickoff",
+            "break",
+            "afterFullTime",
+            "penalties"
+          ]
+        },
+        "period": {
+          "description": "1-based; extra-time periods follow the normal ones.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "periodSec": {
+          "description": "Seconds since the period's kickoff, including stoppage; only during play.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "at": {
+          "description": "Wall-clock time, when the device knows it.",
+          "$ref": "Timestamp.json"
+        },
+        "reason": {
+          "$ref": "AbandonReason.json"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "type",
+        "when",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "The match was abandoned; the score at that point is kept."
+    }
+  ]
+}

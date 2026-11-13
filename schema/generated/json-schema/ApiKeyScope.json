@@ -1,0 +1,22 @@
+{
+  "$id": "ApiKeyScope.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "matches:read",
+    "matches:write",
+    "match-templates:read",
+    "match-templates:write",
+    "match-records:read",
+    "match-records:write",
+    "venues:read",
+    "venues:write",
+    "competitions:read",
+    "competitions:write",
+    "referees:read",
+    "referees:write",
+    "settings:read",
+    "settings:write"
+  ],
+  "description": "<collection>:read, or <collection>:write (which includes reading it)."
+}

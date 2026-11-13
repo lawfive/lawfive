@@ -1,0 +1,28 @@
+{
+  "$id": "NetworkView.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "yourAddress": {
+      "type": "string",
+      "description": "The address this server sees the request coming from, after believing the trusted proxies."
+    },
+    "trustedProxies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "TRUSTED_PROXIES: the proxies believed about the visitor's address; empty, none."
+    },
+    "trustedIpHeader": {
+      "description": "TRUSTED_IP_HEADER, when set.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "yourAddress",
+    "trustedProxies"
+  ],
+  "additionalProperties": false,
+  "description": "How the server tells visitors apart, for its limits on tries (SEC-2, SEC-14). Both settings are environment values only."
+}

@@ -1,0 +1,11 @@
+# Warnings from `pnpm lint:api` (Redocly) that are deliberate.
+generated/openapi.json:
+  # These never answer with a 4xx, and a made-up one would make the description wrong.
+  operation-4xx-response:
+    - '#/paths/~1health/get/responses'
+    - '#/paths/~1v1~1meta/get/responses'
+    - '#/paths/~1v1~1auth~1sign-out/post/responses'
+    - '#/paths/~1v1~1auth~1get-session/get/responses'
+  # The format of the files in misconduct/: part of the data model, not sent by the API.
+  no-unused-components:
+    - '#/components/schemas/MisconductScheme'

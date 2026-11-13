@@ -1,0 +1,29 @@
+{
+  "$id": "VenueMergeResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "venue": {
+      "description": "The venue they were merged into, as saved.",
+      "$ref": "Venue.json"
+    },
+    "merged": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "How many venues were merged into it (and deleted)."
+    },
+    "matchesUpdated": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Matches that now point at it, and at its pitches."
+    }
+  },
+  "required": [
+    "venue",
+    "merged",
+    "matchesUpdated"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,55 @@
+{
+  "id": "f2f3424a-d79e-58ab-bd1b-0a17dddd6e08",
+  "version": 1,
+  "updatedAt": "2026-11-07T17:50:00Z",
+  "matchId": "3900a172-9848-5894-9a9f-9ed93f853cd2",
+  "device": "garmin:venu2",
+  "outcome": "abandoned",
+  "periods": [
+    {
+      "period": 1,
+      "extraTime": false,
+      "startedAt": "2026-11-07T09:02:00-08:00",
+      "playedSec": 1500
+    }
+  ],
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "distanceM": 3420,
+  "events": [
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 1,
+      "periodSec": 400,
+      "team": "home",
+      "player": 11
+    },
+    {
+      "type": "suspension",
+      "when": "play",
+      "period": 1,
+      "periodSec": 1100,
+      "reason": "lightning",
+      "lengthSec": 1800,
+      "note": "Lightning seen; 30-minute wait"
+    },
+    {
+      "type": "suspension",
+      "when": "play",
+      "period": 1,
+      "periodSec": 1500,
+      "reason": "lightning",
+      "note": "Second strike within 10 miles"
+    },
+    {
+      "type": "abandonment",
+      "when": "play",
+      "period": 1,
+      "periodSec": 1500,
+      "reason": "lightning"
+    }
+  ]
+}

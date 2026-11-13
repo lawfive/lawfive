@@ -1,0 +1,29 @@
+{
+    "$comment": "WCH-2, UI-27: what the screen shows at a moment of a 2 × 45 match, for every copy of the clocks. The watches play each moment out as steps and check the clocks, the added time, the ring and the break clock; the pills are the pictures' own.",
+    "screen": [
+        { "name": "match time counts up", "ids": ["TMR-11"], "at": { "phase": "running", "period": 0, "elapsed": "12:34" }, "expect": { "clock": "12:34", "added": null } },
+        { "name": "time left counts down", "ids": ["TMR-11"], "screen": { "mainClock": "down" }, "at": { "phase": "running", "period": 0, "elapsed": "12:34" }, "expect": { "clock": "32:26" } },
+        { "name": "time left holds at 0:00, with the added time under it", "ids": ["TMR-11", "TMR-2"], "screen": { "mainClock": "down" }, "at": { "phase": "running", "period": 0, "elapsed": "47:05" }, "expect": { "clock": "0:00", "added": "+2:05" } },
+        { "name": "no added time before the period's length", "ids": ["TMR-2"], "at": { "phase": "running", "period": 0, "elapsed": "44:59" }, "expect": { "clock": "44:59", "added": null } },
+        { "name": "the second half starts at its scheduled time", "ids": ["TMR-11"], "at": { "phase": "running", "period": 1, "elapsed": "0:00" }, "expect": { "clock": "45:00" } },
+        { "name": "match time in the second half", "ids": ["TMR-11"], "at": { "phase": "running", "period": 1, "elapsed": "22:40" }, "expect": { "clock": "67:40" } },
+        { "name": "each half from 0 starts again", "ids": ["TMR-11"], "screen": { "mainClock": "upEach" }, "at": { "phase": "running", "period": 1, "elapsed": "22:40" }, "expect": { "clock": "22:40" } },
+        { "name": "a second clock counting down", "ids": ["UI-22"], "screen": { "clocks": "stacked", "secondClock": "down" }, "at": { "phase": "running", "period": 0, "elapsed": "12:00" }, "expect": { "clock": "12:00", "second": "33:00" } },
+        { "name": "the second clock holds at 0:00 too", "ids": ["UI-22"], "screen": { "clocks": "stacked", "secondClock": "down" }, "at": { "phase": "running", "period": 0, "elapsed": "47:05" }, "expect": { "second": "0:00" } },
+        { "name": "each half from 0 as the second clock holds at the length", "ids": ["UI-22"], "screen": { "clocks": "stacked", "secondClock": "upEach" }, "at": { "phase": "running", "period": 0, "elapsed": "47:05" }, "expect": { "second": "45:00" } },
+        { "name": "the second clock is never a copy: match time under match time is time left", "ids": ["UI-22"], "screen": { "clocks": "stacked", "secondClock": "up" }, "at": { "phase": "running", "period": 0, "elapsed": "12:00" }, "expect": { "second": "33:00" } },
+        { "name": "and time left under time left is each half from 0", "ids": ["UI-22"], "screen": { "clocks": "stacked", "mainClock": "down", "secondClock": "down" }, "at": { "phase": "running", "period": 0, "elapsed": "12:00" }, "expect": { "clock": "33:00", "second": "12:00" } },
+        { "name": "one clock has no second", "ids": ["UI-22"], "at": { "phase": "running", "period": 0, "elapsed": "12:00" }, "expect": { "second": null } },
+        { "name": "the ring at kickoff", "ids": ["UI-23"], "at": { "phase": "running", "period": 0, "elapsed": "0:00" }, "expect": { "progress": 0 } },
+        { "name": "the ring halfway", "ids": ["UI-23"], "at": { "phase": "running", "period": 0, "elapsed": "22:30" }, "expect": { "progress": 0.5 } },
+        { "name": "the ring stays full through added time", "ids": ["UI-23"], "at": { "phase": "running", "period": 0, "elapsed": "47:00" }, "expect": { "progress": 1 } },
+        { "name": "half-time's clock counting down", "ids": ["TMR-4"], "at": { "phase": "halftime", "period": 0, "elapsed": "3:00" }, "expect": { "breakClock": "12:00" } },
+        { "name": "half-time's clock counting up", "ids": ["TMR-4"], "screen": { "breakClock": "up" }, "at": { "phase": "halftime", "period": 0, "elapsed": "3:00" }, "expect": { "breakClock": "3:00" } },
+        { "name": "a stoppage running shows its time, solid", "ids": ["UI-2", "TMR-10"], "at": { "phase": "running", "period": 0, "elapsed": "31:05", "stoppage": "0:24", "stoppageRunning": true }, "expect": { "stoppage": { "text": "0:24", "solid": true } } },
+        { "name": "stoppage not tracked: no pill", "ids": ["TMR-10"], "tracked": false, "at": { "phase": "running", "period": 0, "elapsed": "31:05", "stoppage": "0:24", "stoppageRunning": true }, "expect": { "stoppage": null } },
+        { "name": "the halfway break counting down to when it's due", "ids": ["UI-4", "TMR-7"], "at": { "phase": "running", "period": 0, "elapsed": "12:00", "halfwayBreak": "coming" }, "expect": { "breakPill": { "text": "9:30", "solid": false } } },
+        { "name": "the halfway break due", "ids": ["UI-4", "TMR-7"], "at": { "phase": "running", "period": 0, "elapsed": "21:40", "stoppage": "0:30", "halfwayBreak": "due" }, "expect": { "breakPill": { "text": "Break due", "solid": true } } },
+        { "name": "the halfway break running, its time left", "ids": ["UI-4", "TMR-7"], "at": { "phase": "running", "period": 0, "elapsed": "22:30", "stoppage": "1:10", "stoppageRunning": true, "halfwayBreak": "running", "breakStarted": "21:50" }, "expect": { "breakPill": { "text": "1:20", "solid": true } } },
+        { "name": "the halfway break running, its time taken", "ids": ["UI-4", "TMR-4"], "screen": { "breakClock": "up" }, "at": { "phase": "running", "period": 0, "elapsed": "22:30", "stoppage": "1:10", "stoppageRunning": true, "halfwayBreak": "running", "breakStarted": "21:50" }, "expect": { "breakPill": { "text": "0:40", "solid": true } } }
+    ]
+}

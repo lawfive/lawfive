@@ -1,0 +1,42 @@
+{
+  "$id": "Pitch.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "aliases": {
+      "description": "Other names it goes by, such as those of pitches combined into it by a merge (DUP-7); imports and pickers find the pitch by them.",
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 60
+      }
+    },
+    "position": {
+      "description": "Where the pitch itself is, which can be some way from the venue's address.",
+      "$ref": "Position.json"
+    },
+    "markings": {
+      "description": "Its corners as marked on the watch, oldest first (TRK-13). Each is used for matches kicking off after it, until a later one.",
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "$ref": "PitchMarking.json"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The launcher icon's board (WEB-25): the mark on the stadium board, the same in light and dark. -->
+    <color name="launcher_background">#0B0E0D</color>
+    <!-- DESIGN.md's tokens for what draws before Compose: the grass (the window), the board (the launch screen). -->
+    <color name="pitch">#12613E</color>
+    <color name="board">#0B0E0D</color>
+    <!-- DESIGN.md's pitch green on a panel: the notifications' accent, on their icon and the app's name. -->
+    <color name="brand">#0B6B47</color>
+</resources>

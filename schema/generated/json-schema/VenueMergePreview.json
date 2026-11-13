@@ -1,0 +1,180 @@
+{
+  "$id": "VenueMergePreview.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "venues": {
+      "type": "array",
+      "items": {
+        "$ref": "DuplicateMember.json"
+      },
+      "description": "The venue kept, then the others, in the order sent; each with its reasons when it's among the likeliest."
+    },
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Every name to choose from: theirs and their other names, once each. The rest become other names."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name that will be kept."
+    },
+    "places": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "venueId": {
+            "$ref": "Id.json"
+          },
+          "address": {
+            "type": "string"
+          },
+          "onMap": {
+            "type": "boolean",
+            "description": "Whether its parking is on the map."
+          }
+        },
+        "required": [
+          "venueId",
+          "onMap"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Their different addresses and parking spots, once each: a choice when there's more than one."
+    },
+    "addressFrom": {
+      "description": "The venue whose address and parking will be kept.",
+      "$ref": "Id.json"
+    },
+    "pitches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "Id.json"
+          },
+          "name": {
+            "type": "string",
+            "description": "Its name now."
+          },
+          "venue": {
+            "description": "The venue it's from, when there are several.",
+            "type": "string"
+          },
+          "matches": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "corners": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "How many times its corners were walked on the watch (TRK-13)."
+          },
+          "onMap": {
+            "type": "boolean"
+          },
+          "check": {
+            "type": "boolean",
+            "description": "Whether to look at it first (shown as Check); the rest are likely fine."
+          },
+          "why": {
+            "type": "string",
+            "description": "Why it's suggested as it is, in a few words."
+          },
+          "choice": {
+            "type": "object",
+            "properties": {
+              "into": {
+                "description": "The pitch it's the same as.",
+                "$ref": "Id.json"
+              },
+              "name": {
+                "description": "Without into, kept, under this name.",
+                "type": "string",
+                "maxLength": 60
+              }
+            },
+            "additionalProperties": false,
+            "description": "What happens to it: the user's choice, else the suggestion."
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "Id.json"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            },
+            "description": "The pitches it can be the same as: those the merged venue keeps, under the names they'll have."
+          },
+          "problem": {
+            "description": "What's wrong with its choice; the merge waits until there's none.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "matches",
+          "corners",
+          "onMap",
+          "check",
+          "why",
+          "choice",
+          "targets"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Every pitch of the venues merged away, riskiest first, then more matches and corners walked first (DUP-8). The order depends only on the venues, so rows stay put while the choices change."
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Things to know, such as corners walked over the 20 a pitch keeps."
+    },
+    "problems": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Pitches that need a look before merging."
+    },
+    "together": {
+      "description": "Their matches, at one venue.",
+      "$ref": "MatchCount.json"
+    },
+    "merge": {
+      "description": "What to send to POST /v1/venues/{id}/merge to merge exactly this; none while there are problems.",
+      "$ref": "VenueMerge.json"
+    }
+  },
+  "required": [
+    "venues",
+    "names",
+    "name",
+    "places",
+    "pitches",
+    "notes",
+    "problems",
+    "together"
+  ],
+  "additionalProperties": false,
+  "description": "What merging these venues would make (DUP-7, DUP-8, DUP-11)."
+}

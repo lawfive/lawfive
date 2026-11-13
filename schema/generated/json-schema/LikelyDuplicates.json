@@ -1,0 +1,19 @@
+{
+  "$id": "LikelyDuplicates.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "likely": {
+      "type": "array",
+      "items": {
+        "$ref": "DuplicateMember.json"
+      },
+      "description": "At most six, likeliest first, each with its reasons."
+    }
+  },
+  "required": [
+    "likely"
+  ],
+  "additionalProperties": false,
+  "description": "The venues or referees most likely the same as one (Merge with…, DUP-1, DUP-7)."
+}

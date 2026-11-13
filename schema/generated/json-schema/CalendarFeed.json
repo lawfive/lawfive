@@ -1,0 +1,29 @@
+{
+  "$id": "CalendarFeed.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "The feed (https), for calendar apps that ask for an address."
+    },
+    "webcalUrl": {
+      "type": "string",
+      "description": "The same feed as webcal://, which opens the calendar app to subscribe."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "lastFetchedAt": {
+      "description": "When a calendar app last fetched it, to within an hour.",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "url",
+    "webcalUrl",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "description": "The account's private calendar address (CAL-1). Anyone with it can see the matches in it; make a new one to stop the old one working."
+}

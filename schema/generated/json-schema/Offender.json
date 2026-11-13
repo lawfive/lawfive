@@ -1,0 +1,45 @@
+{
+  "$id": "Offender.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "player"
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "teamOfficial"
+        },
+        "role": {
+          "$ref": "TeamOfficialRole.json"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "kind",
+        "role"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

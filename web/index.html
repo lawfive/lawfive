@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- WEB-6: the page draws under the phone's bars (edge to edge), so an installed app's gesture bar
+         shows the page, not the manifest's green; styles.css keeps content clear of them. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- WEB-6, WEB-24: the phone's own bars (and an installed app's) are the stadium board, --board in src/styles.css, as the band under the status bar and the tab bar are. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#0b0e0d" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121614" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>LawFive</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

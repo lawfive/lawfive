@@ -1,0 +1,64 @@
+{
+  "$id": "Webhook.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "url": {
+      "type": "string",
+      "description": "Where deliveries are POSTed."
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "$ref": "WebhookTopic.json"
+      },
+      "description": "Which records' changes it hears about."
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Paused webhooks get no deliveries."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "lastDelivery": {
+      "description": "The latest delivery and how it went.",
+      "type": "object",
+      "properties": {
+        "at": {
+          "$ref": "Timestamp.json"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "delivered",
+            "failed"
+          ]
+        },
+        "responseCode": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "at",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "url",
+    "topics",
+    "active",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "description": "A URL that hears about changes to the account's records (HOOK-1)."
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- APP-2: the session stays on this phone, in backups and when moving to a new one. SEC-5: and so do
+     linked watches' sign-ins, which the phone keeps for passing their syncs on (watch-relay.json). -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="datastore/session.preferences_pb" />
+        <exclude domain="file" path="watch-relay.json" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="datastore/session.preferences_pb" />
+        <exclude domain="file" path="watch-relay.json" />
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,24 @@
+{
+  "id": "ifab",
+  "name": "Laws of the Game",
+  "source": "Law 12 of the IFAB Laws of the Game, with the usual report abbreviations; checked against halfline.app/codes on 2026-10-26.",
+  "cautions": [
+    { "code": "UB", "description": "Unsporting behaviour", "short": "Unsporting behavior" },
+    { "code": "DT", "description": "Dissent by word or action", "short": "Dissent" },
+    { "code": "PI", "description": "Persistent infringement", "short": "Persistent fouling" },
+    { "code": "DR", "description": "Delaying the restart of play", "short": "Delaying restart" },
+    { "code": "FRD", "description": "Failure to respect the required distance", "short": "Distance at restart" },
+    { "code": "E", "description": "Entering or re-entering the field of play without permission", "short": "Entered field" },
+    { "code": "L", "description": "Deliberately leaving the field of play without permission", "short": "Left field" }
+  ],
+  "sendOffs": [
+    { "code": "SFP", "description": "Serious foul play", "short": "Serious foul play" },
+    { "code": "VC", "description": "Violent conduct", "short": "Violent conduct" },
+    { "code": "S", "description": "Spitting at or biting someone", "short": "Spitting or biting" },
+    { "code": "DOGSO-H", "description": "Denying a goal or an obvious goal-scoring opportunity by a deliberate handball", "short": "DOGSO by handball" },
+    { "code": "DOGSO-F", "description": "Denying an obvious goal-scoring opportunity by an offense punishable by a free kick", "short": "DOGSO by foul" },
+    { "code": "OFFINABUS", "description": "Offensive, insulting or abusive language or gestures", "short": "Abusive language" },
+    { "code": "2CT", "description": "Second caution in the same match", "short": "Second caution" }
+  ],
+  "secondCaution": "2CT"
+}

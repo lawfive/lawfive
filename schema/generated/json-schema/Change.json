@@ -1,0 +1,126 @@
+{
+  "$id": "Change.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "matches"
+        },
+        "record": {
+          "$ref": "Match.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "match-templates"
+        },
+        "record": {
+          "$ref": "MatchTemplate.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "match-records"
+        },
+        "record": {
+          "$ref": "MatchRecord.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "venues"
+        },
+        "record": {
+          "$ref": "Venue.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "competitions"
+        },
+        "record": {
+          "$ref": "Competition.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "referees"
+        },
+        "record": {
+          "$ref": "Referee.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string",
+          "const": "settings"
+        },
+        "record": {
+          "$ref": "UserSettings.json"
+        }
+      },
+      "required": [
+        "collection",
+        "record"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "description": "A record as it is now, after a change: created, updated or deleted (deletedAt set)."
+}

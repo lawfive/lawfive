@@ -1,0 +1,44 @@
+{
+  "matchId": "3900a172-9848-5894-9a9f-9ed93f853cd2",
+  "final": false,
+  "condition": "rain",
+  "isDay": true,
+  "temperatureC": 11.8,
+  "feelsLikeC": 9.6,
+  "precipitationChance": 0.75,
+  "precipitationMm": 3.4,
+  "precipitationBeforeMm": 16.2,
+  "windGustKph": 31,
+  "hours": [
+    {
+      "time": "2026-11-07T09:00:00-08:00",
+      "condition": "rain",
+      "isDay": true,
+      "temperatureC": 11.8,
+      "precipitationMm": 1.6,
+      "precipitationChance": 0.75
+    },
+    {
+      "time": "2026-11-07T10:00:00-08:00",
+      "condition": "drizzle",
+      "isDay": true,
+      "temperatureC": 12.4,
+      "precipitationMm": 0.4,
+      "precipitationChance": 0.55
+    }
+  ],
+  "risks": [
+    {
+      "kind": "wetField",
+      "level": "possible",
+      "amount": 16.2
+    },
+    {
+      "kind": "rain",
+      "level": "possible",
+      "amount": 3.4
+    }
+  ],
+  "updatedAt": "2026-11-07T05:12:00Z",
+  "source": "Open-Meteo"
+}

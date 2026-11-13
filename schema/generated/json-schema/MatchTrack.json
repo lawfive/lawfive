@@ -1,0 +1,29 @@
+{
+  "$id": "MatchTrack.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "source": {
+      "$ref": "TrackSource.json"
+    },
+    "start": {
+      "description": "The time the series' times count from.",
+      "$ref": "Timestamp.json"
+    },
+    "gps": {
+      "$ref": "GpsSeries.json"
+    },
+    "heartRate": {
+      "$ref": "HeartRateSeries.json"
+    },
+    "pitch": {
+      "$ref": "PitchOutline.json"
+    }
+  },
+  "required": [
+    "source",
+    "start"
+  ],
+  "additionalProperties": false,
+  "description": "GPS and heart rate for one match report, each on its own times, kept as recorded (up to about one sample a second)."
+}

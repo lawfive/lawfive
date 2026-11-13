@@ -1,0 +1,10 @@
+/* lawfive.app's playable parts (SITE-9) on the site's grass. The build scopes these, like the
+   website's styles.css before them, to the part's element (vite.site.config.ts): :root and body
+   become the part. The part sits on the site's own pitch, inside its frame, so it draws no grass of
+   its own (its stripes would start again at its top and not line up with the page's), and has no
+   band over the phone's status bar, which is the website's for its own pages. */
+body { background: none; }
+body::before { content: none; }
+
+/* The quiz's line under its score, on the score's slab (WEB-28): its link reads as one. */
+.lf-part-after a { color: var(--on-board-strong); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

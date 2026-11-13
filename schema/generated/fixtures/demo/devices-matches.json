@@ -1,0 +1,67 @@
+{
+  "matches": [
+    {
+      "matchId": "00000007-0000-4000-8000-000000000001",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": false
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000002",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": true
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000003",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": true
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000004",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": true
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000005",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": true
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000006",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": true
+    },
+    {
+      "matchId": "00000007-0000-4000-8000-000000000007",
+      "deviceId": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "since": "2026-11-09T12:00:00.000Z",
+      "syncedAt": "2026-11-09T12:00:00.000Z",
+      "upToDate": true
+    }
+  ]
+}

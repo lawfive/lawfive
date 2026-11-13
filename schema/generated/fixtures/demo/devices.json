@@ -1,0 +1,16 @@
+{
+  "devices": [
+    {
+      "id": "watch-link-venu2",
+      "kind": "garmin",
+      "name": "Garmin Venu 2",
+      "model": "006-B3703-00",
+      "firmware": "19.05",
+      "appVersion": "2026.11.9",
+      "linkedAt": "2026-10-10T16:00:00.000Z",
+      "lastActiveAt": "2026-11-09T12:00:00.000Z",
+      "current": false,
+      "watchOnly": true
+    }
+  ]
+}

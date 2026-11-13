@@ -1,0 +1,15 @@
+{
+  "$id": "NameChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "AccountName.json"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "description": "A new name for the signed-in account (USR-10); nothing else can be changed this way."
+}

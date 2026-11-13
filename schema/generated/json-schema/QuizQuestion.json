@@ -1,0 +1,65 @@
+{
+  "$id": "QuizQuestion.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "active, draft or retired; the API only sends active ones."
+    },
+    "type": {
+      "type": "string",
+      "description": "single, multiple or true_false."
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "easy, medium or hard."
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "$ref": "QuizRef.json"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "options": {
+      "minItems": 2,
+      "type": "array",
+      "items": {
+        "$ref": "QuizOption.json"
+      }
+    },
+    "editionAdded": {
+      "type": "string"
+    },
+    "lastReviewed": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "status",
+    "type",
+    "difficulty",
+    "refs",
+    "tags",
+    "question",
+    "options",
+    "editionAdded",
+    "lastReviewed"
+  ],
+  "additionalProperties": false
+}

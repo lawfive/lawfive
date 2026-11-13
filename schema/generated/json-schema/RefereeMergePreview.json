@@ -1,0 +1,64 @@
+{
+  "$id": "RefereeMergePreview.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "referees": {
+      "type": "array",
+      "items": {
+        "$ref": "DuplicateMember.json"
+      },
+      "description": "The referee kept, then the others, in the order sent; each with its reasons when it's among the likeliest."
+    },
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Every name to choose from: theirs and their other names, once each. The rest become other names."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name that will be kept."
+    },
+    "emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Their emails, once each: a choice when there's more than one."
+    },
+    "email": {
+      "type": "string"
+    },
+    "phones": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Their phone numbers, once each: a choice when there's more than one."
+    },
+    "phone": {
+      "type": "string"
+    },
+    "together": {
+      "description": "Their matches as one referee, crew typed in under one of their names included; a match counts once.",
+      "$ref": "MatchCount.json"
+    },
+    "merge": {
+      "description": "What to send to POST /v1/referees/{id}/merge to merge exactly this.",
+      "$ref": "RefereeMerge.json"
+    }
+  },
+  "required": [
+    "referees",
+    "names",
+    "name",
+    "emails",
+    "phones",
+    "together",
+    "merge"
+  ],
+  "additionalProperties": false,
+  "description": "What merging these referees would make (DUP-4, DUP-11)."
+}

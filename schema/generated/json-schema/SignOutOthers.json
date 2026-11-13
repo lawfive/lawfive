@@ -1,0 +1,19 @@
+{
+  "$id": "SignOutOthers.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "scope": {
+      "type": "string",
+      "enum": [
+        "browsers",
+        "all"
+      ],
+      "description": "browsers: other browsers only, so watches and phones stay linked. all: every other device too."
+    }
+  },
+  "required": [
+    "scope"
+  ],
+  "additionalProperties": false
+}

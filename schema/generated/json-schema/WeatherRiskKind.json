@@ -1,0 +1,13 @@
+{
+  "$id": "WeatherRiskKind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "wetField",
+    "rain",
+    "storm",
+    "snow",
+    "heat"
+  ],
+  "description": "wetField: rain in the 24 hours before (fields close); rain, storm, snow: during the match or the hour before; heat: feels-like temperature while playing."
+}

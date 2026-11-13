@@ -1,0 +1,19 @@
+---
+// Until DOCS_PUBLIC=true (astro.config.mjs): the code and image these pages point to aren't public yet.
+const live = process.env.DOCS_PUBLIC === "true";
+---
+{!live && (
+    <div class="preview-banner">
+        <strong>Preview.</strong> LawFive's code and server image aren't public yet, so some steps here won't work until they are.
+    </div>
+)}
+
+<style>
+    .preview-banner {
+        padding: 0.5rem var(--sl-nav-pad-x);
+        background: var(--lf-amber-soft);
+        color: var(--lf-ink);
+        font-size: var(--sl-text-sm);
+        text-align: center;
+    }
+</style>

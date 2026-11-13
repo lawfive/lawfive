@@ -1,0 +1,219 @@
+{
+  "$id": "TrackSummary.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "covers": {
+      "type": "string",
+      "enum": [
+        "periods",
+        "track"
+      ],
+      "description": "periods: only the periods played, from the match report's period start times; track: the whole track (the report has no start times)."
+    },
+    "total": {
+      "type": "object",
+      "properties": {
+        "distanceM": {
+          "description": "The GPS figures (distance, top speed, sprints, speed bands) are left out where the track has no GPS, for example before the watch had a fix.",
+          "type": "number",
+          "minimum": 0
+        },
+        "topSpeedMps": {
+          "description": "The watch's own speed when the track has it, otherwise from positions averaged over 3 seconds.",
+          "type": "number",
+          "minimum": 0
+        },
+        "sprints": {
+          "description": "At sprinting speed (21 km/h or more by default, TRK-11) for 2 to 6 seconds.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "speedBands": {
+          "description": "Time and distance in each band, slowest first.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "band": {
+                "$ref": "SpeedBand.json"
+              },
+              "sec": {
+                "type": "number",
+                "minimum": 0
+              },
+              "distanceM": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "band",
+              "sec",
+              "distanceM"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "avgBpm": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "maxBpm": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "zones": {
+          "description": "Time in each heart-rate zone; only with a maximum heart rate in the user's settings.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "zone": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "fromBpm": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "sec": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "zone",
+              "fromBpm",
+              "sec"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "distanceM": {
+            "description": "The GPS figures (distance, top speed, sprints, speed bands) are left out where the track has no GPS, for example before the watch had a fix.",
+            "type": "number",
+            "minimum": 0
+          },
+          "topSpeedMps": {
+            "description": "The watch's own speed when the track has it, otherwise from positions averaged over 3 seconds.",
+            "type": "number",
+            "minimum": 0
+          },
+          "sprints": {
+            "description": "At sprinting speed (21 km/h or more by default, TRK-11) for 2 to 6 seconds.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "speedBands": {
+            "description": "Time and distance in each band, slowest first.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "band": {
+                  "$ref": "SpeedBand.json"
+                },
+                "sec": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "distanceM": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "band",
+                "sec",
+                "distanceM"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "avgBpm": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "maxBpm": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "zones": {
+            "description": "Time in each heart-rate zone; only with a maximum heart rate in the user's settings.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "zone": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                "fromBpm": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "sec": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "zone",
+                "fromBpm",
+                "sec"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "period": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "period"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Each period with a start time; empty when covers is track."
+    },
+    "maxHeartRate": {
+      "description": "The maximum heart rate the zones are worked out from (Settings).",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "sprintKph": {
+      "type": "number",
+      "description": "The sprint speed the speed bands and sprints are worked out from (Settings, TRK-11; 21 by default)."
+    }
+  },
+  "required": [
+    "covers",
+    "total",
+    "periods",
+    "sprintKph"
+  ],
+  "additionalProperties": false,
+  "description": "What the server works out from a track (TRK-3): GPS figures when it has GPS, heart-rate figures when it has heart rate."
+}

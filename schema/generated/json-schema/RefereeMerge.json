@@ -1,0 +1,40 @@
+{
+  "$id": "RefereeMerge.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      },
+      "description": "The referees to merge into this one; they're deleted."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "The name to keep: one of the referees' names or other names. The rest become other names."
+    },
+    "email": {
+      "description": "When they have different emails, the one to keep; otherwise the one there is.",
+      "type": "string",
+      "format": "email",
+      "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+    },
+    "phone": {
+      "description": "When they have different phone numbers, the one to keep; otherwise the one there is.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    }
+  },
+  "required": [
+    "from",
+    "name"
+  ],
+  "additionalProperties": false,
+  "description": "Referees to merge into one (DUP-3, DUP-4)."
+}

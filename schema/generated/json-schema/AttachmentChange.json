@@ -1,0 +1,27 @@
+{
+  "$id": "AttachmentChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "caption": {
+      "description": "The new caption; null or an empty string removes it.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "position": {
+      "description": "Move it to this place among the record's attachments (0 is first; a larger number moves it to the end).",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  },
+  "additionalProperties": false,
+  "description": "What to change about an attachment; leave out what stays the same."
+}

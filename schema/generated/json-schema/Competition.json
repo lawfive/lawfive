@@ -1,0 +1,79 @@
+{
+  "$id": "Competition.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Raised by the server on every change; clients send the version they last saw so conflicts can be spotted."
+    },
+    "updatedAt": {
+      "$ref": "Timestamp.json"
+    },
+    "deletedAt": {
+      "description": "Set when the record is deleted; deleted records are kept so other devices learn of the deletion.",
+      "$ref": "Timestamp.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "organiser": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "type": {
+      "$ref": "CompetitionType.json"
+    },
+    "season": {
+      "description": "Season label, for example 2026-27.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "startDate": {
+      "$ref": "LocalDate.json"
+    },
+    "endDate": {
+      "$ref": "LocalDate.json"
+    },
+    "ageGroup": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "level": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "templateId": {
+      "description": "The match template for this competition's matches: picking the competition fills the format (and fee).",
+      "$ref": "Id.json"
+    },
+    "misconductScheme": {
+      "description": "Overrides the user's default scheme for this competition's matches.",
+      "$ref": "SchemeId.json"
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "updatedAt",
+    "name",
+    "type"
+  ],
+  "additionalProperties": false,
+  "description": "One competition for one season; next season is a new record."
+}

@@ -1,0 +1,32 @@
+{
+  "$id": "HeartRateSeries.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "t": {
+      "maxItems": 43200,
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "description": "Milliseconds after the track's start, always increasing."
+    },
+    "bpm": {
+      "maxItems": 43200,
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 20,
+        "maximum": 250
+      }
+    }
+  },
+  "required": [
+    "t",
+    "bpm"
+  ],
+  "additionalProperties": false,
+  "description": "Heart rate in beats a minute, one per time."
+}

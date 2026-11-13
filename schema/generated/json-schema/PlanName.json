@@ -1,0 +1,22 @@
+{
+  "$id": "PlanName.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z0-9-]+$",
+      "description": "A plan's short handle, unique on the server, to look it up by (PLAN-1): free, pro, friends-family."
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "name"
+  ],
+  "additionalProperties": false
+}

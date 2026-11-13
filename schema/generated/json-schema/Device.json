@@ -1,0 +1,56 @@
+{
+  "$id": "Device.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The session's id, for DELETE /v1/devices/{id}."
+    },
+    "kind": {
+      "type": "string",
+      "description": "browser, or the app's name from its X-LawFive-Device header (garmin)."
+    },
+    "name": {
+      "type": "string",
+      "description": "For people: \"Garmin Venu 2\" (\"Garmin watch\" when it didn't say which), \"Chrome on macOS\"."
+    },
+    "model": {
+      "description": "A watch's Garmin part number, \"006-B3703-00\", when it gives one.",
+      "type": "string"
+    },
+    "firmware": {
+      "description": "A watch's firmware version, \"12.30\", when it gives one.",
+      "type": "string"
+    },
+    "appVersion": {
+      "description": "The version of LawFive on it (VER-3), \"2026.10.30\", from the app= in its X-LawFive-Device header; missing for browsers and apps from before it.",
+      "type": "string"
+    },
+    "linkedAt": {
+      "description": "When it signed in or was linked.",
+      "$ref": "Timestamp.json"
+    },
+    "lastActiveAt": {
+      "$ref": "Timestamp.json"
+    },
+    "current": {
+      "type": "boolean",
+      "description": "true for the device making this request."
+    },
+    "watchOnly": {
+      "description": "true for a watch's link, which only syncs matches (SEC-13); absent for everything else.",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "name",
+    "linkedAt",
+    "lastActiveAt",
+    "current"
+  ],
+  "additionalProperties": false,
+  "description": "Somewhere the account is signed in: a browser or a linked watch."
+}

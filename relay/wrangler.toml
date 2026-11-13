@@ -1,0 +1,32 @@
+# LawFive's push relay on Cloudflare Workers (README.md). Settings and secrets are kept in Cloudflare,
+# never here: keep_vars stops a deploy from removing what's been set there.
+name = "lawfive-push"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+workers_dev = false
+keep_vars = true
+routes = [{ pattern = "push.lawfive.app", custom_domain = true }]
+
+# PUSH-2: no logs of requests. What it prints is counts and errors, never tokens or handles.
+[observability]
+enabled = false
+
+# PUSH-1: the daily and per-minute counts, one object per server.
+[[durable_objects.bindings]]
+name = "COUNTERS"
+class_name = "ServerCounter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ServerCounter"]
+
+# Requests per address, before anything else is done with them.
+[[ratelimits]]
+name = "SEND_LIMIT"
+namespace_id = "1001"
+simple = { limit = 300, period = 60 }
+
+[[ratelimits]]
+name = "REGISTER_LIMIT"
+namespace_id = "1002"
+simple = { limit = 20, period = 60 }

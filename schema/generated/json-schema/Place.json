@@ -1,0 +1,24 @@
+{
+  "$id": "Place.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The full address."
+    },
+    "lat": {
+      "type": "number"
+    },
+    "lon": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name",
+    "lat",
+    "lon"
+  ],
+  "additionalProperties": false,
+  "description": "A place found by address search."
+}

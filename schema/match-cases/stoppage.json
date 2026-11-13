@@ -1,0 +1,25 @@
+{
+    "$comment": "WCH-2: stoppage (TMR-3, TMR-10).",
+    "match": [
+        {
+            "name": "not tracked: the button does nothing",
+            "ids": ["TMR-10"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "1:00", "do": "stoppage", "expect": { "stoppageRunning": false } }
+            ]
+        },
+        {
+            "name": "tracked: it adds up, and is recorded with its length",
+            "ids": ["TMR-3"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage", "expect": { "stoppageRunning": true } },
+                { "at": "5:30", "expect": { "stoppageMs": 30000 } },
+                { "at": "6:00", "do": "stoppage" },
+                { "at": "9:00", "expect": { "stoppageMs": 60000, "stoppageRunning": false, "last": { "type": "S", "team": null, "seconds": 300, "player": null, "extra": 60 } } }
+            ]
+        }
+    ]
+}

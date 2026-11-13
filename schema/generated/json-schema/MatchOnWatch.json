@@ -1,0 +1,45 @@
+{
+  "$id": "MatchOnWatch.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "matchId": {
+      "$ref": "Id.json"
+    },
+    "deviceId": {
+      "type": "string",
+      "description": "The watch's link, as GET /v1/devices gives it (the session's id)."
+    },
+    "kind": {
+      "type": "string",
+      "description": "garmin, wearos or applewatch, from the watch's X-LawFive-Device header; watch when it didn't say."
+    },
+    "name": {
+      "type": "string",
+      "description": "For people: \"Garmin Venu 2\", \"Galaxy Watch4\", \"Apple Watch Series 9\" (\"Garmin watch\" when it didn't say which)."
+    },
+    "since": {
+      "description": "When the watch first got the match as it has it now.",
+      "$ref": "Timestamp.json"
+    },
+    "syncedAt": {
+      "description": "The watch's latest download, which still had the match.",
+      "$ref": "Timestamp.json"
+    },
+    "upToDate": {
+      "type": "boolean",
+      "description": "false when what the watch shows of the match has changed since (teams, kickoff, format, venue, officials, notes, fee), or the match is no longer scheduled: the watch's next sync brings the change, or takes the match off."
+    }
+  },
+  "required": [
+    "matchId",
+    "deviceId",
+    "kind",
+    "name",
+    "since",
+    "syncedAt",
+    "upToDate"
+  ],
+  "additionalProperties": false,
+  "description": "A match on one of the account's linked watches (SYNC-14): in the watch's latest download of its next matches."
+}

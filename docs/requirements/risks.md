@@ -1,0 +1,47 @@
+# Risks and technical notes
+
+Known risks, platform limits, and what still needs checking on real hardware. IDs (R-n) are stable and never reused; R-1 to R-20 are taken.
+
+## What still needs a real device
+
+Most of LawFive has been checked in unit tests, the shared match cases, simulators and emulators. These are the checks that need real hardware. [The checklist for testing on a watch](../../watch-garmin/TESTING-ON-A-WATCH.md) covers the Garmin app.
+
+- **R-6** **Garmin watches.** The app has refereed real matches on a Venu 2, syncing through the Android app: the vibrations, the screen staying on near a period's end, the activity and its GPS map in Garmin Connect, the track with heart rate and the compass kickoff direction all worked. Still to check on a watch:
+  - **Reading it while running, and in sunlight:** each match screen layout (UI-21 to UI-25), the small time of day, the Ring's cost on AMOLED screens, the kits and the kickoff dot (UI-10, UI-11), the added time left and the time over it (TMR-16), the orange stopped clock (TMR-15), the sin bin pills (EVT-12), and the app icon in the app list on AMOLED and memory-in-pixel screens (UI-14).
+  - **Alerts:** the added time alert told apart from full time's (VIB-7); one vibration at the length with stoppage time (VIB-1); the sin bin alert (EVT-12); the lightning countdown (TMR-13).
+  - **Controls:** sideways team swipes (INP-10), the Back press only turning the screen on (INP-11), touch lock in rain (INP-12), touch and buttons with sweat and rain, card reasons on the narrowest round screen (EVT-14), the team menu's five rows (EVT-15), Adjust clock's entry and its minus sign in each model's fonts (TMR-14).
+  - **Match flow:** the golden goal screen (ET-6), extra time's kickoff team and direction (ET-7), abandoning a match (EVT-11), a whole match of one period (SET-16), suspend and resume with the activity pausing in Garmin Connect (TMR-13), a goal with scorers off on a touch watch (EVT-10), an injury starting the stoppage (EVT-16), the clock-that-stops settings through Garmin Connect (TMR-15), moving an old screen layout to the default on an existing install (UI-24).
+  - **Sync and data:** direct sync through Garmin Connect, typing a server address (SYNC-9), the distance at full time (SYNC-7), the forecast line (WX-7), storage over 90 minutes (TRK-7), a linked server kept on the watch, and a phone silencing the watch's notifications during a match (TIP-1).
+  - **Battery** over a full match with GPS (R-4).
+- **R-12** **iPhone.** The app has run on simulators and on an iPad. Not yet checked on a real iPhone: the QR scanner and camera, notifications, background sync, the local network prompt, the app icon (light, dark and tinted) and launch screen, and the look in sunlight and at night (IOS-13). Garmin's iOS SDK can't start the app from a watch message as Android can, so the bridge (IOS-9) may need the app open at a ground without signal. Older iOS versions have drawn layouts differently from the simulators' newer ones, so a new layout is worth a look on the oldest supported iOS.
+- **R-13** **Wear OS and Apple Watch.** Both have run mostly on an emulator and a simulator, and Wear OS on a real watch. Still to check on real watches:
+  - The system's text entry (timer names, the server address; WCH-11, SYNC-9), which didn't hand text back on the Wear OS emulator.
+  - Recording a real match (WCH-7): heart rate, GPS and speed, distance, battery, the workout with the screen off, and the copies in Apple Health and Health Connect.
+  - The compass (WCH-10), vibration strength, screen-off behavior, the physical buttons and the crown, the golden goal (ET-6), the kickoff direction picture (PRE-8), abandoning and the sync screen with a real connection (EVT-11, UI-26), sideways team swipes on Wear OS (INP-10), Mark pitch with real GPS (TRK-13), the Apple Watch's hardware identifier (STAT-15), linking the Apple Watch from the iPhone (WCH-12), and Water Lock at each kickoff (INP-12).
+  - Wear OS's foreground service type and the Apple Watch's workout session may need explaining to the stores' reviewers.
+- **R-18** **Push notifications.** The relay at `push.lawfive.app` has delivered to an emulator. Still to check: a real phone, delivery while it's asleep, the daily limits in production, and for integrations (NOTE-1 to NOTE-4) the wording for one match and several, and a canceled match's reminders going.
+- **R-20** **Plan limits from a phone offline.** Plans (PLAN-4) refuse a match, referee or venue a phone made offline once the account is at its limit; the phone keeps it and the sync fails for it, as for any refused save. Not yet tried on a phone. The watch's own recordings are never refused.
+
+Android's checks still to do (APP-13, APP-14, APP-27): the scanner reading a real QR code, the camera opening Get the app, Open in the app, the launcher and notification icons, and the look in sunlight and at night. Deleting a match (RES-8) with and without signal on both phones.
+
+## Platform limits
+
+- **R-1 (Resolved)** On some touch watches a swipe right is the system Back gesture. The match screen opens the game menu on Back, so the app is never left by accident.
+- **R-2** The Garmin app must be a full device app (not a widget or watch face) to record an activity.
+- **R-3** Recording, GPS and the compass (PRE-8) need the `Fit`, `Positioning` and `Sensor` permissions in the Garmin manifest.
+- **R-4** Battery: a full match with GPS (about 2 hours with half-time and added time) needs testing on the target watches.
+- **R-5** If the app closes or crashes mid-match, the clocks resume correctly (TMR-8). The activity so far is saved, and recording continues as a new activity when the app reopens.
+- **R-7** Touch watches deliver input twice (a tap as Select and then as a positioned tap; Start/Stop as a key and Select). All input on the match, number and confirmation screens goes through one handler that keeps them apart (INP-9).
+- **R-8** Memory-in-pixel screens (for example non-AMOLED fēnix models) show only 64 colors, so team colors (UI-10) show as the nearest one, and the black or white text is chosen for the color as set.
+- **R-9** A sideloaded Garmin build gets no phone settings (Garmin Connect offers settings only for apps from the Connect IQ Store), so the planned match, aliases and colors (SET-11) can't be set that way. Account sync covers them, and the server is chosen on the watch (SYNC-9) or built in at install (SYNC-8).
+- **R-11** Garmin's Android phone SDK and Garmin Connect deliver the watch's messages by broadcast. Garmin Connect never binds to the SDK's binding service, and registering for it stops the broadcasts, so the app doesn't use it: the SDK's receiver takes messages while the app runs, and a receiver in the manifest (`WatchMessageReceiver`) starts it otherwise. A force-stopped app gets no broadcasts until it's opened again, so the watch goes direct then. `adb logcat -s LawFiveWatch` shows what Connect IQ sees. The Android README covers the simulator's quirks.
+- **R-16** The Apple Watch keeps a match running with a HealthKit workout session (WCH-5, WCH-7), which has no time limit. A whole match with the screen off on a real watch is still to check (R-13).
+- **R-17** The iPhone app includes Garmin's Connect IQ SDK, a closed binary under Garmin's license with no license file or privacy manifest, so anyone building it accepts that license. App Store Connect raised nothing about it on upload; App Review still might. The app declares `bluetooth-central` and a Bluetooth permission for a feature not yet tried on hardware, so a submission before it's proven takes those and Link a watch's From this phone section out.
+- **R-19** The Garmin watch's requests straight through Garmin Connect (without the LawFive phone app) can't see an answer's headers, so APP-23 doesn't cover them: a proxy's 404 while the server restarts looks like the server's, and the watch drops what it was sending (TRK-7, SYNC-11, UI-24, SYNC-12). Through the phone app it's covered. A fix could look for the server's JSON error instead, once it's known whether Garmin Connect passes an error's body on.
+
+## Server
+
+- **R-10** Photos (FILE-4) stored on disk live in the server's uploads volume; a deployment that doesn't mount one loses them when the container is replaced. Backups need the volume (or the bucket) as well as the database. LawFive doesn't encrypt photos in a bucket; that's the bucket's setting.
+- **R-14** Resetting a forgotten password doesn't end the account's other sessions, so a stolen one keeps working until it's signed out (SEC-7) or expires. Ending them on every reset would also unlink the person's watches. Accepted for now.
+- **R-15** Email addresses aren't confirmed, so anyone can sign up with an address that isn't theirs, including an `ADMIN_EMAILS` address nobody has signed up with yet, which would make them an admin. Add those accounts before opening a server, or leave `ADMIN_EMAILS` empty and use the setup wizard's code (ADM-5). Anyone who can read the server's logs can use that code until the first account exists.
+- Per-minute and per-day counts (PLAN-8) live in the server's memory, so a restart starts them again, and a second server process would count separately.

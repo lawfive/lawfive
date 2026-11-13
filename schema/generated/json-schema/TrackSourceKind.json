@@ -1,0 +1,17 @@
+{
+  "$id": "TrackSourceKind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "lawfive",
+    "refsix",
+    "fit",
+    "gpx",
+    "tcx",
+    "appleHealth",
+    "healthConnect",
+    "strava",
+    "other"
+  ],
+  "description": "lawfive: a LawFive watch app; refsix: imported from RefSix; fit, gpx, tcx: an activity file; appleHealth, healthConnect: a phone's health store; strava: from Strava."
+}

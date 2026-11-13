@@ -1,0 +1,36 @@
+{
+  "$id": "QuizProtocol.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "relatedLaws": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+      }
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "relatedLaws",
+    "url"
+  ],
+  "additionalProperties": false
+}

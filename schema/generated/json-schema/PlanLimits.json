@@ -1,0 +1,93 @@
+{
+  "$id": "PlanLimits.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "matches": {
+      "description": "Matches kept, not counting deleted ones; matches recorded on a watch are never refused. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "referees": {
+      "description": "Referees kept. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "venues": {
+      "description": "Venues kept. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "storageMb": {
+      "description": "Megabytes of photos and tracks (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "photoMb": {
+      "description": "The largest photo, in megabytes; the server's own most, 10 MB, still applies. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "fileMb": {
+      "description": "The largest file brought in (an import or a restore), in megabytes; the server's own most for each (5 MB and 2 GB) still applies. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "devices": {
+      "description": "Watches and phones signed in at once (PLAN-7); browsers don't count. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "pushPerDay": {
+      "description": "Phone notifications a day (from midnight UTC), across all the account's phones (PLAN-8). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "apiKeys": {
+      "description": "API keys (KEY-1). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "apiCallsPerMinute": {
+      "description": "Requests made with the account's API keys a minute, all its keys together (PLAN-8). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "apiCallsPerDay": {
+      "description": "Requests made with the account's API keys a day (from midnight UTC), all its keys together (PLAN-8). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "webhooks": {
+      "description": "Webhooks (HOOK-1). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "assignorCalendars": {
+      "description": "Assignor calendars (FEED-10). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "addressSearchesPerDay": {
+      "description": "Address searches a day (from midnight UTC), for placing venues on the map (PLAN-11). Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    }
+  },
+  "additionalProperties": false,
+  "description": "What a plan allows (PLAN-2)."
+}

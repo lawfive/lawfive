@@ -1,0 +1,75 @@
+{
+  "$id": "MatchDiagnostics.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "battery": {
+      "description": "The watch's battery at each period's kickoff and end, so the last is full time.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "at": {
+            "type": "string",
+            "enum": [
+              "kickoff",
+              "end"
+            ]
+          },
+          "percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "period",
+          "at",
+          "percent"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "app": {
+      "description": "The version of LawFive that recorded it.",
+      "type": "string",
+      "maxLength": 40
+    },
+    "firmware": {
+      "description": "The watch's own software.",
+      "type": "string",
+      "maxLength": 40
+    },
+    "gpsFirstFixSec": {
+      "description": "Seconds from kickoff to the first GPS fix.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "gpsSamples": {
+      "description": "Track samples taken.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "gpsMissed": {
+      "description": "Of those, how many had no GPS fix.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "restarts": {
+      "description": "How many times the app started again mid-match.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  },
+  "additionalProperties": false,
+  "description": "How the recording went, for tracing problems. Never on a shared match's page."
+}

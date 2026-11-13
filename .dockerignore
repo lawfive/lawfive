@@ -1,0 +1,12 @@
+**/node_modules
+.git
+watch-garmin
+docs
+site
+mobile
+**/.env
+.claude
+**/screenshots
+**/dist
+docs-site
+relay

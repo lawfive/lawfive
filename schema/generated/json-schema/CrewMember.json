@@ -1,0 +1,25 @@
+{
+  "$id": "CrewMember.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "role": {
+      "$ref": "Role.json"
+    },
+    "refereeId": {
+      "description": "A saved referee.",
+      "$ref": "Id.json"
+    },
+    "name": {
+      "description": "A name typed in, when no saved referee is linked.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    }
+  },
+  "required": [
+    "role"
+  ],
+  "additionalProperties": false,
+  "description": "Another official on the match."
+}

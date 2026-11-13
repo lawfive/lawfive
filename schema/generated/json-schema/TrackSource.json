@@ -1,0 +1,24 @@
+{
+  "$id": "TrackSource.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "$ref": "TrackSourceKind.json"
+    },
+    "device": {
+      "description": "What recorded it, for example garmin:venu2.",
+      "type": "string",
+      "maxLength": 60
+    },
+    "app": {
+      "description": "The app that recorded it, with its version: RefSix 1.9.1.",
+      "type": "string",
+      "maxLength": 60
+    }
+  },
+  "required": [
+    "kind"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,26 @@
+{
+  "$id": "PlanSettings.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "default": {
+      "description": "The plan new accounts join.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "signUpTrial": {
+      "description": "null: no trial.",
+      "anyOf": [
+        {
+          "$ref": "SignUpTrial.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

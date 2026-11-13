@@ -1,0 +1,11 @@
+{
+  "$id": "WatchClocks.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "one",
+    "stacked",
+    "sideBySide"
+  ],
+  "description": "One clock, or two: a smaller second clock under the first, or two the same size side by side (UI-21)."
+}

@@ -1,0 +1,1 @@
+ALTER TABLE "device" ADD COLUMN "app_version" text;

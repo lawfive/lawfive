@@ -1,0 +1,23 @@
+{
+  "id": "ussf",
+  "name": "United States",
+  "source": "US Soccer misconduct codes; checked against halfline.app/codes on 2026-10-26.",
+  "cautions": [
+    { "code": "UB", "description": "Unsporting behavior", "short": "Unsporting behavior" },
+    { "code": "DT", "description": "Dissent by word or action", "short": "Dissent" },
+    { "code": "PI", "description": "Persistent infringement", "short": "Persistent fouling" },
+    { "code": "DR", "description": "Delaying the restart of play", "short": "Delaying restart" },
+    { "code": "FRD", "description": "Failure to respect the required distance", "short": "Distance at restart" },
+    { "code": "ERL", "description": "Entering, re-entering or deliberately leaving the field without permission", "short": "Entered or left field" }
+  ],
+  "sendOffs": [
+    { "code": "SFP", "description": "Serious foul play", "short": "Serious foul play" },
+    { "code": "VC", "description": "Violent conduct", "short": "Violent conduct" },
+    { "code": "S", "description": "Spitting at an opponent or any other person", "short": "Spitting" },
+    { "code": "DGH", "description": "Denying a goal or an obvious goal-scoring opportunity by handling", "short": "DOGSO by handball" },
+    { "code": "DGF", "description": "Denying an obvious goal-scoring opportunity by a foul", "short": "DOGSO by foul" },
+    { "code": "AL", "description": "Offensive, insulting or abusive language or gestures", "short": "Abusive language" },
+    { "code": "2CT", "description": "Second caution in the same match", "short": "Second caution" }
+  ],
+  "secondCaution": "2CT"
+}

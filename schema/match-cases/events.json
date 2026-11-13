@@ -1,0 +1,1548 @@
+{
+    "$comment": "WCH-2: goals and cards (EVT-1 to EVT-7, EVT-11), team officials' cards (EVT-15), injuries (EVT-16), and undo (INP-6: this period only).",
+    "match": [
+        {
+            "name": "goals only in play, cards any time",
+            "ids": [
+                "EVT-1",
+                "EVT-7"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "event": "G",
+                            "team": "home"
+                        }
+                    ],
+                    "expect": {
+                        "events": 0,
+                        "score": [
+                            0,
+                            0
+                        ]
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 4
+                    },
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "Y",
+                            "team": "away",
+                            "seconds": -1,
+                            "player": 4
+                        }
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start"
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home",
+                        "player": 9
+                    },
+                    "expect": {
+                        "score": [
+                            1,
+                            0
+                        ],
+                        "last": {
+                            "type": "G",
+                            "team": "home",
+                            "seconds": 600,
+                            "player": 9
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a second yellow for the same team's number is a sending-off",
+            "ids": [
+                "EVT-6"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start",
+                        {
+                            "event": "Y",
+                            "team": "home",
+                            "player": 7
+                        }
+                    ],
+                    "expect": {
+                        "last": {
+                            "type": "Y"
+                        }
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 7
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y",
+                            "team": "away"
+                        }
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 7
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y2",
+                            "team": "home",
+                            "player": 7
+                        }
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home"
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y",
+                            "player": null
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "undo takes back the last goal or card, not a stoppage",
+            "ids": [
+                "EVT-5"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "1:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home"
+                    }
+                },
+                {
+                    "at": "2:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "3:00",
+                    "do": [
+                        "stoppage",
+                        "undo"
+                    ],
+                    "expect": {
+                        "score": [
+                            0,
+                            0
+                        ],
+                        "events": 1,
+                        "last": {
+                            "type": "S"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a card after full time",
+            "ids": [
+                "EVT-7"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "do": "finish",
+                    "expect": {
+                        "phase": "done"
+                    }
+                },
+                {
+                    "at": "50:00",
+                    "do": {
+                        "event": "R",
+                        "team": "home",
+                        "player": 2
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "R",
+                            "seconds": -3
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "abandoning keeps the score, with why",
+            "ids": [
+                "EVT-11"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "abandon": 1
+                    },
+                    "expect": {
+                        "phase": "done",
+                        "abandoned": true,
+                        "events": 2,
+                        "last": {
+                            "type": "A",
+                            "seconds": 600,
+                            "extra": 1
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "finishing isn't abandoning",
+            "ids": [
+                "EVT-11"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": "finish",
+                    "expect": {
+                        "phase": "done",
+                        "abandoned": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a second yellow needs the same team and number; a goal never is one",
+            "ids": [
+                "EVT-5",
+                "EVT-6"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 7
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y"
+                        }
+                    }
+                },
+                {
+                    "at": "11:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 7
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y"
+                        }
+                    }
+                },
+                {
+                    "at": "12:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 8
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y"
+                        }
+                    }
+                },
+                {
+                    "at": "13:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home"
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y"
+                        }
+                    }
+                },
+                {
+                    "at": "14:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home"
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y"
+                        }
+                    }
+                },
+                {
+                    "at": "15:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home",
+                        "player": 7
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "G"
+                        }
+                    }
+                },
+                {
+                    "at": "30:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 7
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y2",
+                            "seconds": 1800
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "00 is no number: two cards at 00 are never a second yellow",
+            "ids": [
+                "EVT-3",
+                "EVT-5"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "5:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 0
+                    },
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "Y",
+                            "team": "away",
+                            "player": null
+                        }
+                    }
+                },
+                {
+                    "at": "6:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 0
+                    },
+                    "expect": {
+                        "events": 2,
+                        "last": {
+                            "type": "Y",
+                            "team": "away",
+                            "player": null
+                        }
+                    }
+                },
+                {
+                    "at": "7:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home",
+                        "player": 0
+                    },
+                    "expect": {
+                        "score": [
+                            1,
+                            0
+                        ],
+                        "last": {
+                            "type": "G",
+                            "team": "home",
+                            "player": null
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a second yellow across the halves; undo takes back only it",
+            "ids": [
+                "EVT-5",
+                "INP-6"
+            ],
+            "format": {
+                "halftimeSec": 600
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "40:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 4
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "56:00",
+                    "do": [
+                        "endHalftime",
+                        "startNextPeriod"
+                    ]
+                },
+                {
+                    "at": "61:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 4
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y2",
+                            "seconds": 300
+                        }
+                    }
+                },
+                {
+                    "at": "61:30",
+                    "do": "undo"
+                },
+                {
+                    "at": "62:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 4
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y2",
+                            "seconds": 360
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "cards before kickoff, at half-time and after full time, but goals only in play",
+            "ids": [
+                "EVT-7"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "event": "G",
+                            "team": "home"
+                        },
+                        {
+                            "event": "Y",
+                            "team": "home",
+                            "player": 4
+                        }
+                    ],
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "Y",
+                            "seconds": -1
+                        }
+                    }
+                },
+                {
+                    "at": "0:01",
+                    "do": "start"
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 4
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y2"
+                        }
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "50:00",
+                    "do": {
+                        "event": "R",
+                        "team": "away"
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "R",
+                            "seconds": -2
+                        }
+                    }
+                },
+                {
+                    "at": "55:00",
+                    "do": [
+                        "endHalftime",
+                        {
+                            "event": "Y",
+                            "team": "away",
+                            "player": 8
+                        }
+                    ],
+                    "expect": {
+                        "last": {
+                            "type": "Y",
+                            "seconds": -2
+                        }
+                    }
+                },
+                {
+                    "at": "56:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "102:00",
+                    "do": "finish"
+                },
+                {
+                    "at": "103:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home"
+                    },
+                    "expect": {
+                        "score": [
+                            0,
+                            0
+                        ]
+                    }
+                },
+                {
+                    "at": "103:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 2
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "Y",
+                            "seconds": -3
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "goal types count for the team they're given to, and undo takes them off",
+            "ids": [
+                "EVT-8"
+            ],
+            "format": {
+                "goalTypes": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "event": "GO",
+                            "team": "home",
+                            "player": 4
+                        }
+                    ],
+                    "expect": {
+                        "events": 0
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start"
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "GO",
+                        "team": "home",
+                        "player": 4
+                    },
+                    "expect": {
+                        "last": {
+                            "type": "GO",
+                            "team": "home",
+                            "player": 4
+                        }
+                    }
+                },
+                {
+                    "at": "20:00",
+                    "do": {
+                        "event": "GP",
+                        "team": "away",
+                        "player": 9
+                    }
+                },
+                {
+                    "at": "30:00",
+                    "do": {
+                        "event": "GF",
+                        "team": "away",
+                        "player": 10
+                    },
+                    "expect": {
+                        "score": [
+                            1,
+                            2
+                        ]
+                    }
+                },
+                {
+                    "at": "30:00",
+                    "do": "undo",
+                    "expect": {
+                        "score": [
+                            1,
+                            1
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "undo takes back only the current period's events: at half-time the half just ended, in the second half nothing from the first",
+            "ids": [
+                "INP-6"
+            ],
+            "format": {
+                "halftimeSec": 600
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "G",
+                        "team": "home",
+                        "player": 9
+                    },
+                    "expect": {
+                        "score": [
+                            1,
+                            0
+                        ]
+                    }
+                },
+                {
+                    "at": "20:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "away",
+                        "player": 4
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "break",
+                        "events": 3
+                    }
+                },
+                {
+                    "at": "47:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 6
+                    },
+                    "expect": {
+                        "events": 4,
+                        "last": {
+                            "type": "Y",
+                            "seconds": -2
+                        }
+                    }
+                },
+                {
+                    "at": "48:00",
+                    "do": "undo",
+                    "expect": {
+                        "events": 3,
+                        "last": {
+                            "type": "E"
+                        }
+                    }
+                },
+                {
+                    "at": "48:30",
+                    "do": "undo",
+                    "expect": {
+                        "events": 2,
+                        "score": [
+                            1,
+                            0
+                        ],
+                        "last": {
+                            "type": "E"
+                        }
+                    }
+                },
+                {
+                    "at": "56:00",
+                    "do": [
+                        "endHalftime",
+                        "startNextPeriod"
+                    ],
+                    "expect": {
+                        "phase": "running",
+                        "period": 1
+                    }
+                },
+                {
+                    "at": "57:00",
+                    "do": "undo",
+                    "expect": {
+                        "events": 2,
+                        "score": [
+                            1,
+                            0
+                        ]
+                    }
+                },
+                {
+                    "at": "60:00",
+                    "do": {
+                        "event": "G",
+                        "team": "away",
+                        "player": 10
+                    },
+                    "expect": {
+                        "score": [
+                            1,
+                            1
+                        ],
+                        "events": 3
+                    }
+                },
+                {
+                    "at": "61:00",
+                    "do": "undo",
+                    "expect": {
+                        "score": [
+                            1,
+                            0
+                        ],
+                        "events": 2,
+                        "last": {
+                            "type": "E"
+                        }
+                    }
+                },
+                {
+                    "at": "62:00",
+                    "do": "undo",
+                    "expect": {
+                        "score": [
+                            1,
+                            0
+                        ],
+                        "events": 2
+                    }
+                }
+            ]
+        },
+        {
+            "name": "undo during play leaves a card from before kickoff, and one from extra time's break once it kicks off",
+            "ids": [
+                "INP-6"
+            ],
+            "format": {
+                "extraTime": true,
+                "etPeriods": 2,
+                "etPeriodSec": 900,
+                "halftimeSec": 300
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "event": "Y",
+                            "team": "away",
+                            "player": 4
+                        }
+                    ],
+                    "expect": {
+                        "events": 1
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start"
+                },
+                {
+                    "at": "1:00",
+                    "do": "undo",
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "Y",
+                            "seconds": -1
+                        }
+                    }
+                },
+                {
+                    "at": "2:00",
+                    "do": {
+                        "event": "R",
+                        "team": "home",
+                        "player": 5
+                    }
+                },
+                {
+                    "at": "3:00",
+                    "do": "undo",
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "Y",
+                            "seconds": -1
+                        }
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "50:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "95:00",
+                    "do": [
+                        "endPeriod",
+                        "chooseExtraTime",
+                        {
+                            "event": "Y",
+                            "team": "home",
+                            "player": 8
+                        }
+                    ],
+                    "expect": {
+                        "phase": "break",
+                        "last": {
+                            "type": "Y",
+                            "seconds": -2
+                        }
+                    }
+                },
+                {
+                    "at": "96:00",
+                    "do": [
+                        "endHalftime",
+                        {
+                            "kickoff": "away"
+                        },
+                        "startNextPeriod"
+                    ],
+                    "expect": {
+                        "phase": "running",
+                        "period": 2
+                    }
+                },
+                {
+                    "at": "97:00",
+                    "do": "undo",
+                    "expect": {
+                        "last": {
+                            "type": "Y",
+                            "seconds": -2
+                        },
+                        "score": [
+                            0,
+                            0
+                        ]
+                    }
+                },
+                {
+                    "at": "98:00",
+                    "do": {
+                        "event": "G",
+                        "team": "away",
+                        "player": 9
+                    },
+                    "expect": {
+                        "score": [
+                            0,
+                            1
+                        ]
+                    }
+                },
+                {
+                    "at": "99:00",
+                    "do": "undo",
+                    "expect": {
+                        "score": [
+                            0,
+                            0
+                        ],
+                        "last": {
+                            "type": "Y",
+                            "seconds": -2
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a team official cautioned and sent off, with the role, at any time",
+            "ids": [
+                "EVT-15",
+                "EVT-7"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "official": "Y",
+                            "team": "away",
+                            "role": "assistantCoach"
+                        }
+                    ],
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "TY",
+                            "team": "away",
+                            "seconds": -1,
+                            "player": null,
+                            "extra": 1
+                        }
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start"
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "official": "Y",
+                        "team": "home",
+                        "role": "headCoach"
+                    },
+                    "expect": {
+                        "events": 2,
+                        "score": [
+                            0,
+                            0
+                        ],
+                        "last": {
+                            "type": "TY",
+                            "team": "home",
+                            "seconds": 600,
+                            "player": null,
+                            "extra": 0
+                        }
+                    }
+                },
+                {
+                    "at": "20:00",
+                    "do": {
+                        "official": "R",
+                        "team": "home",
+                        "role": "headCoach"
+                    },
+                    "expect": {
+                        "events": 3,
+                        "last": {
+                            "type": "TR",
+                            "team": "home",
+                            "seconds": 1200,
+                            "player": null,
+                            "extra": 0
+                        }
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "50:00",
+                    "do": {
+                        "official": "R",
+                        "team": "away",
+                        "role": "other"
+                    },
+                    "expect": {
+                        "phase": "break",
+                        "last": {
+                            "type": "TR",
+                            "team": "away",
+                            "seconds": -2,
+                            "extra": 2
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a team official's caution is never a player's second yellow",
+            "ids": [
+                "EVT-15",
+                "EVT-5"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start",
+                        {
+                            "official": "Y",
+                            "team": "home",
+                            "role": "headCoach"
+                        },
+                        {
+                            "event": "Y",
+                            "team": "home",
+                            "player": 1
+                        }
+                    ],
+                    "expect": {
+                        "events": 2,
+                        "last": {
+                            "type": "Y",
+                            "team": "home",
+                            "player": 1
+                        }
+                    }
+                },
+                {
+                    "at": "1:00",
+                    "do": {
+                        "official": "Y",
+                        "team": "home",
+                        "role": "headCoach"
+                    },
+                    "expect": {
+                        "events": 3,
+                        "last": {
+                            "type": "TY",
+                            "extra": 0
+                        }
+                    }
+                },
+                {
+                    "at": "2:00",
+                    "do": {
+                        "event": "Y",
+                        "team": "home",
+                        "player": 1
+                    },
+                    "expect": {
+                        "events": 4,
+                        "last": {
+                            "type": "Y2",
+                            "player": 1
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "an injury starts the stoppage when it's tracked",
+            "ids": [
+                "EVT-16",
+                "TMR-10",
+                "EVT-4"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "I",
+                        "team": "home",
+                        "player": 7
+                    },
+                    "expect": {
+                        "events": 1,
+                        "score": [
+                            0,
+                            0
+                        ],
+                        "stoppageRunning": true,
+                        "last": {
+                            "type": "I",
+                            "team": "home",
+                            "seconds": 600,
+                            "player": 7,
+                            "extra": null
+                        }
+                    }
+                },
+                {
+                    "at": "11:30",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageRunning": false,
+                        "stoppageMs": 90000,
+                        "events": 2,
+                        "last": {
+                            "type": "S",
+                            "seconds": 600,
+                            "extra": 90
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "an injury while a stoppage runs leaves it running",
+            "ids": [
+                "EVT-16",
+                "TMR-10"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "5:00",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "5:20",
+                    "do": {
+                        "event": "I",
+                        "team": "away"
+                    },
+                    "expect": {
+                        "events": 1,
+                        "stoppageRunning": true,
+                        "last": {
+                            "type": "I",
+                            "team": "away",
+                            "seconds": 320,
+                            "player": null
+                        }
+                    }
+                },
+                {
+                    "at": "6:00",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageRunning": false,
+                        "stoppageMs": 60000,
+                        "events": 2,
+                        "last": {
+                            "type": "S",
+                            "seconds": 300,
+                            "extra": 60
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "an injury without stoppage tracked only records it",
+            "ids": [
+                "EVT-16"
+            ],
+            "format": {
+                "trackStoppage": false
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "I",
+                        "team": "away",
+                        "player": 4
+                    },
+                    "expect": {
+                        "events": 1,
+                        "stoppageRunning": false,
+                        "stoppageMs": 0,
+                        "last": {
+                            "type": "I",
+                            "team": "away",
+                            "seconds": 600,
+                            "player": 4
+                        }
+                    }
+                },
+                {
+                    "at": "12:00",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageRunning": false,
+                        "events": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "an injury at a break or before kickoff has no stoppage",
+            "ids": [
+                "EVT-16",
+                "EVT-7"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        {
+                            "event": "I",
+                            "team": "home",
+                            "player": 3
+                        }
+                    ],
+                    "expect": {
+                        "events": 1,
+                        "phase": "ready",
+                        "stoppageRunning": false,
+                        "last": {
+                            "type": "I",
+                            "seconds": -1,
+                            "player": 3
+                        }
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start"
+                },
+                {
+                    "at": "45:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "50:00",
+                    "do": {
+                        "event": "I",
+                        "team": "away",
+                        "player": 9
+                    },
+                    "expect": {
+                        "phase": "break",
+                        "stoppageRunning": false,
+                        "last": {
+                            "type": "I",
+                            "team": "away",
+                            "seconds": -2,
+                            "player": 9
+                        }
+                    }
+                },
+                {
+                    "at": "60:00",
+                    "do": [
+                        "endHalftime",
+                        "startNextPeriod"
+                    ],
+                    "expect": {
+                        "stoppageRunning": false,
+                        "stoppageMs": 0
+                    }
+                }
+            ]
+        },
+        {
+            "name": "undo takes back an injury, leaving its stoppage running, and a team official's card",
+            "ids": [
+                "EVT-15",
+                "EVT-16",
+                "INP-6"
+            ],
+            "format": {
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": [
+                        {
+                            "event": "I",
+                            "team": "home",
+                            "player": 7
+                        },
+                        "undo"
+                    ],
+                    "expect": {
+                        "events": 0,
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "11:00",
+                    "do": "stoppage",
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "S",
+                            "extra": 60
+                        }
+                    }
+                },
+                {
+                    "at": "12:00",
+                    "do": [
+                        {
+                            "official": "R",
+                            "team": "away",
+                            "role": "other"
+                        },
+                        "undo"
+                    ],
+                    "expect": {
+                        "events": 1,
+                        "last": {
+                            "type": "S"
+                        }
+                    }
+                },
+                {
+                    "at": "13:00",
+                    "do": [
+                        {
+                            "event": "G",
+                            "team": "home"
+                        },
+                        {
+                            "event": "I",
+                            "team": "away",
+                            "player": 2
+                        },
+                        "undo"
+                    ],
+                    "expect": {
+                        "events": 2,
+                        "score": [
+                            1,
+                            0
+                        ],
+                        "last": {
+                            "type": "G",
+                            "team": "home"
+                        },
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "13:30",
+                    "do": "stoppage",
+                    "expect": {
+                        "events": 3,
+                        "stoppageMs": 90000
+                    }
+                },
+                {
+                    "at": "45:00",
+                    "do": [
+                        "endPeriod",
+                        {
+                            "official": "Y",
+                            "team": "home",
+                            "role": "assistantCoach"
+                        },
+                        "undo"
+                    ],
+                    "expect": {
+                        "phase": "break",
+                        "last": {
+                            "type": "E"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

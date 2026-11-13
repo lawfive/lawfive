@@ -1,0 +1,7 @@
+{
+  "$id": "SchemeId.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "pattern": "^[a-z0-9-]+$",
+  "description": "A misconduct scheme's ID, the name of its file in schema/misconduct/ (ifab, ussf, fa)."
+}

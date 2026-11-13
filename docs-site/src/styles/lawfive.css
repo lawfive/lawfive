@@ -1,0 +1,577 @@
+/* LawFive's look on Starlight: Pitch & Scoreboard (DESIGN.md), kept calm for reading. The stadium
+   board runs across the top, the sidebar is the grass, and the words sit on a chalk panel (a dark
+   slab at a night match), so long reading never has stripes or green behind it. The --lf-* tokens
+   are copies of web/src/styles.css's, as site/ keeps its own: a change to them is made in each.
+   Starlight's colors are set from them for each place, as the website's working tokens are: on the
+   page, on the board and on the grass. Its bare :root is dark (a night match); data-theme="light"
+   is the day. */
+
+:root {
+    --sl-font: "Barlow", "Helvetica Neue", sans-serif;
+    --sl-font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    --lf-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+    --lf-radius: 6px;
+
+    /* A night match. */
+    --lf-pitch: #0f2e20;
+    --lf-chalk: #e6e9e3;
+    --lf-chalk-line: #b4bdb6;
+    --lf-chalk-muted: #a6c2b0;
+    --lf-chalk-faint: rgb(180 189 182 / 30%);
+    --lf-hero-shadow: 4px 3px 0 #2fae7a;
+    --lf-board: #121614;
+    --lf-board-edge: #313c36;
+    --lf-board-rule: #2e3934;
+    --lf-on-board: #e6e9e3;
+    --lf-on-board-strong: #ffffff;
+    --lf-on-board-muted: #a7b1ab;
+    --lf-on-board-dim: #7c8580;
+    --lf-mint: #2fae7a;
+    --lf-mint-fold: #1d7a54;
+    --lf-panel: #0f1b15;
+    --lf-panel-2: #16241d;
+    --lf-ink: #e6e9e3;
+    --lf-ink-muted: #a3aea7;
+    --lf-ink-border: #26332c;
+    --lf-ink-rule: #7d8a83;
+    --lf-ink-input: #6b7872;
+    --lf-brand: #2fae7a;
+    --lf-brand-strong: #5cc999;
+    --lf-brand-soft: #173a2b;
+    --lf-on-brand: #04140d;
+    --lf-red-text: #ff8589;
+    --lf-red-soft: #3a1b1c;
+    --lf-amber-soft: #3a3214;
+    --lf-amber-text: #f0cd5a;
+    --lf-blue-soft: #172636;
+    --lf-blue-text: #8ab8ea;
+
+    /* On the page: ink on the panel. */
+    --sl-color-white: var(--lf-ink);
+    --sl-color-gray-1: var(--lf-ink);
+    --sl-color-gray-2: var(--lf-ink);
+    --sl-color-gray-3: var(--lf-ink-muted);
+    --sl-color-gray-4: var(--lf-ink-input);
+    --sl-color-gray-5: var(--lf-ink-border);
+    --sl-color-gray-6: var(--lf-panel-2);
+    --sl-color-gray-7: var(--lf-panel-2);
+    --sl-color-black: var(--lf-panel);
+    --sl-color-text: var(--lf-ink);
+    --sl-color-accent-low: var(--lf-brand-soft);
+    --sl-color-accent: var(--lf-brand);
+    --sl-color-accent-high: var(--lf-brand-strong);
+    --sl-color-text-accent: var(--lf-brand-strong);
+    --sl-color-text-invert: var(--lf-on-brand);
+    --sl-color-bg: var(--lf-panel);
+    --sl-color-bg-nav: var(--lf-panel);
+    --sl-color-bg-sidebar: var(--lf-pitch);
+    --sl-color-bg-inline-code: color-mix(in srgb, var(--lf-ink) 7%, transparent);
+    --sl-color-hairline-light: var(--lf-ink-border);
+    --sl-color-hairline: var(--lf-ink-border);
+    --sl-color-hairline-shade: var(--lf-ink-border);
+    --sl-color-backdrop-overlay: rgb(4 10 7 / 70%);
+    /* Notices: amber for take care, blue for information, red for danger, pitch green for tips. */
+    --sl-color-orange-low: var(--lf-amber-soft);
+    --sl-color-orange: #b77d00;
+    --sl-color-orange-high: var(--lf-amber-text);
+    --sl-color-blue-low: var(--lf-blue-soft);
+    --sl-color-blue: #4f86c6;
+    --sl-color-blue-high: var(--lf-blue-text);
+    --sl-color-red-low: var(--lf-red-soft);
+    --sl-color-red: #d4202a;
+    --sl-color-red-high: var(--lf-red-text);
+    --sl-color-green-low: var(--lf-brand-soft);
+    --sl-color-green: var(--lf-brand);
+    --sl-color-green-high: var(--lf-brand-strong);
+    --sl-color-purple-low: var(--lf-brand-soft);
+    --sl-color-purple: var(--lf-brand);
+    --sl-color-purple-high: var(--lf-brand-strong);
+}
+
+/* The day. */
+:root[data-theme="light"] {
+    --lf-pitch: #12613e;
+    --lf-chalk: #f4f2e9;
+    --lf-chalk-line: #f4f2e9;
+    --lf-chalk-muted: #c4dccd;
+    --lf-chalk-faint: rgb(244 242 233 / 32%);
+    --lf-hero-shadow: 0.035em 0.035em 0 #06301d;
+    --lf-board: #0b0e0d;
+    --lf-board-edge: transparent;
+    --lf-board-rule: #25302b;
+    --lf-on-board: #f4f2e9;
+    --lf-on-board-muted: #b6bfba;
+    --lf-on-board-dim: #7f8883;
+    --lf-panel: #f4f2e9;
+    --lf-panel-2: #e9e7dc;
+    --lf-ink: #0e1311;
+    --lf-ink-muted: #4d5650;
+    --lf-ink-border: #d6d4c8;
+    --lf-ink-rule: #0e1311;
+    --lf-ink-input: #858a82;
+    --lf-brand: #0b6b47;
+    --lf-brand-strong: #08573a;
+    --lf-brand-soft: #dbe8db;
+    --lf-on-brand: #ffffff;
+    --lf-red-text: #b8232a;
+    --lf-red-soft: #f6dcd7;
+    --lf-amber-soft: #f6e8b5;
+    --lf-amber-text: #6f5400;
+    --lf-blue-soft: #dde6ee;
+    --lf-blue-text: #1a5699;
+
+    --sl-color-text-accent: var(--lf-brand);
+    --sl-color-backdrop-overlay: rgb(11 14 13 / 55%);
+    --sl-color-blue: #1a5699;
+}
+
+/* On the board: the top bar. */
+.page > .header {
+    --sl-color-white: var(--lf-on-board-strong);
+    --sl-color-gray-1: var(--lf-on-board);
+    --sl-color-gray-2: var(--lf-on-board-muted);
+    --sl-color-gray-3: var(--lf-on-board-muted);
+    --sl-color-gray-4: var(--lf-on-board-dim);
+    --sl-color-gray-5: var(--lf-board-rule);
+    --sl-color-gray-6: rgb(255 255 255 / 8%);
+    --sl-color-black: var(--lf-board);
+    --sl-color-text: var(--lf-on-board);
+    --sl-color-text-accent: var(--lf-mint);
+    --sl-color-bg-nav: var(--lf-board);
+    background: var(--lf-board);
+    border-bottom: 1px solid var(--lf-board-edge);
+    color: var(--lf-on-board);
+}
+/* The search dialog opens from the board, but reads as the page. */
+.page > .header dialog {
+    --sl-color-white: var(--lf-ink);
+    --sl-color-gray-1: var(--lf-ink);
+    --sl-color-gray-2: var(--lf-ink);
+    --sl-color-gray-3: var(--lf-ink-muted);
+    --sl-color-gray-4: var(--lf-ink-input);
+    --sl-color-gray-5: var(--lf-ink-border);
+    --sl-color-gray-6: var(--lf-panel);
+    --sl-color-black: var(--lf-panel-2);
+    --sl-color-text: var(--lf-ink);
+    --sl-color-text-accent: var(--lf-brand);
+    --sl-color-bg-nav: var(--lf-panel);
+    color: var(--lf-ink);
+}
+:root:not([data-theme="light"]) .page > .header dialog { --sl-color-text-accent: var(--lf-brand-strong); }
+
+/* The wordmark: the mark beside LAWFIVE in black italic capitals, FIVE in mint, then DOCS as one of
+   the board's small labels. */
+.lf-wordmark {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-family: var(--lf-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--lf-on-board);
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 4px;
+}
+.lf-wordmark .lf-mark { height: 0.95em; width: auto; margin-right: 0.22em; flex: none; overflow: visible; }
+.lf-mark .l { fill: var(--lf-on-board); }
+.lf-mark .five { fill: var(--lf-mint); }
+.lf-mark .fold { fill: var(--lf-mint-fold); }
+.lf-name { padding-right: 0.06em; }
+.lf-name span { color: var(--lf-mint); }
+.lf-docs {
+    margin-left: 0.7rem;
+    padding-left: 0.7rem;
+    border-left: 1px solid var(--lf-board-rule);
+    font-family: var(--sl-font-mono);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lf-on-board-muted);
+    align-self: center;
+    line-height: 1.6;
+}
+.lf-wordmark:hover .lf-docs { color: var(--lf-on-board); }
+@media (max-width: 22rem) {
+    .lf-wordmark { font-size: 1.5rem; }
+    .lf-docs { margin-left: 0.5rem; padding-left: 0.5rem; }
+}
+
+/* The board's controls: search as an outline on the board, the menu button a chalk slab. */
+.page > .header button[data-open-modal] { border-radius: var(--lf-radius); background: transparent; }
+@media (min-width: 50rem) {
+    .page > .header button[data-open-modal] { border: 1px solid #3a4540; }
+    .page > .header button[data-open-modal]:hover { border-color: var(--lf-on-board-muted); }
+}
+.page > .header button[data-open-modal] > kbd { background: rgb(255 255 255 / 8%); color: var(--lf-on-board-muted); font-family: var(--sl-font-mono); }
+.page > .header .social-icons::after { border-color: var(--lf-board-rule); }
+.page > .header :focus-visible { outline: 2px solid var(--lf-on-board); outline-offset: 2px; }
+.sl-menu-button,
+:root[data-theme="light"] .sl-menu-button {
+    border-radius: var(--lf-radius);
+    background: var(--lf-on-board);
+    color: var(--lf-board);
+    box-shadow: none;
+}
+.sl-menu-button:has(~ :popover-open),
+:root[data-theme="light"] .sl-menu-button:has(~ :popover-open) { background: var(--lf-on-board-muted); }
+.sl-menu-button:focus-visible { outline: 2px solid var(--lf-on-board); outline-offset: 2px; }
+
+/* On the grass: the sidebar, words in chalk. */
+.sidebar-pane {
+    --sl-color-white: var(--lf-chalk);
+    --sl-color-gray-1: var(--lf-chalk);
+    --sl-color-gray-2: var(--lf-chalk-muted);
+    --sl-color-gray-3: var(--lf-chalk-muted);
+    --sl-color-gray-4: var(--lf-chalk-faint);
+    --sl-color-gray-5: var(--lf-chalk-faint);
+    --sl-color-gray-6: rgb(255 255 255 / 9%);
+    --sl-color-black: var(--lf-pitch);
+    --sl-color-text: var(--lf-chalk);
+    --sl-color-text-accent: var(--lf-chalk);
+    --sl-color-text-invert: var(--lf-ink);
+    --sl-color-hairline-light: var(--lf-chalk-faint);
+    --sl-color-hairline-shade: transparent;
+    --sl-color-bg-nav: var(--lf-pitch);
+    color: var(--lf-chalk);
+}
+.sidebar-pane :focus-visible { outline: 2px solid var(--lf-chalk); outline-offset: 2px; }
+/* A group's label, as on the grass: black italic capitals in chalk. */
+.sidebar-content .large {
+    font-family: var(--lf-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--lf-chalk);
+}
+.sidebar-content summary { padding-block: 0.3em; }
+.sidebar-content ul ul li { border-inline-start-width: 2px; }
+.sidebar-content a { font-weight: 500; }
+.sidebar-content a:hover { color: var(--lf-chalk); }
+/* The page you're on is a chalk slab, and on a computer a tunnel: a tab of the page itself, running
+   off the grass into it, as the board's current page runs into the pitch on the website. */
+.sidebar-content a[aria-current="page"],
+.sidebar-content a[aria-current="page"]:hover,
+.sidebar-content a[aria-current="page"]:focus {
+    background: var(--lf-panel);
+    color: var(--lf-ink);
+    font-weight: 700;
+    border-radius: 4px;
+}
+@media (min-width: 50rem) {
+    /* No gutter kept for a scrollbar, so the tunnel reaches the page; a thin one shows only when the
+       sidebar is taller than the window. */
+    .sidebar-pane {
+        border-inline-end: 0;
+        scrollbar-gutter: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--lf-chalk-faint) transparent;
+    }
+    .sidebar-content a[aria-current="page"] {
+        margin-inline-end: calc(-1 * var(--sl-sidebar-pad-x));
+        border-radius: 4px 0 0 4px;
+    }
+}
+
+/* The mobile "On this page" bar and the right column read as the page. */
+mobile-starlight-toc nav { border-top: 0; }
+.right-sidebar h2,
+mobile-starlight-toc .toggle {
+    font-family: var(--sl-font-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lf-ink-muted);
+}
+starlight-toc a[aria-current="true"],
+starlight-toc a[aria-current="true"]:hover { color: var(--sl-color-text-accent); font-weight: 600; }
+
+/* Type: Barlow for reading; Barlow Condensed black italic capitals for the big headings, as the
+   website's page titles and h2s; a calmer condensed h3 in ordinary case, as a docs page has many. */
+body { color: var(--lf-ink); }
+.sl-markdown-content { line-height: 1.7; }
+h1#_top {
+    font-family: var(--lf-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(2.25rem, 1.4rem + 3vw, 3.25rem);
+    line-height: 0.98;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    /* The italic's overhang, plus the room Starlight keeps at the end of a heading for its link icon. */
+    padding-right: calc(0.06em + var(--sl-anchor-icon-space, 0em));
+    color: var(--lf-ink);
+}
+.sl-markdown-content h2:not(:where(.not-content *)) {
+    font-family: var(--lf-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(1.6rem, 1.25rem + 1.2vw, 2rem);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    /* The italic's overhang, plus the room Starlight keeps at the end of a heading for its link icon. */
+    padding-right: calc(0.06em + var(--sl-anchor-icon-space, 0em));
+    color: var(--lf-ink);
+}
+.sl-markdown-content h3:not(:where(.not-content *)) {
+    font-family: var(--lf-display);
+    font-weight: 800;
+    font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: var(--lf-ink);
+}
+.sl-markdown-content h4:not(:where(.not-content *)) {
+    font-family: var(--sl-font);
+    font-weight: 700;
+    font-size: var(--sl-text-lg);
+    color: var(--lf-ink);
+}
+/* Code in a heading keeps its case and its own font. */
+.sl-markdown-content :is(h1, h2, h3, h4) code { text-transform: none; font-style: normal; font-weight: 400; }
+.sl-markdown-content :is(h2, h3) { scroll-margin-top: 1rem; }
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+    color: var(--sl-color-text-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+}
+.sl-markdown-content a:not(:where(.not-content *)):hover { text-decoration-thickness: 2px; }
+.sl-markdown-content strong { font-weight: 700; color: var(--lf-ink); }
+.sl-markdown-content :focus-visible,
+.content-panel :focus-visible,
+.pagination-links a:focus-visible { outline: 2px solid var(--sl-color-text-accent); outline-offset: 2px; }
+
+/* Code (DESIGN.md: Code): JetBrains Mono a little smaller than the words around it, on a faint tint
+   of the text color, small rounded corners. */
+.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
+    font-size: 0.86em;
+    padding: 0.1em 0.3em;
+    border-radius: 4px;
+    background: var(--sl-color-bg-inline-code);
+    overflow-wrap: anywhere;
+}
+/* In a table, a setting's name keeps whole where the column allows, and the table scrolls before it
+   breaks mid-word. */
+.sl-markdown-content td code { overflow-wrap: break-word; }
+
+/* Tables on the panel: the board's small labels across the top over a heavy rule, rows divided by
+   hairlines. */
+.sl-markdown-content table:not(:where(.not-content *)) {
+    display: block;
+    overflow-x: auto;
+    font-size: var(--sl-text-sm);
+    border-collapse: collapse;
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+    background: none;
+    font-family: var(--sl-font-mono);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lf-ink-muted);
+    border-bottom: 2px solid var(--lf-ink-rule);
+    vertical-align: bottom;
+    white-space: nowrap;
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) { border-color: var(--lf-ink-border); padding-block: 0.6rem; }
+.sl-markdown-content td:not(:where(.not-content *)) { border-bottom: 1px solid var(--lf-ink-border); }
+.sl-markdown-content th:not(:where(.not-content *)) { border-bottom-color: var(--lf-ink-rule); }
+.sl-markdown-content :is(th, td) code { white-space: nowrap; }
+.sl-markdown-content td + td code { white-space: normal; }
+
+/* Notices: a soft panel with a 4px edge in its color and a condensed capital title. */
+.starlight-aside {
+    border-radius: var(--lf-radius);
+    border-inline-start-width: 4px;
+    color: var(--lf-ink);
+}
+.starlight-aside__title {
+    font-family: var(--lf-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.starlight-aside__icon { font-size: 1.15em; }
+:root[data-theme="light"] .starlight-aside--caution { --sl-color-asides-border: #b77d00; }
+.starlight-aside--tip { --sl-color-asides-text-accent: var(--sl-color-text-accent); }
+
+/* Blockquotes and rules on the panel. */
+.sl-markdown-content blockquote:not(:where(.not-content *)) { border-inline-start: 3px solid var(--lf-ink-border); color: var(--lf-ink-muted); }
+.sl-markdown-content hr:not(:where(.not-content *)) { border-color: var(--lf-ink-border); }
+
+/* <details>: Phosphor's caret, as DESIGN.md has for every icon. */
+.sl-markdown-content details:not(:where(.not-content *)) summary::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z'/%3E%3C/svg%3E");
+}
+
+/* A terminal's title bar is a strip of the stadium board; its title in the board's small labels. */
+.expressive-code .frame.is-terminal .header { background: var(--lf-board); }
+.expressive-code .frame.is-terminal .header .title { color: var(--lf-on-board-muted); font-family: var(--sl-font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* Previous and next: outlines on the panel, the page's name in condensed capitals. */
+.pagination-links a {
+    border: 2px solid var(--lf-ink-border);
+    border-radius: var(--lf-radius);
+    box-shadow: none;
+    color: var(--lf-ink-muted);
+    font-family: var(--sl-font-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.pagination-links a:hover { border-color: var(--sl-color-text-accent); }
+.pagination-links .link-title {
+    display: inline-block;
+    margin-top: 0.25rem;
+    font-family: var(--lf-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.4rem;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+    /* The italic's overhang, plus the room Starlight keeps at the end of a heading for its link icon. */
+    padding-right: calc(0.06em + var(--sl-anchor-icon-space, 0em));
+    color: var(--lf-ink);
+}
+.pagination-links a:hover .link-title { color: var(--sl-color-text-accent); }
+.pagination-links svg { color: var(--sl-color-text-accent); }
+
+/* Cards: a panel with an outline, the icon on a board tile in mint, as the website shows a record's
+   icon, and the title in condensed capitals. */
+.card {
+    border: 2px solid var(--lf-ink-border);
+    border-radius: var(--lf-radius);
+    background: var(--lf-panel);
+}
+.card .title {
+    font-family: var(--lf-display);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.45rem;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    /* The italic's overhang, plus the room Starlight keeps at the end of a heading for its link icon. */
+    padding-right: calc(0.06em + var(--sl-anchor-icon-space, 0em));
+}
+.card .icon,
+.card:nth-child(n) .icon {
+    box-sizing: border-box;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0.5rem;
+    background: var(--lf-board);
+    color: var(--lf-mint);
+    border: 1px solid var(--lf-board-edge);
+    border-radius: 4px;
+}
+.sl-link-card { border-radius: var(--lf-radius); }
+
+/* Buttons: condensed capitals, 6px corners. */
+.sl-link-button {
+    border-radius: var(--lf-radius);
+    font-family: var(--lf-display);
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* The home page: the hero on the grass, full width, the rest of the page on the chalk panel. */
+/* The grass runs edge to edge: the hero's own background, drawn out to the screen's sides by a
+   border image, which paints beyond the box without making the page scroll sideways. */
+.content-panel:has(.lf-hero) { padding-top: 0; }
+.lf-hero {
+    display: grid;
+    grid-template-columns: 100%;
+    color: var(--lf-chalk);
+    background: var(--lf-pitch);
+    border-image: linear-gradient(var(--lf-pitch) 0 0) fill 0 / / 0 100vw;
+}
+.lf-hero + .sl-markdown-content { margin-top: 2.5rem; }
+.lf-hero .hero {
+    grid-template-columns: 100%;
+    padding-block: 2.5rem 2.75rem;
+}
+.lf-hero h1#_top {
+    font-size: clamp(2.75rem, 1.2rem + 7vw, 5.75rem);
+    line-height: 0.92;
+    color: var(--lf-chalk);
+    text-shadow: var(--lf-hero-shadow);
+    padding-right: 0.08em;
+}
+.lf-hero .tagline { color: var(--lf-chalk); font-size: clamp(1.0625rem, 0.9rem + 0.6vw, 1.3rem); line-height: 1.5; }
+.lf-hero .copy > * { max-width: 34rem; }
+.lf-hero .sl-link-button {
+    min-height: 3rem;
+    padding: 0.7rem 1.25rem;
+    font-size: 1.1rem;
+    border-width: 2px;
+}
+.lf-hero .sl-link-button.primary {
+    background: var(--lf-chalk);
+    border-color: var(--lf-chalk);
+    color: #0b0e0d;
+    box-shadow: 0 3px 0 #0b0e0d;
+}
+.lf-hero .sl-link-button.primary:hover { background: #ffffff; border-color: #ffffff; color: #0b0e0d; }
+.lf-hero .sl-link-button.minimal {
+    padding-inline: 1.25rem;
+    border-color: var(--lf-chalk);
+    color: var(--lf-chalk);
+}
+.lf-hero .sl-link-button.minimal:hover { background: rgb(255 255 255 / 9%); }
+.lf-hero .sl-link-button:focus-visible { outline: 2px solid var(--lf-chalk); outline-offset: 3px; }
+.lf-pitch { display: none; }
+@media (min-width: 50rem) {
+    .lf-hero { grid-template-columns: 1fr auto; gap: 3rem; align-items: stretch; }
+    .lf-hero .hero { padding-block: 4.5rem 4.75rem; }
+    /* The halfway line from the top of the grass to the center circle, and on from it to the foot,
+       stopping at the circle so no chalk runs through the mark. */
+    .lf-pitch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: clamp(14rem, 26vw, 21rem);
+        margin-right: clamp(0rem, 4vw, 4rem);
+    }
+    .lf-halfway { flex: 1; min-height: 3rem; width: 3px; background: var(--lf-chalk-line); }
+    .lf-circle {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 100%;
+        aspect-ratio: 1;
+        border: 3px solid var(--lf-chalk-line);
+        border-radius: 50%;
+    }
+    .lf-circle .lf-mark { width: 44%; height: auto; overflow: visible; }
+}
+/* On the grass the mark is all chalk, as the website draws it there. */
+.lf-circle .lf-mark .l,
+.lf-circle .lf-mark .five { fill: var(--lf-chalk); }
+.lf-circle .lf-mark .fold { fill: var(--lf-chalk-muted); }
+
+/* The preview banner: an amber notice across the top. */
+.preview-banner a { color: inherit; text-decoration: underline; }
+
+@media print {
+    .page > .header, .sidebar-pane { background: none; }
+}
+
+/* Search: Phosphor's magnifying glass, x and page in place of Pagefind's and Starlight's own. */
+#starlight__search .pagefind-ui__form::before { -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%20fill%3D%22black%22%3E%3Cpath%20d%3D%22M229.66%2C218.34l-50.07-50.06a88.11%2C88.11%2C0%2C1%2C0-11.31%2C11.31l50.06%2C50.07a8%2C8%2C0%2C0%2C0%2C11.32-11.32ZM40%2C112a72%2C72%2C0%2C1%2C1%2C72%2C72A72.08%2C72.08%2C0%2C0%2C1%2C40%2C112Z%22%2F%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%20fill%3D%22black%22%3E%3Cpath%20d%3D%22M229.66%2C218.34l-50.07-50.06a88.11%2C88.11%2C0%2C1%2C0-11.31%2C11.31l50.06%2C50.07a8%2C8%2C0%2C0%2C0%2C11.32-11.32ZM40%2C112a72%2C72%2C0%2C1%2C1%2C72%2C72A72.08%2C72.08%2C0%2C0%2C1%2C40%2C112Z%22%2F%3E%3C%2Fsvg%3E"); -webkit-mask-size: contain; mask-size: contain; }
+#starlight__search .pagefind-ui__search-clear::before { -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%20fill%3D%22black%22%3E%3Cpath%20d%3D%22M205.66%2C194.34a8%2C8%2C0%2C0%2C1-11.32%2C11.32L128%2C139.31%2C61.66%2C205.66a8%2C8%2C0%2C0%2C1-11.32-11.32L116.69%2C128%2C50.34%2C61.66A8%2C8%2C0%2C0%2C1%2C61.66%2C50.34L128%2C116.69l66.34-66.35a8%2C8%2C0%2C0%2C1%2C11.32%2C11.32L139.31%2C128Z%22%2F%3E%3C%2Fsvg%3E") center / 50% no-repeat; mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%20fill%3D%22black%22%3E%3Cpath%20d%3D%22M205.66%2C194.34a8%2C8%2C0%2C0%2C1-11.32%2C11.32L128%2C139.31%2C61.66%2C205.66a8%2C8%2C0%2C0%2C1-11.32-11.32L116.69%2C128%2C50.34%2C61.66A8%2C8%2C0%2C0%2C1%2C61.66%2C50.34L128%2C116.69l66.34-66.35a8%2C8%2C0%2C0%2C1%2C11.32%2C11.32L139.31%2C128Z%22%2F%3E%3C%2Fsvg%3E") center / 50% no-repeat; }
+#starlight__search .pagefind-ui__result-inner > .pagefind-ui__result-title::before { -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%20fill%3D%22black%22%3E%3Cpath%20d%3D%22M213.66%2C82.34l-56-56A8%2C8%2C0%2C0%2C0%2C152%2C24H56A16%2C16%2C0%2C0%2C0%2C40%2C40V216a16%2C16%2C0%2C0%2C0%2C16%2C16H200a16%2C16%2C0%2C0%2C0%2C16-16V88A8%2C8%2C0%2C0%2C0%2C213.66%2C82.34ZM160%2C51.31%2C188.69%2C80H160ZM200%2C216H56V40h88V88a8%2C8%2C0%2C0%2C0%2C8%2C8h48V216Zm-32-80a8%2C8%2C0%2C0%2C1-8%2C8H96a8%2C8%2C0%2C0%2C1%2C0-16h64A8%2C8%2C0%2C0%2C1%2C168%2C136Zm0%2C32a8%2C8%2C0%2C0%2C1-8%2C8H96a8%2C8%2C0%2C0%2C1%2C0-16h64A8%2C8%2C0%2C0%2C1%2C168%2C168Z%22%2F%3E%3C%2Fsvg%3E") center / 1.25rem no-repeat; mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%20fill%3D%22black%22%3E%3Cpath%20d%3D%22M213.66%2C82.34l-56-56A8%2C8%2C0%2C0%2C0%2C152%2C24H56A16%2C16%2C0%2C0%2C0%2C40%2C40V216a16%2C16%2C0%2C0%2C0%2C16%2C16H200a16%2C16%2C0%2C0%2C0%2C16-16V88A8%2C8%2C0%2C0%2C0%2C213.66%2C82.34ZM160%2C51.31%2C188.69%2C80H160ZM200%2C216H56V40h88V88a8%2C8%2C0%2C0%2C0%2C8%2C8h48V216Zm-32-80a8%2C8%2C0%2C0%2C1-8%2C8H96a8%2C8%2C0%2C0%2C1%2C0-16h64A8%2C8%2C0%2C0%2C1%2C168%2C136Zm0%2C32a8%2C8%2C0%2C0%2C1-8%2C8H96a8%2C8%2C0%2C0%2C1%2C0-16h64A8%2C8%2C0%2C0%2C1%2C168%2C168Z%22%2F%3E%3C%2Fsvg%3E") center / 1.25rem no-repeat; }

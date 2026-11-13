@@ -1,0 +1,32 @@
+{
+  "$id": "PlanChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "plan": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z0-9-]+$",
+      "description": "A plan's short handle, unique on the server, to look it up by (PLAN-1): free, pro, friends-family."
+    },
+    "endsOn": {
+      "description": "Its last day, in the account's time zone; none: it doesn't end.",
+      "type": "string",
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "then": {
+      "description": "The plan after it ends; the default when left out.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^[a-z0-9-]+$"
+    }
+  },
+  "required": [
+    "plan"
+  ],
+  "additionalProperties": false,
+  "description": "Putting an account in a plan (PLAN-3)."
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12 and later: the launch screen is the launcher icon opened out, the L5 mark on the
+         stadium board (WEB-25), in light and dark; then the app's grass. -->
+    <style name="Theme.LawFive" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/pitch</item>
+        <item name="android:windowSplashScreenBackground">@color/board</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+    </style>
+</resources>

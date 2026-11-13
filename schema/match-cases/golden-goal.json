@@ -1,0 +1,39 @@
+{
+    "$comment": "WCH-2: a golden goal ends extra time with End match, or Undo takes it back and play goes on (ET-6).",
+    "match": [
+        {
+            "name": "a goal in extra time: undone and play goes on, then one that stands",
+            "ids": ["ET-6"],
+            "format": { "extraTime": true, "goldenGoal": true, "penalties": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "phase": "running" } },
+                { "at": "20:00", "do": { "event": "G", "team": "away", "player": 7 } },
+                { "at": "45:00", "do": ["endPeriod", "endHalftime"] },
+                { "at": "60:00", "do": "startNextPeriod" },
+                { "at": "105:00", "do": ["endPeriod", "chooseExtraTime", "endHalftime", { "kickoff": "home" }] },
+                { "at": "120:00", "do": "startNextPeriod" },
+                { "at": "126:52", "do": { "event": "G", "team": "away", "player": 11 }, "expect": { "phase": "golden", "goldenWinner": "away" } },
+                { "at": "127:10", "do": [{ "event": "Y", "team": "home", "player": 4 }, "undoGoldenGoal"], "expect": { "phase": "running", "score": [1, 1], "last": { "type": "Y" }, "goldenWinner": null } },
+                { "at": "128:00", "expect": { "clock": "98:00" } },
+                { "at": "132:00", "do": { "event": "GO", "team": "home" }, "expect": { "phase": "golden" } },
+                { "at": "132:00", "do": "undo", "expect": { "phase": "running" } },
+                { "at": "132:30", "do": { "event": "G", "team": "home", "player": 10 }, "expect": { "phase": "golden" } },
+                { "at": "133:00", "do": "finish", "expect": { "phase": "done", "endedGolden": true, "last": { "type": "E", "seconds": 780 }, "pens": null } }
+            ]
+        },
+        {
+            "name": "without golden goal, extra time plays on",
+            "ids": ["ET-6"],
+            "format": { "extraTime": true, "penalties": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "45:00", "do": ["endPeriod", "endHalftime"] },
+                { "at": "60:00", "do": "startNextPeriod" },
+                { "at": "105:00", "do": ["endPeriod", "chooseExtraTime", "endHalftime", { "kickoff": "home" }] },
+                { "at": "120:00", "do": "startNextPeriod" },
+                { "at": "126:00", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "phase": "running" } }
+            ]
+        }
+    ]
+}

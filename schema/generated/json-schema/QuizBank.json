@@ -1,0 +1,67 @@
+{
+  "$id": "QuizBank.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "language": {
+      "type": "string"
+    },
+    "edition": {
+      "type": "string"
+    },
+    "effectiveDate": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "url"
+      ],
+      "additionalProperties": false
+    },
+    "laws": {
+      "type": "array",
+      "items": {
+        "$ref": "QuizLaw.json"
+      }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "$ref": "QuizProtocol.json"
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "QuizQuestion.json"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "language",
+    "edition",
+    "effectiveDate",
+    "source",
+    "laws",
+    "protocols",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "description": "The Laws of the Game quiz's questions in one language."
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key><string>en</string>
+	<key>CFBundleDisplayName</key><string>LawFive</string>
+	<key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+	<key>CFBundleName</key><string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key><string>APPL</string>
+	<key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LFCommit</key><string>unknown</string>
+	<key>LFVersion</key><string>dev</string>
+	<key>LFServer</key><string>$(LAWFIVE_SERVER)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key><string>app.lawfive</string>
+			<key>CFBundleURLSchemes</key><array><string>lawfive</string></array>
+		</dict>
+		<dict>
+			<!-- IOS-9: Garmin Connect comes back here with the watches chosen. -->
+			<key>CFBundleURLName</key><string>app.lawfive.garmin</string>
+			<key>CFBundleURLSchemes</key><array><string>lawfive-ciq</string></array>
+		</dict>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array><string>app.lawfive.sync</string></array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array><string>comgooglemaps</string><string>gcm-ciq</string></array>
+	<key>LSRequiresIPhoneOS</key><true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- IOS-2: https everywhere, and plain http only for a server on the local network. -->
+		<key>NSAllowsLocalNetworking</key><true/>
+	</dict>
+	<!-- IOS-11: only the system's own encryption (https), so no export compliance question per build. -->
+	<key>ITSAppUsesNonExemptEncryption</key><false/>
+	<key>NSBluetoothAlwaysUsageDescription</key><string>To talk to your Garmin watch, so it can get its matches and hand over the ones you referee through this phone.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key><string>To talk to your Garmin watch, so it can get its matches and hand over the ones you referee through this phone.</string>
+	<key>NSCameraUsageDescription</key><string>To scan a LawFive QR code, and to take photos of matches, venues and referees.</string>
+	<key>NSLocalNetworkUsageDescription</key><string>To reach a LawFive server on your home network.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>barlow_regular.ttf</string>
+		<string>barlow_medium.ttf</string>
+		<string>barlow_semibold.ttf</string>
+		<string>barlow_bold.ttf</string>
+		<string>barlow_condensed_semibold.ttf</string>
+		<string>barlow_condensed_bold.ttf</string>
+		<string>barlow_condensed_extrabold.ttf</string>
+		<string>barlow_condensed_black.ttf</string>
+		<string>barlow_condensed_bold_italic.ttf</string>
+		<string>barlow_condensed_extrabold_italic.ttf</string>
+		<string>barlow_condensed_black_italic.ttf</string>
+		<string>jetbrains_mono.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key><array><string>fetch</string><string>bluetooth-central</string></array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key><string>LaunchBackground</string>
+		<key>UIImageName</key><string>LaunchMark</string>
+		<key>UIImageRespectsSafeAreaInsets</key><true/>
+	</dict>
+	<!-- IOS-13: the status bar sits on the board in both modes, so its words are light. -->
+	<key>UIStatusBarStyle</key><string>UIStatusBarStyleLightContent</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key><false/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array><string>UIInterfaceOrientationPortrait</string></array>
+</dict>
+</plist>

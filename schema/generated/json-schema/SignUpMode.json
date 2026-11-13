@@ -1,0 +1,11 @@
+{
+  "$id": "SignUpMode.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "open",
+    "approval",
+    "closed"
+  ],
+  "description": "Who can make an account (USR-2): open, anyone; approval, anyone, but an admin approves the account before it can be used; closed, only people with an invitation (USR-3)."
+}

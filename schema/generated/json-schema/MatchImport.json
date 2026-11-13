@@ -1,0 +1,38 @@
+{
+  "$id": "MatchImport.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "rows": {
+      "minItems": 1,
+      "maxItems": 1000,
+      "type": "array",
+      "items": {
+        "$ref": "ImportRow.json"
+      }
+    },
+    "timeZone": {
+      "description": "For kickoffs written without a UTC offset, when the row has no Time zone column; the web app sends the browser's. UTC when not given.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "dateOrder": {
+      "description": "How to read dates written with slashes or dots (7/11/2026); ISO dates (2026-11-07) need none. mdy when not given.",
+      "type": "string",
+      "enum": [
+        "dmy",
+        "mdy"
+      ]
+    },
+    "dryRun": {
+      "description": "Check every row and say what would happen, without saving anything (IMP-5).",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "rows"
+  ],
+  "additionalProperties": false,
+  "description": "Matches to add or update, from a spreadsheet, CSV or JSON file (IMP-1 to IMP-8)."
+}

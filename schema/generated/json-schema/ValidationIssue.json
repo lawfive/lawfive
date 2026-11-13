@@ -1,0 +1,30 @@
+{
+  "$id": "ValidationIssue.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "path": {
+      "type": "array",
+      "items": {
+        "type": [
+          "string",
+          "number"
+        ]
+      },
+      "description": "Where in the body, for example [\"home\", \"colour\"]."
+    },
+    "message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "path",
+    "message"
+  ],
+  "additionalProperties": {},
+  "description": "One problem with a request body, as Zod reports it."
+}

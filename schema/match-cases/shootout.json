@@ -1,0 +1,32 @@
+{
+    "$comment": "WCH-2: the penalty shoot-out (ET-3, ET-4).",
+    "match": [
+        {
+            "name": "decided when one side can't catch up, and no kicks after",
+            "ids": ["ET-3", "ET-4"],
+            "format": { "penalties": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "45:00", "do": ["endPeriod", "endHalftime"] },
+                { "at": "60:00", "do": "startNextPeriod" },
+                { "at": "105:00", "do": ["endPeriod", "choosePenalties", { "penaltyFirst": "away" }, "startPenalties"], "expect": { "nextKicker": "away", "pens": [0, 0] } },
+                { "at": "106:00", "do": [{ "kick": "scored" }, { "kick": "missed" }, { "kick": "scored" }, { "kick": "missed" }, { "kick": "scored" }, { "kick": "missed" }], "expect": { "penaltyWinner": "away" } },
+                { "at": "107:00", "do": { "kick": "scored" }, "expect": { "pens": [0, 3] } }
+            ]
+        },
+        {
+            "name": "sudden death, decided only once both have kicked",
+            "ids": ["ET-4"],
+            "format": { "penalties": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "45:00", "do": ["endPeriod", "endHalftime"] },
+                { "at": "60:00", "do": "startNextPeriod" },
+                { "at": "105:00", "do": ["endPeriod", "choosePenalties", { "penaltyFirst": "home" }, "startPenalties"] },
+                { "at": "106:00", "do": [{ "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }, { "kick": "scored" }], "expect": { "penaltyWinner": null, "pens": [5, 5] } },
+                { "at": "107:00", "do": { "kick": "scored" }, "expect": { "penaltyWinner": null } },
+                { "at": "107:30", "do": { "kick": "missed" }, "expect": { "penaltyWinner": "home", "pens": [6, 5] } }
+            ]
+        }
+    ]
+}

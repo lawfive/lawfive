@@ -1,0 +1,226 @@
+<resources>
+    <strings>
+        <string id="homeNameTitle">Home team name</string>
+        <string id="homeAliasTitle">Home short name, up to 4 letters (blank = first 3 letters of the name, or HOM)</string>
+        <string id="homeColorTitle">Home color, hex such as #C8102E (blank = none)</string>
+        <string id="awayNameTitle">Away team name</string>
+        <string id="awayAliasTitle">Away short name, up to 4 letters (blank = first 3 letters of the name, or AWY)</string>
+        <string id="awayColorTitle">Away color, hex such as #1D428A (blank = none)</string>
+        <string id="numPeriodsTitle">Number of periods</string>
+        <string id="periodMinTitle">Period length (minutes)</string>
+        <string id="halftimeMinTitle">Break between periods, or before extra time (minutes)</string>
+        <string id="teamSizeTitle">Players per team</string>
+        <string id="midBreakTitle">Break halfway through each period</string>
+        <string id="midBreakMinTitle">Halfway break length (minutes)</string>
+        <string id="extraTimeTitle">Extra time</string>
+        <string id="etPeriodsTitle">Extra-time periods</string>
+        <string id="etPeriodMinTitle">Extra-time period length (minutes)</string>
+        <string id="goldenGoalTitle">Golden goal: the first goal in extra time wins</string>
+        <string id="penaltiesTitle">Penalty shoot-out</string>
+        <string id="trackStoppageTitle">Track stoppage time</string>
+        <string id="clockKindTitle">Clock</string>
+        <string id="clockRunsOn">Runs on (the Laws)</string>
+        <string id="clockStops">Stops when play stops (US high school and college; tracks stoppage)</string>
+        <string id="stopForGoalsCardsTitle">Goals and cards stop the clock (when it stops)</string>
+        <string id="breakStoppageTitle">Add the halfway break to stoppage time (when tracking it)</string>
+        <string id="sinBinsTitle">Sin bins (temporary dismissals)</string>
+        <string id="sinBinMinTitle">Sin bin length (minutes)</string>
+        <string id="screenClocksTitle">Match screen: clocks</string>
+        <string id="clocksOne">One clock</string>
+        <string id="clocksStacked">Two, stacked (a smaller second clock under the first)</string>
+        <string id="clocksSideBySide">Two, side by side</string>
+        <string id="mainClockTitle">Match clock</string>
+        <string id="clockUp">Match time: 0 to 90, like TV</string>
+        <string id="clockUpEach">Each half from 0: 0 to 45, then 0 to 45 again</string>
+        <string id="clockDown">Time left: 45 down to 0</string>
+        <string id="secondClockTitle">Second clock, with two (never the same as the match clock)</string>
+        <string id="breakClockTitle">Break clock</string>
+        <string id="breakDown">Time left</string>
+        <string id="breakUp">Time taken</string>
+        <string id="screenEdgeTitle">Ring or time of day</string>
+        <string id="edgeNone">Neither</string>
+        <string id="edgeRing">Ring (round watches)</string>
+        <string id="edgeTime">Time of day</string>
+        <string id="screenNamesTitle">Team names over the clock (off: scores only, with a bigger clock)</string>
+        <string id="goalScorersTitle">Record goal scorers (ask for the number)</string>
+        <string id="goalTypesTitle">Record goal type (DFK, penalty, own goal)</string>
+        <string id="alertRepeatSecTitle">Repeat full-time and break alerts every (seconds)</string>
+        <string id="stoppageReminderSecTitle">Stoppage reminder every (seconds, 0 = off)</string>
+        <string id="vibeFullTimeTitle">Vibrate at end of period</string>
+        <string id="vibeAddedTitle">Vibrate when the added time is used up (with stoppage tracked)</string>
+        <string id="vibeSinBinTitle">Vibrate when a sin bin is over (with sin bins)</string>
+        <string id="vibeStoppageTitle">Vibrate during stoppage</string>
+        <string id="vibeBreakTitle">Vibrate for breaks</string>
+        <string id="tapStoppageTitle">Tap screen to start/end stoppage</string>
+        <string id="cardReasonsTitle">Ask for a card's reason (misconduct code) after the number</string>
+        <string id="touchLockTitle">Touch lock: during play only the buttons work (five-button watches, not the Venu)</string>
+        <string id="stoppageLabelTitle">Name for the stoppage timer (blank = stoppage)</string>
+        <string id="breakLabelTitle">Name for the break timer (blank = break)</string>
+        <string id="serverUrlTitle">LawFive server to link to (change only for your own server)</string>
+        <string id="recordTrackTitle">Send GPS and heart rate to LawFive with each match</string>
+        <string id="syncOnOpenTitle">Sync with LawFive when the app opens</string>
+    </strings>
+
+    <settings>
+        <setting propertyKey="@Properties.homeName" title="@Strings.homeNameTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.homeAlias" title="@Strings.homeAliasTitle">
+            <settingConfig type="alphaNumeric" maxLength="4" />
+        </setting>
+        <setting propertyKey="@Properties.homeColor" title="@Strings.homeColorTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.awayName" title="@Strings.awayNameTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.awayAlias" title="@Strings.awayAliasTitle">
+            <settingConfig type="alphaNumeric" maxLength="4" />
+        </setting>
+        <setting propertyKey="@Properties.awayColor" title="@Strings.awayColorTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.numPeriods" title="@Strings.numPeriodsTitle">
+            <settingConfig type="numeric" min="1" max="4" />
+        </setting>
+        <setting propertyKey="@Properties.periodMin" title="@Strings.periodMinTitle">
+            <settingConfig type="numeric" min="1" max="60" />
+        </setting>
+        <setting propertyKey="@Properties.halftimeMin" title="@Strings.halftimeMinTitle">
+            <settingConfig type="numeric" min="0" max="30" />
+        </setting>
+        <setting propertyKey="@Properties.teamSize" title="@Strings.teamSizeTitle">
+            <settingConfig type="numeric" min="1" max="11" />
+        </setting>
+        <setting propertyKey="@Properties.midBreak" title="@Strings.midBreakTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.midBreakMin" title="@Strings.midBreakMinTitle">
+            <settingConfig type="numeric" min="0" max="15" />
+        </setting>
+        <setting propertyKey="@Properties.extraTime" title="@Strings.extraTimeTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.etPeriods" title="@Strings.etPeriodsTitle">
+            <settingConfig type="numeric" min="1" max="2" />
+        </setting>
+        <setting propertyKey="@Properties.etPeriodMin" title="@Strings.etPeriodMinTitle">
+            <settingConfig type="numeric" min="1" max="30" />
+        </setting>
+        <setting propertyKey="@Properties.goldenGoal" title="@Strings.goldenGoalTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.penalties" title="@Strings.penaltiesTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.clockKind" title="@Strings.clockKindTitle">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.clockRunsOn</listEntry>
+                <listEntry value="1">@Strings.clockStops</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.stopForGoalsCards" title="@Strings.stopForGoalsCardsTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.trackStoppage" title="@Strings.trackStoppageTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.breakStoppage" title="@Strings.breakStoppageTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.sinBins" title="@Strings.sinBinsTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.sinBinMin" title="@Strings.sinBinMinTitle">
+            <settingConfig type="numeric" min="1" max="20" />
+        </setting>
+        <setting propertyKey="@Properties.goalScorers" title="@Strings.goalScorersTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.goalTypes" title="@Strings.goalTypesTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.screenClocks" title="@Strings.screenClocksTitle">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.clocksOne</listEntry>
+                <listEntry value="1">@Strings.clocksStacked</listEntry>
+                <listEntry value="2">@Strings.clocksSideBySide</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.mainClock" title="@Strings.mainClockTitle">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.clockUp</listEntry>
+                <listEntry value="1">@Strings.clockUpEach</listEntry>
+                <listEntry value="2">@Strings.clockDown</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.secondClock" title="@Strings.secondClockTitle">
+            <settingConfig type="list">
+                <listEntry value="2">@Strings.clockDown</listEntry>
+                <listEntry value="1">@Strings.clockUpEach</listEntry>
+                <listEntry value="0">@Strings.clockUp</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.breakClock" title="@Strings.breakClockTitle">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.breakDown</listEntry>
+                <listEntry value="1">@Strings.breakUp</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.screenEdge" title="@Strings.screenEdgeTitle">
+            <settingConfig type="list">
+                <listEntry value="0">@Strings.edgeNone</listEntry>
+                <listEntry value="1">@Strings.edgeRing</listEntry>
+                <listEntry value="2">@Strings.edgeTime</listEntry>
+            </settingConfig>
+        </setting>
+        <setting propertyKey="@Properties.screenNames" title="@Strings.screenNamesTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.alertRepeatSec" title="@Strings.alertRepeatSecTitle">
+            <settingConfig type="numeric" min="3" max="120" />
+        </setting>
+        <setting propertyKey="@Properties.stoppageReminderSec" title="@Strings.stoppageReminderSecTitle">
+            <settingConfig type="numeric" min="0" max="300" />
+        </setting>
+        <setting propertyKey="@Properties.vibeFullTime" title="@Strings.vibeFullTimeTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.vibeAdded" title="@Strings.vibeAddedTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.vibeSinBin" title="@Strings.vibeSinBinTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.vibeStoppage" title="@Strings.vibeStoppageTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.vibeBreak" title="@Strings.vibeBreakTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.tapStoppage" title="@Strings.tapStoppageTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.cardReasons" title="@Strings.cardReasonsTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.touchLock" title="@Strings.touchLockTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.stoppageLabel" title="@Strings.stoppageLabelTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.breakLabel" title="@Strings.breakLabelTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.serverUrl" title="@Strings.serverUrlTitle">
+            <settingConfig type="alphaNumeric" />
+        </setting>
+        <setting propertyKey="@Properties.recordTrack" title="@Strings.recordTrackTitle">
+            <settingConfig type="boolean" />
+        </setting>
+        <setting propertyKey="@Properties.syncOnOpen" title="@Strings.syncOnOpenTitle">
+            <settingConfig type="boolean" />
+        </setting>
+    </settings>
+</resources>

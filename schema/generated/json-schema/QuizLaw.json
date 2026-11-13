@@ -1,0 +1,25 @@
+{
+  "$id": "QuizLaw.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "law": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "law",
+    "title",
+    "url"
+  ],
+  "additionalProperties": false
+}

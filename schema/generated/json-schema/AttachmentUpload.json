@@ -1,0 +1,34 @@
+{
+  "$id": "AttachmentUpload.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "recordType": {
+      "$ref": "AttachmentRecordType.json"
+    },
+    "recordId": {
+      "$ref": "Id.json"
+    },
+    "caption": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "width": {
+      "description": "The image's width in pixels.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20000
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20000
+    }
+  },
+  "required": [
+    "recordType",
+    "recordId"
+  ],
+  "additionalProperties": false,
+  "description": "The form fields of an upload (multipart/form-data), beside the files: file (a JPEG, PNG or WebP of at most 10 MB) and, optionally, thumb (a small version, at most 1 MB)."
+}

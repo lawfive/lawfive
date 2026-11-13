@@ -1,0 +1,28 @@
+{
+  "$id": "MatchCount.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "played": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "upcoming": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Scheduled matches."
+    },
+    "last": {
+      "description": "The latest played match's kickoff.",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "played",
+    "upcoming"
+  ],
+  "additionalProperties": false,
+  "description": "How many matches a venue or referee has, or several as if merged."
+}

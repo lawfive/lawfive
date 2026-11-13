@@ -1,0 +1,24 @@
+---
+// The home page's hero on the grass (DESIGN.md: the pitch): Starlight's own hero, with the halfway
+// line and the center circle beside it, the L5 mark in the circle in chalk. The drawing is left out
+// on phones, where it would push the words down.
+import Default from "@astrojs/starlight/components/Hero.astro";
+import { markFive, markFold, markL, markTransform, markViewBox } from "../../../web/src/logo.ts";
+---
+
+<div class="lf-hero">
+    <Default />
+    <div class="lf-pitch" aria-hidden="true">
+        <span class="lf-halfway"></span>
+        <div class="lf-circle">
+            <svg class="lf-mark" viewBox={markViewBox}>
+                <g transform={markTransform}>
+                    <path class="l" d={markL} />
+                    <path class="five" d={markFive} />
+                    <path class="fold" d={markFold} />
+                </g>
+            </svg>
+        </div>
+        <span class="lf-halfway"></span>
+    </div>
+</div>

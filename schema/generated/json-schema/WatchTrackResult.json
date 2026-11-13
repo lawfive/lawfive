@@ -1,0 +1,34 @@
+{
+  "$id": "WatchTrackResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "received": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "How many of the track's chunks the server has."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "track": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "saved",
+        "kept",
+        "dropped"
+      ],
+      "description": "waiting: for more chunks or the match; saved: the track is on the match report; kept: the match report already had a track (from a file, say), which stays; dropped: nothing in it could be used (no positions or heart rate)."
+    }
+  },
+  "required": [
+    "received",
+    "count",
+    "track"
+  ],
+  "additionalProperties": false
+}

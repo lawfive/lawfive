@@ -1,0 +1,18 @@
+{
+  "$id": "EmailConfirmation.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "From the link emailed to the new address: /confirm-email/<token>."
+    }
+  },
+  "required": [
+    "token"
+  ],
+  "additionalProperties": false,
+  "description": "Following the link that confirms a new email address (USR-9)."
+}

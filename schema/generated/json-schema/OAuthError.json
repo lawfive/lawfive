@@ -1,0 +1,19 @@
+{
+  "$id": "OAuthError.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "string",
+      "description": "authorization_pending, slow_down, expired_token, access_denied, invalid_request, invalid_client, invalid_grant or unauthorized."
+    },
+    "error_description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "additionalProperties": {},
+  "description": "An error from the linking endpoints, as RFC 8628 has them."
+}

@@ -1,0 +1,29 @@
+{
+  "$id": "QuizOption.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correct": {
+      "type": "boolean"
+    },
+    "explanation": {
+      "type": "string",
+      "description": "Why this option is right or wrong; shown after answering."
+    }
+  },
+  "required": [
+    "id",
+    "text",
+    "correct",
+    "explanation"
+  ],
+  "additionalProperties": false
+}

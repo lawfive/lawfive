@@ -1,0 +1,52 @@
+{
+    "$comment": "WCH-2: a match of one period (SET-16): no half-time and no next kickoff; the halfway break, extra time and penalties still work; no period label on the screen.",
+    "match": [
+        {
+            "name": "one period: no label, and ending it is full time",
+            "ids": ["SET-16", "TMR-6", "UI-3"],
+            "format": { "numPeriods": 1, "periodSec": 1200 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"], "expect": { "phase": "running", "period": 0, "periodLabel": "", "clock": "0:00" } },
+                { "at": "12:00", "do": { "event": "G", "team": "away", "player": 9 }, "expect": { "score": [0, 1], "last": { "type": "G", "seconds": 720 } } },
+                { "at": "20:00", "expect": { "alert": "fullTime", "clock": "20:00", "added": "+0:00", "progress": 1 } },
+                { "at": "21:10", "do": "endPeriod", "expect": { "phase": "done", "score": [0, 1] } }
+            ]
+        },
+        {
+            "name": "one period counting down, with its halfway break",
+            "ids": ["SET-16", "TMR-7", "TMR-11"],
+            "format": { "numPeriods": 1, "periodSec": 1200, "midBreak": true, "breakLenSec": 120 },
+            "screen": { "mainClock": "down" },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "away" }, "start"], "expect": { "clock": "20:00", "breakDueInMs": 540000 } },
+                { "at": "9:00", "expect": { "alert": "breakStart", "breakDue": true, "clock": "11:00" } },
+                { "at": "9:10", "do": "startBreak", "expect": { "breakLeftMs": 120000 } },
+                { "at": "11:10", "expect": { "breakLeftMs": 0 } },
+                { "at": "20:00", "do": "endPeriod", "expect": { "phase": "done" } }
+            ]
+        },
+        {
+            "name": "one period level, then extra time with its own toss, then penalties",
+            "ids": ["SET-16", "ET-1", "ET-2", "ET-7"],
+            "format": { "numPeriods": 1, "periodSec": 1200, "halftimeSec": 300, "extraTime": true, "etPeriods": 1, "etPeriodSec": 300, "penalties": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "20:30", "do": "endPeriod", "expect": { "phase": "decide", "decision": "extraTime" } },
+                { "at": "20:30", "do": "chooseExtraTime", "expect": { "phase": "break", "breakClock": "5:00" } },
+                { "at": "25:30", "do": "endHalftime", "expect": { "phase": "nextKickoff", "kickoffOnScreen": null } },
+                { "at": "25:40", "do": [{ "kickoff": "away" }, "startNextPeriod"], "expect": { "phase": "running", "period": 1, "periodLabel": "ET1", "clock": "20:00", "kickoff": "away" } },
+                { "at": "30:40", "do": "endPeriod", "expect": { "phase": "decide", "decision": "penalties" } },
+                { "at": "30:40", "do": "choosePenalties", "expect": { "phase": "penalties" } }
+            ]
+        },
+        {
+            "name": "one period with penalties only: level, the shoot-out comes first",
+            "ids": ["SET-16", "ET-1"],
+            "format": { "numPeriods": 1, "periodSec": 900, "penalties": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "15:00", "do": "endPeriod", "expect": { "phase": "decide", "decision": "penalties" } }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,269 @@
+{
+  "$id": "WatchMatch.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "kickoff": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Seconds since 1970 (UTC)."
+    },
+    "title": {
+      "type": "string",
+      "description": "\"STR v ROV\", for the watch's list."
+    },
+    "name": {
+      "description": "The match's name, or its competition's.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "where": {
+      "description": "Venue and pitch, \"Twin Creeks, Field 3\".",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "role": {
+      "description": "Referee, AR1, AR2 or 4th official.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "weather": {
+      "description": "A short forecast in the user's temperature unit, \"54° rain\" (WX-7).",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fee": {
+      "description": "The fee, for the match's screen and its Paid toggle (UI-19); absent from servers before it.",
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "\"$25\", in the fee's currency."
+            },
+            "paid": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "text",
+            "paid"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "crew": {
+      "description": "The other officials, [role, name]: [\"AR1\", \"Sam Rivera\"].",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "items": false,
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "notes": {
+      "description": "The match's notes, shortened to 300 characters for the watch's memory.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "home": {
+      "type": "string",
+      "maxLength": 4,
+      "description": "Short name shown on the watch."
+    },
+    "away": {
+      "type": "string",
+      "maxLength": 4
+    },
+    "homeName": {
+      "type": "string"
+    },
+    "awayName": {
+      "type": "string"
+    },
+    "homeColor": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "0xRRGGBB, or -1 for none."
+    },
+    "awayColor": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "numPeriods": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "periodSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "halftimeSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "The break between periods."
+    },
+    "teamSize": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "midBreak": {
+      "type": "boolean",
+      "description": "A break halfway through each period (for example a water break)."
+    },
+    "breakLenSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "extraTime": {
+      "type": "boolean"
+    },
+    "etPeriods": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "etPeriodSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "goldenGoal": {
+      "type": "boolean",
+      "description": "A goal in extra time ends the match (ET-6)."
+    },
+    "penalties": {
+      "type": "boolean"
+    },
+    "clockStyle": {
+      "anyOf": [
+        {
+          "type": "number",
+          "const": 0
+        },
+        {
+          "type": "number",
+          "const": 1
+        },
+        {
+          "type": "number",
+          "const": 2
+        }
+      ],
+      "description": "For older watch builds: the account's match clock (TMR-11), 0 Match time, 1 each period from 0, 2 time left. Newer ones take it from the match screen."
+    },
+    "trackStoppage": {
+      "type": "boolean"
+    },
+    "stoppingClock": {
+      "description": "The match clock stops while play is stopped, with no added time (TMR-15); trackStoppage is on with it. Absent from servers before it.",
+      "type": "boolean"
+    },
+    "stopForGoalsCards": {
+      "description": "With a stopping clock, a goal or card recorded stops it (TMR-15).",
+      "type": "boolean"
+    },
+    "breakStoppage": {
+      "type": "boolean",
+      "description": "The halfway break's time is added on as stoppage (TMR-12)."
+    },
+    "goalScorers": {
+      "type": "boolean",
+      "description": "Ask the scorer's number for each goal (EVT-10)."
+    },
+    "goalTypes": {
+      "type": "boolean"
+    },
+    "sinBins": {
+      "type": "boolean",
+      "description": "Sin bin in the team menu (EVT-12)."
+    },
+    "sinBinSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "A sin bin's length, 10 minutes unless the format says."
+    },
+    "misconductScheme": {
+      "description": "The codes for a card's reason on the watch (EVT-14): the competition's, else the account's.",
+      "$ref": "SchemeId.json"
+    }
+  },
+  "required": [
+    "id",
+    "kickoff",
+    "title",
+    "name",
+    "where",
+    "role",
+    "weather",
+    "home",
+    "away",
+    "homeName",
+    "awayName",
+    "homeColor",
+    "awayColor",
+    "numPeriods",
+    "periodSec",
+    "halftimeSec",
+    "teamSize",
+    "midBreak",
+    "breakLenSec",
+    "extraTime",
+    "etPeriods",
+    "etPeriodSec",
+    "goldenGoal",
+    "penalties",
+    "clockStyle",
+    "trackStoppage",
+    "breakStoppage",
+    "goalScorers",
+    "goalTypes",
+    "sinBins",
+    "sinBinSec"
+  ],
+  "additionalProperties": false,
+  "description": "A match in the form the Garmin watch starts one from (its setup keys), plus what its list shows. Watches have little memory, so the server does the converting."
+}

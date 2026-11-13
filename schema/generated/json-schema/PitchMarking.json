@@ -1,0 +1,26 @@
+{
+  "$id": "PitchMarking.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "corners": {
+      "minItems": 2,
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "$ref": "Position.json"
+      },
+      "description": "Two to four of the pitch's corners, in any order, as walked on the watch."
+    },
+    "at": {
+      "description": "When they were marked.",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "corners",
+    "at"
+  ],
+  "additionalProperties": false,
+  "description": "Pitch corners marked on the watch (TRK-13)."
+}

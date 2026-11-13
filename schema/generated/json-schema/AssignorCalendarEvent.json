@@ -1,0 +1,34 @@
+{
+  "$id": "AssignorCalendarEvent.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Home v Away, or the match's name."
+    },
+    "kickoff": {
+      "$ref": "Timestamp.json"
+    },
+    "timeZone": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "IANA time zone name, for example America/Los_Angeles."
+    },
+    "venue": {
+      "type": "string"
+    },
+    "inLawFive": {
+      "type": "boolean",
+      "description": "A match already in LawFive at this kickoff, which the calendar takes on without changing (FEED-5)."
+    }
+  },
+  "required": [
+    "title",
+    "kickoff",
+    "inLawFive"
+  ],
+  "additionalProperties": false,
+  "description": "A game in an assignor's calendar, as it would be saved."
+}

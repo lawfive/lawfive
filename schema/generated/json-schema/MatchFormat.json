@@ -1,0 +1,112 @@
+{
+  "$id": "MatchFormat.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "periods": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "description": "Periods of normal time: 1 (SET-16, a tournament game of one period) to 4."
+    },
+    "periodSec": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 3600
+    },
+    "breakSec": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1800,
+      "description": "Between periods, and before and between extra-time periods."
+    },
+    "halfwayBreak": {
+      "type": "boolean",
+      "description": "A break halfway through each period of normal time (TMR-7)."
+    },
+    "halfwayBreakSec": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 900
+    },
+    "teamSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 11
+    },
+    "clock": {
+      "description": "No longer chosen per match: the account's match screen sets it (TMR-11). Kept for older apps.",
+      "$ref": "ClockStyle.json"
+    },
+    "trackStoppage": {
+      "type": "boolean"
+    },
+    "stoppingClock": {
+      "description": "The clock (TMR-15): true stops the match clock while play is stopped (a stoppage, the halfway break), as US high school (NFHS) and college (NCAA) games keep time, with no added time; it needs trackStoppage. Missing means it runs on, as the Laws have it.",
+      "type": "boolean"
+    },
+    "stopForGoalsCards": {
+      "description": "With a stopping clock, recording a goal or a card stops it, until Start/Stop at the restart (TMR-15). Missing means on.",
+      "type": "boolean"
+    },
+    "breakStoppage": {
+      "description": "With stoppage tracked, the halfway break's time is added on as stoppage (TMR-12). Missing means on: formats saved before the setting.",
+      "type": "boolean"
+    },
+    "goalScorers": {
+      "description": "Ask the scorer's number for each goal (EVT-10). Missing means on: formats saved before this always asked.",
+      "type": "boolean"
+    },
+    "goalTypes": {
+      "type": "boolean",
+      "description": "Ask the goal type (goal, DFK, penalty, own goal) for each goal (EVT-8)."
+    },
+    "extraTime": {
+      "type": "boolean"
+    },
+    "extraTimePeriods": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "extraTimePeriodSec": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 1800
+    },
+    "goldenGoal": {
+      "description": "With extra time, a goal in it ends the match, the scoring team winning (ET-6). Missing means off.",
+      "type": "boolean"
+    },
+    "penalties": {
+      "type": "boolean"
+    },
+    "sinBins": {
+      "description": "Temporary dismissals (EVT-12): Sin bin in the watch's team menu, a countdown with the match clock. Missing means off.",
+      "type": "boolean"
+    },
+    "sinBinSec": {
+      "description": "A sin bin's length (EVT-12). Missing means 10 minutes.",
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 1200
+    }
+  },
+  "required": [
+    "periods",
+    "periodSec",
+    "breakSec",
+    "halfwayBreak",
+    "halfwayBreakSec",
+    "teamSize",
+    "clock",
+    "trackStoppage",
+    "goalTypes",
+    "extraTime",
+    "extraTimePeriods",
+    "extraTimePeriodSec",
+    "penalties"
+  ],
+  "additionalProperties": false,
+  "description": "How a match is played: periods, breaks, extra time, penalties and what the watch records."
+}

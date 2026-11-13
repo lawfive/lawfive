@@ -1,0 +1,14 @@
+{
+  "$id": "WatchLayout.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "default",
+    "stacked",
+    "minimal",
+    "scoreboard",
+    "sideBySide",
+    "ring"
+  ],
+  "description": "The running screen as watch builds from before the four choices (UI-21) know it: the nearest of the six old layouts. scoreboard is no longer offered."
+}

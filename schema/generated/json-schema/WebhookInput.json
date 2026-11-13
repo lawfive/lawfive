@@ -1,0 +1,29 @@
+{
+  "$id": "WebhookInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "maxLength": 2000,
+      "format": "uri",
+      "description": "http or https."
+    },
+    "topics": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "$ref": "WebhookTopic.json"
+      }
+    },
+    "active": {
+      "description": "true when left out.",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "url",
+    "topics"
+  ],
+  "additionalProperties": false
+}

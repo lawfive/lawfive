@@ -1,0 +1,15 @@
+{
+  "id": "2d7b16f1-ebc3-5bf6-9f30-df4148c9b67d",
+  "version": 1,
+  "updatedAt": "2026-10-26T18:00:00Z",
+  "name": "Bay Youth League U12 Boys",
+  "organiser": "Bay Youth League",
+  "type": "league",
+  "season": "2026-27",
+  "startDate": "2026-08-29",
+  "endDate": "2027-05-15",
+  "ageGroup": "U12",
+  "level": "Gold",
+  "templateId": "1eccc1f4-1cf4-5810-ad08-6356d442033e",
+  "misconductScheme": "ussf"
+}

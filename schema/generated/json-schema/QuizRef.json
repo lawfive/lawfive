@@ -1,0 +1,23 @@
+{
+  "$id": "QuizRef.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "law": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 17
+    },
+    "section": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "protocol": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "What a question is based on: a Law and section, or a protocol."
+}

@@ -1,0 +1,39 @@
+{
+  "$id": "WebhookPayload.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The delivery's id; the same on every retry, so a receiver can ignore one it has had.",
+      "$ref": "Id.json"
+    },
+    "event": {
+      "type": "string",
+      "description": "<topic>.<created|updated|deleted>"
+    },
+    "createdAt": {
+      "description": "When the change was made.",
+      "$ref": "Timestamp.json"
+    },
+    "test": {
+      "description": "true for Send test; data is then an example.",
+      "type": "boolean"
+    },
+    "data": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {},
+      "description": "The record as stored (as GET returns it); for deleted, its id, version and deletedAt."
+    }
+  },
+  "required": [
+    "id",
+    "event",
+    "createdAt",
+    "data"
+  ],
+  "additionalProperties": false,
+  "description": "What each delivery POSTs, as JSON. It's signed: X-LawFive-Signature is t=<unix seconds>,v1=<hex HMAC-SHA256 of \"<t>.<body>\" with the webhook's secret>."
+}

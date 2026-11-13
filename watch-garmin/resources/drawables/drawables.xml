@@ -1,0 +1,18 @@
+<drawables>
+    <bitmap id="LauncherIcon" filename="launcher_icon.svg"/>
+    <!-- UI-18: Phosphor icons (bold, MIT) in black for menu rows, drawn on a LawFive green circle (MenuIcon), sized to the screen, undithered so thin strokes stay crisp. -->
+    <bitmap id="IconMatches" filename="icons/icon_matches.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconNew" filename="icons/icon_new.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconHistory" filename="icons/icon_history.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconSettings" filename="icons/icon_settings.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconAccount" filename="icons/icon_account.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconAlerts" filename="icons/icon_alerts.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconControls" filename="icons/icon_controls.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconScreen" filename="icons/icon_screen.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconNames" filename="icons/icon_names.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconQuick" filename="icons/icon_quick.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconAbout" filename="icons/icon_about.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconSame" filename="icons/icon_same.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconStart" filename="icons/icon_start.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <bitmap id="IconCustom" filename="icons/icon_custom.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+</drawables>

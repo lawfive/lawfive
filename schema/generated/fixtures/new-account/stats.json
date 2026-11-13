@@ -1,0 +1,78 @@
+{
+  "options": {
+    "years": [],
+    "genders": [],
+    "competitions": [],
+    "tags": [],
+    "venues": []
+  },
+  "games": {
+    "total": 0,
+    "abandoned": 0
+  },
+  "roles": {
+    "referee": 0,
+    "ar1": 0,
+    "ar2": 0,
+    "fourth": 0,
+    "notSet": 0
+  },
+  "distance": {
+    "totalM": 0,
+    "games": 0,
+    "tracked": 0,
+    "byRole": [],
+    "overTime": []
+  },
+  "months": [],
+  "busiest": [],
+  "ageGroups": [],
+  "places": {
+    "venues": 0,
+    "pitches": 0,
+    "top": []
+  },
+  "referees": {
+    "count": 0,
+    "top": []
+  },
+  "weather": {
+    "games": 0,
+    "rainy": 0,
+    "temperaturesC": []
+  },
+  "fees": {
+    "games": 0,
+    "earnedAmount": 0,
+    "paidAmount": 0,
+    "owedAmount": 0,
+    "otherCurrencies": [],
+    "months": [],
+    "competitions": []
+  },
+  "discipline": {
+    "games": 0,
+    "cautions": 0,
+    "sendOffs": 0,
+    "secondCautions": 0,
+    "sinBins": 0,
+    "goals": 0,
+    "ageGroups": [],
+    "competitions": [],
+    "codes": []
+  },
+  "fitness": {
+    "games": []
+  },
+  "addedTime": {
+    "periods": 0,
+    "byPeriod": [],
+    "ageGroups": [],
+    "competitions": []
+  },
+  "watches": {
+    "games": 0,
+    "models": []
+  },
+  "years": []
+}

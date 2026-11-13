@@ -1,0 +1,10 @@
+packages:
+  - schema
+  - server
+  - web
+  - relay
+allowBuilds:
+  esbuild: true
+  # Install scripts @redocly/cli's dependencies don't need (a donation notice, a version check).
+  core-js: false
+  protobufjs: false

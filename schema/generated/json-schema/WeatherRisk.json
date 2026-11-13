@@ -1,0 +1,28 @@
+{
+  "$id": "WeatherRisk.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "$ref": "WeatherRiskKind.json"
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "possible",
+        "likely"
+      ],
+      "description": "possible: worth watching; likely: the match may well be called off or stopped."
+    },
+    "amount": {
+      "description": "What the level is based on: millimeters of rain (wetField: in the 24 hours before; rain: during the match), centimeters of snow, or the highest feels-like temperature in °C (heat).",
+      "type": "number"
+    }
+  },
+  "required": [
+    "kind",
+    "level"
+  ],
+  "additionalProperties": false,
+  "description": "Something in the forecast that could stop or cancel the match (WX-4). Rough rules, not a prediction."
+}

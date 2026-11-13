@@ -1,0 +1,48 @@
+{
+  "$id": "DuplicateGroups.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Why they're probably one, in a few words each."
+          },
+          "members": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "$ref": "DuplicateMember.json"
+            },
+            "description": "Most matches first: the one a merge keeps unless the user picks another."
+          }
+        },
+        "required": [
+          "reasons",
+          "members"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Groups that are probably one venue or person, surest first."
+    },
+    "of": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "How many venues or referees there are in all."
+    }
+  },
+  "required": [
+    "groups",
+    "of"
+  ],
+  "additionalProperties": false,
+  "description": "Likely duplicates across all of the user's venues or referees (DUP-1, DUP-7)."
+}

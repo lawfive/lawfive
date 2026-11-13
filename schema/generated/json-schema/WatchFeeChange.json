@@ -1,0 +1,26 @@
+{
+  "$id": "WatchFeeChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "matchId": {
+      "$ref": "Id.json"
+    },
+    "paid": {
+      "type": "boolean"
+    },
+    "at": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991,
+      "description": "When it was changed on the watch, in seconds since 1970."
+    }
+  },
+  "required": [
+    "matchId",
+    "paid",
+    "at"
+  ],
+  "additionalProperties": false,
+  "description": "A match's fee marked paid or not paid on the watch (SYNC-11)."
+}

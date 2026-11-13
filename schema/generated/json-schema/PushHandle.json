@@ -1,0 +1,24 @@
+{
+  "$id": "PushHandle.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "handle": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "What the push relay gave this phone (PUSH-2), which only it can read; null to stop notifications."
+    }
+  },
+  "required": [
+    "handle"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,70 @@
+{
+  "$id": "CompetitionInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "organiser": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "type": {
+      "$ref": "CompetitionType.json"
+    },
+    "season": {
+      "description": "Season label, for example 2026-27.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "startDate": {
+      "$ref": "LocalDate.json"
+    },
+    "endDate": {
+      "$ref": "LocalDate.json"
+    },
+    "ageGroup": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "level": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "templateId": {
+      "description": "The match template for this competition's matches: picking the competition fills the format (and fee).",
+      "$ref": "Id.json"
+    },
+    "misconductScheme": {
+      "description": "Overrides the user's default scheme for this competition's matches.",
+      "$ref": "SchemeId.json"
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "id": {
+      "description": "The id from the URL; can be left out.",
+      "$ref": "Id.json"
+    },
+    "version": {
+      "description": "The version last seen, when updating. Leave it out to create the record.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ],
+  "additionalProperties": false,
+  "description": "A Competition as a client sends it to save it: the server sets updatedAt and deletedAt, and version only goes with an update."
+}

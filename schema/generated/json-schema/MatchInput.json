@@ -1,0 +1,115 @@
+{
+  "$id": "MatchInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "status": {
+      "$ref": "MatchStatus.json"
+    },
+    "kickoff": {
+      "$ref": "Timestamp.json"
+    },
+    "timeZone": {
+      "description": "The venue's time zone, for showing the kickoff in local time.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "format": {
+      "description": "A copy of the format, so editing the template later doesn't change this match.",
+      "$ref": "MatchFormat.json"
+    },
+    "templateId": {
+      "description": "The template the format was copied from.",
+      "$ref": "Id.json"
+    },
+    "home": {
+      "$ref": "Team.json"
+    },
+    "away": {
+      "$ref": "Team.json"
+    },
+    "gender": {
+      "$ref": "Gender.json"
+    },
+    "ageGroup": {
+      "description": "Free text, as leagues write it: U12, U19, Adult, O35.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "competitionId": {
+      "$ref": "Id.json"
+    },
+    "venueId": {
+      "$ref": "Id.json"
+    },
+    "pitchId": {
+      "description": "One of the venue's pitches.",
+      "$ref": "Id.json"
+    },
+    "role": {
+      "description": "The user's role in this match.",
+      "$ref": "Role.json"
+    },
+    "crew": {
+      "type": "array",
+      "items": {
+        "$ref": "CrewMember.json"
+      },
+      "description": "The other officials."
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "outlook": {
+      "description": "What to expect: competitive, one-sided, team strengths and so on.",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "fee": {
+      "$ref": "Fee.json"
+    },
+    "external": {
+      "$ref": "ExternalRef.json"
+    },
+    "assignor": {
+      "description": "Who assigned the match (SET-15): a name, typed in or set by an integration or import.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "tags": {
+      "$ref": "Tags.json"
+    },
+    "pitchMarking": {
+      "description": "The pitch's corners as marked on the watch for this match (TRK-13).",
+      "$ref": "PitchMarking.json"
+    },
+    "id": {
+      "description": "The id from the URL; can be left out.",
+      "$ref": "Id.json"
+    },
+    "version": {
+      "description": "The version last seen, when updating. Leave it out to create the record.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "status",
+    "format",
+    "home",
+    "away",
+    "crew"
+  ],
+  "additionalProperties": false,
+  "description": "A Match as a client sends it to save it: the server sets updatedAt and deletedAt, and version only goes with an update."
+}

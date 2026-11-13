@@ -1,0 +1,43 @@
+{
+    "$comment": "WCH-2: the card's reason (EVT-14), with Card reasons on in the watch's settings: after the number (or the official's role), the watch lists the codes of the match's scheme with No reason first. A code chosen goes to the most recent card (Y, Y2, R, SB, SB2, TY, TR) and replaces one given before; No reason gives none. The events keep their six fields: the upload sends the reasons beside them as [the card's index in events, its code], worked out when it's sent, so a card undone takes its reason with it and the ones after keep theirs.",
+    "match": [
+        {
+            "name": "a caution, a second caution and a send-off each take a reason; a card without one has none",
+            "ids": ["EVT-14", "EVT-5"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"], "expect": { "reasons": [] } },
+                { "at": "10:00", "do": [{ "event": "Y", "team": "home", "player": 4 }, { "reason": "UB" }], "expect": { "events": 1, "last": { "type": "Y", "player": 4, "reason": "UB" }, "reasons": [[0, "UB"]] } },
+                { "at": "20:00", "do": [{ "event": "Y", "team": "home", "player": 4 }, { "reason": "DT" }], "expect": { "last": { "type": "Y2", "player": 4, "reason": "DT" }, "reasons": [[0, "UB"], [1, "DT"]] } },
+                { "at": "30:00", "do": [{ "event": "R", "team": "away", "player": 9 }, { "reason": "SFP" }], "expect": { "last": { "type": "R", "reason": "SFP" }, "reasons": [[0, "UB"], [1, "DT"], [2, "SFP"]] } },
+                { "at": "31:00", "do": { "event": "Y", "team": "away", "player": 5 }, "expect": { "events": 4, "last": { "type": "Y", "reason": null }, "reasons": [[0, "UB"], [1, "DT"], [2, "SFP"]] } }
+            ]
+        },
+        {
+            "name": "a sin bin and a team official's card take one; a second reason replaces the first; one given after a stoppage goes to the card",
+            "ids": ["EVT-14", "EVT-12", "EVT-15"],
+            "format": { "sinBins": true, "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": [{ "event": "SB", "team": "home", "player": 7 }, { "reason": "DT" }], "expect": { "last": { "type": "SB", "extra": 600, "reason": "DT" }, "reasons": [[0, "DT"]] } },
+                { "at": "6:00", "do": [{ "official": "Y", "team": "away", "role": "headCoach" }, { "reason": "DT" }, { "reason": "UB" }], "expect": { "last": { "type": "TY", "extra": 0, "reason": "UB" }, "reasons": [[0, "DT"], [1, "UB"]] } },
+                { "at": "8:00", "do": [{ "event": "Y", "team": "home", "player": 3 }, "stoppage"] },
+                { "at": "8:30", "do": ["stoppage", { "reason": "PI" }], "expect": { "events": 4, "last": { "type": "S", "reason": null }, "reasons": [[0, "DT"], [1, "UB"], [2, "PI"]] } },
+                { "at": "9:00", "do": [{ "official": "R", "team": "home", "role": "other" }, { "reason": "VC" }], "expect": { "last": { "type": "TR", "extra": 2, "reason": "VC" }, "reasons": [[0, "DT"], [1, "UB"], [2, "PI"], [4, "VC"]] } }
+            ]
+        },
+        {
+            "name": "undo takes a card's reason with it, and the cards after keep theirs at their new places",
+            "ids": ["EVT-14", "INP-6"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": [{ "event": "Y", "team": "home", "player": 4 }, { "reason": "UB" }] },
+                { "at": "11:00", "do": [{ "event": "Y", "team": "away", "player": 8 }, { "reason": "DT" }, "stoppage"] },
+                { "at": "11:20", "do": "stoppage", "expect": { "events": 3, "reasons": [[0, "UB"], [1, "DT"]] } },
+                { "at": "12:00", "do": "undo", "expect": { "events": 2, "last": { "type": "S" }, "reasons": [[0, "UB"]] } },
+                { "at": "13:00", "do": [{ "event": "R", "team": "away", "player": 8 }, { "reason": "VC" }], "expect": { "events": 3, "reasons": [[0, "UB"], [2, "VC"]] } },
+                { "at": "14:00", "do": { "event": "G", "team": "home" }, "expect": { "events": 4, "last": { "type": "G", "reason": null }, "reasons": [[0, "UB"], [2, "VC"]] } }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+# The API description's lint (pnpm lint:api): Redocly's recommended rules, as errors so the tests
+# fail on any new warning. Deliberate exceptions are in .redocly.lint-ignore.yaml.
+extends:
+  - recommended-strict

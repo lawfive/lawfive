@@ -1,0 +1,880 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1327EE4CDA9542A27F98EE5E /* LawFive.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFFED346E29C5654F54133D /* LawFive.swift */; };
+		A1F00000000000000000F00D /* LawFiveWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A1F00000000000000000F002 /* LawFiveWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C1A000000000000000000001 /* ConnectIQ in Frameworks */ = {isa = PBXBuildFile; productRef = C1A000000000000000000002 /* ConnectIQ */; };
+		5A0000000000000000000001 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 5A0000000000000000000002 /* SnapshotTesting */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B2F00000000000000000F20B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DC844ABCCFC0D132D087C1C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1F00000000000000000F001;
+			remoteInfo = LawFiveWatch;
+		};
+		46B174A1F0F1A498B0831D68 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DC844ABCCFC0D132D087C1C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB08EDE0F8CD7E822A9A7AF5;
+			remoteInfo = LawFive;
+		};
+		A1F00000000000000000F00F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DC844ABCCFC0D132D087C1C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1F00000000000000000F001;
+			remoteInfo = LawFiveWatch;
+		};
+		A1F00000000000000000F10B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DC844ABCCFC0D132D087C1C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1F00000000000000000F001;
+			remoteInfo = LawFiveWatch;
+		};
+		E9C317EE62D7A80B4B3C9AC3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DC844ABCCFC0D132D087C1C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB08EDE0F8CD7E822A9A7AF5;
+			remoteInfo = LawFive;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A1F00000000000000000F00C /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				A1F00000000000000000F00D /* LawFiveWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0B8FE8C58B23D2288819C897 /* LawFive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LawFive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AE80A3C4C72E619445B7552 /* LawFiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LawFiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		707A1B8AA6F495C9BF6658C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8145FFF0806392A3A6F5ABEC /* LawFiveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LawFiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1F00000000000000000F002 /* LawFiveWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LawFiveWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1F00000000000000000F00B /* LawFiveWatch-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LawFiveWatch-Info.plist"; sourceTree = "<group>"; };
+		B2F00000000000000000F202 /* LawFiveWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LawFiveWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1F00000000000000000F102 /* LawFiveWatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LawFiveWatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAFFED346E29C5654F54133D /* LawFive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LawFive.swift; path = ../../schema/generated/swift/LawFive.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1DA5FB384236691F4D9D770E /* LawFiveUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LawFiveUITests;
+			sourceTree = "<group>";
+		};
+		7F6D92847B04EA577C731867 /* LawFiveTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LawFiveTests;
+			sourceTree = "<group>";
+		};
+		9FBCD1EC5BACE8EA5A708F78 /* LawFive */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LawFive;
+			sourceTree = "<group>";
+		};
+		A1F00000000000000000F003 /* LawFiveWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LawFiveWatch;
+			sourceTree = "<group>";
+		};
+		A1F00000000000000000F103 /* LawFiveWatchUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LawFiveWatchUITests;
+			sourceTree = "<group>";
+		};
+		B2F00000000000000000F203 /* LawFiveWatchTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LawFiveWatchTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		869A013D31422C5A54E66FB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		885D3B69EA3BAD459F41048D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A000000000000000000001 /* ConnectIQ in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E5CCDF2AF099F9D82EA4940 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0000000000000000000001 /* SnapshotTesting in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F00000000000000000F005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F00000000000000000F105 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2F00000000000000000F205 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		63A9F0EA7BB98050796B649E = {
+			isa = PBXGroup;
+			children = (
+				707A1B8AA6F495C9BF6658C2 /* Info.plist */,
+				A1F00000000000000000F00B /* LawFiveWatch-Info.plist */,
+				A1F00000000000000000F003 /* LawFiveWatch */,
+				A1F00000000000000000F103 /* LawFiveWatchUITests */,
+				B2F00000000000000000F203 /* LawFiveWatchTests */,
+				C71E2869364F812550E0F354 /* Schema */,
+				9FBCD1EC5BACE8EA5A708F78 /* LawFive */,
+				7F6D92847B04EA577C731867 /* LawFiveTests */,
+				1DA5FB384236691F4D9D770E /* LawFiveUITests */,
+				F82C06BF29B68F0EB5A72E1D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C71E2869364F812550E0F354 /* Schema */ = {
+			isa = PBXGroup;
+			children = (
+				DAFFED346E29C5654F54133D /* LawFive.swift */,
+			);
+			name = Schema;
+			sourceTree = "<group>";
+		};
+		F82C06BF29B68F0EB5A72E1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0B8FE8C58B23D2288819C897 /* LawFive.app */,
+				8145FFF0806392A3A6F5ABEC /* LawFiveTests.xctest */,
+				4AE80A3C4C72E619445B7552 /* LawFiveUITests.xctest */,
+				A1F00000000000000000F002 /* LawFiveWatch.app */,
+				A1F00000000000000000F102 /* LawFiveWatchUITests.xctest */,
+				B2F00000000000000000F202 /* LawFiveWatchTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2F5D9D8D2E78CE46D4D7E595 /* LawFiveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45D6C95FA2339DDC29B2F66F /* Build configuration list for PBXNativeTarget "LawFiveTests" */;
+			buildPhases = (
+				6351AB31DE05ED29FA3E7B03 /* Sources */,
+				8E5CCDF2AF099F9D82EA4940 /* Frameworks */,
+				B0436A936A401BB9700034A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A752CD51616FEF8E8554B5CD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7F6D92847B04EA577C731867 /* LawFiveTests */,
+			);
+			name = LawFiveTests;
+			packageProductDependencies = (
+				5A0000000000000000000002 /* SnapshotTesting */,
+			);
+			productName = LawFiveTests;
+			productReference = 8145FFF0806392A3A6F5ABEC /* LawFiveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		72983D2061ECD1AC92FFFFFD /* LawFiveUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5A22C696975455EDF59EE2D /* Build configuration list for PBXNativeTarget "LawFiveUITests" */;
+			buildPhases = (
+				B800C7B7DE758AE9585DDA4F /* Sources */,
+				869A013D31422C5A54E66FB6 /* Frameworks */,
+				0E75266863BF43F86FDD3B84 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1399BFA91F08BBCA571141AD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1DA5FB384236691F4D9D770E /* LawFiveUITests */,
+			);
+			name = LawFiveUITests;
+			productName = LawFiveUITests;
+			productReference = 4AE80A3C4C72E619445B7552 /* LawFiveUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A1F00000000000000000F001 /* LawFiveWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1F00000000000000000F008 /* Build configuration list for PBXNativeTarget "LawFiveWatch" */;
+			buildPhases = (
+				A1F00000000000000000F004 /* Sources */,
+				A1F00000000000000000F005 /* Frameworks */,
+				A1F00000000000000000F006 /* Resources */,
+				A1F00000000000000000F007 /* Version from git (VER-1) */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1F00000000000000000F003 /* LawFiveWatch */,
+			);
+			name = LawFiveWatch;
+			productName = LawFiveWatch;
+			productReference = A1F00000000000000000F002 /* LawFiveWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A1F00000000000000000F101 /* LawFiveWatchUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1F00000000000000000F107 /* Build configuration list for PBXNativeTarget "LawFiveWatchUITests" */;
+			buildPhases = (
+				A1F00000000000000000F104 /* Sources */,
+				A1F00000000000000000F105 /* Frameworks */,
+				A1F00000000000000000F106 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1F00000000000000000F10A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A1F00000000000000000F103 /* LawFiveWatchUITests */,
+			);
+			name = LawFiveWatchUITests;
+			productName = LawFiveWatchUITests;
+			productReference = A1F00000000000000000F102 /* LawFiveWatchUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FB08EDE0F8CD7E822A9A7AF5 /* LawFive */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D0096C4F895AD61BFC31D6E /* Build configuration list for PBXNativeTarget "LawFive" */;
+			buildPhases = (
+				E8E4FFBB286BA59E6C040EC3 /* Sources */,
+				885D3B69EA3BAD459F41048D /* Frameworks */,
+				F1E4C7A124641C6201468B9C /* Resources */,
+				A1F00000000000000000F00C /* Embed Watch Content */,
+				471AE88F2885F811DB63F71F /* Version from git (VER-1) */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1F00000000000000000F00E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				9FBCD1EC5BACE8EA5A708F78 /* LawFive */,
+			);
+			name = LawFive;
+			packageProductDependencies = (
+				C1A000000000000000000002 /* ConnectIQ */,
+			);
+			productName = LawFive;
+			productReference = 0B8FE8C58B23D2288819C897 /* LawFive.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B2F00000000000000000F201 /* LawFiveWatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2F00000000000000000F207 /* Build configuration list for PBXNativeTarget "LawFiveWatchTests" */;
+			buildPhases = (
+				B2F00000000000000000F204 /* Sources */,
+				B2F00000000000000000F205 /* Frameworks */,
+				B2F00000000000000000F206 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B2F00000000000000000F20A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B2F00000000000000000F203 /* LawFiveWatchTests */,
+			);
+			name = LawFiveWatchTests;
+			productName = LawFiveWatchTests;
+			productReference = B2F00000000000000000F202 /* LawFiveWatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4DC844ABCCFC0D132D087C1C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					2F5D9D8D2E78CE46D4D7E595 = {
+						TestTargetID = FB08EDE0F8CD7E822A9A7AF5;
+					};
+					72983D2061ECD1AC92FFFFFD = {
+						TestTargetID = FB08EDE0F8CD7E822A9A7AF5;
+					};
+					A1F00000000000000000F101 = {
+						TestTargetID = A1F00000000000000000F001;
+					};
+					B2F00000000000000000F201 = {
+						TestTargetID = A1F00000000000000000F001;
+					};
+				};
+			};
+			buildConfigurationList = 16E3877AD8F62543827F8422 /* Build configuration list for PBXProject "LawFive" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 63A9F0EA7BB98050796B649E;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C1A000000000000000000003 /* XCRemoteSwiftPackageReference "connectiq-companion-app-sdk-ios" */,
+				5A0000000000000000000003 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F82C06BF29B68F0EB5A72E1D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FB08EDE0F8CD7E822A9A7AF5 /* LawFive */,
+				2F5D9D8D2E78CE46D4D7E595 /* LawFiveTests */,
+				72983D2061ECD1AC92FFFFFD /* LawFiveUITests */,
+				A1F00000000000000000F001 /* LawFiveWatch */,
+				A1F00000000000000000F101 /* LawFiveWatchUITests */,
+				B2F00000000000000000F201 /* LawFiveWatchTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0E75266863BF43F86FDD3B84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F00000000000000000F006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F00000000000000000F106 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0436A936A401BB9700034A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E4C7A124641C6201468B9C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2F00000000000000000F206 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		471AE88F2885F811DB63F71F /* Version from git (VER-1) */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Version from git (VER-1)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "\"$SRCROOT/tools/stamp-version.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A1F00000000000000000F007 /* Version from git (VER-1) */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Version from git (VER-1)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "\"$SRCROOT/tools/stamp-version.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6351AB31DE05ED29FA3E7B03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F00000000000000000F004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F00000000000000000F104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B800C7B7DE758AE9585DDA4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E8E4FFBB286BA59E6C040EC3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1327EE4CDA9542A27F98EE5E /* LawFive.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2F00000000000000000F204 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1399BFA91F08BBCA571141AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB08EDE0F8CD7E822A9A7AF5 /* LawFive */;
+			targetProxy = E9C317EE62D7A80B4B3C9AC3 /* PBXContainerItemProxy */;
+		};
+		A1F00000000000000000F00E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1F00000000000000000F001 /* LawFiveWatch */;
+			targetProxy = A1F00000000000000000F00F /* PBXContainerItemProxy */;
+		};
+		A1F00000000000000000F10A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1F00000000000000000F001 /* LawFiveWatch */;
+			targetProxy = A1F00000000000000000F10B /* PBXContainerItemProxy */;
+		};
+		A752CD51616FEF8E8554B5CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB08EDE0F8CD7E822A9A7AF5 /* LawFive */;
+			targetProxy = 46B174A1F0F1A498B0831D68 /* PBXContainerItemProxy */;
+		};
+		B2F00000000000000000F20A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1F00000000000000000F001 /* LawFiveWatch */;
+			targetProxy = B2F00000000000000000F20B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		12406EEB0D0583323BF7C76C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		167B5743A4393D2CA1B5C6F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LawFive;
+			};
+			name = Debug;
+		};
+		2B149AE9F2B37B739405E1F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Info.plist;
+				LAWFIVE_SERVER = "https:/$()/api.lawfive.app";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Release;
+		};
+		3DBD2408BCF3B237A6E24ED6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LawFive.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LawFive";
+			};
+			name = Debug;
+		};
+		86170EAFF788C6217E9EE46C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Info.plist;
+				LAWFIVE_SERVER = "https:/$()/api.lawfive.app";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Debug;
+		};
+		A1F00000000000000000F009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LawFiveWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = "LawFiveWatch-Info.plist";
+				LAWFIVE_SERVER = "https:/$()/api.lawfive.app";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		A1F00000000000000000F00A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LawFiveWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = "LawFiveWatch-Info.plist";
+				LAWFIVE_SERVER = "https:/$()/api.lawfive.app";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		A1F00000000000000000F108 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.watchuitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = LawFiveWatch;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		A1F00000000000000000F109 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.watchuitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = LawFiveWatch;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		D02F79CFE069A70DE0AB8F91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LawFive.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LawFive";
+			};
+			name = Release;
+		};
+		F3F102875FC537FB0D0F4207 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F991C508A52866E0D6842FDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LawFive;
+			};
+			name = Release;
+		};
+		B2F00000000000000000F208 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.watchtests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LawFiveWatch.app/LawFiveWatch";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		B2F00000000000000000F209 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.lawfive.watchtests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LawFiveWatch.app/LawFiveWatch";
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0D0096C4F895AD61BFC31D6E /* Build configuration list for PBXNativeTarget "LawFive" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				86170EAFF788C6217E9EE46C /* Debug */,
+				2B149AE9F2B37B739405E1F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		16E3877AD8F62543827F8422 /* Build configuration list for PBXProject "LawFive" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3F102875FC537FB0D0F4207 /* Debug */,
+				12406EEB0D0583323BF7C76C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		45D6C95FA2339DDC29B2F66F /* Build configuration list for PBXNativeTarget "LawFiveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DBD2408BCF3B237A6E24ED6 /* Debug */,
+				D02F79CFE069A70DE0AB8F91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1F00000000000000000F008 /* Build configuration list for PBXNativeTarget "LawFiveWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1F00000000000000000F009 /* Debug */,
+				A1F00000000000000000F00A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1F00000000000000000F107 /* Build configuration list for PBXNativeTarget "LawFiveWatchUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1F00000000000000000F108 /* Debug */,
+				A1F00000000000000000F109 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5A22C696975455EDF59EE2D /* Build configuration list for PBXNativeTarget "LawFiveUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				167B5743A4393D2CA1B5C6F4 /* Debug */,
+				F991C508A52866E0D6842FDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B2F00000000000000000F207 /* Build configuration list for PBXNativeTarget "LawFiveWatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2F00000000000000000F208 /* Debug */,
+				B2F00000000000000000F209 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C1A000000000000000000003 /* XCRemoteSwiftPackageReference "connectiq-companion-app-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/garmin/connectiq-companion-app-sdk-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 1.8.0;
+			};
+		};
+		5A0000000000000000000003 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = exactVersion;
+				version = 1.19.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C1A000000000000000000002 /* ConnectIQ */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C1A000000000000000000003 /* XCRemoteSwiftPackageReference "connectiq-companion-app-sdk-ios" */;
+			productName = ConnectIQ;
+		};
+		5A0000000000000000000002 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A0000000000000000000003 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 4DC844ABCCFC0D132D087C1C /* Project object */;
+}

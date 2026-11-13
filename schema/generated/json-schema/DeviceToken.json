@@ -1,0 +1,31 @@
+{
+  "$id": "DeviceToken.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "access_token": {
+      "type": "string",
+      "description": "Send as Authorization: Bearer <token>."
+    },
+    "token_type": {
+      "type": "string",
+      "const": "Bearer"
+    },
+    "expires_in": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "scope": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "access_token",
+    "token_type",
+    "expires_in",
+    "scope"
+  ],
+  "additionalProperties": {},
+  "description": "The watch's token once someone has approved its code."
+}

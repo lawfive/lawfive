@@ -1,0 +1,90 @@
+{
+  "$id": "MisconductScheme.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "SchemeId.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the codes come from."
+    },
+    "cautions": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 12
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "short": {
+            "description": "A few words for a watch's list of reasons (EVT-14), \"Unsporting behavior\"; the description, cut short, when left out.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 22
+          }
+        },
+        "required": [
+          "code",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sendOffs": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 12
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "short": {
+            "description": "A few words for a watch's list of reasons (EVT-14), \"Unsporting behavior\"; the description, cut short, when left out.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 22
+          }
+        },
+        "required": [
+          "code",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "secondCaution": {
+      "type": "string",
+      "description": "The send-off code for a second caution in the same match (2CT, S7)."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "source",
+    "cautions",
+    "sendOffs",
+    "secondCaution"
+  ],
+  "additionalProperties": false,
+  "description": "A set of caution and send-off codes."
+}

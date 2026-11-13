@@ -1,0 +1,5398 @@
+{
+  "schemaVersion": 1,
+  "language": "en",
+  "edition": "2026/27",
+  "effectiveDate": "2026-07-01",
+  "source": {
+    "title": "Laws of the Game 2026/27",
+    "url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en"
+  },
+  "laws": [
+    {
+      "law": 1,
+      "title": "The Field of Play",
+      "url": "https://www.theifab.com/laws/latest/the-field-of-play/"
+    },
+    {
+      "law": 2,
+      "title": "The Ball",
+      "url": "https://www.theifab.com/laws/latest/the-ball/"
+    },
+    {
+      "law": 3,
+      "title": "The Players",
+      "url": "https://www.theifab.com/laws/latest/the-players/"
+    },
+    {
+      "law": 4,
+      "title": "The Players' Equipment",
+      "url": "https://www.theifab.com/laws/latest/the-players-equipment/"
+    },
+    {
+      "law": 5,
+      "title": "The Referee",
+      "url": "https://www.theifab.com/laws/latest/the-referee/"
+    },
+    {
+      "law": 6,
+      "title": "The Other Match Officials",
+      "url": "https://www.theifab.com/laws/latest/the-other-match-officials/"
+    },
+    {
+      "law": 7,
+      "title": "The Duration of the Match",
+      "url": "https://www.theifab.com/laws/latest/the-duration-of-the-match/"
+    },
+    {
+      "law": 8,
+      "title": "The Start and Restart of Play",
+      "url": "https://www.theifab.com/laws/latest/the-start-and-restart-of-play/"
+    },
+    {
+      "law": 9,
+      "title": "The Ball in and out of Play",
+      "url": "https://www.theifab.com/laws/latest/the-ball-in-and-out-of-play/"
+    },
+    {
+      "law": 10,
+      "title": "Determining the Outcome of a Match",
+      "url": "https://www.theifab.com/laws/latest/determining-the-outcome-of-a-match/"
+    },
+    {
+      "law": 11,
+      "title": "Offside",
+      "url": "https://www.theifab.com/laws/latest/offside/"
+    },
+    {
+      "law": 12,
+      "title": "Fouls and Misconduct",
+      "url": "https://www.theifab.com/laws/latest/fouls-and-misconduct/"
+    },
+    {
+      "law": 13,
+      "title": "Free Kicks",
+      "url": "https://www.theifab.com/laws/latest/free-kicks/"
+    },
+    {
+      "law": 14,
+      "title": "The Penalty Kick",
+      "url": "https://www.theifab.com/laws/latest/the-penalty-kick/"
+    },
+    {
+      "law": 15,
+      "title": "The Throw-in",
+      "url": "https://www.theifab.com/laws/latest/the-throw-in/"
+    },
+    {
+      "law": 16,
+      "title": "The Goal Kick",
+      "url": "https://www.theifab.com/laws/latest/the-goal-kick/"
+    },
+    {
+      "law": 17,
+      "title": "The Corner Kick",
+      "url": "https://www.theifab.com/laws/latest/the-corner-kick/"
+    }
+  ],
+  "protocols": [
+    {
+      "id": "time-limited-substitution",
+      "title": "Time-limited substitution protocol",
+      "relatedLaws": [
+        3
+      ],
+      "url": "https://theifab.com/laws/latest/time-limited-substitution-protocol/"
+    },
+    {
+      "id": "off-field-treatment",
+      "title": "Off-field treatment and assessment protocol",
+      "relatedLaws": [
+        5
+      ],
+      "url": "https://theifab.com/laws/latest/off-field-treatment-and-assessment-protocol/"
+    },
+    {
+      "id": "countdown",
+      "title": "Throw-in and goal-kick countdown protocol",
+      "relatedLaws": [
+        15,
+        16
+      ],
+      "url": "https://theifab.com/laws/latest/throw-in-and-goal-kick-countdown-protocol/"
+    },
+    {
+      "id": "sin-bins",
+      "title": "Guidelines for temporary dismissals (sin bins)",
+      "relatedLaws": [
+        5
+      ],
+      "url": "https://theifab.com/laws/latest/guidelines-for-temporary-dismissals/"
+    }
+  ],
+  "questions": [
+    {
+      "id": "L01-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 1,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "measurements"
+      ],
+      "question": "What is the minimum length of the touchline for a standard (non-international) 11-a-side match?",
+      "options": [
+        {
+          "id": "a",
+          "text": "100 m (110 yds)",
+          "correct": false,
+          "explanation": "100 m is the minimum touchline length for international matches, not for all matches."
+        },
+        {
+          "id": "b",
+          "text": "90 m (100 yds)",
+          "correct": true,
+          "explanation": "The touchline must be between 90 m and 120 m long, and longer than the goal line."
+        },
+        {
+          "id": "c",
+          "text": "120 m (130 yds)",
+          "correct": false,
+          "explanation": "120 m is the maximum touchline length, not the minimum."
+        },
+        {
+          "id": "d",
+          "text": "45 m (50 yds)",
+          "correct": false,
+          "explanation": "45 m is the minimum length of the goal line, not the touchline."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 1,
+          "section": "10"
+        }
+      ],
+      "tags": [
+        "measurements"
+      ],
+      "question": "What is the distance between the inside edges of the two goalposts?",
+      "options": [
+        {
+          "id": "a",
+          "text": "5.5 m (6 yds)",
+          "correct": false,
+          "explanation": "5.5 m is the depth of the goal area and its distance from each post."
+        },
+        {
+          "id": "b",
+          "text": "2.44 m (8 ft)",
+          "correct": false,
+          "explanation": "2.44 m is the height from the ground to the lower edge of the crossbar."
+        },
+        {
+          "id": "c",
+          "text": "7.32 m (8 yds)",
+          "correct": true,
+          "explanation": "The posts are 7.32 m (8 yds) apart, measured between their inside edges."
+        },
+        {
+          "id": "d",
+          "text": "9.15 m (10 yds)",
+          "correct": false,
+          "explanation": "9.15 m is the radius of the center circle and the usual restart distance."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-003",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 1,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "field-markings"
+      ],
+      "question": "True or false: the field markings are part of the areas they mark out, so a ball on the touchline is still inside the field of play.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "Lines belong to the areas they bound, so the ball is only out when it has wholly crossed the line."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "Lines are part of the area they enclose; a ball resting on the line has not left the field."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 1,
+          "section": "6"
+        }
+      ],
+      "tags": [
+        "measurements"
+      ],
+      "question": "How far is the penalty mark from the midpoint between the goalposts?",
+      "options": [
+        {
+          "id": "a",
+          "text": "16.5 m (18 yds)",
+          "correct": false,
+          "explanation": "16.5 m is how far the penalty area extends into the field."
+        },
+        {
+          "id": "b",
+          "text": "5.5 m (6 yds)",
+          "correct": false,
+          "explanation": "5.5 m is the depth of the goal area."
+        },
+        {
+          "id": "c",
+          "text": "9.15 m (10 yds)",
+          "correct": false,
+          "explanation": "9.15 m is the radius of the penalty arc measured from the penalty mark."
+        },
+        {
+          "id": "d",
+          "text": "11 m (12 yds)",
+          "correct": true,
+          "explanation": "The penalty mark is placed 11 m (12 yds) from the midpoint between the posts."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 1,
+          "section": "10"
+        }
+      ],
+      "tags": [
+        "restarts",
+        "scenario"
+      ],
+      "question": "During play the crossbar breaks. The groundstaff manage to repair it. How is play restarted?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The match must be abandoned",
+          "correct": false,
+          "explanation": "Abandonment only applies if the crossbar cannot be repaired. Here it was fixed."
+        },
+        {
+          "id": "b",
+          "text": "Goal kick",
+          "correct": false,
+          "explanation": "A goal kick is only for the ball crossing the goal line last touched by an attacker; that didn't happen here."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick to the defending team",
+          "correct": false,
+          "explanation": "No offense was committed, so there is no free kick."
+        },
+        {
+          "id": "d",
+          "text": "Dropped ball",
+          "correct": true,
+          "explanation": "Play is stopped until the crossbar is repaired or replaced, then restarted with a dropped ball."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-006",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 1,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "sanctions",
+        "scenario"
+      ],
+      "question": "During the match, the referee sees a player scraping an unauthorized mark on the field with their boot. Which of these are correct? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The player is cautioned for unsporting behavior",
+          "correct": true,
+          "explanation": "Making unauthorized marks on the field is a caution for unsporting behavior."
+        },
+        {
+          "id": "b",
+          "text": "The referee must stop play immediately to issue the caution",
+          "correct": false,
+          "explanation": "The Law says the caution waits until the ball is next out of play."
+        },
+        {
+          "id": "c",
+          "text": "No card is needed; the referee simply has the mark removed",
+          "correct": false,
+          "explanation": "This is a cautionable offense, not just a matter of tidying the field."
+        },
+        {
+          "id": "d",
+          "text": "The caution is given when the ball next goes out of play",
+          "correct": true,
+          "explanation": "The referee doesn't need to stop play; the caution is issued at the next stoppage."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 1,
+          "section": "9"
+        }
+      ],
+      "tags": [
+        "technical-area"
+      ],
+      "question": "How many people in a technical area may give tactical instructions at any one time?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Any named team official",
+          "correct": false,
+          "explanation": "Being named on the team list doesn't allow several people to coach at once."
+        },
+        {
+          "id": "b",
+          "text": "Only one",
+          "correct": true,
+          "explanation": "Only one person at a time is allowed to convey tactical instructions from the technical area."
+        },
+        {
+          "id": "c",
+          "text": "Two: the head coach and one assistant",
+          "correct": false,
+          "explanation": "The Law allows only one person at a time, regardless of their role."
+        },
+        {
+          "id": "d",
+          "text": "Any number, as long as they stay in the technical area",
+          "correct": false,
+          "explanation": "Staying within the confines is required, but instructions are still limited to one person at a time."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L01-008",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 1,
+          "section": "2"
+        },
+        {
+          "law": 1,
+          "section": "6"
+        }
+      ],
+      "tags": [
+        "measurements"
+      ],
+      "question": "How is the 11 m (12 yds) distance to the penalty mark measured?",
+      "options": [
+        {
+          "id": "a",
+          "text": "From the center of the mark to the front (field-side) edge of the goal line",
+          "correct": false,
+          "explanation": "Lines are part of the area they enclose, so the measurement goes to the back edge of the goal line."
+        },
+        {
+          "id": "b",
+          "text": "From the front edge of the mark to the back edge of the goal line",
+          "correct": false,
+          "explanation": "The measurement starts at the center of the penalty mark, not its edge."
+        },
+        {
+          "id": "c",
+          "text": "From the center of the mark to the middle of the goal line's width",
+          "correct": false,
+          "explanation": "The measurement goes to the back edge of the goal line, not its midpoint."
+        },
+        {
+          "id": "d",
+          "text": "From the center of the mark to the back edge of the goal line",
+          "correct": true,
+          "explanation": "The Law specifies measuring from the center of the penalty mark to the back edge of the goal line."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L02-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 2,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "measurements",
+        "ball"
+      ],
+      "question": "What circumference must a match ball have?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Between 70 cm and 72 cm",
+          "correct": false,
+          "explanation": "That is larger than the range the Law allows."
+        },
+        {
+          "id": "b",
+          "text": "Between 64 cm and 66 cm",
+          "correct": false,
+          "explanation": "That is smaller than the range the Law allows."
+        },
+        {
+          "id": "c",
+          "text": "Any size, as long as it is the right weight",
+          "correct": false,
+          "explanation": "Circumference, weight and pressure are all specified."
+        },
+        {
+          "id": "d",
+          "text": "Between 68 cm and 70 cm (27-28 ins)",
+          "correct": true,
+          "explanation": "The ball must be spherical with a circumference of 68-70 cm."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L02-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 2,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "ball"
+      ],
+      "question": "True or false: the match ball may only be changed during the match with the referee's permission.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "The ball may not be changed during the match without the referee's permission."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "Changing the ball always needs the referee's permission."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L02-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 2,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "restarts",
+        "scenario",
+        "ball"
+      ],
+      "question": "The ball bursts during open play. How does play restart once a new ball is ready?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Throw-in to the team that last touched the ball",
+          "correct": false,
+          "explanation": "The ball didn't leave the field, so there's no throw-in."
+        },
+        {
+          "id": "b",
+          "text": "Indirect free kick to the team in possession",
+          "correct": false,
+          "explanation": "No offense occurred, so there is no free kick."
+        },
+        {
+          "id": "c",
+          "text": "Dropped ball",
+          "correct": true,
+          "explanation": "If the ball becomes defective during play, play is stopped and restarted with a dropped ball."
+        },
+        {
+          "id": "d",
+          "text": "Kickoff",
+          "correct": false,
+          "explanation": "A kickoff only starts a half or restarts play after a goal."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L02-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 2,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "scenario",
+        "ball"
+      ],
+      "question": "A penalty kick is taken and the ball bursts as it moves forward, before touching any player, the crossbar or the goalposts. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The penalty kick is retaken",
+          "correct": true,
+          "explanation": "A ball that becomes defective as it moves forward at a penalty, before touching anyone or the frame, means the kick is retaken."
+        },
+        {
+          "id": "b",
+          "text": "Goal kick",
+          "correct": false,
+          "explanation": "The ball didn't cross the goal line, and the defect wasn't anyone's offense."
+        },
+        {
+          "id": "c",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "A dropped ball is used for a defective ball during open play, but the penalty kick has its own rule: retake."
+        },
+        {
+          "id": "d",
+          "text": "Indirect free kick to the defending team",
+          "correct": false,
+          "explanation": "The kicker committed no offense, so there's no free kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 3,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "players"
+      ],
+      "question": "What is the minimum number of players a team must have for a match to start or continue?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Seven",
+          "correct": true,
+          "explanation": "A match may not start or continue if either team has fewer than seven players."
+        },
+        {
+          "id": "b",
+          "text": "Six",
+          "correct": false,
+          "explanation": "The minimum is seven, not six."
+        },
+        {
+          "id": "c",
+          "text": "Eight",
+          "correct": false,
+          "explanation": "Eight is more than the Law requires; the minimum is seven."
+        },
+        {
+          "id": "d",
+          "text": "Nine",
+          "correct": false,
+          "explanation": "Nine is more than the Law requires; the minimum is seven."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 3,
+          "section": "3"
+        },
+        {
+          "protocol": "time-limited-substitution"
+        }
+      ],
+      "tags": [
+        "substitutions",
+        "new-2026-27"
+      ],
+      "question": "Under the 2026/27 Laws, how long does a player being substituted have to leave the field once the substitution board is shown (or the referee signals)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "15 seconds",
+          "correct": false,
+          "explanation": "The time limit for substitutions is ten seconds."
+        },
+        {
+          "id": "b",
+          "text": "5 seconds",
+          "correct": false,
+          "explanation": "Five seconds is the countdown for throw-ins and goal kicks, not substitutions."
+        },
+        {
+          "id": "c",
+          "text": "10 seconds",
+          "correct": true,
+          "explanation": "New for 2026/27: the outgoing player must be off the field within ten seconds."
+        },
+        {
+          "id": "d",
+          "text": "30 seconds",
+          "correct": false,
+          "explanation": "The time limit for substitutions is ten seconds."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-003",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 3,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "substitutions"
+      ],
+      "question": "True or false: a substitute must enter the field of play at the halfway line.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "A substitute enters during a stoppage, at the halfway line, after the replaced player has left and after the referee's signal."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "The substitute's point of entry is the halfway line. The leaving player is the one who can use the nearest boundary line."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 3,
+          "section": "5"
+        },
+        {
+          "protocol": "time-limited-substitution"
+        }
+      ],
+      "tags": [
+        "substitutions",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "The board goes up for a substitution, but the outgoing player walks off slowly and is still on the field after ten seconds. There is no safety or injury reason. Play restarts. When may the substitute come on?",
+      "options": [
+        {
+          "id": "a",
+          "text": "After one minute, even while the ball is in play",
+          "correct": false,
+          "explanation": "A substitute can only enter during a stoppage."
+        },
+        {
+          "id": "b",
+          "text": "Immediately, as soon as the outgoing player has left",
+          "correct": false,
+          "explanation": "Play restarts without the substitute; that's the penalty for the delay."
+        },
+        {
+          "id": "c",
+          "text": "At the first stoppage after one minute has passed since the restart, with the referee's permission",
+          "correct": true,
+          "explanation": "If the ten seconds are exceeded, the substitute must wait until the first stoppage after one minute (running clock) from the restart."
+        },
+        {
+          "id": "d",
+          "text": "At the very next stoppage in play",
+          "correct": false,
+          "explanation": "The substitute has to wait for one minute to pass first, not just the next stoppage."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-005",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 3,
+          "section": "4"
+        },
+        {
+          "law": 3,
+          "section": "5"
+        }
+      ],
+      "tags": [
+        "goalkeeper",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "During a stoppage in the second half, a defender swaps shirts with the goalkeeper and takes over in goal without telling the referee. Play restarts before the referee notices. Which are correct? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The referee allows play to continue",
+          "correct": true,
+          "explanation": "Play is not stopped for an unauthorized goalkeeper change."
+        },
+        {
+          "id": "b",
+          "text": "Both players are cautioned when the ball is next out of play",
+          "correct": true,
+          "explanation": "Both players involved are cautioned at the next stoppage."
+        },
+        {
+          "id": "c",
+          "text": "The referee stops play at once and awards an indirect free kick",
+          "correct": false,
+          "explanation": "The Law says to let play continue and deal with it at the next stoppage."
+        },
+        {
+          "id": "d",
+          "text": "Only the player who went in goal is cautioned",
+          "correct": false,
+          "explanation": "Both players who changed places are cautioned."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-006",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 3,
+          "section": "7"
+        }
+      ],
+      "tags": [
+        "restarts",
+        "scenario"
+      ],
+      "question": "A substitute runs onto the field while the ball is in play and kicks the ball away from an attacker. The referee stops play. How does play restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "A dropped ball is used when an outside agent interferes, but a substitute is on the team list."
+        },
+        {
+          "id": "b",
+          "text": "Direct free kick (or penalty kick)",
+          "correct": true,
+          "explanation": "Interference by a substitute, substituted or sent-off player or team official is restarted with a direct free kick or penalty kick."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick",
+          "correct": false,
+          "explanation": "Interference by someone on the team list (other than a player) is a direct free kick offense."
+        },
+        {
+          "id": "d",
+          "text": "Throw-in to the attacking team",
+          "correct": false,
+          "explanation": "The ball didn't go out of play."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 3,
+          "section": "9"
+        }
+      ],
+      "tags": [
+        "goals",
+        "scenario"
+      ],
+      "question": "A goal is scored. Before the restart, the referee realizes a substitute of the scoring team was on the field and interfered with play when the goal was scored. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal disallowed; direct free kick from the position of the extra person",
+          "correct": true,
+          "explanation": "If the extra person belongs to the scoring team, the goal is disallowed and play restarts with a direct free kick where that person was."
+        },
+        {
+          "id": "b",
+          "text": "Goal disallowed; indirect free kick where the ball was",
+          "correct": false,
+          "explanation": "The restart is a direct free kick from where the extra person was."
+        },
+        {
+          "id": "c",
+          "text": "Goal stands; the incident is reported",
+          "correct": false,
+          "explanation": "The goal is only allowed if the extra person was from the team that conceded or was an outside agent who didn't interfere."
+        },
+        {
+          "id": "d",
+          "text": "Goal disallowed; dropped ball",
+          "correct": false,
+          "explanation": "A dropped ball applies when the extra person was an outside agent, not someone from the scoring team."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-008",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 3,
+          "section": "9"
+        }
+      ],
+      "tags": [
+        "goals",
+        "scenario"
+      ],
+      "question": "After a goal and the following kickoff, the referee realizes an extra person was on the field when the goal was scored. What happens to the goal?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The goal stands only if the extra person was an outside agent",
+          "correct": false,
+          "explanation": "After the restart, the goal stands whoever the extra person was."
+        },
+        {
+          "id": "b",
+          "text": "The goal stands; it can no longer be disallowed",
+          "correct": true,
+          "explanation": "Once play has restarted, the goal can't be disallowed. If the extra person is still on the field, play is stopped, they're removed, and play restarts appropriately."
+        },
+        {
+          "id": "c",
+          "text": "The goal is disallowed and a direct free kick is awarded",
+          "correct": false,
+          "explanation": "It's too late to disallow the goal once play has restarted."
+        },
+        {
+          "id": "d",
+          "text": "The goal is disallowed and play restarts with a dropped ball",
+          "correct": false,
+          "explanation": "Once play has restarted after the goal, the goal can't be disallowed."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-009",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 3,
+          "section": "6"
+        }
+      ],
+      "tags": [
+        "sanctions",
+        "substitutions"
+      ],
+      "question": "A player is named in the starting line-up on the team list, then is sent off before kickoff. Which is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "They cannot be replaced, so the team starts with ten",
+          "correct": false,
+          "explanation": "A starting player sent off before kickoff can be replaced; once the match has kicked off, a sent-off player can't be."
+        },
+        {
+          "id": "b",
+          "text": "They may be replaced, but this counts as one of the team's substitutions",
+          "correct": false,
+          "explanation": "The Law says the number of substitutions is not reduced."
+        },
+        {
+          "id": "c",
+          "text": "They may be replaced by anyone, even someone not on the team list",
+          "correct": false,
+          "explanation": "The replacement must be a named substitute."
+        },
+        {
+          "id": "d",
+          "text": "They may be replaced by a named substitute, who cannot be replaced, and the team keeps its full number of substitutions",
+          "correct": true,
+          "explanation": "A player sent off after the team list but before kickoff can be replaced by a named substitute; the team's substitutions are not reduced."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L03-010",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 3,
+          "section": "3"
+        },
+        {
+          "law": 3,
+          "section": "5"
+        },
+        {
+          "protocol": "time-limited-substitution"
+        }
+      ],
+      "tags": [
+        "substitutions",
+        "new-2026-27"
+      ],
+      "question": "Which statements about the 2026/27 ten-second substitution rule are correct? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The referee may decide not to apply the limit when an injury clearly stops the player leaving in time",
+          "correct": true,
+          "explanation": "Injury and safety/security reasons are exceptions the referee can allow."
+        },
+        {
+          "id": "b",
+          "text": "A player who goes over the ten seconds is always cautioned",
+          "correct": false,
+          "explanation": "A caution is only given if the player excessively delays the restart."
+        },
+        {
+          "id": "c",
+          "text": "Once the ten seconds are exceeded, the team may cancel the substitution or choose a different substitute",
+          "correct": false,
+          "explanation": "The substitution can't be canceled and the substitute can't be changed."
+        },
+        {
+          "id": "d",
+          "text": "When several substitutions are made in one stoppage, all outgoing players must be off within ten seconds of the last one being signaled",
+          "correct": true,
+          "explanation": "With multiple substitutions in the same stoppage, the ten seconds run from the final substitution signal."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-001",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 4,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "equipment"
+      ],
+      "question": "Which of these are part of a player's compulsory equipment? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Footwear",
+          "correct": true,
+          "explanation": "Footwear is compulsory."
+        },
+        {
+          "id": "b",
+          "text": "A shirt with sleeves",
+          "correct": true,
+          "explanation": "A shirt with sleeves is one of the five compulsory items."
+        },
+        {
+          "id": "c",
+          "text": "Shinguards covered by the socks",
+          "correct": true,
+          "explanation": "Shinguards are compulsory and must be covered by the socks."
+        },
+        {
+          "id": "d",
+          "text": "Gloves",
+          "correct": false,
+          "explanation": "Gloves are permitted protective equipment but not compulsory."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 4,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "equipment",
+        "new-2026-27"
+      ],
+      "question": "True or false: under the 2026/27 Laws, a player may wear an accessory if it is not dangerous and is safely and securely covered.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "New for 2026/27: the blanket jewelry ban was replaced. Non-dangerous accessories are allowed if safely and securely covered; dangerous items must still be removed."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "2026/27 changed this: non-dangerous accessories are permitted if safely and securely covered."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 4,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "equipment",
+        "colors"
+      ],
+      "question": "Both goalkeepers' shirts are the same color and neither has another shirt. What does the referee do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Makes one goalkeeper play in the outfield team's colors",
+          "correct": false,
+          "explanation": "Goalkeepers must be distinguishable from the other players."
+        },
+        {
+          "id": "b",
+          "text": "Refuses to start the match",
+          "correct": false,
+          "explanation": "The Law specifically allows the match to be played in this situation."
+        },
+        {
+          "id": "c",
+          "text": "Abandons the match and reports it",
+          "correct": false,
+          "explanation": "There's no need to abandon; the match can be played."
+        },
+        {
+          "id": "d",
+          "text": "Allows the match to be played",
+          "correct": true,
+          "explanation": "If both goalkeepers have the same shirt color and no alternative, the referee lets the match go ahead."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 4,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "equipment",
+        "goals",
+        "scenario"
+      ],
+      "question": "An attacker's boot comes off accidentally. Before the ball next goes out of play, the attacker shoots with the bootless foot and scores. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No goal; dropped ball",
+          "correct": false,
+          "explanation": "The goal is valid, so there's no reason to stop play."
+        },
+        {
+          "id": "b",
+          "text": "No goal; the player is cautioned",
+          "correct": false,
+          "explanation": "There is no offense or caution for playing on after accidentally losing a boot."
+        },
+        {
+          "id": "c",
+          "text": "Goal",
+          "correct": true,
+          "explanation": "Accidentally lost footwear must be replaced by the next stoppage; if the player plays the ball or scores before then, the goal stands."
+        },
+        {
+          "id": "d",
+          "text": "No goal; indirect free kick to the defending team",
+          "correct": false,
+          "explanation": "Playing on briefly after accidentally losing a boot isn't an offense."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 4,
+          "section": "6"
+        }
+      ],
+      "tags": [
+        "equipment",
+        "restarts",
+        "scenario"
+      ],
+      "question": "A player who left the field to fix their equipment comes back on without the referee's permission. They don't interfere with play, but the referee stops play to caution them. How does play restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Direct free kick from where the player re-entered",
+          "correct": false,
+          "explanation": "A direct free kick (or penalty) applies only if the player interfered; then it's taken from where the interference happened."
+        },
+        {
+          "id": "b",
+          "text": "No restart change; the caution waits until the ball is out of play",
+          "correct": false,
+          "explanation": "The referee did stop play here, so a restart has to be awarded."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick from where the ball was when play stopped",
+          "correct": true,
+          "explanation": "Without interference, the restart is an indirect free kick from the ball's position when play was stopped."
+        },
+        {
+          "id": "d",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "An offense was committed, so the restart is a free kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-006",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 4,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "equipment"
+      ],
+      "question": "Which are requirements for head covers (other than goalkeepers' caps)? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "They may have parts sticking out if those parts are padded",
+          "correct": false,
+          "explanation": "Head covers must not have any protruding elements."
+        },
+        {
+          "id": "b",
+          "text": "Black or the same main color as the shirt, with teammates wearing the same color",
+          "correct": true,
+          "explanation": "Head covers must be black or the shirt's main color, and the same color across the team."
+        },
+        {
+          "id": "c",
+          "text": "Any color is fine if the cover isn't dangerous",
+          "correct": false,
+          "explanation": "Color is restricted: black or the shirt's main color."
+        },
+        {
+          "id": "d",
+          "text": "Not attached to the shirt",
+          "correct": true,
+          "explanation": "Head covers must not be attached to the shirt."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L04-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 4,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "equipment",
+        "team-officials"
+      ],
+      "question": "A coach in the technical area is using a tablet to review tactics during the match. Is this allowed?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only for medical or player welfare reasons",
+          "correct": false,
+          "explanation": "Tactical and coaching reasons are also allowed."
+        },
+        {
+          "id": "b",
+          "text": "Yes; small handheld devices are allowed for tactical/coaching or player welfare reasons",
+          "correct": true,
+          "explanation": "Team officials may use small, mobile, handheld equipment for tactical, coaching, welfare or safety reasons."
+        },
+        {
+          "id": "c",
+          "text": "Only phones and earpieces are allowed",
+          "correct": false,
+          "explanation": "Tablets and laptops are also listed as allowed handheld equipment."
+        },
+        {
+          "id": "d",
+          "text": "No; all electronic devices are banned in the technical area",
+          "correct": false,
+          "explanation": "The Law allows small handheld devices for team officials."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-001",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 5,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "referee"
+      ],
+      "question": "True or false: the referee's decisions on facts connected with play, including whether a goal was scored and the result of the match, are final.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "Factual decisions about play, including goals and the result, are final."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "The Law states that these decisions are final."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-002",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 5,
+          "section": "5"
+        }
+      ],
+      "tags": [
+        "referee",
+        "equipment"
+      ],
+      "question": "Which items are compulsory equipment for the referee? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "A notebook or another way of recording the match",
+          "correct": true,
+          "explanation": "The referee must have a means of keeping a record of the match."
+        },
+        {
+          "id": "b",
+          "text": "Red and yellow cards",
+          "correct": true,
+          "explanation": "Cards are compulsory referee equipment."
+        },
+        {
+          "id": "c",
+          "text": "A communication headset or buzzer flags",
+          "correct": false,
+          "explanation": "Communication equipment may be permitted, but it isn't compulsory."
+        },
+        {
+          "id": "d",
+          "text": "Whistle(s)",
+          "correct": true,
+          "explanation": "A whistle is compulsory referee equipment."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "advantage"
+      ],
+      "question": "The referee plays advantage, but the expected advantage doesn't happen. When can the referee still go back and penalize the original offense?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Within ten seconds exactly",
+          "correct": false,
+          "explanation": "The Law doesn't set an exact number; it says 'within a few seconds'."
+        },
+        {
+          "id": "b",
+          "text": "At that time or within a few seconds",
+          "correct": true,
+          "explanation": "If the advantage doesn't materialize straight away or within a few seconds, the referee penalizes the original offense."
+        },
+        {
+          "id": "c",
+          "text": "Never; once advantage is signaled the decision is final",
+          "correct": false,
+          "explanation": "The referee can still penalize if the advantage doesn't happen."
+        },
+        {
+          "id": "d",
+          "text": "Up to the next stoppage in play",
+          "correct": false,
+          "explanation": "The window is only a few seconds, not until the next stoppage."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        },
+        {
+          "protocol": "off-field-treatment"
+        }
+      ],
+      "tags": [
+        "injuries",
+        "new-2026-27"
+      ],
+      "question": "Under the 2026/27 Laws, an outfield player is treated on the field (not one of the exceptions). For how long after play restarts must they stay off the field?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Two minutes",
+          "correct": false,
+          "explanation": "The period is one minute."
+        },
+        {
+          "id": "b",
+          "text": "Thirty seconds",
+          "correct": false,
+          "explanation": "The period is one minute."
+        },
+        {
+          "id": "c",
+          "text": "Until the next stoppage in play",
+          "correct": false,
+          "explanation": "The player may come back after one minute, even while the ball is in play, with the referee's permission."
+        },
+        {
+          "id": "d",
+          "text": "One minute (running clock)",
+          "correct": true,
+          "explanation": "New for 2026/27: the player must leave and stay off for one minute after the restart."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-005",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        },
+        {
+          "protocol": "off-field-treatment"
+        }
+      ],
+      "tags": [
+        "injuries"
+      ],
+      "question": "In which situations may an injured player stay on the field after assessment or treatment? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The injury came from a physical offense for which the opponent was cautioned or sent off",
+          "correct": true,
+          "explanation": "Injuries from physical offenses punished with a yellow or red card are an exception."
+        },
+        {
+          "id": "b",
+          "text": "Two players from the same team collided and need attention",
+          "correct": true,
+          "explanation": "A collision between teammates is an exception."
+        },
+        {
+          "id": "c",
+          "text": "The injured player is a goalkeeper",
+          "correct": true,
+          "explanation": "An injured goalkeeper is an exception."
+        },
+        {
+          "id": "d",
+          "text": "The injured player is the team captain",
+          "correct": false,
+          "explanation": "Being captain isn't an exception; the player must leave."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-006",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        },
+        {
+          "protocol": "off-field-treatment"
+        }
+      ],
+      "tags": [
+        "injuries",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "An injured outfield player left the field for treatment. One minute after the restart, the ball is in play and the referee gives permission to return. Where may the player re-enter?",
+      "options": [
+        {
+          "id": "a",
+          "text": "From any boundary line",
+          "correct": false,
+          "explanation": "Any boundary line is allowed only when the ball is out of play."
+        },
+        {
+          "id": "b",
+          "text": "They can't re-enter until the ball is out of play",
+          "correct": false,
+          "explanation": "The referee may let them return while the ball is in play."
+        },
+        {
+          "id": "c",
+          "text": "Only at the halfway line",
+          "correct": false,
+          "explanation": "The halfway line is the entry point for substitutes, not for returning injured players."
+        },
+        {
+          "id": "d",
+          "text": "From the touchline",
+          "correct": true,
+          "explanation": "With the ball in play, the player must re-enter from the touchline."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "sanctions"
+      ],
+      "question": "Two offenses happen at the same time. Which does the referee penalize?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The one committed by the defending team",
+          "correct": false,
+          "explanation": "Which team committed it isn't the deciding factor."
+        },
+        {
+          "id": "b",
+          "text": "Neither; play restarts with a dropped ball",
+          "correct": false,
+          "explanation": "The referee must punish the more serious offense."
+        },
+        {
+          "id": "c",
+          "text": "Whichever happened first",
+          "correct": false,
+          "explanation": "These offenses happened at the same time; the test is seriousness."
+        },
+        {
+          "id": "d",
+          "text": "The more serious one, judged on sanction, restart, physical severity and tactical impact",
+          "correct": true,
+          "explanation": "With simultaneous offenses, the referee punishes the more serious one using those criteria."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-008",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "advantage",
+        "new-2026-27"
+      ],
+      "question": "True or false: if a team takes a restart incorrectly and the ball is in play, the referee may let play continue (advantage) if the opponents would benefit.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "2026/27 clarifies that advantage can be applied after an incorrectly taken restart once the ball is in play."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "The 2026/27 Laws confirm that advantage can apply here."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-009",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 5,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "restarts",
+        "scenario"
+      ],
+      "question": "The referee awards a throw-in to the wrong team. It's taken, and only then does the assistant referee point out the mistake. Can the referee change the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No; a restart decision can't be changed once play has restarted",
+          "correct": true,
+          "explanation": "The referee can't change a restart decision after play has restarted."
+        },
+        {
+          "id": "b",
+          "text": "Yes; the throw-in is retaken by the correct team",
+          "correct": false,
+          "explanation": "Once play has restarted, the restart decision stands."
+        },
+        {
+          "id": "c",
+          "text": "Yes, but only within five seconds of the throw",
+          "correct": false,
+          "explanation": "There's no time window; the restart has already happened."
+        },
+        {
+          "id": "d",
+          "text": "Yes; play is stopped and restarted with a dropped ball",
+          "correct": false,
+          "explanation": "The decision can't be changed after the restart."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-010",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "outside-interference",
+        "scenario"
+      ],
+      "question": "A spectator blows a whistle and a defender, thinking play has stopped, picks the ball up. The referee decides the whistle interfered with play. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Indirect free kick to the attacking team",
+          "correct": false,
+          "explanation": "The restart for this interference is a dropped ball."
+        },
+        {
+          "id": "b",
+          "text": "Play on, because a spectator's whistle has no effect",
+          "correct": false,
+          "explanation": "The referee judged that it interfered with play, so play must be stopped."
+        },
+        {
+          "id": "c",
+          "text": "Penalize the handball with a direct free kick (or penalty kick)",
+          "correct": false,
+          "explanation": "The handling was caused by outside interference, and the Law says to restart with a dropped ball."
+        },
+        {
+          "id": "d",
+          "text": "Stop play; restart with a dropped ball",
+          "correct": true,
+          "explanation": "When a spectator's whistle interferes with play, play is stopped and restarted with a dropped ball."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-011",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        },
+        {
+          "protocol": "off-field-treatment"
+        }
+      ],
+      "tags": [
+        "injuries",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "A player is hurt by a reckless tackle and the opponent is cautioned. The injured player is treated on the field and the treatment takes a while. Must the injured player leave the field for one minute?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only if the player is bleeding",
+          "correct": false,
+          "explanation": "Bleeding has its own rule, but it isn't the test here."
+        },
+        {
+          "id": "b",
+          "text": "Only if treatment takes longer than 30 seconds",
+          "correct": false,
+          "explanation": "There's no time threshold in the Law for this exception."
+        },
+        {
+          "id": "c",
+          "text": "Yes; every treated outfield player must leave for one minute",
+          "correct": false,
+          "explanation": "There are exceptions, including injuries caused by a cautionable or sending-off physical offense."
+        },
+        {
+          "id": "d",
+          "text": "No; they may stay on the field",
+          "correct": true,
+          "explanation": "Injuries from a physical offense punished with a yellow or red card are an exception, even if the treatment isn't quick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L05-012",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 5,
+          "section": "3"
+        },
+        {
+          "protocol": "sin-bins"
+        }
+      ],
+      "tags": [
+        "sin-bins",
+        "grassroots"
+      ],
+      "question": "In a youth or grassroots competition using temporary dismissals (sin bins), how long should a temporary dismissal last?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Until the next goal is scored",
+          "correct": false,
+          "explanation": "The period is time-based, not linked to goals."
+        },
+        {
+          "id": "b",
+          "text": "Always exactly 10 minutes",
+          "correct": false,
+          "explanation": "The length depends on the match duration: 10-15% of playing time."
+        },
+        {
+          "id": "c",
+          "text": "10-15% of the total playing time",
+          "correct": true,
+          "explanation": "The guidelines set the dismissal at 10-15% of total playing time (for example, 10 minutes in a 90-minute match)."
+        },
+        {
+          "id": "d",
+          "text": "5 minutes",
+          "correct": false,
+          "explanation": "The guidelines use 10-15% of playing time, not a fixed five minutes."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L06-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 6,
+          "section": null
+        }
+      ],
+      "tags": [
+        "match-officials"
+      ],
+      "question": "Assistant referees and other match officials help the referee. Who takes the final decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The referee",
+          "correct": true,
+          "explanation": "Other officials assist, but the final decision is always the referee's."
+        },
+        {
+          "id": "b",
+          "text": "The senior assistant referee",
+          "correct": false,
+          "explanation": "Seniority among the assistants doesn't affect who makes the final decision."
+        },
+        {
+          "id": "c",
+          "text": "The fourth official",
+          "correct": false,
+          "explanation": "The fourth official assists but doesn't decide."
+        },
+        {
+          "id": "d",
+          "text": "The assistant referee with the best view",
+          "correct": false,
+          "explanation": "Assistants advise; the referee decides."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L06-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 6,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "match-officials"
+      ],
+      "question": "True or false: an assistant referee is allowed onto the pitch to help keep opponents 9.15 m (10 yds) from the ball.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "The Law allows the assistant referee to enter the field to help manage the 9.15 m distance."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "This is specifically permitted for assistant referees."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L06-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 6,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "match-officials",
+        "time"
+      ],
+      "question": "Which match official shows the minimum additional time the referee intends to play at the end of each half?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The assistant referee nearest the benches",
+          "correct": false,
+          "explanation": "This is the fourth official's job, not an assistant referee's."
+        },
+        {
+          "id": "b",
+          "text": "The additional assistant referee",
+          "correct": false,
+          "explanation": "Additional assistant referees watch the goal line."
+        },
+        {
+          "id": "c",
+          "text": "The fourth official",
+          "correct": true,
+          "explanation": "Indicating the minimum additional time is one of the fourth official's duties."
+        },
+        {
+          "id": "d",
+          "text": "The referee, with a hand signal only",
+          "correct": false,
+          "explanation": "The fourth official displays it on the referee's behalf."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L06-004",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 6,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "match-officials",
+        "penalty-kick"
+      ],
+      "question": "At a penalty kick with no additional assistant referees, what does the assistant referee indicate? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Whether the ball crossed the goal line",
+          "correct": true,
+          "explanation": "The assistant also indicates whether the ball crossed the line."
+        },
+        {
+          "id": "b",
+          "text": "The final decision on whether the kick is retaken",
+          "correct": false,
+          "explanation": "The assistant advises; the referee decides."
+        },
+        {
+          "id": "c",
+          "text": "The order in which the kickers will take their kicks",
+          "correct": false,
+          "explanation": "Teams choose their order, and the referee isn't even told it in a shoot-out."
+        },
+        {
+          "id": "d",
+          "text": "Whether the goalkeeper moved off the goal line before the ball was kicked",
+          "correct": true,
+          "explanation": "Watching the goalkeeper's position at the kick is one of the assistant's duties."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L06-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 6,
+          "section": null
+        }
+      ],
+      "tags": [
+        "match-officials",
+        "misconduct",
+        "scenario"
+      ],
+      "question": "After the match, once the officials have left the field, an assistant referee realizes they saw serious misconduct that neither the referee nor the other officials saw. What is the assistant's duty?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing, because the match is over",
+          "correct": false,
+          "explanation": "Reporting obligations continue after the match."
+        },
+        {
+          "id": "b",
+          "text": "Show the card themselves",
+          "correct": false,
+          "explanation": "Only the referee issues cards."
+        },
+        {
+          "id": "c",
+          "text": "Report it to the appropriate authorities and tell the referee and the other officials",
+          "correct": true,
+          "explanation": "Other on-field officials must report serious misconduct the referee didn't see, and tell the other officials they're doing so."
+        },
+        {
+          "id": "d",
+          "text": "Ask the fourth official to decide on a sanction",
+          "correct": false,
+          "explanation": "The duty is to report it to the appropriate authorities."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L06-006",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 6,
+          "section": null
+        }
+      ],
+      "tags": [
+        "match-officials"
+      ],
+      "question": "The referee gets injured and can't continue. Who takes over?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Always the fourth official",
+          "correct": false,
+          "explanation": "The Law leaves this to the competition rules."
+        },
+        {
+          "id": "b",
+          "text": "Always the senior assistant referee",
+          "correct": false,
+          "explanation": "The Law leaves this to the competition rules."
+        },
+        {
+          "id": "c",
+          "text": "Whoever the competition rules say (for example, the fourth official or the senior assistant referee)",
+          "correct": true,
+          "explanation": "Competition rules must state clearly who replaces a match official who can't continue."
+        },
+        {
+          "id": "d",
+          "text": "Nobody; the match is abandoned",
+          "correct": false,
+          "explanation": "Competition rules set out a replacement so the match can continue."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L07-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 7,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "time"
+      ],
+      "question": "What is the maximum length of the half-time interval?",
+      "options": [
+        {
+          "id": "a",
+          "text": "15 minutes",
+          "correct": true,
+          "explanation": "Players are entitled to a half-time interval of no more than 15 minutes."
+        },
+        {
+          "id": "b",
+          "text": "20 minutes",
+          "correct": false,
+          "explanation": "The maximum is 15 minutes."
+        },
+        {
+          "id": "c",
+          "text": "10 minutes",
+          "correct": false,
+          "explanation": "The maximum is 15 minutes, though competitions set the exact length."
+        },
+        {
+          "id": "d",
+          "text": "Whatever the two teams agree",
+          "correct": false,
+          "explanation": "Competition rules set it, and it can only be changed with the referee's permission."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L07-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 7,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "time"
+      ],
+      "question": "True or false: the length of each half can only be reduced if the referee and both teams agree before the match starts and the competition rules allow it.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "Both conditions are needed: agreement before kickoff and compliance with competition rules."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "Reducing the halves requires that agreement before the match and in line with competition rules."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L07-003",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 7,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "time"
+      ],
+      "question": "Which of these does the referee allow for as time lost? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Substitutions",
+          "correct": true,
+          "explanation": "Substitutions are listed as time lost."
+        },
+        {
+          "id": "b",
+          "text": "The ball going out for a normal throw-in",
+          "correct": false,
+          "explanation": "Routine restarts aren't time lost unless there is a significant delay."
+        },
+        {
+          "id": "c",
+          "text": "Goal celebrations",
+          "correct": true,
+          "explanation": "Goal celebrations are listed as time lost."
+        },
+        {
+          "id": "d",
+          "text": "Time-wasting",
+          "correct": true,
+          "explanation": "Wasting time is listed as time lost."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L07-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 7,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "time",
+        "scenario"
+      ],
+      "question": "The fourth official shows three minutes of additional time. During that time there's a long stoppage for an injury. What can the referee do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Increase or reduce it as needed",
+          "correct": false,
+          "explanation": "Additional time can be increased but never reduced."
+        },
+        {
+          "id": "b",
+          "text": "Nothing; the time shown can't be changed",
+          "correct": false,
+          "explanation": "The referee may increase the time shown."
+        },
+        {
+          "id": "c",
+          "text": "Only reduce it, to finish on time",
+          "correct": false,
+          "explanation": "Additional time can't be reduced."
+        },
+        {
+          "id": "d",
+          "text": "Increase the additional time",
+          "correct": true,
+          "explanation": "The additional time shown is a minimum; the referee can increase it but not reduce it."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L07-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 7,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "time",
+        "scenario"
+      ],
+      "question": "At half-time, the referee realizes a timekeeping error meant the first half was two minutes short. What should the referee do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Add two minutes to the second half",
+          "correct": false,
+          "explanation": "The Law forbids changing the second half to make up for a first-half error."
+        },
+        {
+          "id": "b",
+          "text": "Abandon the match so it can be replayed",
+          "correct": false,
+          "explanation": "A timekeeping error isn't a reason to abandon."
+        },
+        {
+          "id": "c",
+          "text": "Not compensate by changing the length of the second half",
+          "correct": true,
+          "explanation": "The referee must not make up for a first-half timekeeping error by changing the second half's length."
+        },
+        {
+          "id": "d",
+          "text": "Play the missing two minutes before the second half starts",
+          "correct": false,
+          "explanation": "The Law doesn't provide for this."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L08-001",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 8,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "kickoff",
+        "goals"
+      ],
+      "question": "True or false: a goal can be scored directly against the opponents from a kickoff.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "A goal can be scored directly against the opponents from a kickoff."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "A direct goal from a kickoff is allowed against the opponents. If it goes into the kicker's own goal, a corner kick is awarded."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L08-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 8,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "dropped-ball",
+        "scenario"
+      ],
+      "question": "The referee stops play for an injury while the ball is inside the defending team's penalty area. How is the dropped ball taken?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is dropped for the team that last touched it",
+          "correct": false,
+          "explanation": "That rule is for balls outside the penalty area where possession can't be decided."
+        },
+        {
+          "id": "b",
+          "text": "It is dropped for the defending goalkeeper in their penalty area",
+          "correct": true,
+          "explanation": "If the ball was in the penalty area when play stopped, it is dropped for the defending goalkeeper."
+        },
+        {
+          "id": "c",
+          "text": "It is moved outside the penalty area and dropped there",
+          "correct": false,
+          "explanation": "Inside the penalty area, it's dropped for the defending goalkeeper."
+        },
+        {
+          "id": "d",
+          "text": "It is dropped between one player from each team",
+          "correct": false,
+          "explanation": "A dropped ball is for one player; everyone else must be at least 4 m away."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L08-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 8,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "kickoff",
+        "restarts"
+      ],
+      "question": "The player taking the kickoff touches the ball a second time (not with the hand/arm) before any other player has touched it. What is the restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The kickoff is retaken",
+          "correct": false,
+          "explanation": "A retake is for other kickoff procedure offenses, not a double touch."
+        },
+        {
+          "id": "b",
+          "text": "Play continues",
+          "correct": false,
+          "explanation": "Touching the ball twice is an offense."
+        },
+        {
+          "id": "c",
+          "text": "Direct free kick to the opponents",
+          "correct": false,
+          "explanation": "It's a direct free kick only if the second touch is a handball offense."
+        },
+        {
+          "id": "d",
+          "text": "Indirect free kick to the opponents",
+          "correct": true,
+          "explanation": "A second touch by the kickoff taker before anyone else plays the ball gives an indirect free kick (direct if it's a handball)."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L08-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 8,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "dropped-ball",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "Outside the penalty areas, the ball hits the referee and possession changes, so the referee stops play. Where is the dropped ball taken?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On the nearest line of the penalty area",
+          "correct": false,
+          "explanation": "The position is where the ball touched the referee."
+        },
+        {
+          "id": "b",
+          "text": "Where the ball touched the referee",
+          "correct": true,
+          "explanation": "New for 2026/27: when the ball hits a match official or outside agent, the dropped ball is at the point of contact."
+        },
+        {
+          "id": "c",
+          "text": "At the center mark",
+          "correct": false,
+          "explanation": "Dropped balls aren't moved to the center mark."
+        },
+        {
+          "id": "d",
+          "text": "Where the ball was when play was stopped",
+          "correct": false,
+          "explanation": "That's the normal position, but contact with a match official is the exception."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L08-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 8,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "dropped-ball",
+        "goals",
+        "scenario"
+      ],
+      "question": "From a dropped ball, the player kicks the ball straight into the opponents' goal without any other player touching it. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Corner kick",
+          "correct": false,
+          "explanation": "A corner kick applies only if the ball goes into the team's own goal."
+        },
+        {
+          "id": "b",
+          "text": "The dropped ball is retaken",
+          "correct": false,
+          "explanation": "Retakes are for a ball that touches a player before the ground or leaves the field untouched."
+        },
+        {
+          "id": "c",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "A goal isn't scored unless at least two players have touched the ball."
+        },
+        {
+          "id": "d",
+          "text": "Goal kick",
+          "correct": true,
+          "explanation": "A dropped ball must touch at least two players before a goal can count; if it goes straight into the opponents' goal, it's a goal kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L09-001",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 9,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "ball-in-play"
+      ],
+      "question": "True or false: if the ball rebounds off a goalpost and stays on the field, it is still in play.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "A ball that rebounds off a post, crossbar or corner flagpost and stays on the field remains in play."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "Hitting the goal frame doesn't stop play if the ball stays on the field."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L09-002",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 9,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "ball-in-play",
+        "dropped-ball"
+      ],
+      "question": "The ball touches the referee and stays on the field. In which situations is it out of play (restarted with a dropped ball)? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The team in possession changes",
+          "correct": true,
+          "explanation": "A change of possession after contact with a match official makes the ball out of play."
+        },
+        {
+          "id": "b",
+          "text": "A team starts a promising attack",
+          "correct": true,
+          "explanation": "Contact with a match official leading to a promising attack makes the ball out of play."
+        },
+        {
+          "id": "c",
+          "text": "The same team keeps it in a neutral area of the field",
+          "correct": false,
+          "explanation": "If none of the three situations happen, the ball stays in play."
+        },
+        {
+          "id": "d",
+          "text": "The ball goes directly into the goal",
+          "correct": true,
+          "explanation": "Contact with a match official that sends the ball straight into the goal makes it out of play."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L09-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 9,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "ball-in-play",
+        "scenario"
+      ],
+      "question": "The ball is in play and clearly heading over the touchline. A substitute warming up nearby stops it with their foot just before it crosses, without intending to interfere unfairly. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Indirect free kick, with no disciplinary sanction",
+          "correct": true,
+          "explanation": "Touching a ball that is clearly leaving the field, without intent to interfere unfairly, is penalized with an indirect free kick and no card."
+        },
+        {
+          "id": "b",
+          "text": "Direct free kick and a caution",
+          "correct": false,
+          "explanation": "In this specific situation the Law gives an indirect free kick and no sanction."
+        },
+        {
+          "id": "c",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "An offense occurred, so there's a free kick rather than a dropped ball."
+        },
+        {
+          "id": "d",
+          "text": "Throw-in to the opponents",
+          "correct": false,
+          "explanation": "The ball didn't cross the line; the substitute stopped it."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 10,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "goals"
+      ],
+      "question": "When is a goal scored?",
+      "options": [
+        {
+          "id": "a",
+          "text": "When the whole ball crosses the goal line between the posts and under the crossbar, with no offense by the scoring team",
+          "correct": true,
+          "explanation": "The whole ball must cross the line inside the goal, and the scoring team must not have committed an offense."
+        },
+        {
+          "id": "b",
+          "text": "When the ball touches the net",
+          "correct": false,
+          "explanation": "Touching the net isn't the test; the whole ball crossing the line is."
+        },
+        {
+          "id": "c",
+          "text": "When most of the ball has crossed the goal line",
+          "correct": false,
+          "explanation": "The whole ball must cross the line."
+        },
+        {
+          "id": "d",
+          "text": "When any part of the ball is over the goal line",
+          "correct": false,
+          "explanation": "The ball is still in play until it has wholly crossed the line."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 10,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "penalties-shootout"
+      ],
+      "question": "True or false: a player who was sent off during the match may take part in penalties (penalty shoot-out).",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "explanation": "Sent-off players are not permitted to take part in the shoot-out."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "explanation": "A player sent off during the match can't take part. Cautions and warnings, however, don't carry over into the shoot-out."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 10,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "goals",
+        "goalkeeper",
+        "scenario"
+      ],
+      "question": "The goalkeeper throws the ball the length of the field and it goes directly into the opponents' goal. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal kick",
+          "correct": true,
+          "explanation": "A goalkeeper can't score directly by throwing; the restart is a goal kick."
+        },
+        {
+          "id": "b",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "A goal can't be scored directly from a goalkeeper's throw."
+        },
+        {
+          "id": "c",
+          "text": "Corner kick",
+          "correct": false,
+          "explanation": "The ball went into the opponents' goal, not the thrower's own."
+        },
+        {
+          "id": "d",
+          "text": "Indirect free kick to the opponents",
+          "correct": false,
+          "explanation": "No offense was committed; it's simply not a goal."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 10,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "penalties-shootout",
+        "scenario"
+      ],
+      "question": "At the end of extra time, Team A has 11 players and Team B has 10. What must happen before penalties start?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Team A reduces to 10 and tells the referee the name and number of the excluded player",
+          "correct": true,
+          "explanation": "The team with more players must reduce to match the opponents and inform the referee who is excluded."
+        },
+        {
+          "id": "b",
+          "text": "The referee picks which Team A player sits out",
+          "correct": false,
+          "explanation": "The team decides and tells the referee."
+        },
+        {
+          "id": "c",
+          "text": "Team B may bring on a substitute to make it 11",
+          "correct": false,
+          "explanation": "Teams must equalize by the larger team reducing, not by adding players."
+        },
+        {
+          "id": "d",
+          "text": "Nothing; numbers don't matter in penalties",
+          "correct": false,
+          "explanation": "The numbers must be equalized before (and during) the shoot-out."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 10,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "penalties-shootout",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "In penalties (penalty shoot-out), the kicker accidentally touches the ball with their non-kicking foot immediately after the kick, and the ball goes in. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "The accidental double touch means the goal doesn't stand; the kick is retaken."
+        },
+        {
+          "id": "b",
+          "text": "Recorded as missed and the kicker is cautioned",
+          "correct": false,
+          "explanation": "An accidental touch isn't misconduct, and the ball went in, so it's a retake."
+        },
+        {
+          "id": "c",
+          "text": "The kick is recorded as missed",
+          "correct": false,
+          "explanation": "The kick is recorded as missed only when the ball does NOT go in after an accidental double touch."
+        },
+        {
+          "id": "d",
+          "text": "The kick is retaken",
+          "correct": true,
+          "explanation": "An accidental double touch that results in a goal means the kick is retaken."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-006",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 10,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "penalties-shootout"
+      ],
+      "question": "Which statements about penalties (penalty shoot-out) are correct? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cautions from the match carry over into the shoot-out",
+          "correct": false,
+          "explanation": "Warnings and cautions from the match are not carried forward."
+        },
+        {
+          "id": "b",
+          "text": "The referee must abandon the match if a team drops below seven players",
+          "correct": false,
+          "explanation": "The Law specifically says the referee must not abandon the match for this reason during penalties."
+        },
+        {
+          "id": "c",
+          "text": "A goalkeeper who is sent off must be replaced by an eligible player",
+          "correct": true,
+          "explanation": "A sent-off goalkeeper must be replaced by an eligible player."
+        },
+        {
+          "id": "d",
+          "text": "All eligible players must take a kick before any player takes a second kick",
+          "correct": true,
+          "explanation": "Every eligible player kicks once before anyone kicks twice."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L10-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 10,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "penalties-shootout"
+      ],
+      "question": "Before penalties start, the referee tosses a coin twice. What do the two tosses decide, in order?",
+      "options": [
+        {
+          "id": "a",
+          "text": "First, which goal is used (unless there are other considerations); second, which team chooses to kick first or second",
+          "correct": true,
+          "explanation": "The first toss picks the goal, unless conditions or safety dictate otherwise. The winner of the second toss decides the kicking order."
+        },
+        {
+          "id": "b",
+          "text": "First, which goalkeeper starts; second, which goal is used",
+          "correct": false,
+          "explanation": "Neither toss decides which goalkeeper starts."
+        },
+        {
+          "id": "c",
+          "text": "First, which team kicks first; second, which goal is used",
+          "correct": false,
+          "explanation": "The order is reversed: goal first, then who kicks first."
+        },
+        {
+          "id": "d",
+          "text": "Only one toss is used, and the winner picks both the goal and the kicking order",
+          "correct": false,
+          "explanation": "There are two separate tosses."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-001",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 11,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "offside"
+      ],
+      "question": "True or false: simply being in an offside position is an offense.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "explanation": "Being in an offside position isn't an offense by itself; the player must also become involved in active play."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "explanation": "The Law states that being in an offside position is not an offense."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 11,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "offside"
+      ],
+      "question": "Which parts of the body are NOT considered when judging whether a player is in an offside position?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The head",
+          "correct": false,
+          "explanation": "The head counts."
+        },
+        {
+          "id": "b",
+          "text": "Hands and arms (for all players, including goalkeepers)",
+          "correct": true,
+          "explanation": "Hands and arms are ignored for offside position. The arm's upper boundary is level with the bottom of the armpit."
+        },
+        {
+          "id": "c",
+          "text": "The shoulders",
+          "correct": false,
+          "explanation": "The shoulder is above the arm's upper boundary (the bottom of the armpit), so it counts."
+        },
+        {
+          "id": "d",
+          "text": "The feet",
+          "correct": false,
+          "explanation": "The feet count."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 11,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "offside",
+        "restarts",
+        "scenario"
+      ],
+      "question": "A teammate takes a throw-in. An attacker standing in an offside position receives the ball directly from the throw. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The throw-in is retaken",
+          "correct": false,
+          "explanation": "The throw was taken correctly, so there's nothing to retake."
+        },
+        {
+          "id": "b",
+          "text": "Play on; there is no offside offense",
+          "correct": true,
+          "explanation": "There's no offside offense when receiving the ball directly from a throw-in, goal kick or corner kick."
+        },
+        {
+          "id": "c",
+          "text": "Offside only if the attacker then scores",
+          "correct": false,
+          "explanation": "There's no offense at all when the ball comes directly from a throw-in."
+        },
+        {
+          "id": "d",
+          "text": "Offside; indirect free kick to the defending team",
+          "correct": false,
+          "explanation": "Receiving the ball directly from a throw-in can't be an offside offense."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 11,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "offside",
+        "scenario"
+      ],
+      "question": "When a teammate passes the ball, an attacker in the opponents' half is exactly level with the second-last opponent. Is the attacker in an offside position?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No",
+          "correct": true,
+          "explanation": "A player level with the second-last opponent (or the last two opponents) is not in an offside position."
+        },
+        {
+          "id": "b",
+          "text": "Yes",
+          "correct": false,
+          "explanation": "Being level is onside; the attacker must be nearer the goal line than the second-last opponent."
+        },
+        {
+          "id": "c",
+          "text": "Only if the attacker is also ahead of the ball",
+          "correct": false,
+          "explanation": "Being level with the second-last opponent is enough to be onside, wherever the ball is."
+        },
+        {
+          "id": "d",
+          "text": "It depends on where the goalkeeper is",
+          "correct": false,
+          "explanation": "What matters is the second-last opponent, whoever that is."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 11,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "offside",
+        "restarts",
+        "scenario"
+      ],
+      "question": "An attacker in an offside position runs back into their own half to collect a teammate's pass and is penalized for offside. Where is the indirect free kick taken?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On the halfway line",
+          "correct": false,
+          "explanation": "There's no special halfway-line placement for offside."
+        },
+        {
+          "id": "b",
+          "text": "Where the offense happened, even though it's in the attacker's own half",
+          "correct": true,
+          "explanation": "The free kick is taken where the offense occurred, including in the player's own half."
+        },
+        {
+          "id": "c",
+          "text": "Where the attacker was standing when the pass was made",
+          "correct": false,
+          "explanation": "The kick is taken where the offense (involvement in play) occurred."
+        },
+        {
+          "id": "d",
+          "text": "Where the pass was played from",
+          "correct": false,
+          "explanation": "The kick is taken where the offense occurred, not where the pass started."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-006",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 11,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "offside"
+      ],
+      "question": "A player is in an offside position when a teammate plays the ball. Which actions would make this an offside offense? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Standing still far from the ball without affecting any opponent",
+          "correct": false,
+          "explanation": "Without involvement in active play, there's no offense."
+        },
+        {
+          "id": "b",
+          "text": "Challenging an opponent for the ball",
+          "correct": true,
+          "explanation": "Challenging an opponent for the ball is interfering with an opponent."
+        },
+        {
+          "id": "c",
+          "text": "Clearly blocking the goalkeeper's line of vision so they can't play the ball",
+          "correct": true,
+          "explanation": "Clearly obstructing an opponent's line of vision is interfering with an opponent."
+        },
+        {
+          "id": "d",
+          "text": "Playing the ball passed by the teammate",
+          "correct": true,
+          "explanation": "Playing or touching the ball passed by a teammate is interfering with play."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 11,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "offside",
+        "scenario"
+      ],
+      "question": "An attacker is in an offside position when a teammate shoots. The goalkeeper deliberately saves the shot, and the ball rebounds to the attacker, who scores. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Corner kick",
+          "correct": false,
+          "explanation": "The attacker's offside offense is penalized."
+        },
+        {
+          "id": "b",
+          "text": "Goal, because the goalkeeper played the ball last",
+          "correct": false,
+          "explanation": "A deliberate save doesn't reset offside; only a deliberate play (not a save) does."
+        },
+        {
+          "id": "c",
+          "text": "Goal, because rebounds are never offside",
+          "correct": false,
+          "explanation": "Gaining an advantage from a rebound or a save is an offside offense."
+        },
+        {
+          "id": "d",
+          "text": "Offside; indirect free kick to the defending team",
+          "correct": true,
+          "explanation": "Gaining an advantage from a ball that was deliberately saved by an opponent is an offside offense."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-008",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 11,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "offside",
+        "scenario"
+      ],
+      "question": "A defender under no pressure, with a clear view and plenty of time, tries to clear a slow ball but miskicks it to an attacker in an offside position, who scores. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Offside, because the ball went to an attacker",
+          "correct": false,
+          "explanation": "Where the ball ends up doesn't matter once an opponent has deliberately played it."
+        },
+        {
+          "id": "b",
+          "text": "Offside, because the clearance was inaccurate",
+          "correct": false,
+          "explanation": "An inaccurate or unsuccessful clearance still counts as a deliberate play."
+        },
+        {
+          "id": "c",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "Nothing calls for a dropped ball; the goal stands."
+        },
+        {
+          "id": "d",
+          "text": "Goal; the defender deliberately played the ball",
+          "correct": true,
+          "explanation": "A controlled, deliberate play by a defender, even an inaccurate one, means the attacker gains no advantage under offside."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-009",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 11,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "offside",
+        "scenario"
+      ],
+      "question": "A defender walks off the field over the goal line, without the referee's permission, to try to put an attacker offside. For offside purposes, where is the defender considered to be?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On the goal line, until the next stoppage or until the defending team plays the ball toward halfway and out of its penalty area",
+          "correct": true,
+          "explanation": "A defender who leaves without permission still counts, on the goal or touch line, until one of those two things happens."
+        },
+        {
+          "id": "b",
+          "text": "On the goal line until the attacking team loses possession",
+          "correct": false,
+          "explanation": "Losing possession isn't the trigger."
+        },
+        {
+          "id": "c",
+          "text": "At the spot where they left, until the end of the half",
+          "correct": false,
+          "explanation": "They count on the line only until the next stoppage, or until the defending team plays the ball toward halfway and out of its penalty area."
+        },
+        {
+          "id": "d",
+          "text": "They don't count for offside at all",
+          "correct": false,
+          "explanation": "Leaving the field doesn't remove them from the offside calculation."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L11-010",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 11,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "offside",
+        "fouls",
+        "scenario"
+      ],
+      "question": "An attacker in an offside position runs toward the ball to play it, but is fouled by a defender before playing or trying to play the ball. What does the referee penalize?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The foul, because it happened before any offside offense",
+          "correct": true,
+          "explanation": "If the attacker is fouled before playing, attempting to play or challenging for the ball, the foul came first and is penalized."
+        },
+        {
+          "id": "b",
+          "text": "Offside, because the attacker was in an offside position",
+          "correct": false,
+          "explanation": "The offside offense hadn't happened yet when the foul occurred."
+        },
+        {
+          "id": "c",
+          "text": "Neither; restart with a dropped ball",
+          "correct": false,
+          "explanation": "An offense occurred and must be penalized."
+        },
+        {
+          "id": "d",
+          "text": "Offside, and the defender is cautioned",
+          "correct": false,
+          "explanation": "The foul is penalized; the defender's sanction depends on the foul itself."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 12,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "fouls",
+        "sanctions"
+      ],
+      "question": "A player commits a reckless tackle. What is the disciplinary sanction?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A warning only",
+          "correct": false,
+          "explanation": "A reckless challenge requires a caution."
+        },
+        {
+          "id": "b",
+          "text": "Sending-off (red card)",
+          "correct": false,
+          "explanation": "A sending-off is for excessive force, not recklessness."
+        },
+        {
+          "id": "c",
+          "text": "Caution (yellow card)",
+          "correct": true,
+          "explanation": "Reckless challenges must be cautioned."
+        },
+        {
+          "id": "d",
+          "text": "No sanction",
+          "correct": false,
+          "explanation": "No sanction is needed for a careless challenge, but a reckless one is a caution."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 12,
+          "section": null
+        }
+      ],
+      "tags": [
+        "fouls",
+        "restarts"
+      ],
+      "question": "True or false: direct free kicks, indirect free kicks and penalty kicks can only be awarded for offenses committed while the ball is in play.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "Free kicks and penalties are only for offenses while the ball is in play. Misconduct while the ball is out can still be sanctioned, but the restart doesn't change."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "Offenses while the ball is out of play don't change the restart."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 12,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "goalkeeper",
+        "restarts"
+      ],
+      "question": "A goalkeeper inside their penalty area holds the ball in their hands for more than eight seconds. What is the restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Corner kick to the opponents",
+          "correct": true,
+          "explanation": "Controlling the ball with the hands for more than eight seconds is penalized with a corner kick to the opponents."
+        },
+        {
+          "id": "b",
+          "text": "Indirect free kick to the opponents",
+          "correct": false,
+          "explanation": "The eight-second offense is restarted with a corner kick."
+        },
+        {
+          "id": "c",
+          "text": "A caution and an indirect free kick",
+          "correct": false,
+          "explanation": "The eight-second offense is restarted with a corner kick, and no caution is required."
+        },
+        {
+          "id": "d",
+          "text": "A throw-in to the opponents",
+          "correct": false,
+          "explanation": "The restart is a corner kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-004",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "sanctions"
+      ],
+      "question": "Which of these are cautionable offenses for a player? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Dissent by word or action",
+          "correct": true,
+          "explanation": "Dissent is a cautionable offense."
+        },
+        {
+          "id": "b",
+          "text": "Spitting at an opponent",
+          "correct": false,
+          "explanation": "Spitting at someone is a sending-off offense."
+        },
+        {
+          "id": "c",
+          "text": "Entering the field of play without the referee's permission",
+          "correct": true,
+          "explanation": "Entering or re-entering without permission is cautionable."
+        },
+        {
+          "id": "d",
+          "text": "Persistent offenses",
+          "correct": true,
+          "explanation": "Persistent offenses are cautionable; no set number or pattern is required."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 12,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "fouls",
+        "restarts"
+      ],
+      "question": "A player moves into an opponent's path to block them when the ball isn't within playing distance, without making contact. What is the restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Play on; impeding is only an offense with contact",
+          "correct": false,
+          "explanation": "Impeding without contact is still an offense."
+        },
+        {
+          "id": "b",
+          "text": "Indirect free kick",
+          "correct": true,
+          "explanation": "Impeding an opponent without contact is an indirect free kick offense."
+        },
+        {
+          "id": "c",
+          "text": "Direct free kick",
+          "correct": false,
+          "explanation": "It becomes a direct free kick offense only if there is contact."
+        },
+        {
+          "id": "d",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "An offense occurred, so there's a free kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-006",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "fouls",
+        "penalty-kick",
+        "scenario"
+      ],
+      "question": "A defender starts holding an attacker outside the penalty area and keeps holding them inside the penalty area. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Penalty kick",
+          "correct": true,
+          "explanation": "If holding starts outside the area and continues inside it, the referee must award a penalty kick."
+        },
+        {
+          "id": "b",
+          "text": "Direct free kick where the holding started",
+          "correct": false,
+          "explanation": "Because the holding continued into the penalty area, it's a penalty kick."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick",
+          "correct": false,
+          "explanation": "Holding is a direct free kick offense."
+        },
+        {
+          "id": "d",
+          "text": "Direct free kick on the edge of the penalty area",
+          "correct": false,
+          "explanation": "There's no such placement; the decision is a penalty kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 12,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "handball",
+        "goals",
+        "scenario"
+      ],
+      "question": "The ball accidentally hits an attacker's arm (in a natural position) and goes straight into the opponents' goal. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal, because the contact was accidental",
+          "correct": false,
+          "explanation": "Scoring directly from the hand/arm is an offense even when accidental."
+        },
+        {
+          "id": "b",
+          "text": "No goal; indirect free kick",
+          "correct": false,
+          "explanation": "Handball offenses are penalized with a direct free kick."
+        },
+        {
+          "id": "c",
+          "text": "No goal; dropped ball",
+          "correct": false,
+          "explanation": "An offense was committed, so a free kick is awarded."
+        },
+        {
+          "id": "d",
+          "text": "No goal; direct free kick to the defending team",
+          "correct": true,
+          "explanation": "A goal scored directly from the hand/arm is a handball offense, even if accidental."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-008",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "sanctions",
+        "celebrations"
+      ],
+      "question": "Which goal celebrations require a caution, even if the goal is disallowed? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Covering the head or face with a mask",
+          "correct": true,
+          "explanation": "Covering the head or face with a mask or similar item is a caution."
+        },
+        {
+          "id": "b",
+          "text": "Climbing onto a perimeter fence in a way that causes safety issues",
+          "correct": true,
+          "explanation": "Climbing the fence or approaching spectators in a way that causes safety or security issues is a caution."
+        },
+        {
+          "id": "c",
+          "text": "Removing the shirt",
+          "correct": true,
+          "explanation": "Taking off the shirt or pulling it over the head is a caution."
+        },
+        {
+          "id": "d",
+          "text": "Briefly leaving the field to celebrate and returning promptly",
+          "correct": false,
+          "explanation": "Leaving the field to celebrate isn't cautionable by itself, as long as players return quickly."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-009",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "dogso",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "In their own penalty area, a defender trips an attacker while genuinely trying to play the ball, denying an obvious goal-scoring opportunity. A penalty kick is awarded. What is the sanction?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A warning",
+          "correct": false,
+          "explanation": "The sanction is a caution."
+        },
+        {
+          "id": "b",
+          "text": "Sending-off",
+          "correct": false,
+          "explanation": "A sending-off applies when there was no attempt to play the ball, for example holding or pushing."
+        },
+        {
+          "id": "c",
+          "text": "Caution",
+          "correct": true,
+          "explanation": "For a DOGSO offense in the penalty area that was an attempt to play the ball, the penalty plus a caution is enough."
+        },
+        {
+          "id": "d",
+          "text": "No sanction",
+          "correct": false,
+          "explanation": "A caution is still required."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-010",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 12,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "goalkeeper",
+        "restarts",
+        "scenario"
+      ],
+      "question": "Inside their penalty area, a goalkeeper picks up the ball after a teammate deliberately kicked it to them. The goalkeeper didn't attempt to kick it first. What is the restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Penalty kick",
+          "correct": false,
+          "explanation": "A penalty is only for direct free kick offenses."
+        },
+        {
+          "id": "b",
+          "text": "Play on; goalkeepers may handle in their own area",
+          "correct": false,
+          "explanation": "This is one of the specific exceptions where handling is penalized."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick to the opponents",
+          "correct": true,
+          "explanation": "Handling a ball deliberately kicked to the goalkeeper by a teammate is an indirect free kick offense."
+        },
+        {
+          "id": "d",
+          "text": "Direct free kick to the opponents",
+          "correct": false,
+          "explanation": "This goalkeeper handling offense inside the area is indirect."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-011",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 12,
+          "section": "5"
+        }
+      ],
+      "tags": [
+        "restarts",
+        "violent-conduct",
+        "scenario"
+      ],
+      "question": "While the ball is in play, a player strikes their own teammate on the field. Apart from the sending-off, how does play restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Direct free kick (or penalty kick if inside the offender's own penalty area)",
+          "correct": true,
+          "explanation": "A physical offense against a teammate on the field is restarted with a direct free kick or penalty kick."
+        },
+        {
+          "id": "b",
+          "text": "Indirect free kick",
+          "correct": false,
+          "explanation": "Physical offenses against a teammate are direct free kick offenses."
+        },
+        {
+          "id": "c",
+          "text": "There is no free kick, only the sending-off",
+          "correct": false,
+          "explanation": "A free kick is awarded as well."
+        },
+        {
+          "id": "d",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "A dropped ball is for offenses against outside agents."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-012",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "dogso",
+        "advantage",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "A defender commits a foul that would deny an obvious goal-scoring opportunity, but the referee plays advantage and the attacking team scores. What is the sanction for the defender?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No disciplinary sanction",
+          "correct": true,
+          "explanation": "New for 2026/27: if advantage is played after a DOGSO offense and a goal results, the offender isn't sanctioned."
+        },
+        {
+          "id": "b",
+          "text": "Sending-off for DOGSO",
+          "correct": false,
+          "explanation": "The opportunity wasn't denied, because the goal was scored."
+        },
+        {
+          "id": "c",
+          "text": "Caution for unsporting behavior",
+          "correct": false,
+          "explanation": "A caution applies when advantage is played after DOGSO but no goal is scored."
+        },
+        {
+          "id": "d",
+          "text": "Sending-off, and the goal is disallowed",
+          "correct": false,
+          "explanation": "The goal stands and there is no sanction."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-013",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "sanctions",
+        "scenario"
+      ],
+      "question": "The referee decides to caution a player for stopping a promising attack. Before the card process starts, the fouled team takes a quick free kick and gets a clear goal-scoring opportunity. What happens?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Play is brought back so the caution can be given",
+          "correct": false,
+          "explanation": "The quick free kick is allowed because the referee hadn't started the card process."
+        },
+        {
+          "id": "b",
+          "text": "The player is sent off at the next stoppage",
+          "correct": false,
+          "explanation": "Nothing here justifies a sending-off."
+        },
+        {
+          "id": "c",
+          "text": "The caution is given at the next stoppage",
+          "correct": false,
+          "explanation": "For stopping a promising attack, the caution is dropped in this situation."
+        },
+        {
+          "id": "d",
+          "text": "Play continues, and the offender isn't cautioned at the next stoppage",
+          "correct": true,
+          "explanation": "After a quick free kick like this, an offense that only stopped a promising attack is not cautioned."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-014",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "handball",
+        "dogso",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "Outside their own penalty area, a defender commits a non-deliberate handball offense that denies an obvious goal-scoring opportunity. What is the sanction?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sending-off",
+          "correct": true,
+          "explanation": "DOGSO by a non-deliberate handball outside the offender's own penalty area is a sending-off."
+        },
+        {
+          "id": "b",
+          "text": "No sanction, because it wasn't deliberate",
+          "correct": false,
+          "explanation": "A non-deliberate handball offense that denies an obvious goal-scoring opportunity outside the area is still a red card."
+        },
+        {
+          "id": "c",
+          "text": "Caution",
+          "correct": false,
+          "explanation": "The caution applies when a penalty kick is awarded for a non-deliberate handball DOGSO."
+        },
+        {
+          "id": "d",
+          "text": "A warning",
+          "correct": false,
+          "explanation": "Warnings aren't used for DOGSO."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-015",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "dogso",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "Inside their own penalty area, a defender pulls an attacker's shirt with no attempt to play the ball, denying an obvious goal-scoring opportunity. A penalty is awarded. What is the sanction?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Caution, unless the penalty is missed",
+          "correct": false,
+          "explanation": "Whether the penalty is scored doesn't change the sanction."
+        },
+        {
+          "id": "b",
+          "text": "Sending-off",
+          "correct": true,
+          "explanation": "When there's no attempt to play the ball (holding, pulling, pushing and so on), DOGSO in the area is still a sending-off."
+        },
+        {
+          "id": "c",
+          "text": "No sanction, because the penalty is punishment enough",
+          "correct": false,
+          "explanation": "A sending-off is required here."
+        },
+        {
+          "id": "d",
+          "text": "Caution",
+          "correct": false,
+          "explanation": "The reduction to a caution only applies when the offense was an attempt to play or challenge for the ball."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-016",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "5"
+        }
+      ],
+      "tags": [
+        "restarts",
+        "penalty-kick",
+        "scenario"
+      ],
+      "question": "While the ball is still in play near the goal line, a defender and an attacker run off the field beside the goal. Just off the field, level with the defender's penalty area, the defender kicks the attacker. What is the restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal kick",
+          "correct": false,
+          "explanation": "An offense occurred while the ball was in play, so it's penalized."
+        },
+        {
+          "id": "b",
+          "text": "Penalty kick",
+          "correct": true,
+          "explanation": "For a direct free kick offense off the field, the kick goes to the nearest boundary point. If that point is inside the offender's penalty area, it becomes a penalty kick."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick on the goal line",
+          "correct": false,
+          "explanation": "Kicking an opponent is a direct free kick offense."
+        },
+        {
+          "id": "d",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "A dropped ball is for offenses against outside agents."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-017",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "2"
+        },
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "goalkeeper",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "A defender flicks the ball up with their foot and heads it back to their goalkeeper to get around the back-pass rule. Which statements are correct? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "An indirect free kick is awarded to the opponents",
+          "correct": true,
+          "explanation": "Starting a deliberate trick to pass to the goalkeeper with the head, chest, knee etc. is an indirect free kick offense."
+        },
+        {
+          "id": "b",
+          "text": "It's only an offense if the goalkeeper then handles the ball",
+          "correct": false,
+          "explanation": "It's an offense whether or not the goalkeeper touches the ball with their hands."
+        },
+        {
+          "id": "c",
+          "text": "There's no offense because the ball was headed, not kicked",
+          "correct": false,
+          "explanation": "Using the head to get around the Law is exactly the offense."
+        },
+        {
+          "id": "d",
+          "text": "The defender is cautioned for unsporting behavior",
+          "correct": true,
+          "explanation": "The player who starts the trick is cautioned (or the goalkeeper, if they started it)."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L12-018",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 12,
+          "section": "4"
+        }
+      ],
+      "tags": [
+        "advantage",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "After a serious foul play offense, the referee plays advantage because there's a clear chance to score. Before the ball goes out, the offender challenges an opponent. What does the referee do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Stop play and award a penalty kick",
+          "correct": false,
+          "explanation": "The restart is an indirect free kick unless a more serious offense was committed."
+        },
+        {
+          "id": "b",
+          "text": "Stop play, send the player off, and restart with an indirect free kick (unless they committed a more serious offense)",
+          "correct": true,
+          "explanation": "An offender awaiting a sending-off who then challenges or interferes with an opponent is sent off, with an indirect free kick restart unless the new offense is more serious."
+        },
+        {
+          "id": "c",
+          "text": "Caution the player for the new challenge",
+          "correct": false,
+          "explanation": "The player is sent off for the original offense."
+        },
+        {
+          "id": "d",
+          "text": "Wait until the ball goes out of play, then send the player off",
+          "correct": false,
+          "explanation": "Once the offender challenges an opponent, the referee stops play."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L13-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 13,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "free-kicks",
+        "goals"
+      ],
+      "question": "An indirect free kick goes directly into the opponents' goal without touching anyone. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Corner kick",
+          "correct": false,
+          "explanation": "A corner kick is for a free kick that goes directly into the kicker's own goal."
+        },
+        {
+          "id": "b",
+          "text": "Goal kick",
+          "correct": true,
+          "explanation": "A goal can't be scored directly from an indirect free kick; if it enters the opponents' goal, the restart is a goal kick."
+        },
+        {
+          "id": "c",
+          "text": "The free kick is retaken",
+          "correct": false,
+          "explanation": "A retake only happens if the referee failed to signal that the kick was indirect."
+        },
+        {
+          "id": "d",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "An indirect free kick must touch another player before a goal can be scored."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L13-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 13,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "free-kicks",
+        "distances"
+      ],
+      "question": "How far must opponents be from the ball at a free kick, unless they are on their own goal line between the posts?",
+      "options": [
+        {
+          "id": "a",
+          "text": "At least 4 m (4.5 yds)",
+          "correct": false,
+          "explanation": "4 m is the distance at a dropped ball."
+        },
+        {
+          "id": "b",
+          "text": "At least 1 m (1 yd)",
+          "correct": false,
+          "explanation": "1 m is how far attackers must stay from a defensive wall."
+        },
+        {
+          "id": "c",
+          "text": "At least 9.15 m (10 yds)",
+          "correct": true,
+          "explanation": "Opponents must be at least 9.15 m from the ball until it is in play."
+        },
+        {
+          "id": "d",
+          "text": "At least 2 m (2 yds)",
+          "correct": false,
+          "explanation": "2 m is the distance at a throw-in."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L13-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 13,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "free-kicks",
+        "scenario"
+      ],
+      "question": "Three defenders form a wall. When the attacking team takes the free kick, one attacker is standing half a meter from the wall. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Indirect free kick to the defending team",
+          "correct": true,
+          "explanation": "Attackers must be at least 1 m from a wall of three or more defenders; being closer gives an indirect free kick to the defense."
+        },
+        {
+          "id": "b",
+          "text": "The free kick is retaken",
+          "correct": false,
+          "explanation": "The Law gives the defending team an indirect free kick, not a retake."
+        },
+        {
+          "id": "c",
+          "text": "Play on",
+          "correct": false,
+          "explanation": "Being within 1 m of the wall is an offense."
+        },
+        {
+          "id": "d",
+          "text": "The attacker is cautioned and the kick is retaken",
+          "correct": false,
+          "explanation": "There's no automatic caution; it's an indirect free kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L13-004",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 13,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "free-kicks",
+        "scenario"
+      ],
+      "question": "True or false: a team takes a free kick quickly, and an opponent who was less than 9.15 m away intercepts it. The referee must order a retake.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "explanation": "If a team chooses to take a quick free kick, an opponent who was too close can intercept and play continues."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "explanation": "Play continues. The exception: an opponent who deliberately stops the kick being taken quickly is cautioned for delaying the restart."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L13-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 13,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "free-kicks",
+        "signals",
+        "scenario"
+      ],
+      "question": "The referee forgets to raise their arm for an indirect free kick, and the kick goes directly into the opponents' goal. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal kick",
+          "correct": false,
+          "explanation": "Normally yes, but the missing signal means the kick is retaken."
+        },
+        {
+          "id": "b",
+          "text": "The indirect free kick is retaken",
+          "correct": true,
+          "explanation": "If the referee fails to signal an indirect free kick and the ball goes straight in, the kick is retaken."
+        },
+        {
+          "id": "c",
+          "text": "Dropped ball",
+          "correct": false,
+          "explanation": "The Law specifically requires a retake."
+        },
+        {
+          "id": "d",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "A goal can't be scored directly from an indirect free kick, whatever the signal."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-001",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 14,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "penalty-kick"
+      ],
+      "question": "True or false: a backheeled penalty kick is allowed as long as the ball moves forward.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "explanation": "The ball must be kicked forward; a backheel is permitted if the ball goes forward."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "explanation": "Backheeling is allowed provided the ball moves forward."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 14,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "goalkeeper"
+      ],
+      "question": "At the moment a penalty kick is taken, what is the requirement for the defending goalkeeper's feet?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Anywhere inside the goal area",
+          "correct": false,
+          "explanation": "The goalkeeper must stay on the goal line until the ball is kicked."
+        },
+        {
+          "id": "b",
+          "text": "At least part of one foot must be touching, in line with, or behind the goal line",
+          "correct": true,
+          "explanation": "The goalkeeper only needs part of one foot touching, level with, or behind the line when the ball is kicked."
+        },
+        {
+          "id": "c",
+          "text": "Both feet must be on the goal line",
+          "correct": false,
+          "explanation": "Only part of one foot is required."
+        },
+        {
+          "id": "d",
+          "text": "One foot must be touching the goal line",
+          "correct": false,
+          "explanation": "Being level with or behind the line also satisfies the Law."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 14,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "The kicker finishes their run-up, then feints to kick before striking the ball into the goal. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The penalty is retaken with no caution",
+          "correct": false,
+          "explanation": "Illegal feinting is a caution and an indirect free kick."
+        },
+        {
+          "id": "b",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "Illegal feinting cancels the goal."
+        },
+        {
+          "id": "c",
+          "text": "The penalty is retaken and the kicker is cautioned",
+          "correct": false,
+          "explanation": "Illegal feinting results in an indirect free kick, not a retake."
+        },
+        {
+          "id": "d",
+          "text": "Indirect free kick to the defending team; the kicker is cautioned",
+          "correct": true,
+          "explanation": "Feinting after the run-up is complete is illegal; the restart is an indirect free kick and the kicker is cautioned, even if a goal is scored."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 14,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "goalkeeper",
+        "scenario"
+      ],
+      "question": "The goalkeeper steps off the line too early and saves the penalty. It's the goalkeeper's first such offense in the match. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The penalty is retaken, and the goalkeeper is cautioned",
+          "correct": false,
+          "explanation": "The first offense gets a warning, not a caution."
+        },
+        {
+          "id": "b",
+          "text": "Goal is awarded",
+          "correct": false,
+          "explanation": "The ball didn't go in, and a goal can't be awarded instead of a retake."
+        },
+        {
+          "id": "c",
+          "text": "The penalty is retaken, and the goalkeeper is warned",
+          "correct": true,
+          "explanation": "If the goalkeeper's offense causes a retake, it's a warning for the first offense and a caution for any further one."
+        },
+        {
+          "id": "d",
+          "text": "Play continues",
+          "correct": false,
+          "explanation": "The goalkeeper's offense prevented a goal, so the kick is retaken."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-005",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 14,
+          "section": "2"
+        },
+        {
+          "law": 14,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "encroachment",
+        "scenario"
+      ],
+      "question": "Before the ball is kicked, an attacker encroaches into the penalty area and clearly affects the goalkeeper. The penalty is scored. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The penalty is retaken",
+          "correct": true,
+          "explanation": "Encroachment by an attacker that clearly impacts the goalkeeper leads to a retake if the kick is scored."
+        },
+        {
+          "id": "b",
+          "text": "Goal",
+          "correct": false,
+          "explanation": "Because the encroachment clearly impacted the goalkeeper, the goal doesn't stand."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick to the defending team",
+          "correct": false,
+          "explanation": "An indirect free kick applies when no goal is scored after impactful attacking encroachment."
+        },
+        {
+          "id": "d",
+          "text": "Goal, and the encroaching attacker is cautioned",
+          "correct": false,
+          "explanation": "The goal doesn't stand; the kick is retaken."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-006",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 14,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "scenario",
+        "new-2026-27"
+      ],
+      "question": "Taking a penalty kick, the kicker accidentally touches the ball with their non-kicking foot immediately after the kick, and the ball does NOT go in. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Direct free kick to the defending team",
+          "correct": false,
+          "explanation": "A direct free kick is for a handball offense by the kicker."
+        },
+        {
+          "id": "b",
+          "text": "The penalty is retaken",
+          "correct": false,
+          "explanation": "A retake applies only if the ball goes in after the accidental double touch (or the goalkeeper also offended)."
+        },
+        {
+          "id": "c",
+          "text": "Play continues",
+          "correct": false,
+          "explanation": "The double touch is still penalized."
+        },
+        {
+          "id": "d",
+          "text": "Indirect free kick to the defending team",
+          "correct": true,
+          "explanation": "Confirmed for 2026/27: an accidental double touch that doesn't result in a goal gives an indirect free kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L14-007",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 14,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "penalty-kick",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "The referee identifies Player 9 as the penalty taker, but Player 10 runs up instead and scores. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The penalty is retaken and Player 9 is cautioned",
+          "correct": false,
+          "explanation": "The player who actually took the kick is the one cautioned, and there's no retake."
+        },
+        {
+          "id": "b",
+          "text": "The penalty is retaken by Player 9",
+          "correct": false,
+          "explanation": "This offense results in an indirect free kick, not a retake."
+        },
+        {
+          "id": "c",
+          "text": "Goal stands",
+          "correct": false,
+          "explanation": "A goal doesn't count if the wrong kicker takes the penalty."
+        },
+        {
+          "id": "d",
+          "text": "Indirect free kick to the defending team, and Player 10 is cautioned",
+          "correct": true,
+          "explanation": "If a teammate of the identified kicker takes the kick, the restart is an indirect free kick and the player who took it is cautioned, goal or not."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L15-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 15,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "throw-in",
+        "distances"
+      ],
+      "question": "How far must opponents stand from the point where a throw-in is taken?",
+      "options": [
+        {
+          "id": "a",
+          "text": "At least 9.15 m (10 yds)",
+          "correct": false,
+          "explanation": "9.15 m is for free kicks and corner kicks."
+        },
+        {
+          "id": "b",
+          "text": "At least 1 m (1 yd)",
+          "correct": false,
+          "explanation": "The distance is 2 m."
+        },
+        {
+          "id": "c",
+          "text": "At least 4 m (4.5 yds)",
+          "correct": false,
+          "explanation": "4 m is for dropped balls."
+        },
+        {
+          "id": "d",
+          "text": "At least 2 m (2 yds)",
+          "correct": true,
+          "explanation": "Opponents must be at least 2 m from the throw-in point on the touchline."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L15-002",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 15,
+          "section": null
+        }
+      ],
+      "tags": [
+        "throw-in",
+        "goals"
+      ],
+      "question": "True or false: a goal can be scored directly from a throw-in.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "explanation": "A goal can't be scored directly from a throw-in."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "explanation": "A throw-in that goes straight into the opponents' goal is a goal kick; straight into the thrower's own goal, a corner kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L15-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 15,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "throw-in",
+        "scenario"
+      ],
+      "question": "A throw-in bounces on the ground outside the field before it enters the field of play. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Indirect free kick to the opponents",
+          "correct": false,
+          "explanation": "There's no free kick; the same team retakes."
+        },
+        {
+          "id": "b",
+          "text": "The throw-in goes to the opposing team",
+          "correct": false,
+          "explanation": "Opponents only get the throw if it was taken incorrectly in another way, or not taken before the five-second countdown ends."
+        },
+        {
+          "id": "c",
+          "text": "The same team retakes the throw-in from the same position",
+          "correct": true,
+          "explanation": "If the ball touches the ground before entering the field, the same team retakes it from the same place."
+        },
+        {
+          "id": "d",
+          "text": "Play continues once the ball enters the field",
+          "correct": false,
+          "explanation": "The ball was never in play, so the throw must be retaken."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L15-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 15,
+          "section": "2"
+        },
+        {
+          "protocol": "countdown"
+        }
+      ],
+      "tags": [
+        "throw-in",
+        "time-wasting",
+        "new-2026-27"
+      ],
+      "question": "A team is deliberately delaying its throw-in. The referee starts the five-second countdown and the throw isn't taken in time. What happens?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The throw-in goes to the opponents from the same position; a caution only follows if the player then excessively delays the opponents' throw",
+          "correct": true,
+          "explanation": "New for 2026/27: losing the throw is the main penalty, and a caution is only for further excessive delay."
+        },
+        {
+          "id": "b",
+          "text": "The player is cautioned and the throw goes to the opponents",
+          "correct": false,
+          "explanation": "There's no automatic caution; it's only for excessive further delay."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick to the opponents",
+          "correct": false,
+          "explanation": "The restart is a throw-in for the opponents."
+        },
+        {
+          "id": "d",
+          "text": "The player is cautioned and the same team retakes the throw",
+          "correct": false,
+          "explanation": "The throw is awarded to the opposing team, with no automatic caution."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L15-005",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 15,
+          "section": "2"
+        }
+      ],
+      "tags": [
+        "throw-in",
+        "sanctions",
+        "scenario"
+      ],
+      "question": "An opponent moves to within 2 m of the thrower to put them off. Which are correct? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The opponent is cautioned for unsporting behavior",
+          "correct": true,
+          "explanation": "Unfairly distracting or impeding the thrower, including moving closer than 2 m, is a caution."
+        },
+        {
+          "id": "b",
+          "text": "No action unless the throw hits the opponent",
+          "correct": false,
+          "explanation": "Impeding the thrower is an offense on its own."
+        },
+        {
+          "id": "c",
+          "text": "The throw-in is given to the opponent's team",
+          "correct": false,
+          "explanation": "The thrower's team didn't do anything wrong."
+        },
+        {
+          "id": "d",
+          "text": "If the throw-in has already been taken, an indirect free kick is awarded",
+          "correct": true,
+          "explanation": "Once the throw has been taken, the restart is an indirect free kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L16-001",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 16,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "goal-kick"
+      ],
+      "question": "Where can a goal kick be taken from?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Any point within the goal area",
+          "correct": true,
+          "explanation": "The ball can be placed anywhere in the goal area."
+        },
+        {
+          "id": "b",
+          "text": "Only on the goal area line on the side where the ball went out",
+          "correct": false,
+          "explanation": "The kick can be taken from anywhere in the goal area."
+        },
+        {
+          "id": "c",
+          "text": "Only from the corners of the goal area",
+          "correct": false,
+          "explanation": "Any point in the goal area is allowed."
+        },
+        {
+          "id": "d",
+          "text": "Anywhere in the penalty area",
+          "correct": false,
+          "explanation": "It must be within the goal area, not the wider penalty area."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L16-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 16,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "goal-kick",
+        "ball-in-play"
+      ],
+      "question": "When is the ball in play from a goal kick?",
+      "options": [
+        {
+          "id": "a",
+          "text": "When it is touched by another player",
+          "correct": false,
+          "explanation": "No second touch is needed for the ball to be in play."
+        },
+        {
+          "id": "b",
+          "text": "When it leaves the penalty area",
+          "correct": false,
+          "explanation": "That was an older rule; now it's in play once kicked and clearly moving."
+        },
+        {
+          "id": "c",
+          "text": "When it is kicked and clearly moves",
+          "correct": true,
+          "explanation": "The ball is in play as soon as it is kicked and clearly moves; it doesn't need to leave the penalty area."
+        },
+        {
+          "id": "d",
+          "text": "When it leaves the goal area",
+          "correct": false,
+          "explanation": "Leaving the goal area isn't required."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L16-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 16,
+          "section": "2"
+        },
+        {
+          "protocol": "countdown"
+        }
+      ],
+      "tags": [
+        "goal-kick",
+        "time-wasting",
+        "new-2026-27"
+      ],
+      "question": "A team is deliberately delaying its goal kick. The referee's five-second countdown ends and the kick still hasn't been taken. What is the restart?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Indirect free kick to the opponents",
+          "correct": false,
+          "explanation": "The restart is a corner kick."
+        },
+        {
+          "id": "b",
+          "text": "Corner kick to the opponents, on the side nearest where the goal kick was to be taken",
+          "correct": true,
+          "explanation": "New for 2026/27: delaying a goal kick past the countdown gives the opponents a corner kick."
+        },
+        {
+          "id": "c",
+          "text": "The goal kick is retaken and the player is cautioned",
+          "correct": false,
+          "explanation": "The opponents get a corner kick; a caution only follows excessive further delay."
+        },
+        {
+          "id": "d",
+          "text": "Throw-in to the opponents",
+          "correct": false,
+          "explanation": "A throw-in is the result of a delayed throw-in, not a delayed goal kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L16-004",
+      "status": "active",
+      "type": "single",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 16,
+          "section": "2"
+        },
+        {
+          "law": 11,
+          "section": "3"
+        }
+      ],
+      "tags": [
+        "goal-kick",
+        "scenario"
+      ],
+      "question": "A goal kick is taken quickly while an attacker is still in the penalty area because they didn't have time to leave. After the ball is in play, the attacker intercepts it. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The goal kick is retaken",
+          "correct": false,
+          "explanation": "A retake applies only if the opponent touches or challenges for the ball before it's in play."
+        },
+        {
+          "id": "b",
+          "text": "The attacker is cautioned and the kick is retaken",
+          "correct": false,
+          "explanation": "There's no offense here."
+        },
+        {
+          "id": "c",
+          "text": "Indirect free kick to the defending team",
+          "correct": false,
+          "explanation": "The attacker committed no offense."
+        },
+        {
+          "id": "d",
+          "text": "Play continues",
+          "correct": true,
+          "explanation": "If opponents are in the area because they had no time to leave, play continues. Receiving directly from a goal kick isn't offside either."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L17-001",
+      "status": "active",
+      "type": "true_false",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 17,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "corner-kick",
+        "ball-in-play"
+      ],
+      "question": "True or false: at a corner kick, the ball must leave the corner area to be in play.",
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "explanation": "The ball is in play as soon as it is kicked and clearly moves; it doesn't need to leave the corner area."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "explanation": "It doesn't need to leave the corner area; being kicked and clearly moving is enough."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L17-002",
+      "status": "active",
+      "type": "single",
+      "difficulty": "easy",
+      "refs": [
+        {
+          "law": 17,
+          "section": "1"
+        }
+      ],
+      "tags": [
+        "corner-kick",
+        "distances"
+      ],
+      "question": "How far must opponents stay from the corner arc until the ball is in play?",
+      "options": [
+        {
+          "id": "a",
+          "text": "At least 5 m",
+          "correct": false,
+          "explanation": "The distance is 9.15 m."
+        },
+        {
+          "id": "b",
+          "text": "At least 9.15 m (10 yds)",
+          "correct": true,
+          "explanation": "Opponents must be at least 9.15 m from the corner arc."
+        },
+        {
+          "id": "c",
+          "text": "At least 4 m (4.5 yds)",
+          "correct": false,
+          "explanation": "4 m is for dropped balls."
+        },
+        {
+          "id": "d",
+          "text": "At least 2 m (2 yds)",
+          "correct": false,
+          "explanation": "2 m is the throw-in distance."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L17-003",
+      "status": "active",
+      "type": "single",
+      "difficulty": "medium",
+      "refs": [
+        {
+          "law": 17,
+          "section": null
+        }
+      ],
+      "tags": [
+        "corner-kick",
+        "goals",
+        "scenario"
+      ],
+      "question": "On a windy day, a corner kick curls back and goes directly into the kicker's own goal. What is the decision?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Goal kick",
+          "correct": false,
+          "explanation": "Because the ball entered the kicker's own goal, the opponents get a corner kick."
+        },
+        {
+          "id": "b",
+          "text": "Goal to the opponents",
+          "correct": false,
+          "explanation": "A goal can't be scored directly against the kicker's own team from a corner kick."
+        },
+        {
+          "id": "c",
+          "text": "Corner kick to the opponents",
+          "correct": true,
+          "explanation": "A corner kick that goes directly into the kicker's own goal gives the opponents a corner kick."
+        },
+        {
+          "id": "d",
+          "text": "The corner kick is retaken",
+          "correct": false,
+          "explanation": "The Law gives the opponents a corner kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    },
+    {
+      "id": "L17-004",
+      "status": "active",
+      "type": "multiple",
+      "difficulty": "hard",
+      "refs": [
+        {
+          "law": 17,
+          "section": null
+        },
+        {
+          "law": 12,
+          "section": "3"
+        },
+        {
+          "protocol": "countdown"
+        }
+      ],
+      "tags": [
+        "corner-kick",
+        "new-2026-27"
+      ],
+      "question": "Under the 2026/27 Laws, which situations result in a corner kick? Select all that apply.",
+      "options": [
+        {
+          "id": "a",
+          "text": "A team delays its throw-in past the five-second countdown",
+          "correct": false,
+          "explanation": "A delayed throw-in gives the opponents the throw-in, not a corner kick."
+        },
+        {
+          "id": "b",
+          "text": "A team delays its goal kick past the five-second countdown",
+          "correct": true,
+          "explanation": "New for 2026/27: delaying a goal kick gives the opponents a corner kick."
+        },
+        {
+          "id": "c",
+          "text": "The whole ball crosses the goal line, last touched by a defender, and no goal is scored",
+          "correct": true,
+          "explanation": "This is the standard reason for a corner kick."
+        },
+        {
+          "id": "d",
+          "text": "The goalkeeper controls the ball with their hands for more than eight seconds",
+          "correct": true,
+          "explanation": "The eight-second offense is penalized with a corner kick."
+        }
+      ],
+      "editionAdded": "2026/27",
+      "lastReviewed": "2026/27"
+    }
+  ]
+}

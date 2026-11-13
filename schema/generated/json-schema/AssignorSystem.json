@@ -1,0 +1,15 @@
+{
+  "$id": "AssignorSystem.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "arbiter",
+    "assignr",
+    "horizon",
+    "reftown",
+    "gotsport",
+    "spordle",
+    "other"
+  ],
+  "description": "Which system a calendar link is from: ArbiterSports, Assignr, HorizonWebRef, RefTown, GotSport, Spordle, or another (FEED-1). Each is read the same way until it has rules of its own (FEED-5)."
+}

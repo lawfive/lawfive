@@ -1,0 +1,20 @@
+{
+  "$id": "MatchShare.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "The public page: PUBLIC_URL/s/<token>. Anyone with it can see the match."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "url",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "description": "A match's share link (DATA-7)."
+}

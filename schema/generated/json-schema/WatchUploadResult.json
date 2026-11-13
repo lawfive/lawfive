@@ -1,0 +1,20 @@
+{
+  "$id": "WatchUploadResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "recordId": {
+      "description": "The match record. The same every time this match is sent, so sending it again updates it.",
+      "$ref": "Id.json"
+    },
+    "matchId": {
+      "description": "The planned match, or the one made for a quick match.",
+      "$ref": "Id.json"
+    }
+  },
+  "required": [
+    "recordId",
+    "matchId"
+  ],
+  "additionalProperties": false
+}

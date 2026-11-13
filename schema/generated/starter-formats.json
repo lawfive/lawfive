@@ -1,0 +1,274 @@
+[
+  {
+    "id": "us-u8",
+    "name": "U8 · 4v4 · 2×20",
+    "ageGroups": [
+      "U6",
+      "U7",
+      "U8"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 1200,
+      "breakSec": 300,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 4,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-u10",
+    "name": "U9–U10 · 7v7 · 2×25",
+    "ageGroups": [
+      "U9",
+      "U10"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 1500,
+      "breakSec": 300,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 7,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-u12",
+    "name": "U11–U12 · 9v9 · 2×30",
+    "ageGroups": [
+      "U11",
+      "U12"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 1800,
+      "breakSec": 300,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 9,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-u14",
+    "name": "U13–U14 · 11v11 · 2×35",
+    "ageGroups": [
+      "U13",
+      "U14"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 2100,
+      "breakSec": 600,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 11,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-u16",
+    "name": "U15–U16 · 11v11 · 2×40",
+    "ageGroups": [
+      "U15",
+      "U16"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 2400,
+      "breakSec": 600,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 11,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-u19",
+    "name": "U17–U19 · 11v11 · 2×45",
+    "ageGroups": [
+      "U17",
+      "U18",
+      "U19"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 2700,
+      "breakSec": 600,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 11,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "adult",
+    "name": "Adult · 11v11 · 2×45",
+    "ageGroups": [
+      "Adult"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 2700,
+      "breakSec": 900,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 11,
+      "clock": "up",
+      "trackStoppage": false,
+      "stoppingClock": false,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-hs",
+    "name": "High school (NFHS) · 2×40 · stopping clock",
+    "ageGroups": [
+      "HS",
+      "Varsity",
+      "JV"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 2400,
+      "breakSec": 600,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 11,
+      "clock": "up",
+      "trackStoppage": true,
+      "stoppingClock": true,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  },
+  {
+    "id": "us-college",
+    "name": "College (NCAA) · 2×45 · stopping clock",
+    "ageGroups": [
+      "College",
+      "NCAA"
+    ],
+    "format": {
+      "periods": 2,
+      "periodSec": 2700,
+      "breakSec": 900,
+      "halfwayBreak": false,
+      "halfwayBreakSec": 120,
+      "teamSize": 11,
+      "clock": "up",
+      "trackStoppage": true,
+      "stoppingClock": true,
+      "stopForGoalsCards": true,
+      "breakStoppage": true,
+      "goalScorers": true,
+      "goalTypes": false,
+      "extraTime": false,
+      "extraTimePeriods": 2,
+      "extraTimePeriodSec": 900,
+      "goldenGoal": false,
+      "penalties": false,
+      "sinBins": false,
+      "sinBinSec": 600
+    }
+  }
+]

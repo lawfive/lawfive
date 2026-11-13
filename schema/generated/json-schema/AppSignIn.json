@@ -1,0 +1,40 @@
+{
+  "$id": "AppSignIn.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "For GET /v1/app-sign-in/{id}."
+    },
+    "code": {
+      "type": "string",
+      "description": "Eight letters and digits."
+    },
+    "link": {
+      "type": "string",
+      "description": "What the QR code holds: the web app's Get the app page with the code in its fragment, which a phone's camera can open."
+    },
+    "appLink": {
+      "type": "string",
+      "description": "The same as a lawfive:// link, which opens the app."
+    },
+    "server": {
+      "type": "string",
+      "description": "The address to sign in at, for someone typing the code."
+    },
+    "expiresAt": {
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "link",
+    "appLink",
+    "server",
+    "expiresAt"
+  ],
+  "additionalProperties": false,
+  "description": "A code that signs a phone in to this account. It works once, for two minutes."
+}

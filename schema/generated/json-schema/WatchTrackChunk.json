@@ -1,0 +1,50 @@
+{
+  "$id": "WatchTrackChunk.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "created": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991,
+      "description": "The match's created time, as in its upload: which match the track is for."
+    },
+    "start": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991,
+      "description": "When the track starts (the first kickoff), in seconds since 1970."
+    },
+    "index": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "description": "Which chunk this is, from 0."
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200,
+      "description": "How many chunks the track has."
+    },
+    "device": {
+      "description": "The watch model, \"venu2\".",
+      "type": "string",
+      "maxLength": 40
+    },
+    "data": {
+      "type": "string",
+      "maxLength": 32768,
+      "description": "The chunk's samples as the watch packs them, \"dt,dlat,dlon,speed,hr;\" each: tenths of a second since the sample before (empty for 10; the chunk's first counts from start), millionths of a degree moved since the chunk's position before (the first is whole; both empty without a new fix), the speed the watch measured in cm/s, and beats a minute. Empty fields mean unknown; trailing ones are left off."
+    }
+  },
+  "required": [
+    "created",
+    "start",
+    "index",
+    "count",
+    "data"
+  ],
+  "additionalProperties": false,
+  "description": "Part of a match's track as the watch recorded it (TRK-7): GPS and heart rate about once a second during the periods."
+}

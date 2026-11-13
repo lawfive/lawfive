@@ -1,0 +1,107 @@
+{
+  "$id": "RestoreResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "records": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "added": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "updated": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "unchanged": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "added",
+          "updated",
+          "unchanged"
+        ],
+        "additionalProperties": false
+      },
+      "description": "By collection: matches, venues, referees…"
+    },
+    "tracks": {
+      "type": "object",
+      "properties": {
+        "added": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "added",
+        "updated",
+        "unchanged"
+      ],
+      "additionalProperties": false
+    },
+    "photos": {
+      "type": "object",
+      "properties": {
+        "added": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "added",
+        "updated",
+        "unchanged"
+      ],
+      "additionalProperties": false
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What couldn't be restored and why, at most 50."
+    }
+  },
+  "required": [
+    "records",
+    "tracks",
+    "photos",
+    "problems"
+  ],
+  "additionalProperties": false,
+  "description": "What restoring an export did (DATA-4). Records the account already has a newer copy of are unchanged; running it again adds nothing."
+}

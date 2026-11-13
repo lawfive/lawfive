@@ -1,0 +1,56 @@
+// Garmin watches by part number, as a watch reports it (System.getDeviceSettings().partNumber), for
+// the watches LawFive's app is built for. Written by scripts/garminModels.ts from the Connect IQ SDK.
+
+const models: Record<string, string> = {
+    "006-B3703-00": "Venu 2",
+    "006-B3704-00": "Venu 2S",
+    "006-B3851-00": "Venu 2 Plus",
+    "006-B3905-00": "fēnix 7S",
+    "006-B3906-00": "fēnix 7",
+    "006-B3907-00": "fēnix 7X",
+    "006-B3908-00": "fēnix 7S",
+    "006-B3909-00": "fēnix 7",
+    "006-B3910-00": "fēnix 7X",
+    "006-B3943-00": "epix (Gen 2)",
+    "006-B3944-00": "epix (Gen 2)",
+    "006-B3949-00": "Venu 2S",
+    "006-B3950-00": "Venu 2",
+    "006-B4017-00": "Venu 2 Plus",
+    "006-B4135-00": "fēnix 7X",
+    "006-B4171-00": "Venu 2",
+    "006-B4175-00": "Venu 2S",
+    "006-B4180-00": "Venu 2",
+    "006-B4181-00": "Venu 2S",
+    "006-B4257-00": "Forerunner 265",
+    "006-B4258-00": "Forerunner 265s",
+    "006-B4260-00": "Venu 3",
+    "006-B4261-00": "Venu 3S",
+    "006-B4312-00": "epix Pro (Gen 2) 42mm",
+    "006-B4313-00": "epix Pro (Gen 2) 47mm",
+    "006-B4314-00": "epix Pro (Gen 2) 51mm",
+    "006-B4315-00": "Forerunner 965",
+    "006-B4341-00": "fēnix 7X",
+    "006-B4374-00": "fēnix 7S Pro",
+    "006-B4375-00": "fēnix 7 Pro",
+    "006-B4376-00": "fēnix 7X Pro",
+    "006-B4532-00": "fēnix 8 Solar 47mm",
+    "006-B4533-00": "fēnix 8 Solar 51mm",
+    "006-B4534-00": "fēnix 8 43mm",
+    "006-B4536-00": "fēnix 8 47mm",
+    "006-B4542-00": "epix Pro (Gen 2) 51mm",
+    "006-B4556-00": "epix Pro (Gen 2) 51mm",
+    "006-B4595-00": "fēnix 7 Pro - Solar Edition (no Wi-Fi)",
+    "006-B4596-00": "fēnix 7X Pro - Solar Edition (no Wi-Fi)",
+    "006-B4603-00": "Venu X1",
+    "006-B4631-00": "fēnix 8 Pro 47mm",
+    "006-B4643-00": "Venu 4 45mm",
+    "006-B4644-00": "Venu 4 41mm",
+    "006-B4775-00": "fēnix 8 47mm",
+    "006-B4776-00": "fēnix 8 Solar 51mm",
+    "006-B4944-00": "Venu 4 45mm",
+};
+
+/** "Venu 2" for a Garmin part number ("006-B3703-00"), or undefined for one LawFive doesn't know. */
+export function garminModelName(partNumber: string | undefined): string | undefined {
+    return partNumber ? models[partNumber.trim().toUpperCase()] : undefined;
+}

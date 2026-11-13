@@ -1,0 +1,118 @@
+{
+    "$comment": "WCH-2: suspending and resuming a match (TMR-13), for a lightning or weather delay after which it carries on. Every clock stops where it is (the match clock, the stoppage clock, a running halfway break) and carries on from there at the resume, so the suspended time is neither played time nor added time. Recorded as SU (the reason in extra, numbered as an abandonment's) and RS (the whole seconds suspended in extra), both at the period's time where play stopped. For lightning, a 30:00 countdown that Lightning again starts over, with one long vibration at zero.",
+    "match": [
+        {
+            "name": "the match clock stops where it is and carries on from there; events after leave the suspension out",
+            "ids": ["TMR-13", "TMR-8"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "G", "team": "home", "player": 9 } },
+                { "at": "20:00", "do": { "suspend": 0 }, "expect": { "phase": "suspended", "clock": "20:00", "events": 2, "last": { "type": "SU", "team": null, "seconds": 1200, "player": null, "extra": 0 }, "suspendedMs": 0, "lightningLeftMs": null } },
+                { "at": "35:00", "expect": { "phase": "suspended", "clock": "20:00", "suspendedMs": 900000, "score": [1, 0], "alert": null } },
+                { "at": "35:00", "do": "resume", "expect": { "phase": "running", "clock": "20:00", "events": 3, "last": { "type": "RS", "team": null, "seconds": 1200, "player": null, "extra": 900 }, "suspendedMs": null } },
+                { "at": "40:00", "do": { "event": "G", "team": "away", "player": 7 }, "expect": { "clock": "25:00", "score": [1, 1], "last": { "type": "G", "seconds": 1500 } } },
+                { "at": "59:59", "expect": { "clock": "44:59", "added": null } },
+                { "at": "60:00", "expect": { "clock": "45:00", "added": "+0:00", "alert": "fullTime" } },
+                { "at": "60:00", "do": "endPeriod", "expect": { "phase": "break", "last": { "type": "E", "seconds": 2700 } } }
+            ]
+        },
+        {
+            "name": "lightning: a 30:00 countdown, started over by Lightning again, with one vibration at zero",
+            "ids": ["TMR-13", "VIB-3"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "30:00", "do": { "suspend": 1 }, "expect": { "phase": "suspended", "last": { "type": "SU", "seconds": 1800, "extra": 1 }, "lightningLeftMs": 1800000, "suspendedMs": 0 } },
+                { "at": "40:00", "expect": { "lightningLeftMs": 1200000, "suspendedMs": 600000 } },
+                { "at": "40:00", "do": "lightningAgain", "expect": { "lightningLeftMs": 1800000, "suspendedMs": 600000, "events": 1 } },
+                { "at": "69:59", "expect": { "lightningLeftMs": 1000, "alert": null } },
+                { "at": "70:00", "expect": { "lightningLeftMs": 0, "alert": "lightning", "phase": "suspended" } },
+                { "at": "70:10", "expect": { "lightningLeftMs": 0, "alert": null } },
+                { "at": "75:00", "do": "resume", "expect": { "phase": "running", "clock": "30:00", "last": { "type": "RS", "seconds": 1800, "extra": 2700 }, "lightningLeftMs": null, "suspendedMs": null } },
+                { "at": "76:00", "expect": { "clock": "31:00" } }
+            ]
+        },
+        {
+            "name": "Lightning again only for lightning; a second suspension in the period adds to the first",
+            "ids": ["TMR-13"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": [{ "suspend": 0 }, "lightningAgain"], "expect": { "lightningLeftMs": null, "suspendedMs": 0 } },
+                { "at": "15:00", "do": "resume", "expect": { "last": { "type": "RS", "seconds": 600, "extra": 300 } } },
+                { "at": "20:00", "do": { "suspend": 4 }, "expect": { "clock": "15:00", "last": { "type": "SU", "seconds": 900, "extra": 4 } } },
+                { "at": "30:00", "do": "resume", "expect": { "clock": "15:00", "events": 4, "last": { "type": "RS", "seconds": 900, "extra": 600 } } },
+                { "at": "60:00", "do": "endPeriod", "expect": { "phase": "break", "last": { "type": "E", "seconds": 2700 } } }
+            ]
+        },
+        {
+            "name": "the stoppage clock stops too, with no reminders, and the suspended time adds nothing to added time",
+            "ids": ["TMR-13", "TMR-3", "VIB-2", "VIB-7"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "10:30", "do": { "suspend": 4 }, "expect": { "stoppageMs": 30000, "stoppageRunning": true } },
+                { "at": "20:30", "expect": { "stoppageMs": 30000, "alert": null } },
+                { "at": "20:30", "do": "resume" },
+                { "at": "21:00", "expect": { "stoppageMs": 60000, "stoppageRunning": true } },
+                { "at": "21:00", "do": "stoppage", "expect": { "stoppageMs": 60000, "stoppageRunning": false, "last": { "type": "S", "seconds": 600, "extra": 60 } } },
+                { "at": "55:00", "expect": { "clock": "45:00", "added": "+0:00", "alert": "fullTime" } },
+                { "at": "56:00", "expect": { "clock": "45:00", "added": "+1:00", "alert": "addedTime" } }
+            ]
+        },
+        {
+            "name": "a running halfway break stops too, and runs the rest of its time after",
+            "ids": ["TMR-13", "TMR-7", "VIB-3"],
+            "format": { "midBreak": true, "breakLenSec": 120 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "21:30", "expect": { "alert": "breakStart", "breakDue": true } },
+                { "at": "21:40", "do": "startBreak", "expect": { "breakLeftMs": 120000 } },
+                { "at": "22:40", "do": { "suspend": 1 }, "expect": { "breakLeftMs": 60000 } },
+                { "at": "40:00", "expect": { "breakLeftMs": 60000, "alert": null } },
+                { "at": "40:00", "do": "resume" },
+                { "at": "40:30", "expect": { "breakLeftMs": 30000, "clock": "23:10" } },
+                { "at": "41:00", "expect": { "alert": "breakEnd", "breakLeftMs": null } }
+            ]
+        },
+        {
+            "name": "cards while suspended at the time play stopped, goals only after it resumes; undo takes back a card, never the suspension",
+            "ids": ["TMR-13", "EVT-7", "INP-6", "EVT-5", "EVT-15"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "30:00", "do": { "suspend": 2 } },
+                { "at": "31:00", "do": { "event": "Y", "team": "away", "player": 4 }, "expect": { "events": 2, "last": { "type": "Y", "team": "away", "seconds": 1800, "player": 4 } } },
+                { "at": "31:30", "do": { "event": "G", "team": "home", "player": 9 }, "expect": { "events": 2, "score": [0, 0] } },
+                { "at": "32:00", "do": { "event": "Y", "team": "away", "player": 4 }, "expect": { "events": 3, "last": { "type": "Y2", "seconds": 1800, "player": 4 } } },
+                { "at": "33:00", "do": "undo", "expect": { "events": 2, "last": { "type": "Y", "player": 4 }, "phase": "suspended" } },
+                { "at": "34:00", "do": { "official": "R", "team": "home", "role": "headCoach" }, "expect": { "events": 3, "last": { "type": "TR", "team": "home", "seconds": 1800, "extra": 0 } } },
+                { "at": "35:00", "do": "resume", "expect": { "events": 4, "last": { "type": "RS", "seconds": 1800, "extra": 300 } } },
+                { "at": "36:00", "do": "undo", "expect": { "events": 3, "last": { "type": "RS" } } },
+                { "at": "36:00", "do": "undo", "expect": { "events": 2, "last": { "type": "RS" } } }
+            ]
+        },
+        {
+            "name": "abandoned while suspended: the period ends where play stopped, and the suspension has no length",
+            "ids": ["TMR-13", "EVT-11"],
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "12:00", "do": { "event": "G", "team": "away" } },
+                { "at": "30:00", "do": { "suspend": 1 } },
+                { "at": "50:00", "do": { "abandon": 1 }, "expect": { "phase": "done", "abandoned": true, "score": [0, 1], "events": 4, "last": { "type": "A", "seconds": 1800, "extra": 1 }, "suspendedMs": null, "lightningLeftMs": null } }
+            ]
+        },
+        {
+            "name": "only during play: not before kickoff or at half-time; while suspended, no clock corrections, period end or stoppage",
+            "ids": ["TMR-13", "TMR-14"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, { "suspend": 0 }], "expect": { "phase": "ready", "events": 0 } },
+                { "at": "0:00", "do": ["start", "resume"], "expect": { "phase": "running", "events": 0 } },
+                { "at": "10:00", "do": [{ "suspend": 0 }, { "adjustClock": 60 }, { "adjustAdded": 30 }, "stoppage", "endPeriod", "startBreak", "restart"], "expect": { "phase": "suspended", "events": 1, "clock": "10:00", "stoppageMs": 0, "stoppageRunning": false } },
+                { "at": "11:00", "do": { "suspend": 1 }, "expect": { "events": 1, "lightningLeftMs": null, "last": { "type": "SU", "extra": 0 } } },
+                { "at": "12:00", "do": "resume" },
+                { "at": "47:00", "do": "endPeriod", "expect": { "phase": "break" } },
+                { "at": "48:00", "do": [{ "suspend": 0 }, "resume", "lightningAgain"], "expect": { "phase": "break", "events": 3, "last": { "type": "E" } } }
+            ]
+        }
+    ]
+}

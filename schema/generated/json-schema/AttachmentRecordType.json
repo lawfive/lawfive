@@ -1,0 +1,11 @@
+{
+  "$id": "AttachmentRecordType.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "match",
+    "venue",
+    "referee"
+  ],
+  "description": "The kinds of record that can have attachments."
+}

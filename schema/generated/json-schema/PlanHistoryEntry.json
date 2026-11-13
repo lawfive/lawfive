@@ -1,0 +1,41 @@
+{
+  "$id": "PlanHistoryEntry.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "description": "None for the first entry.",
+      "$ref": "PlanName.json"
+    },
+    "to": {
+      "$ref": "PlanName.json"
+    },
+    "at": {
+      "$ref": "Timestamp.json"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "sign-up",
+        "invite",
+        "admin",
+        "ended"
+      ],
+      "description": "sign-up: joined (a trial, or the default then); invite: joined with an invitation's plan; admin: an admin changed it; ended: the plan before it ended."
+    },
+    "by": {
+      "description": "The admin's name, for reason admin.",
+      "type": "string"
+    },
+    "endsAt": {
+      "description": "When this one was set to end.",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "to",
+    "at",
+    "reason"
+  ],
+  "additionalProperties": false
+}

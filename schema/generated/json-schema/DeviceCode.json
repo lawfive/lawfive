@@ -1,0 +1,45 @@
+{
+  "$id": "DeviceCode.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "device_code": {
+      "type": "string",
+      "description": "Secret; the watch polls with it."
+    },
+    "user_code": {
+      "type": "string",
+      "description": "Eight letters and digits without look-alikes, shown on the watch."
+    },
+    "verification_uri": {
+      "type": "string",
+      "description": "The web app's Link page."
+    },
+    "verification_uri_complete": {
+      "type": "string",
+      "description": "The Link page with the code filled in, for a QR code."
+    },
+    "expires_in": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Seconds (600)."
+    },
+    "interval": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Seconds to wait between polls (5)."
+    }
+  },
+  "required": [
+    "device_code",
+    "user_code",
+    "verification_uri",
+    "verification_uri_complete",
+    "expires_in",
+    "interval"
+  ],
+  "additionalProperties": false,
+  "description": "A code for linking a watch (RFC 8628)."
+}

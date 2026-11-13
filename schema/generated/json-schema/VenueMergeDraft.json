@@ -1,0 +1,56 @@
+{
+  "$id": "VenueMergeDraft.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      },
+      "description": "The venues to merge into this one; they're deleted."
+    },
+    "name": {
+      "description": "The name chosen so far; left out, or not one of theirs, the kept venue's.",
+      "type": "string",
+      "maxLength": 100
+    },
+    "addressFrom": {
+      "description": "The venue whose address and parking were chosen so far, where they differ.",
+      "$ref": "Id.json"
+    },
+    "pitches": {
+      "description": "The pitches the user has chosen for so far; the rest get the suggestion. A name can be empty while it's being typed.",
+      "maxItems": 200,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "Id.json"
+          },
+          "into": {
+            "description": "The pitch it's the same as.",
+            "$ref": "Id.json"
+          },
+          "name": {
+            "description": "Without into, kept, under this name.",
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "from"
+  ],
+  "additionalProperties": false,
+  "description": "A venue merge as chosen so far, to preview (DUP-7, DUP-8)."
+}

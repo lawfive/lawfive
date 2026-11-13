@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -13 126 126" width="126" height="126">
+  <!-- UI-14: the L5 mark (WEB-25) in the board's colors, from web/src/logo.ts by web/scripts/icons.ts (pnpm icons). -->
+  <g transform="translate(22 0) skewX(-12)">
+    <path fill="#f4f2e9" d="M0 0H26V76H52L41 100H0Z"/>
+    <path fill="#2fae7a" d="M35 0H104L99 22H60V32H78A22 22 0 0 1 100 54V78A22 22 0 0 1 78 100H54L64 78H75V55H35Z"/>
+    <path fill="#1d7a54" d="M54 100L64 78H84Z"/>
+  </g>
+</svg>

@@ -1,0 +1,51 @@
+{
+  "$id": "MatchTemplate.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "description": "Raised by the server on every change; clients send the version they last saw so conflicts can be spotted."
+    },
+    "updatedAt": {
+      "$ref": "Timestamp.json"
+    },
+    "deletedAt": {
+      "description": "Set when the record is deleted; deleted records are kept so other devices learn of the deletion.",
+      "$ref": "Timestamp.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "format": {
+      "$ref": "MatchFormat.json"
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "fee": {
+          "$ref": "Fee.json"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Filled into a match made from this template, or from a competition that uses it, when the match has none. Not the user's role: that depends on the match."
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "updatedAt",
+    "name",
+    "format",
+    "defaults"
+  ],
+  "additionalProperties": false,
+  "description": "A reusable match format, such as \"U12 league: 2×30, 5 min half-time\"."
+}

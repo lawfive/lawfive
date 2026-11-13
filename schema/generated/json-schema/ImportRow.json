@@ -1,0 +1,27 @@
+{
+  "$id": "ImportRow.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "propertyNames": {
+    "type": "string",
+    "maxLength": 60
+  },
+  "additionalProperties": {
+    "anyOf": [
+      {
+        "type": "string",
+        "maxLength": 2000
+      },
+      {
+        "type": "number"
+      },
+      {
+        "type": "boolean"
+      },
+      {
+        "type": "null"
+      }
+    ]
+  },
+  "description": "A row as a spreadsheet has it: column names (Home, home_colour and homeColour are the same column) and text, number or true/false values. Empty values change nothing."
+}

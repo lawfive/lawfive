@@ -1,0 +1,76 @@
+{
+  "$id": "Attachment.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "recordType": {
+      "$ref": "AttachmentRecordType.json"
+    },
+    "recordId": {
+      "description": "The match, venue or referee it's on.",
+      "$ref": "Id.json"
+    },
+    "contentType": {
+      "type": "string",
+      "enum": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "description": "What the file is, worked out from its contents."
+    },
+    "size": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "The file's size in bytes."
+    },
+    "width": {
+      "description": "Its width in pixels, when the upload gave it.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "height": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "caption": {
+      "type": "string"
+    },
+    "position": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "Its place among the record's attachments, from 0. A referee's first photo is their picture."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "url": {
+      "type": "string",
+      "description": "Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in."
+    },
+    "thumbUrl": {
+      "type": "string",
+      "description": "A small version for lists and galleries: /v1/attachments/{id}/thumb (the file itself when none was uploaded)."
+    }
+  },
+  "required": [
+    "id",
+    "recordType",
+    "recordId",
+    "contentType",
+    "size",
+    "position",
+    "createdAt",
+    "url",
+    "thumbUrl"
+  ],
+  "additionalProperties": false,
+  "description": "A photo on a match, venue or referee (FILE-1). The files are private: fetching them needs the same sign-in as the rest of the API."
+}

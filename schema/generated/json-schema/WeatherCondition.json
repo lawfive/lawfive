@@ -1,0 +1,16 @@
+{
+  "$id": "WeatherCondition.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "clear",
+    "partlyCloudy",
+    "cloudy",
+    "fog",
+    "drizzle",
+    "rain",
+    "snow",
+    "storm"
+  ],
+  "description": "What the sky is doing, for the icon: the most significant condition while the match is played."
+}

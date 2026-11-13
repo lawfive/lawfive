@@ -1,0 +1,344 @@
+{
+  "$id": "WatchUpload.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "created": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991,
+      "description": "When the match was started on the watch, in seconds since 1970."
+    },
+    "matchId": {
+      "description": "The planned match it was started from; none for a quick match.",
+      "anyOf": [
+        {
+          "$ref": "Id.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "device": {
+      "description": "The watch model, \"venu2\".",
+      "type": "string",
+      "maxLength": 40
+    },
+    "home": {
+      "type": "string",
+      "maxLength": 4
+    },
+    "away": {
+      "type": "string",
+      "maxLength": 4
+    },
+    "homeName": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "awayName": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "homeColor": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "awayColor": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "numPeriods": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "periodSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "halftimeSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "teamSize": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "breakAtSec": {
+      "description": "When the halfway break comes, or -1 for none.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "breakLenSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "extraTime": {
+      "type": "boolean"
+    },
+    "etPeriods": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "etPeriodSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "goldenGoal": {
+      "description": "The format's golden goal (ET-6).",
+      "type": "boolean"
+    },
+    "penalties": {
+      "type": "boolean"
+    },
+    "clockStyle": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "trackStoppage": {
+      "type": "boolean"
+    },
+    "stoppingClock": {
+      "description": "The format's stopping clock (TMR-15): every event's seconds are the clock's, which stood still during stoppages (S).",
+      "type": "boolean"
+    },
+    "stopForGoalsCards": {
+      "type": "boolean"
+    },
+    "breakStoppage": {
+      "type": "boolean"
+    },
+    "goalScorers": {
+      "type": "boolean"
+    },
+    "goalTypes": {
+      "type": "boolean"
+    },
+    "sinBins": {
+      "description": "The format's sin bins (EVT-12).",
+      "type": "boolean"
+    },
+    "sinBinSec": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "score": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[home, away]."
+    },
+    "pens": {
+      "description": "Shoot-out score, [home, away].",
+      "anyOf": [
+        {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "golden": {
+      "description": "It ended on a golden goal in extra time (ET-6).",
+      "type": "boolean"
+    },
+    "distanceM": {
+      "description": "How far the referee ran, in meters.",
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "startedAt": {
+      "description": "When each period kicked off, in seconds since 1970, for the track's figures (TRK-3).",
+      "maxItems": 8,
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "kickoff": {
+      "description": "The team that kicked off the first period: 0 home, 1 away, -1 not chosen.",
+      "type": "integer",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "homeHeading": {
+      "description": "The compass heading of the goal the home team attacked in the first period, in radians from true north, when the referee recorded it (PRE-8).",
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "WatchEvent.json"
+      }
+    },
+    "misconduct": {
+      "description": "The cards' reasons chosen on the watch (EVT-14); a code that isn't the scheme's for that card is left out.",
+      "type": "object",
+      "properties": {
+        "scheme": {
+          "description": "The codes the watch listed.",
+          "$ref": "SchemeId.json"
+        },
+        "codes": {
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 12
+              }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "description": "[the card's index in events, its code]."
+        }
+      },
+      "required": [
+        "scheme",
+        "codes"
+      ],
+      "additionalProperties": false
+    },
+    "diagnostics": {
+      "description": "How the recording went, for tracing problems (DIAG-1).",
+      "type": "object",
+      "properties": {
+        "battery": {
+          "description": "[period from 0, 0 kickoff or 1 its end, percent].",
+          "maxItems": 24,
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "items": false,
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "app": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "firmware": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "gpsFirstFixSec": {
+          "description": "Seconds from kickoff to the first GPS fix.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gpsSamples": {
+          "description": "Track samples taken.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gpsMissed": {
+          "description": "Of those, how many had no GPS fix.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "restarts": {
+          "description": "How many times the app started again mid-match (R-5).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "created",
+    "home",
+    "away",
+    "numPeriods",
+    "periodSec",
+    "halftimeSec",
+    "score",
+    "events"
+  ],
+  "additionalProperties": false,
+  "description": "A finished match as the watch saved it. The server stores it as a match record."
+}

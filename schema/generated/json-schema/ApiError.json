@@ -1,0 +1,16 @@
+{
+  "$id": "ApiError.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "string",
+      "description": "What went wrong, in words a person can read."
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "additionalProperties": false,
+  "description": "Every LawFive error (outside /v1/auth) has this shape; some add fields."
+}

@@ -1,0 +1,75 @@
+{
+  "$id": "MatchImportResult.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "ImportedRow.json"
+      },
+      "description": "Every row that had anything in it, in order."
+    },
+    "added": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "updated": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "skipped": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "created": {
+      "type": "object",
+      "properties": {
+        "venues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "competitions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "referees": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "venues",
+        "competitions",
+        "referees"
+      ],
+      "additionalProperties": false,
+      "description": "Names the user had no record for, added (or, on a dry run, to be added) (IMP-4)."
+    },
+    "ignoredColumns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Columns the import doesn't know, as written in the file."
+    }
+  },
+  "required": [
+    "rows",
+    "added",
+    "updated",
+    "skipped",
+    "created",
+    "ignoredColumns"
+  ],
+  "additionalProperties": false
+}

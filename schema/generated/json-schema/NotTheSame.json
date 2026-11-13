@@ -1,0 +1,21 @@
+{
+  "$id": "NotTheSame.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "others": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "$ref": "Id.json"
+      },
+      "description": "Venues or referees that aren't the same as this one, nor as each other."
+    }
+  },
+  "required": [
+    "others"
+  ],
+  "additionalProperties": false,
+  "description": "Venues or referees the user says are different, so they aren't suggested together again (DUP-5)."
+}

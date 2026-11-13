@@ -1,0 +1,38 @@
+{
+  "$id": "WeatherHour.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "time": {
+      "description": "The start of the hour.",
+      "$ref": "Timestamp.json"
+    },
+    "condition": {
+      "$ref": "WeatherCondition.json"
+    },
+    "isDay": {
+      "type": "boolean"
+    },
+    "temperatureC": {
+      "type": "number"
+    },
+    "precipitationMm": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Rain (or melted snow) during the hour."
+    },
+    "precipitationChance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": [
+    "time",
+    "condition",
+    "isDay",
+    "temperatureC",
+    "precipitationMm"
+  ],
+  "additionalProperties": false
+}

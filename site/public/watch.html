@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>On the watch | LawFive</title>
+    <meta name="description" content="LawFive on Garmin, Wear OS and Apple Watch: every clock a referee keeps, goals and cards, extra time, penalties, the coin toss and a match screen you build yourself.">
+    <meta name="theme-color" content="#0b0e0d" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+    <meta property="og:title" content="On the watch | LawFive">
+    <meta property="og:description" content="LawFive on Garmin, Wear OS and Apple Watch: every clock a referee keeps, goals and cards, extra time, penalties, the coin toss and a match screen you build yourself.">
+    <meta property="og:image" content="https://lawfive.app/images/web-matches-light.jpg">
+    <meta property="og:url" content="https://lawfive.app/watch">
+    <link rel="canonical" href="https://lawfive.app/watch">
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="preload" href="fonts/barlow-condensed-latin-900-italic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+    <script src="video.js" defer></script>
+    <script type="module" src="play/site.js"></script>
+</head>
+<body>
+    <header class="top">
+        <a class="wordmark" href="/" aria-label="LawFive home"><svg class="logo-mark" viewBox="0 0 126 100" aria-hidden="true"><g transform="translate(22 0) skewX(-12)"><path class="l" d="M0 0H26V76H52L41 100H0Z"/><path class="five" d="M35 0H104L99 22H60V32H78A22 22 0 0 1 100 54V78A22 22 0 0 1 78 100H54L64 78H75V55H35Z"/><path class="fold" d="M54 100L64 78H84Z"/></g></svg><span class="wordmark-name" aria-hidden="true">LAW<span>FIVE</span></span></a>
+        <nav class="top-links">
+            <a class="text-link" href="try.html">Try it</a>
+            <a class="text-link" href="quiz.html">Quiz</a>
+            <a class="text-link wide-faq" href="faq.html">FAQ</a>
+            <a class="ext text-link wide" href="https://lawfive.dev">Docs<svg class="ext-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/></svg><span class="sr-only"> (lawfive.dev, the docs)</span></a>
+            <a class="btn" href="https://app.lawfive.app">Sign in</a>
+        </nav>
+    </header>
+
+    <main class="pitch-frame">
+        <div class="frame-corners" aria-hidden="true"></div>
+        <div class="wrap page-hero">
+            <p class="eyebrow">On the watch</p>
+            <h1>Run the whole match from your wrist.</h1>
+            <p class="lede">Big clocks and few taps, made to read at a glance mid-match. The watch runs the match by itself, with or without a phone, and syncs when it can.</p>
+        </div>
+        <div class="halfway" aria-hidden="true"><span></span></div>
+
+        <section class="wrap" aria-label="On the watch">
+            <div class="topics">
+                <article class="topic" id="clocks">
+                    <div>
+                        <h2>Every clock you keep</h2>
+                        <p>The match clock, added time once the period's length is up, and a stoppage clock you start and stop with one press. Turn stoppage tracking off for matches where you don't keep it, and the screen keeps to what you use.</p>
+                        <p class="go-line"><a class="go" href="try.html">Try them in a match<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></a></p>
+                        <ul>
+                            <li><b>A halfway break</b> for drinks or cooling, due at the middle of each period and counted down, and added on as stoppage if you like.</li>
+                            <li><b>A clock that stops</b>, for high school (NFHS) and college (NCAA) games where you keep the time: set the format's <b>Clock</b> to <b>Stops when play stops</b> and Start/Stop stops the match clock, which turns orange, and starts it again at the restart. Recording a goal or card stops it too (you can turn that off), as does an injury and the halfway break. There's no added time: the period ends when its clock reaches the length, and the times in your report are the clock's. The high school and college formats are ready to pick when you set up a match.</li>
+                            <li><b>Half-time and the break between periods</b>, counting down or up.</li>
+                            <li><b>Halves, quarters, three periods or one</b>: a tournament game of a single period has no half-time, and extra time and penalties still follow it.</li>
+                            <li><b>The added time left</b>: once the period's length is up, the stoppage pill counts down the added time still to play, holding still while you stop for more, so there's no sum to do in your head. At 0:00 the watch vibrates; past it the pill shows the time over, "+0:05".</li>
+                            <li><b>Vibrations</b> at the end of each period, when the added time is used up, when a break is due and as a stoppage reminder, each one you can switch off. With stoppage tracked, the end of the period is one buzz, as added time starts; the one that says added time is up repeats until you press a button. With no stoppage time to add, the end of the period repeats until you press a button instead.</li>
+                            <li><b>Clocks that keep time</b> even if the screen sleeps or the app closes mid-match: they're worked out from when the period started, not counted.</li>
+                            <li><b>Adjust clock</b> in the game menu, for a clock started late or one that must match the stadium's: set the period's minutes and seconds, check the change ("+0:40") and every clock, alert and break moves with it. With stoppage tracked, <b>Adjust added time</b> corrects a stoppage started or ended late. Both show in the match's events and the report.</li>
+                            <li><b>Suspend match</b> for a lightning or weather delay: every clock stops where it is, the Suspended screen counts how long it's been, and for lightning a 30-minute countdown that <b>Lightning again</b> starts over, with a vibration when it's done. Cards can still be shown; <b>Resume</b> carries the period on from where it stopped, so the delay is neither played time nor added time. It shows in the match's events and the report ("Suspended 34:12 · Lightning"), and your distance and speeds leave it out. If play can't restart, abandon from there.</li>
+                        </ul>
+                    </div>
+                    <div class="topic-media">
+                        <div class="watch"><img src="images/watch-match.jpg" alt="LawFive on a Garmin watch: the teams in their colors, the score, the match clock and a running stoppage" width="480" height="480" loading="lazy"></div>
+                    </div>
+                </article>
+                <article class="topic text-only" id="setup">
+                    <div>
+                        <h2>Your match screen, your way</h2>
+                        <p>Build what the watch shows while a period runs, a step at a time, on the website, either phone or the watch's Settings:</p>
+                        <ul>
+                            <li><b>One clock or two</b>, stacked or side by side.</li>
+                            <li><b>How each counts</b>: Match time (0 to 90, like TV), each half from 0, or time left (45 down to 0).</li>
+                            <li><b>A ring</b> that fills as the period runs, or <b>the time of day</b> at the bottom.</li>
+                            <li><b>Team names</b> or just the score, with a bigger clock.</li>
+                        </ul>
+                        <p>Pictures of the screen follow along: pick a moment of a match, or play one through from kickoff to full time. Try it below, then <a href="try.html">try a match</a> with it on the watch.</p>
+                        <p class="where">Set up on the website, Android and iPhone; on Garmin, Wear OS and Apple Watch</p>
+                    </div>
+                </article>
+                <div class="play-part" data-lawfive="setup">
+                    <div class="browser"><picture><source srcset="images/web-match-screen-dark.jpg" media="(prefers-color-scheme: dark)"><img src="images/web-match-screen-light.jpg" alt="The match screen setup: how each clock counts, beside pictures of the screen in added time" width="1755" height="914" loading="lazy"></picture></div>
+                </div>
+                <article class="topic text-only" id="goals">
+                    <div>
+                        <h2>Goals and cards</h2>
+                        <p>A goal or a card takes a few taps, with the player's number and the time it happened. A second yellow for the same number becomes a red by itself. Turn on goal types (penalty, direct free kick, own goal) when you report them, or turn off scorers for a goal in one tap. A goal, card or injury recorded by mistake can be undone from the game menu while its period is on, or at the break after it; the period's end comes first in that menu, as it's the row you need every match.</p>
+                        <p>A team official's card is there too, with whether it was the head coach, an assistant or another official. An injury goes in with the player's number, and starts the stoppage clock when you track stoppage, so the time it takes is added on.</p>
+                        <p>Where your competition uses sin bins, turn on <b>Sin bins</b> in the match's format, with their length (10 minutes unless you change it). <b>Sin bin</b> is then in the team menu, just above the yellow card. The player's time runs with the match clock, so it waits through half-time and any delay and carries into the next half, and with stoppage tracked it holds while you stop for a stoppage, as IFAB's guidance has you add the time lost; a pill shows it ("AWY 7 4:12"). When it's up, the watch vibrates and says "AWY #7 can return" until you press a button. A second sin bin for the same number is a send-off; a sin bin and a caution don't add up to one. Both show in the match's events, the report and your discipline stats.</p>
+                        <p>To give each card its reason as you go, turn on <b>Card reasons</b> in the watch's Settings, under Controls. After the player's number, or the official's role, the watch lists your misconduct codes (US Soccer's, The FA's or the Laws of the Game's, as you've chosen for your account or the match's competition), each with a few words: "UB, Unsporting behavior". <b>No reason</b> comes first, so one press skips it, and you can add the code afterwards. The code goes on your match report. It's off unless you turn it on, as it's one more step during play.</p>
+                        <p>Cards can be shown before kickoff, at half-time and after full time too, and a match that can't finish can be abandoned with its reason, keeping the score.</p>
+                        <p>Rain and sleeves can set a touch screen off. On a Forerunner, fēnix or epix, turn on <b>Touch lock</b> in the watch's Settings, under Controls: during play the screen then takes no taps or swipes, and the five buttons run everything. On Apple Watch, the same setting turns on the watch's own Water Lock whenever play's screen shows; turn the Digital Crown to unlock it.</p>
+                    </div>
+                </article>
+                <article class="topic" id="kickoff">
+                    <div>
+                        <h2>Kickoff, the toss and the ends</h2>
+                        <p><b>Coin toss</b> on the watch for a forgotten coin, before kickoff, extra time and penalties. <b>Kickoff direction</b>: face the goal the kickoff team attacks and save it, and at each later kickoff an arrow turns with you to point the way that team attacks. Extra time has its own toss, so you pick its kickoff team and save its direction again.</p>
+                        <p class="where">Kickoff direction on watches with a compass</p>
+                    </div>
+                    <div class="topic-media">
+                        <div class="watch"><video data-clip src="video/kickoff-direction.mp4" poster="images/clip-kickoff-direction.jpg" width="480" height="480" muted loop playsinline preload="none" aria-label="On the watch, a compass reading turns as the referee faces the goal and saves it. On the next kickoff screen, an arrow turns to keep pointing at the goal that team attacks."></video></div>
+                    </div>
+                </article>
+                <article class="topic text-only" id="extra-time">
+                    <div>
+                        <h2>Extra time, penalties and golden goal</h2>
+                        <p>When the last period ends level, the watch offers extra time or penalties, and End match when there's a winner. Extra time is its own periods with the same clocks. In a shoot-out, tap Scored or Missed for each kick; the watch keeps the tally and calls the winner, sudden death included. Golden goal ends extra time on the first goal, with Undo in case it's disallowed.</p>
+                        <p class="go-line"><a class="go" href="try.html">Try one: the tour ends with a cup match<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></a></p>
+                    </div>
+                </article>
+                <article class="topic" id="sync">
+                    <div>
+                        <h2>Your matches, synced</h2>
+                        <p>Link the watch to your account and your next matches are on it, with the teams, their colors, the format and the forecast, ready to start. At full time the match goes up to your account with its events, your track and the distance you ran. Mark a fee paid from the watch, even without a connection. A quick match works without an account at all.</p>
+                        <p class="go-line"><a class="go" href="tracks.html">Where you ran<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></svg></a></p>
+                    </div>
+                    <div class="topic-media">
+                        <div class="watch"><img src="images/watch-menu.jpg" alt="The watch's New match menu: a planned match, Strikers v Rovers, above Quick match and Custom" width="480" height="480" loading="lazy"></div>
+                    </div>
+                </article>
+                <article class="topic text-only" id="watches">
+                    <div>
+                        <h2>Which watches</h2>
+                        <p><b>Garmin</b>, in testing, on its way to the Connect IQ Store:</p>
+                        <ul class="models">
+                            <li>Forerunner 265, 265S and 965</li>
+                            <li>fēnix 7, 7S and 7X, and their Pro editions</li>
+                            <li>fēnix 8 (43 and 47 mm, Pro and Solar)</li>
+                            <li>epix (Gen 2) and epix Pro</li>
+                            <li>Venu 2, 2S and 2 Plus</li>
+                            <li>Venu 3, 3S, Venu 4 and Venu X1</li>
+                        </ul>
+                        <p>Every watch also records your GPS track and heart rate (Record track, in the watch's Settings), and marks the pitch's corners. <b>Wear OS and Apple Watch</b> are in early testing, syncing over the watch's own connection; an Apple Watch saves each match to Apple Health as a soccer workout, and from a Wear OS watch the Android app saves it to Health Connect. The first time the app opens, it says what it asks for and why (your location for the track and the kickoff direction, your heart rate for the workout), before the watch asks, so nothing asks between Start match and the kickoff.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="wrap" aria-labelledby="more">
+            <div class="section-head">
+                <p class="eyebrow">Find out more</p>
+                <h2 id="more">More of what it does</h2>
+            </div>
+            <nav class="more" aria-label="Find out more">
+                <a href="tracks.html">
+                    <span class="tile"><svg viewBox="0 0 256 256" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M200,168a32.06,32.06,0,0,0-31,24H72a32,32,0,0,1,0-64h96a40,40,0,0,0,0-80H72a8,8,0,0,0,0,16h96a24,24,0,0,1,0,48H72a48,48,0,0,0,0,96h97a32,32,0,1,0,31-40Zm0,48a16,16,0,1,1,16-16A16,16,0,0,1,200,216Z"/></svg></span>
+                    <b>Where you ran</b>
+                    <span>Your track, heart rate, heatmaps and the replay.</span>
+                </a>
+                <a href="schedule.html">
+                    <span class="tile"><svg viewBox="0 0 256 256" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-68-76a12,12,0,1,1-12-12A12,12,0,0,1,140,132Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,132ZM96,172a12,12,0,1,1-12-12A12,12,0,0,1,96,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,140,172Zm44,0a12,12,0,1,1-12-12A12,12,0,0,1,184,172Z"/></svg></span>
+                    <b>Your season</b>
+                    <span>Assignments, reminders, the weather, fees and stats.</span>
+                </a>
+                <a href="quiz.html">
+                    <span class="tile"><svg viewBox="0 0 256 256" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M216,40H40A16,16,0,0,0,24,56V216a8,8,0,0,0,11.58,7.16L64,208.94l28.42,14.22a8,8,0,0,0,7.16,0L128,208.94l28.42,14.22a8,8,0,0,0,7.16,0L192,208.94l28.42,14.22A8,8,0,0,0,232,216V56A16,16,0,0,0,216,40Zm0,163.06-20.42-10.22a8,8,0,0,0-7.16,0L160,207.06l-28.42-14.22a8,8,0,0,0-7.16,0L96,207.06,67.58,192.84a8,8,0,0,0-7.16,0L40,203.06V56H216ZM60.42,167.16a8,8,0,0,0,10.74-3.58L76.94,152h38.12l5.78,11.58a8,8,0,1,0,14.32-7.16l-32-64a8,8,0,0,0-14.32,0l-32,64A8,8,0,0,0,60.42,167.16ZM96,113.89,107.06,136H84.94ZM136,128a8,8,0,0,1,8-8h16V104a8,8,0,0,1,16,0v16h16a8,8,0,0,1,0,16H176v16a8,8,0,0,1-16,0V136H144A8,8,0,0,1,136,128Z"/></svg></span>
+                    <b>The Laws quiz</b>
+                    <span>120 questions on the Laws, and why each answer is right.</span>
+                </a>
+                <a href="try.html">
+                    <span class="tile"><svg viewBox="0 0 256 256" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48.24-94.78-64-40A8,8,0,0,0,100,88v80a8,8,0,0,0,12.24,6.78l64-40a8,8,0,0,0,0-13.56ZM116,153.57V102.43L156.91,128Z"/></svg></span>
+                    <b>Try a match</b>
+                    <span>The watch in your browser: run a match with its own buttons.</span>
+                </a>
+                <a href="faq.html">
+                    <span class="tile"><svg viewBox="0 0 256 256" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span>
+                    <b>Questions</b>
+                    <span>Which watches, what it costs, privacy and running your own.</span>
+                </a>
+            </nav>
+        </section>
+
+        <section class="wrap">
+            <div class="close">
+                <div>
+                    <h2>Want to try it?</h2>
+                    <p>Make an account, and we'll email you once it's approved. Already have one? Sign in on the web.</p>
+                </div>
+                <div class="actions">
+                    <a class="btn btn-primary" href="https://app.lawfive.app/signup">Create an account</a>
+                    <a class="btn" href="https://app.lawfive.app">Sign in</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <svg class="logo-mark foot-mark" viewBox="0 0 126 100" aria-hidden="true"><g transform="translate(22 0) skewX(-12)"><path class="l" d="M0 0H26V76H52L41 100H0Z"/><path class="five" d="M35 0H104L99 22H60V32H78A22 22 0 0 1 100 54V78A22 22 0 0 1 78 100H54L64 78H75V55H35Z"/><path class="fold" d="M54 100L64 78H84Z"/></g></svg>
+        <span>LawFive, after Law 5 of the Laws of the Game: The Referee.</span>
+        <span>Screens and clips show sample data, recorded from the apps and their emulators. <a href="watch.html">On the watch</a> · <a href="tracks.html">Where you ran</a> · <a href="schedule.html">Your season</a> · <a href="quiz.html">Quiz</a> · <a href="try.html">Try a match</a> · <a href="faq.html">FAQ</a> · <a href="https://lawfive.dev" class="ext">Docs<svg class="ext-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/></svg><span class="sr-only"> (lawfive.dev, the docs)</span></a> · <a href="support.html">Support</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="delete-account.html">Delete your account</a></span>
+    </footer>
+</body>
+</html>

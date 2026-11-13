@@ -1,0 +1,235 @@
+{
+    "$comment": "WCH-2: sin bins, temporary dismissals (EVT-12), with sin bins on in the format (10 minutes unless sinBinSec says). Sin bin is recorded as SB with the player number and its length in seconds in extra; a second for the same team and number as SB2, a send-off (the red screen, EVT-6), with the length too. Each runs with the match clock: what's been played since it began (the periods' E events, then the period being played), so it waits through breaks and suspensions and carries into the next period, and follows a clock's correction (TMR-14). With stoppage tracked (TMR-10) it holds still while a stoppage runs (the stoppages recorded, S with their length, and the one running), the halfway break as stoppage too (TMR-12); Adjust added time leaves it be. One given before kickoff or at a break counts from the next kickoff. The pill shows the one ending first, \"AWY 7 4:12\", with \"+1\" for each other. When one ends, \"can return\" waits for a button, with a vibration of its own (sinBinEnd) repeating as VIB-1's while its switch is on. A red, a second yellow or a second sin bin for the player ends theirs with no return. A sin bin and a caution don't combine (Q-22). Undo takes a sin bin back as a card.",
+    "match": [
+        {
+            "name": "counts down with the match clock, waits through half-time and carries into the next period, then can return until a button",
+            "ids": ["EVT-12", "VIB-6"],
+            "format": { "sinBins": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "40:00", "do": { "event": "SB", "team": "away", "player": 7 }, "expect": { "events": 1, "last": { "type": "SB", "team": "away", "seconds": 2400, "player": 7, "extra": 600 }, "sinBinPill": "AWY 7 10:00", "sinBins": 1, "sinBinReturn": null } },
+                { "at": "44:00", "expect": { "sinBinPill": "AWY 7 6:00", "alert": null } },
+                { "at": "45:00", "do": "endPeriod", "expect": { "phase": "break", "sinBinPill": "AWY 7 5:00" } },
+                { "at": "55:00", "expect": { "sinBinPill": "AWY 7 5:00", "alert": null } },
+                { "at": "60:00", "do": ["endHalftime", "startNextPeriod"], "expect": { "phase": "running", "sinBinPill": "AWY 7 5:00" } },
+                { "at": "64:59", "expect": { "sinBinPill": "AWY 7 0:01", "alert": null, "sinBinReturn": null } },
+                { "at": "65:00", "expect": { "alert": "sinBinEnd", "alerting": true, "sinBinPill": null, "sinBins": 0, "sinBinReturn": { "team": "away", "player": 7 } } },
+                { "at": "65:05", "expect": { "alert": null, "sinBinReturn": { "team": "away", "player": 7 } } },
+                { "at": "65:10", "expect": { "alert": "sinBinEnd" } },
+                { "at": "65:12", "do": "acknowledge", "expect": { "alerting": false, "sinBinReturn": null, "events": 2 } },
+                { "at": "65:20", "expect": { "alert": null, "sinBinReturn": null } }
+            ]
+        },
+        {
+            "name": "waits through a suspension, as the match clock does",
+            "ids": ["EVT-12", "TMR-13"],
+            "format": { "sinBins": true, "sinBinSec": 300 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "home", "player": 4 }, "expect": { "sinBinPill": "HOM 4 5:00", "last": { "type": "SB", "extra": 300 } } },
+                { "at": "12:00", "do": { "suspend": 0 }, "expect": { "phase": "suspended", "sinBinPill": "HOM 4 3:00" } },
+                { "at": "30:00", "expect": { "sinBinPill": "HOM 4 3:00", "alert": null } },
+                { "at": "30:00", "do": "resume", "expect": { "phase": "running", "sinBinPill": "HOM 4 3:00" } },
+                { "at": "32:59", "expect": { "sinBinPill": "HOM 4 0:01", "alert": null } },
+                { "at": "33:00", "expect": { "alert": "sinBinEnd", "sinBinPill": null, "sinBinReturn": { "team": "home", "player": 4 } } }
+            ]
+        },
+        {
+            "name": "with stoppage tracked it holds while a stoppage runs, one given during a stoppage from the stoppage's end, so can return comes that much later",
+            "ids": ["EVT-12", "TMR-10", "TMR-3"],
+            "format": { "sinBins": true, "sinBinSec": 300, "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": "stoppage" },
+                { "at": "10:30", "do": { "event": "SB", "team": "home", "player": 4 }, "expect": { "sinBinPill": "HOM 4 5:00", "last": { "type": "SB", "seconds": 630, "extra": 300 } } },
+                { "at": "11:00", "expect": { "sinBinPill": "HOM 4 5:00" } },
+                { "at": "11:00", "do": "stoppage", "expect": { "stoppageRunning": false, "last": { "type": "S", "seconds": 600, "extra": 60 }, "sinBinPill": "HOM 4 5:00" } },
+                { "at": "13:00", "expect": { "sinBinPill": "HOM 4 3:00" } },
+                { "at": "13:00", "do": "stoppage" },
+                { "at": "13:45", "expect": { "sinBinPill": "HOM 4 3:00", "stoppageRunning": true } },
+                { "at": "14:00", "do": "stoppage", "expect": { "sinBinPill": "HOM 4 3:00" } },
+                { "at": "15:30", "expect": { "sinBinPill": "HOM 4 1:30", "alert": null, "sinBinReturn": null } },
+                { "at": "16:59", "expect": { "sinBinPill": "HOM 4 0:01", "alert": null, "sinBinReturn": null } },
+                { "at": "17:00", "expect": { "alert": "sinBinEnd", "sinBinPill": null, "sinBinReturn": { "team": "home", "player": 4 } } },
+                { "at": "17:05", "do": "acknowledge", "expect": { "sinBinReturn": null } },
+                { "at": "18:00", "do": "stoppage" },
+                { "at": "19:00", "do": "stoppage", "expect": { "sinBinPill": null, "sinBinReturn": null } },
+                { "at": "19:01", "expect": { "alert": null, "sinBinReturn": null } }
+            ]
+        },
+        {
+            "name": "without stoppage tracked it runs on, as the match clock does",
+            "ids": ["EVT-12", "TMR-10"],
+            "format": { "sinBins": true, "sinBinSec": 300 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": [{ "event": "SB", "team": "away", "player": 3 }, "stoppage"], "expect": { "stoppageRunning": false, "sinBinPill": "AWY 3 5:00" } },
+                { "at": "12:00", "expect": { "sinBinPill": "AWY 3 3:00" } },
+                { "at": "15:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "away", "player": 3 } } }
+            ]
+        },
+        {
+            "name": "a stoppage running across the period's end holds it to the end; full time's one vibration doesn't touch it; it waits through half-time and carries on",
+            "ids": ["EVT-12", "TMR-10", "VIB-1"],
+            "format": { "sinBins": true, "sinBinSec": 300, "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "43:00", "do": { "event": "SB", "team": "away", "player": 9 }, "expect": { "sinBinPill": "AWY 9 5:00" } },
+                { "at": "44:00", "do": "stoppage", "expect": { "sinBinPill": "AWY 9 4:00" } },
+                { "at": "45:00", "expect": { "alert": "fullTime", "alerting": false, "stoppageRunning": true, "sinBinPill": "AWY 9 4:00" } },
+                { "at": "46:00", "do": "endPeriod", "expect": { "phase": "break", "sinBinPill": "AWY 9 4:00" } },
+                { "at": "55:00", "expect": { "sinBinPill": "AWY 9 4:00", "alert": null } },
+                { "at": "61:00", "do": ["endHalftime", "startNextPeriod"], "expect": { "phase": "running", "sinBinPill": "AWY 9 4:00" } },
+                { "at": "62:00", "do": "stoppage", "expect": { "sinBinPill": "AWY 9 3:00" } },
+                { "at": "62:30", "do": "stoppage", "expect": { "sinBinPill": "AWY 9 3:00" } },
+                { "at": "65:29", "expect": { "sinBinPill": "AWY 9 0:01", "alert": null } },
+                { "at": "65:30", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "away", "player": 9 } } }
+            ]
+        },
+        {
+            "name": "the halfway break as stoppage holds it, as any stoppage",
+            "ids": ["EVT-12", "TMR-12", "TMR-7"],
+            "format": { "sinBins": true, "sinBinSec": 600, "trackStoppage": true, "midBreak": true, "breakLenSec": 120, "breakStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "15:00", "do": { "event": "SB", "team": "home", "player": 2 } },
+                { "at": "21:30", "expect": { "alert": "breakStart", "sinBinPill": "HOM 2 3:30" } },
+                { "at": "21:30", "do": "startBreak", "expect": { "breakStoppageRunning": true } },
+                { "at": "22:30", "expect": { "sinBinPill": "HOM 2 3:30" } },
+                { "at": "23:30", "expect": { "alert": "breakEnd", "breakStoppageRunning": false, "stoppageMs": 120000, "sinBinPill": "HOM 2 3:30" } },
+                { "at": "25:00", "expect": { "sinBinPill": "HOM 2 2:00" } },
+                { "at": "26:59", "expect": { "alert": null, "sinBinPill": "HOM 2 0:01" } },
+                { "at": "27:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 2 } } }
+            ]
+        },
+        {
+            "name": "without break as stoppage, the halfway break leaves it running",
+            "ids": ["EVT-12", "TMR-12"],
+            "format": { "sinBins": true, "sinBinSec": 600, "trackStoppage": true, "midBreak": true, "breakLenSec": 120, "breakStoppage": false },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "15:00", "do": { "event": "SB", "team": "home", "player": 2 } },
+                { "at": "21:30", "expect": { "alert": "breakStart" } },
+                { "at": "21:30", "do": "startBreak", "expect": { "breakStoppageRunning": false, "sinBinPill": "HOM 2 3:30" } },
+                { "at": "23:30", "expect": { "alert": "breakEnd", "sinBinPill": "HOM 2 1:30" } },
+                { "at": "25:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 2 } } }
+            ]
+        },
+        {
+            "name": "holding, it still follows a clock's correction; Adjust added time leaves it be",
+            "ids": ["EVT-12", "TMR-14"],
+            "format": { "sinBins": true, "sinBinSec": 300, "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "away", "player": 6 } },
+                { "at": "11:00", "do": "stoppage", "expect": { "sinBinPill": "AWY 6 4:00" } },
+                { "at": "11:30", "do": { "adjustClock": 30 }, "expect": { "clock": "12:00", "stoppageRunning": true, "sinBinPill": "AWY 6 3:30" } },
+                { "at": "12:00", "do": "stoppage", "expect": { "sinBinPill": "AWY 6 3:30" } },
+                { "at": "13:00", "do": { "adjustAdded": 30 }, "expect": { "stoppageMs": 90000, "sinBinPill": "AWY 6 2:30" } },
+                { "at": "15:29", "expect": { "alert": null, "sinBinPill": "AWY 6 0:01" } },
+                { "at": "15:30", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "away", "player": 6 } } }
+            ]
+        },
+        {
+            "name": "a stoppage while suspended holds as everything does, and holds on after Resume until it's ended",
+            "ids": ["EVT-12", "TMR-13"],
+            "format": { "sinBins": true, "sinBinSec": 300, "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "home", "player": 8 } },
+                { "at": "11:00", "do": ["stoppage", { "suspend": 0 }], "expect": { "phase": "suspended", "sinBinPill": "HOM 8 4:00" } },
+                { "at": "20:00", "do": "resume", "expect": { "stoppageRunning": true, "sinBinPill": "HOM 8 4:00" } },
+                { "at": "20:30", "do": "stoppage", "expect": { "sinBinPill": "HOM 8 4:00", "last": { "type": "S", "extra": 30 } } },
+                { "at": "24:29", "expect": { "alert": null, "sinBinPill": "HOM 8 0:01" } },
+                { "at": "24:30", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 8 } } }
+            ]
+        },
+        {
+            "name": "a second sin bin for the same number is a send-off and ends the first; a sin bin and a caution don't combine; no number is never matched",
+            "ids": ["EVT-12", "EVT-5", "EVT-3"],
+            "format": { "sinBins": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": { "event": "SB", "team": "home", "player": 9 }, "expect": { "sinBinPill": "HOM 9 10:00" } },
+                { "at": "6:00", "do": { "event": "Y", "team": "home", "player": 9 }, "expect": { "last": { "type": "Y", "player": 9 }, "sinBinPill": "HOM 9 9:00" } },
+                { "at": "7:00", "do": { "event": "SB", "team": "home", "player": 10 }, "expect": { "sinBins": 2, "sinBinPill": "HOM 9 8:00 +1" } },
+                { "at": "8:00", "do": { "event": "SB", "team": "home", "player": 9 }, "expect": { "last": { "type": "SB2", "team": "home", "seconds": 480, "player": 9, "extra": 600 }, "sinBins": 1, "sinBinPill": "HOM 10 9:00" } },
+                { "at": "9:00", "do": [{ "event": "SB", "team": "away" }, { "event": "SB", "team": "away", "player": 0 }], "expect": { "last": { "type": "SB", "player": null }, "sinBins": 3, "sinBinPill": "HOM 10 8:00 +2" } },
+                { "at": "10:00", "do": { "event": "Y", "team": "away", "player": 5 } },
+                { "at": "11:00", "do": { "event": "SB", "team": "away", "player": 5 }, "expect": { "last": { "type": "SB", "player": 5 }, "sinBins": 4 } },
+                { "at": "13:00", "do": { "event": "R", "team": "home", "player": 10 }, "expect": { "sinBins": 3, "sinBinPill": "AWY 6:00 +2", "events": 9 } },
+                { "at": "15:00", "expect": { "alert": null, "sinBinReturn": null } },
+                { "at": "17:00", "expect": { "alert": null, "sinBinReturn": null } },
+                { "at": "19:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "away", "player": null }, "sinBins": 1, "sinBinPill": "AWY 5 2:00" } },
+                { "at": "20:00", "do": "acknowledge", "expect": { "sinBinReturn": null } },
+                { "at": "21:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "away", "player": 5 }, "sinBins": 0, "sinBinPill": null } }
+            ]
+        },
+        {
+            "name": "undo takes back a sin bin, a second sin bin back to the first's countdown, and one waiting to return",
+            "ids": ["EVT-12", "INP-6"],
+            "format": { "sinBins": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "home", "player": 3 }, "expect": { "sinBinPill": "HOM 3 10:00" } },
+                { "at": "11:00", "do": "undo", "expect": { "events": 0, "sinBins": 0, "sinBinPill": null } },
+                { "at": "12:00", "do": { "event": "SB", "team": "home", "player": 3 }, "expect": { "last": { "type": "SB" }, "sinBinPill": "HOM 3 10:00" } },
+                { "at": "14:00", "do": { "event": "SB", "team": "home", "player": 3 }, "expect": { "last": { "type": "SB2" }, "sinBins": 0, "sinBinPill": null } },
+                { "at": "14:00", "do": "undo", "expect": { "events": 1, "last": { "type": "SB" }, "sinBins": 1, "sinBinPill": "HOM 3 8:00" } },
+                { "at": "22:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 3 } } },
+                { "at": "22:30", "do": "undo", "expect": { "events": 0, "sinBinReturn": null, "alerting": false } }
+            ]
+        },
+        {
+            "name": "given before kickoff or at a break it counts from the next kickoff; it follows a clock's correction",
+            "ids": ["EVT-12", "EVT-7", "TMR-14"],
+            "format": { "sinBins": true },
+            "steps": [
+                { "at": "0:00", "do": { "event": "SB", "team": "home", "player": 5 }, "expect": { "phase": "pre", "last": { "type": "SB", "seconds": -1, "extra": 600 }, "sinBinPill": "HOM 5 10:00" } },
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"], "expect": { "sinBinPill": "HOM 5 10:00" } },
+                { "at": "4:00", "expect": { "sinBinPill": "HOM 5 6:00" } },
+                { "at": "4:00", "do": { "adjustClock": 60 }, "expect": { "clock": "5:00", "sinBinPill": "HOM 5 5:00" } },
+                { "at": "9:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 5 } } },
+                { "at": "9:01", "do": "acknowledge", "expect": { "sinBinReturn": null } },
+                { "at": "45:00", "do": ["endPeriod", { "event": "SB", "team": "away", "player": 8 }], "expect": { "phase": "break", "last": { "type": "SB", "seconds": -2 }, "sinBinPill": "AWY 8 10:00" } },
+                { "at": "60:00", "do": ["endHalftime", "startNextPeriod"], "expect": { "sinBinPill": "AWY 8 10:00" } },
+                { "at": "62:00", "expect": { "sinBinPill": "AWY 8 8:00" } }
+            ]
+        },
+        {
+            "name": "no Sin bin without sin bins in the format",
+            "ids": ["EVT-12"],
+            "format": { "sinBins": false },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "home", "player": 3 }, "expect": { "events": 0, "sinBinPill": null, "sinBins": 0 } }
+            ]
+        },
+        {
+            "name": "with its vibration off, can return still waits for a button",
+            "ids": ["EVT-12", "VIB-5"],
+            "format": { "sinBins": true, "sinBinSec": 60, "vibeSinBin": false },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "10:00", "do": { "event": "SB", "team": "away", "player": 2 }, "expect": { "sinBinPill": "AWY 2 1:00", "last": { "type": "SB", "extra": 60 } } },
+                { "at": "11:00", "expect": { "alert": null, "alerting": false, "sinBinReturn": { "team": "away", "player": 2 } } },
+                { "at": "11:05", "do": "acknowledge", "expect": { "sinBinReturn": null } }
+            ]
+        },
+        {
+            "name": "a sin bin given in extra time's break counts from extra time's kickoff",
+            "ids": ["EVT-12", "ET-2"],
+            "format": { "sinBins": true, "sinBinSec": 300, "extraTime": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "45:00", "do": "endPeriod" },
+                { "at": "60:00", "do": ["endHalftime", "startNextPeriod"] },
+                { "at": "103:00", "do": { "event": "SB", "team": "home", "player": 6 }, "expect": { "last": { "type": "SB", "seconds": 2580 }, "sinBinPill": "HOM 6 5:00" } },
+                { "at": "105:00", "do": "endPeriod", "expect": { "phase": "decide", "sinBinPill": "HOM 6 3:00" } },
+                { "at": "105:30", "do": "chooseExtraTime", "expect": { "phase": "break", "sinBinPill": "HOM 6 3:00" } },
+                { "at": "120:30", "do": ["endHalftime", { "kickoff": "away" }, "startNextPeriod"], "expect": { "phase": "running", "periodLabel": "ET1", "sinBinPill": "HOM 6 3:00" } },
+                { "at": "123:30", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 6 } } }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+  "$id": "ImportedRow.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "row": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991,
+      "description": "The row's place in rows, from 1."
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "add",
+        "update",
+        "skip"
+      ],
+      "description": "skip: it has problems, so it wasn't imported."
+    },
+    "matchId": {
+      "description": "The match it added or updated (or would).",
+      "$ref": "Id.json"
+    },
+    "title": {
+      "description": "The match in a few words, for showing the row: home v away.",
+      "type": "string"
+    },
+    "kickoff": {
+      "description": "Its kickoff, once imported.",
+      "$ref": "Timestamp.json"
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Why it's skipped, naming the column; empty when it isn't."
+    }
+  },
+  "required": [
+    "row",
+    "action",
+    "problems"
+  ],
+  "additionalProperties": false
+}

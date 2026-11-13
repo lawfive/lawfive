@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "records_settings" ON "records" USING btree ("user_id") WHERE "records"."type" = 'settings' and "records"."deleted_at" is null;

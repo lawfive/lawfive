@@ -1,0 +1,4 @@
+Match number,Status,Date,Time,Home,Home short name,Home color,Away,Away short name,Away color,Competition,Venue,Pitch,Match name,Age group,Gender,Role,Referee,AR1,AR2,Fourth official,Periods,Period length (min),Half-time (min),Team size,Fee,Currency,Paid,Tags,Notes
+BYL-1142,scheduled,2027-03-06,09:00,Strikers U12,STR,red,Rovers U12,ROV,blue,Bay Youth League U12 Boys,Twin Creeks Sports Complex,Field 3,,U12,male,referee,,Sam Rivera,Jordan Lee,,2,30,5,9,40,USD,no,league,Bring the spare flags.
+NPL-2207,scheduled,2027-03-06,11:30,Thunder FC,THU,yellow,Galaxy SC,GAL,purple,NorCal Premier U14 Girls,Twin Creeks Sports Complex,Field 1,,U14,female,ar1,Priya Natarajan,,Jordan Lee,,2,35,10,11,30,USD,no,,
+HC-SF1,scheduled,2027-03-13,14:00,Dynamo,DYN,#FF7A00,City,CTY,#0057B8,Harvest Cup,Ortega Park,,Semi-final,Adult,coed,fourth,Sam Rivera,Jordan Lee,Priya Natarajan,,2,45,15,11,55,USD,no,"tournament, final stages",

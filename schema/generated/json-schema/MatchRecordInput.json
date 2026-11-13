@@ -1,0 +1,144 @@
+{
+  "$id": "MatchRecordInput.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "matchId": {
+      "description": "The planned match; absent for a quick match started on the watch, for which the server makes a match.",
+      "$ref": "Id.json"
+    },
+    "device": {
+      "description": "What recorded it: the watch app and the watch, for example garmin:006-B3703-00 (a Garmin part number), wearos:SM-R860 (the model) or applewatch:Watch7,3 (the hardware identifier; applewatch:Apple Watch from apps before it).",
+      "type": "string",
+      "maxLength": 60
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "abandoned"
+      ]
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "$ref": "PeriodPlayed.json"
+      }
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "home": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "away": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "home",
+        "away"
+      ],
+      "additionalProperties": false
+    },
+    "penalties": {
+      "description": "Shoot-out score, when there was one.",
+      "type": "object",
+      "properties": {
+        "home": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "away": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "home",
+        "away"
+      ],
+      "additionalProperties": false
+    },
+    "goldenGoal": {
+      "description": "The match ended on a golden goal in extra time (ET-6): the team that scored it won.",
+      "type": "boolean"
+    },
+    "stoppingClock": {
+      "description": "The match was played on a clock that stops (TMR-15), as US high school and college games are: events' times are the clock's, its stoppages are when it stood still, and there was no added time, so the added-time stats leave the match out (STAT-9).",
+      "type": "boolean"
+    },
+    "distanceM": {
+      "description": "Distance the referee covered during the match, in meters, from the watch's GPS.",
+      "type": "number",
+      "minimum": 0
+    },
+    "kickoffDirection": {
+      "description": "Which way the first period's kickoff team attacked, when the referee recorded it on the watch (PRE-8); heatmaps use it (TRK-9).",
+      "type": "object",
+      "properties": {
+        "team": {
+          "type": "string",
+          "enum": [
+            "home",
+            "away"
+          ],
+          "description": "The team that kicked off the first period."
+        },
+        "bearingDeg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360,
+          "description": "The compass bearing of the goal it attacked, in degrees from true north."
+        }
+      },
+      "required": [
+        "team",
+        "bearingDeg"
+      ],
+      "additionalProperties": false
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "Event.json"
+      }
+    },
+    "diagnostics": {
+      "description": "How the recording went (DIAG-1).",
+      "$ref": "MatchDiagnostics.json"
+    },
+    "editedAt": {
+      "description": "When its result was last corrected after the match (RES-1); set by the server whenever the outcome, score, shoot-out, golden goal or events change. A watch's later upload of the same match then changes nothing (RES-4).",
+      "$ref": "Timestamp.json"
+    },
+    "original": {
+      "description": "The result exactly as the watch first sent it, kept by the server the first time it's corrected (RES-3), so it can be shown or put back. Absent for results entered without a watch.",
+      "$ref": "RecordedResult.json"
+    },
+    "id": {
+      "description": "The id from the URL; can be left out.",
+      "$ref": "Id.json"
+    },
+    "version": {
+      "description": "The version last seen, when updating. Leave it out to create the record.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "outcome",
+    "periods",
+    "score",
+    "events"
+  ],
+  "additionalProperties": false,
+  "description": "A MatchRecord as a client sends it to save it: the server sets updatedAt and deletedAt, and version only goes with an update."
+}

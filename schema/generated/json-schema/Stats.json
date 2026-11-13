@@ -1,0 +1,1322 @@
+{
+  "$id": "Stats.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "options": {
+      "type": "object",
+      "properties": {
+        "years": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "description": "Years with games, newest first, for the When filter."
+        },
+        "genders": {
+          "type": "array",
+          "items": {
+            "$ref": "Gender.json"
+          },
+          "description": "Genders your games have."
+        },
+        "competitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "Id.json"
+              },
+              "name": {
+                "type": "string"
+              },
+              "season": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "games"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Competitions with games, most games first."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags on your games, alphabetically."
+        },
+        "venues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "Id.json"
+              },
+              "name": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "games"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Venues with games, most games first."
+        }
+      },
+      "required": [
+        "years",
+        "genders",
+        "competitions",
+        "tags",
+        "venues"
+      ],
+      "additionalProperties": false,
+      "description": "What the filters can choose from: from all your games, whatever is filtered."
+    },
+    "games": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "abandoned": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "first": {
+          "$ref": "LocalDate.json"
+        },
+        "last": {
+          "$ref": "LocalDate.json"
+        }
+      },
+      "required": [
+        "total",
+        "abandoned"
+      ],
+      "additionalProperties": false
+    },
+    "roles": {
+      "type": "object",
+      "properties": {
+        "referee": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "ar1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "ar2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "fourth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "notSet": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "referee",
+        "ar1",
+        "ar2",
+        "fourth",
+        "notSet"
+      ],
+      "additionalProperties": false
+    },
+    "distance": {
+      "type": "object",
+      "properties": {
+        "totalM": {
+          "type": "number",
+          "minimum": 0
+        },
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Games with a distance."
+        },
+        "tracked": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Of those, games whose distance comes from a track."
+        },
+        "averageM": {
+          "description": "A game's distance (STAT-16): totalM over games, to the meter; the one per-game distance every page shows. Absent without distances.",
+          "type": "number",
+          "minimum": 0
+        },
+        "byRole": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "referee",
+                  "assistant",
+                  "fourth"
+                ]
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "averageM": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "role",
+              "games",
+              "averageM"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "longest": {
+          "type": "object",
+          "properties": {
+            "matchId": {
+              "$ref": "Id.json"
+            },
+            "kickoff": {
+              "$ref": "Timestamp.json"
+            },
+            "title": {
+              "type": "string",
+              "description": "Home v Away, or the match's name."
+            },
+            "role": {
+              "$ref": "Role.json"
+            },
+            "distanceM": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "matchId",
+            "kickoff",
+            "title",
+            "distanceM"
+          ],
+          "additionalProperties": false
+        },
+        "shortest": {
+          "type": "object",
+          "properties": {
+            "matchId": {
+              "$ref": "Id.json"
+            },
+            "kickoff": {
+              "$ref": "Timestamp.json"
+            },
+            "title": {
+              "type": "string",
+              "description": "Home v Away, or the match's name."
+            },
+            "role": {
+              "$ref": "Role.json"
+            },
+            "distanceM": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "matchId",
+            "kickoff",
+            "title",
+            "distanceM"
+          ],
+          "additionalProperties": false
+        },
+        "overTime": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "matchId": {
+                "$ref": "Id.json"
+              },
+              "kickoff": {
+                "$ref": "Timestamp.json"
+              },
+              "distanceM": {
+                "type": "number"
+              },
+              "totalM": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "matchId",
+              "kickoff",
+              "distanceM",
+              "totalM"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Each game with a distance, oldest first, with the running total."
+        }
+      },
+      "required": [
+        "totalM",
+        "games",
+        "tracked",
+        "byRole",
+        "overTime"
+      ],
+      "additionalProperties": false
+    },
+    "months": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string",
+            "description": "2026-04"
+          },
+          "referee": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "assistant": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "fourth": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "notSet": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "month",
+          "referee",
+          "assistant",
+          "fourth",
+          "notSet"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Every month from the first game to the last, by role."
+    },
+    "busiest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6,
+            "description": "0 is Monday."
+          },
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23,
+            "description": "Kickoff hour, local time."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "day",
+          "hour",
+          "games"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Only the day and hour pairs with games."
+    },
+    "ageGroups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ageGroup": {
+            "type": "string"
+          },
+          "male": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "female": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "coed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "notSet": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "ageGroup",
+          "male",
+          "female",
+          "coed",
+          "notSet"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Youngest first; games without an age group are left out."
+    },
+    "places": {
+      "type": "object",
+      "properties": {
+        "venues": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "pitches": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Distinct pitches, counting a venue as one when a match has no pitch."
+        },
+        "top": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "venueId": {
+                "$ref": "Id.json"
+              },
+              "pitchId": {
+                "$ref": "Id.json"
+              },
+              "venue": {
+                "type": "string"
+              },
+              "pitch": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "venueId",
+              "venue",
+              "games"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to ten, most games first."
+        }
+      },
+      "required": [
+        "venues",
+        "pitches",
+        "top"
+      ],
+      "additionalProperties": false
+    },
+    "referees": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Distinct people on your crews: saved referees, and names typed in."
+        },
+        "top": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "refereeId": {
+                "$ref": "Id.json"
+              },
+              "name": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "name",
+              "games"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to ten, most games first."
+        }
+      },
+      "required": [
+        "count",
+        "top"
+      ],
+      "additionalProperties": false
+    },
+    "weather": {
+      "type": "object",
+      "properties": {
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Games with weather."
+        },
+        "rainy": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "1 mm of rain or more from an hour before kickoff to the end."
+        },
+        "averageTemperatureC": {
+          "description": "At kickoff.",
+          "type": "number"
+        },
+        "hottest": {
+          "type": "object",
+          "properties": {
+            "matchId": {
+              "$ref": "Id.json"
+            },
+            "kickoff": {
+              "$ref": "Timestamp.json"
+            },
+            "title": {
+              "type": "string",
+              "description": "Home v Away, or the match's name."
+            },
+            "role": {
+              "$ref": "Role.json"
+            },
+            "temperatureC": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "matchId",
+            "kickoff",
+            "title",
+            "temperatureC"
+          ],
+          "additionalProperties": false
+        },
+        "coldest": {
+          "type": "object",
+          "properties": {
+            "matchId": {
+              "$ref": "Id.json"
+            },
+            "kickoff": {
+              "$ref": "Timestamp.json"
+            },
+            "title": {
+              "type": "string",
+              "description": "Home v Away, or the match's name."
+            },
+            "role": {
+              "$ref": "Role.json"
+            },
+            "temperatureC": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "matchId",
+            "kickoff",
+            "title",
+            "temperatureC"
+          ],
+          "additionalProperties": false
+        },
+        "windiest": {
+          "type": "object",
+          "properties": {
+            "matchId": {
+              "$ref": "Id.json"
+            },
+            "kickoff": {
+              "$ref": "Timestamp.json"
+            },
+            "title": {
+              "type": "string",
+              "description": "Home v Away, or the match's name."
+            },
+            "role": {
+              "$ref": "Role.json"
+            },
+            "windGustKph": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "matchId",
+            "kickoff",
+            "title",
+            "windGustKph"
+          ],
+          "additionalProperties": false
+        },
+        "temperaturesC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Each game's kickoff temperature, for apps to put into bands in their unit."
+        }
+      },
+      "required": [
+        "games",
+        "rainy",
+        "temperaturesC"
+      ],
+      "additionalProperties": false
+    },
+    "fees": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "description": "The currency the amounts are in: the Settings one.",
+          "type": "string"
+        },
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Games with a fee in that currency."
+        },
+        "earnedAmount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "paidAmount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "owedAmount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "otherCurrencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "amount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "currency",
+              "games",
+              "amount"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Fees in other currencies, not in the figures above."
+        },
+        "months": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "month": {
+                "type": "string"
+              },
+              "paidAmount": {
+                "type": "number"
+              },
+              "owedAmount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "month",
+              "paidAmount",
+              "owedAmount"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Every month from the first game to the last."
+        },
+        "competitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "competitionId": {
+                "$ref": "Id.json"
+              },
+              "name": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "amount": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "name",
+              "games",
+              "amount"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to ten, most earned first; games without a competition as one."
+        }
+      },
+      "required": [
+        "games",
+        "earnedAmount",
+        "paidAmount",
+        "owedAmount",
+        "otherCurrencies",
+        "months",
+        "competitions"
+      ],
+      "additionalProperties": false
+    },
+    "discipline": {
+      "type": "object",
+      "properties": {
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Games with a match report, which the figures come from."
+        },
+        "cautions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Yellow cards: cautions and second cautions."
+        },
+        "sendOffs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Red cards: send-offs, second cautions and second sin bins (EVT-12)."
+        },
+        "secondCautions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "sinBins": {
+          "description": "Temporary dismissals (EVT-12), second sin bins included; missing from servers before them.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "goals": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "ageGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ageGroup": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "cautions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sendOffs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "ageGroup",
+              "games",
+              "cautions",
+              "sendOffs"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Youngest first."
+        },
+        "competitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "competitionId": {
+                "$ref": "Id.json"
+              },
+              "name": {
+                "type": "string"
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "cautions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sendOffs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "name",
+              "games",
+              "cautions",
+              "sendOffs"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to ten, most games first."
+        },
+        "codes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "misconduct": {
+                "$ref": "MisconductCode.json"
+              },
+              "cautions": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sendOffs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "misconduct",
+              "cautions",
+              "sendOffs"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to ten, most used first."
+        }
+      },
+      "required": [
+        "games",
+        "cautions",
+        "sendOffs",
+        "secondCautions",
+        "goals",
+        "ageGroups",
+        "competitions",
+        "codes"
+      ],
+      "additionalProperties": false
+    },
+    "fitness": {
+      "type": "object",
+      "properties": {
+        "games": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "matchId": {
+                "$ref": "Id.json"
+              },
+              "kickoff": {
+                "$ref": "Timestamp.json"
+              },
+              "distanceM": {
+                "type": "number"
+              },
+              "avgBpm": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "maxBpm": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "sprints": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "topSpeedMps": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "matchId",
+              "kickoff"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Games with a track, oldest first, with the track's figures (TRK-3)."
+        },
+        "maxHeartRate": {
+          "description": "From Settings; zones only with it.",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "zone": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "fromBpm": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "sec": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "zone",
+              "fromBpm",
+              "sec"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "speedBands": {
+          "description": "Time and distance in each speed band across the games with GPS, slowest first (TRK-9).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "band": {
+                "$ref": "SpeedBand.json"
+              },
+              "sec": {
+                "type": "number",
+                "minimum": 0
+              },
+              "distanceM": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "band",
+              "sec",
+              "distanceM"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "sprintKph": {
+          "description": "The sprint speed the bands start from (Settings, TRK-11).",
+          "type": "number"
+        },
+        "heatmaps": {
+          "description": "Where you spent the periods across the games, one heatmap a role, on a grid over a pitch drawing (its margin included). A referee's games are turned so the first period's kickoff team attacks left to right when the kickoff direction is known; an assistant's so their touchline is at the bottom (TRK-9)",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "referee",
+                  "assistant"
+                ],
+                "description": "Games as referee (and games with no role), or as an assistant; a fourth official's have none."
+              },
+              "cols": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "rows": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "description": "Seconds in each cell, row by row from the top of the drawing (the far touchline), left to right."
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Games in it: those with GPS whose pitch is known or could be found."
+              }
+            },
+            "required": [
+              "role",
+              "cols",
+              "rows",
+              "cells",
+              "games"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "games"
+      ],
+      "additionalProperties": false
+    },
+    "addedTime": {
+      "type": "object",
+      "properties": {
+        "periods": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Periods counted: of completed games, at most 15 minutes over."
+        },
+        "averageSec": {
+          "type": "number",
+          "minimum": 0
+        },
+        "byPeriod": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "periods": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "averageSec": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "period",
+              "periods",
+              "averageSec"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Regular periods: first half, second half, or each quarter."
+        },
+        "ageGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ageGroup": {
+                "type": "string"
+              },
+              "periods": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "averageSec": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "ageGroup",
+              "periods",
+              "averageSec"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "competitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "competitionId": {
+                "$ref": "Id.json"
+              },
+              "name": {
+                "type": "string"
+              },
+              "periods": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "averageSec": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "name",
+              "periods",
+              "averageSec"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to ten, most periods first."
+        }
+      },
+      "required": [
+        "periods",
+        "byPeriod",
+        "ageGroups",
+        "competitions"
+      ],
+      "additionalProperties": false
+    },
+    "watches": {
+      "description": "The watches the games were recorded on and how much battery a match used on each, from the battery readings the watches send with a match. Absent from servers before it, and for an API key that can't read match reports.",
+      "type": "object",
+      "properties": {
+        "games": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Games with a match report from a watch that said which watch it was."
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "device": {
+                "type": "string",
+                "description": "As the watch reported it, for example garmin:006-B3703-00."
+              },
+              "name": {
+                "type": "string",
+                "description": "As people know it (deviceName): Garmin Venu 2, Galaxy Watch4, Apple Watch Series 9, or the device as given."
+              },
+              "platform": {
+                "type": "string",
+                "enum": [
+                  "garmin",
+                  "wearos",
+                  "applewatch",
+                  "other"
+                ]
+              },
+              "games": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "batteryGames": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Of those, games with the battery read at the first kickoff and at full time, which the drain comes from."
+              },
+              "drainPerHour": {
+                "description": "Battery used an hour, in percent: from the first kickoff to full time, over that time, halftime included, averaged over the batteryGames.",
+                "type": "number",
+                "minimum": 0
+              },
+              "drainPerGame": {
+                "description": "Battery used a game, in percent, averaged over the batteryGames.",
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "device",
+              "name",
+              "platform",
+              "games",
+              "batteryGames"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Most games first."
+        }
+      },
+      "required": [
+        "games",
+        "models"
+      ],
+      "additionalProperties": false
+    },
+    "years": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "asCentre": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "distanceM": {
+            "type": "number",
+            "minimum": 0
+          },
+          "distanceGames": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "referees": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "venues": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "feesAmount": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "year",
+          "games",
+          "asCentre",
+          "distanceM",
+          "distanceGames",
+          "referees",
+          "venues",
+          "feesAmount"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Each year with games, newest first."
+    }
+  },
+  "required": [
+    "options",
+    "games",
+    "roles",
+    "distance",
+    "months",
+    "busiest",
+    "ageGroups",
+    "places",
+    "referees",
+    "weather",
+    "fees",
+    "discipline",
+    "fitness",
+    "addedTime",
+    "years"
+  ],
+  "additionalProperties": false,
+  "description": "Stats on the user's games (STAT-1 to STAT-3), for the filters in the query."
+}

@@ -1,0 +1,14 @@
+{
+  "$id": "WebhookTopic.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "match",
+    "matchRecord",
+    "venue",
+    "referee",
+    "competition",
+    "matchTemplate"
+  ],
+  "description": "The kinds of record a webhook can hear about: matches, match reports (results), venues, referees, competitions and match templates."
+}

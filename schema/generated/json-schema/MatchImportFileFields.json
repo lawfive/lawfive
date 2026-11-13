@@ -1,0 +1,31 @@
+{
+  "$id": "MatchImportFileFields.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "timeZone": {
+      "description": "For kickoffs written without a UTC offset, when the row has no Time zone column.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "dateOrder": {
+      "description": "How to read dates written with slashes or dots (7/11/2026); ISO dates (2026-11-07) are always understood.",
+      "type": "string",
+      "enum": [
+        "dmy",
+        "mdy"
+      ]
+    },
+    "dryRun": {
+      "description": "true: check every row and say what would happen, without saving anything (IMP-5).",
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "description": "The form fields of a file import (multipart/form-data), beside the file."
+}

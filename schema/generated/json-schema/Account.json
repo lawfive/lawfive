@@ -1,0 +1,40 @@
+{
+  "$id": "Account.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "status": {
+      "$ref": "AccountStatus.json"
+    },
+    "admin": {
+      "type": "boolean",
+      "description": "Can invite and approve people (USR-1)."
+    },
+    "pendingEmail": {
+      "description": "A new address waiting for its owner to follow the link emailed to it (USR-9); email stays the old one until then.",
+      "type": "string"
+    },
+    "pendingEmailUntil": {
+      "description": "When that link stops working.",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "email",
+    "status",
+    "admin"
+  ],
+  "additionalProperties": false,
+  "description": "The signed-in account, with what it may do."
+}

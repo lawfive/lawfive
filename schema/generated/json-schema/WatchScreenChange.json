@@ -1,0 +1,42 @@
+{
+  "$id": "WatchScreenChange.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "layout": {
+      "description": "The nearest old layout. A watch that sends only this and secondClock is a build from before the four choices (UI-21).",
+      "$ref": "WatchLayout.json"
+    },
+    "secondClock": {
+      "$ref": "ClockStyle.json"
+    },
+    "clocks": {
+      "$ref": "WatchClocks.json"
+    },
+    "mainClock": {
+      "$ref": "ClockStyle.json"
+    },
+    "breakClock": {
+      "$ref": "BreakClockStyle.json"
+    },
+    "edge": {
+      "$ref": "WatchEdge.json"
+    },
+    "names": {
+      "type": "boolean"
+    },
+    "at": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991,
+      "description": "When it was changed on the watch, in seconds since 1970."
+    }
+  },
+  "required": [
+    "layout",
+    "secondClock",
+    "at"
+  ],
+  "additionalProperties": false,
+  "description": "The match screen as chosen on the watch, or as it's sent to one (UI-21, UI-24); the latest change wins."
+}

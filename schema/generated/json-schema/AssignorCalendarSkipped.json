@@ -1,0 +1,23 @@
+{
+  "$id": "AssignorCalendarSkipped.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The event's summary, or what's known of it."
+    },
+    "kickoff": {
+      "$ref": "Timestamp.json"
+    },
+    "reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "reason"
+  ],
+  "additionalProperties": false,
+  "description": "An event that couldn't be read or saved, and why (FEED-9)."
+}

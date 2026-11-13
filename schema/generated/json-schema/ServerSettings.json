@@ -1,0 +1,200 @@
+{
+  "$id": "ServerSettings.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "signUp": {
+      "description": "Who can make an account (USR-2, SIGN_UP).",
+      "anyOf": [
+        {
+          "$ref": "SignUpMode.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "smtpUrl": {
+      "description": "Email through an SMTP server: smtp://user:password@host:587 or smtps://…:465. A secret: never sent back (SMTP_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mailFrom": {
+      "description": "The sender, \"LawFive <lawfive@example.com>\" (MAIL_FROM). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapStyleUrl": {
+      "description": "A MapLibre style for the map, or off for raster tiles (MAP_STYLE_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapStyleDarkUrl": {
+      "description": "The style for dark mode (MAP_STYLE_DARK_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapStyleAttribution": {
+      "description": "The style's credit, as HTML (MAP_STYLE_ATTRIBUTION). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapTileUrl": {
+      "description": "Raster tiles, with {z}, {x} and {y} (MAP_TILE_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapAttribution": {
+      "description": "The tiles' credit, as HTML (MAP_ATTRIBUTION). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapSatelliteUrl": {
+      "description": "Satellite tiles, with the provider's key (MAP_SATELLITE_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "mapSatelliteAttribution": {
+      "description": "Their credit, as HTML (MAP_SATELLITE_ATTRIBUTION). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "geocoderUrl": {
+      "description": "Address search (Nominatim-compatible), or off (GEOCODER_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "weatherUrl": {
+      "description": "Forecasts (Open-Meteo-compatible), or off (WEATHER_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "weatherHistoryUrl": {
+      "description": "Past weather for played matches, or off (WEATHER_HISTORY_URL). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "weatherApiKey": {
+      "description": "For a paid plan. A secret: never sent back (WEATHER_API_KEY). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "weatherDailyLimit": {
+      "description": "Weather calls a day at most (WEATHER_DAILY_LIMIT). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "webhookAllowPrivate": {
+      "description": "true lets webhooks reach private and local addresses (WEBHOOK_ALLOW_PRIVATE). null or \"\" clears it, back to the default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "description": "Settings for the whole server that admins change in the web app (ADM-1, ADM-2), sending only those that change. One the environment sets is fixed there and can't be changed."
+}

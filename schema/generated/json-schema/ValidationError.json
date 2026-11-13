@@ -1,0 +1,22 @@
+{
+  "$id": "ValidationError.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "string"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "$ref": "ValidationIssue.json"
+      }
+    }
+  },
+  "required": [
+    "error",
+    "issues"
+  ],
+  "additionalProperties": false,
+  "description": "The body doesn't match the schema; issues lists each problem."
+}

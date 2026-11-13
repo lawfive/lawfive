@@ -1,0 +1,29 @@
+{
+  "$id": "UsualFormat.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format": {
+      "$ref": "MatchFormat.json"
+    },
+    "templateId": {
+      "description": "The template it came from, if it did, so the form can show its name.",
+      "$ref": "Id.json"
+    },
+    "starterId": {
+      "description": "The starter format it came from (starterFormats' id, \"us-u10\"), if it did and is unchanged.",
+      "type": "string",
+      "maxLength": 30
+    },
+    "changedAt": {
+      "description": "When it was last set.",
+      "$ref": "Timestamp.json"
+    }
+  },
+  "required": [
+    "format",
+    "changedAt"
+  ],
+  "additionalProperties": false,
+  "description": "The format new matches start with (SET-17): the last one saved on a match form, or one chosen in Settings."
+}

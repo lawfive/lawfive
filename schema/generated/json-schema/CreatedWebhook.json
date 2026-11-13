@@ -1,0 +1,69 @@
+{
+  "$id": "CreatedWebhook.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "url": {
+      "type": "string",
+      "description": "Where deliveries are POSTed."
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "$ref": "WebhookTopic.json"
+      },
+      "description": "Which records' changes it hears about."
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Paused webhooks get no deliveries."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "lastDelivery": {
+      "description": "The latest delivery and how it went.",
+      "type": "object",
+      "properties": {
+        "at": {
+          "$ref": "Timestamp.json"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "delivered",
+            "failed"
+          ]
+        },
+        "responseCode": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "at",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "secret": {
+      "type": "string",
+      "description": "For checking a delivery's X-LawFive-Signature, shown only this once."
+    }
+  },
+  "required": [
+    "id",
+    "url",
+    "topics",
+    "active",
+    "createdAt",
+    "secret"
+  ],
+  "additionalProperties": false,
+  "description": "A new webhook, with the secret its deliveries are signed with."
+}

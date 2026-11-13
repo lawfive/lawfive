@@ -1,0 +1,66 @@
+{
+  "id": "3900a172-9848-5894-9a9f-9ed93f853cd2",
+  "version": 3,
+  "updatedAt": "2026-11-05T02:14:00Z",
+  "name": "Strikers U12 v Rovers U12",
+  "status": "scheduled",
+  "kickoff": "2026-11-07T09:00:00-08:00",
+  "timeZone": "America/Los_Angeles",
+  "format": {
+    "periods": 2,
+    "periodSec": 1800,
+    "breakSec": 300,
+    "halfwayBreak": true,
+    "halfwayBreakSec": 120,
+    "teamSize": 9,
+    "clock": "down",
+    "trackStoppage": false,
+    "goalTypes": false,
+    "extraTime": false,
+    "extraTimePeriods": 2,
+    "extraTimePeriodSec": 600,
+    "penalties": false
+  },
+  "templateId": "1eccc1f4-1cf4-5810-ad08-6356d442033e",
+  "home": {
+    "name": "Strikers U12",
+    "alias": "STR",
+    "colour": "#C8102E"
+  },
+  "away": {
+    "name": "Rovers U12",
+    "alias": "ROV",
+    "colour": "#003DA5"
+  },
+  "gender": "male",
+  "ageGroup": "U12",
+  "competitionId": "2d7b16f1-ebc3-5bf6-9f30-df4148c9b67d",
+  "venueId": "fb2ad39a-5903-5e89-835c-581d8e430dcc",
+  "pitchId": "56472e9d-e258-5ee5-be64-90f2f97dc7cf",
+  "role": "referee",
+  "crew": [
+    {
+      "role": "ar1",
+      "refereeId": "ed8c6592-2c83-57f8-a9a2-b032ed0e9107"
+    },
+    {
+      "role": "ar2",
+      "name": "Jordan Lee"
+    }
+  ],
+  "notes": "Club linesman if an AR doesn't show.",
+  "outlook": "Top of the table; last meeting was 4-3.",
+  "fee": {
+    "amount": 40,
+    "currency": "USD",
+    "paid": false
+  },
+  "external": {
+    "source": "csv",
+    "id": "BYL-2026-1142"
+  },
+  "tags": [
+    "league",
+    "needs AR"
+  ]
+}

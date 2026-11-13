@@ -1,0 +1,794 @@
+{
+    "$comment": "WCH-2: the halfway break (TMR-7, TMR-12) and the break clock (TMR-4).",
+    "match": [
+        {
+            "name": "due at 21:30, repeating until started, added on as stoppage, over after its length",
+            "ids": [
+                "TMR-7",
+                "TMR-12",
+                "VIB-3"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "trackStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "20:30",
+                    "expect": {
+                        "breakDueInMs": 60000
+                    }
+                },
+                {
+                    "at": "21:29",
+                    "expect": {
+                        "alert": null,
+                        "breakDue": false
+                    }
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart",
+                        "breakDue": true
+                    }
+                },
+                {
+                    "at": "21:31",
+                    "expect": {
+                        "alert": null
+                    }
+                },
+                {
+                    "at": "21:40",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "22:00",
+                    "do": "startBreak",
+                    "expect": {
+                        "breakStoppageRunning": true,
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "23:00",
+                    "expect": {
+                        "breakLeftMs": 60000
+                    }
+                },
+                {
+                    "at": "24:00",
+                    "expect": {
+                        "alert": "breakEnd",
+                        "breakLeftMs": null,
+                        "stoppageRunning": false
+                    }
+                },
+                {
+                    "at": "25:00",
+                    "expect": {
+                        "stoppageMs": 120000
+                    }
+                }
+            ]
+        },
+        {
+            "name": "skipped, none to come",
+            "ids": [
+                "TMR-7"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "22:00",
+                    "expect": {
+                        "alert": "breakStart",
+                        "breakDue": true
+                    }
+                },
+                {
+                    "at": "22:00",
+                    "do": "skipBreak",
+                    "expect": {
+                        "breakDue": false
+                    }
+                },
+                {
+                    "at": "23:00",
+                    "expect": {
+                        "breakDueInMs": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ended early: the countdown and its stoppage stop, and it doesn't come back",
+            "ids": [
+                "TMR-7",
+                "TMR-12"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "trackStoppage": true,
+                "breakStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:40",
+                    "do": "startBreak"
+                },
+                {
+                    "at": "22:10",
+                    "do": "endBreakEarly",
+                    "expect": {
+                        "stoppageRunning": false,
+                        "stoppageMs": 30000,
+                        "breakDue": false
+                    }
+                },
+                {
+                    "at": "22:20",
+                    "expect": {
+                        "breakLeftMs": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "reset when started by mistake: due again, and its stoppage taken back",
+            "ids": [
+                "TMR-7"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "trackStoppage": true,
+                "breakStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:40",
+                    "do": [
+                        "startBreak",
+                        "resetBreak"
+                    ]
+                },
+                {
+                    "at": "22:00",
+                    "expect": {
+                        "breakLeftMs": null,
+                        "stoppageRunning": false,
+                        "stoppageMs": 0,
+                        "breakDue": true,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "22:00",
+                    "do": "startBreak"
+                },
+                {
+                    "at": "22:30",
+                    "expect": {
+                        "breakLeftMs": 90000
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the break clock counting down, the halfway break's and half-time's",
+            "ids": [
+                "TMR-4"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:30",
+                    "do": "startBreak"
+                },
+                {
+                    "at": "22:00",
+                    "expect": {
+                        "breakClock": "1:30"
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "49:00",
+                    "expect": {
+                        "breakClock": "12:00"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the break clock counting up, held at the break's length",
+            "ids": [
+                "TMR-4"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "screen": {
+                "breakClock": "up"
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:30",
+                    "do": "startBreak"
+                },
+                {
+                    "at": "22:00",
+                    "expect": {
+                        "breakClock": "0:30"
+                    }
+                },
+                {
+                    "at": "25:00",
+                    "expect": {
+                        "breakClock": "2:00"
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "49:00",
+                    "expect": {
+                        "breakClock": "3:00"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "due again in the second half, never at half-time",
+            "ids": [
+                "TMR-7"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "halftimeSec": 600
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ],
+                    "expect": {
+                        "breakDueInMs": 1290000
+                    }
+                },
+                {
+                    "at": "20:00",
+                    "expect": {
+                        "breakDueInMs": 90000
+                    }
+                },
+                {
+                    "at": "21:29",
+                    "expect": {
+                        "alert": null,
+                        "breakDue": false
+                    }
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart",
+                        "breakDue": true,
+                        "alerting": true,
+                        "breakLeftMs": null,
+                        "breakDueInMs": null
+                    }
+                },
+                {
+                    "at": "22:10",
+                    "expect": {
+                        "breakDue": true
+                    }
+                },
+                {
+                    "at": "22:10",
+                    "do": "startBreak",
+                    "expect": {
+                        "breakDue": false,
+                        "alerting": false,
+                        "breakLeftMs": 120000
+                    }
+                },
+                {
+                    "at": "24:09",
+                    "expect": {
+                        "breakLeftMs": 1000
+                    }
+                },
+                {
+                    "at": "24:10",
+                    "expect": {
+                        "alert": "breakEnd",
+                        "breakLeftMs": null
+                    }
+                },
+                {
+                    "at": "44:59",
+                    "expect": {
+                        "alert": null,
+                        "breakDue": false
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod"
+                },
+                {
+                    "at": "50:00",
+                    "expect": {
+                        "breakDueInMs": null
+                    }
+                },
+                {
+                    "at": "51:00",
+                    "expect": {
+                        "breakDue": false,
+                        "breakLeftMs": 300000
+                    }
+                },
+                {
+                    "at": "56:00",
+                    "do": [
+                        "endHalftime",
+                        "startNextPeriod"
+                    ],
+                    "expect": {
+                        "breakDueInMs": 1290000
+                    }
+                },
+                {
+                    "at": "77:29",
+                    "expect": {
+                        "alert": null,
+                        "breakDue": false
+                    }
+                },
+                {
+                    "at": "77:30",
+                    "expect": {
+                        "alert": "breakStart",
+                        "breakDue": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "silencing the due alert keeps the break due",
+            "ids": [
+                "VIB-6",
+                "TMR-7"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:35",
+                    "do": "acknowledge"
+                },
+                {
+                    "at": "21:36",
+                    "expect": {
+                        "alerting": false,
+                        "breakDue": true
+                    }
+                },
+                {
+                    "at": "21:50",
+                    "do": "startBreak",
+                    "expect": {
+                        "breakLeftMs": 120000
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a skipped break doesn't come back that half",
+            "ids": [
+                "TMR-7"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:31",
+                    "do": "skipBreak",
+                    "expect": {
+                        "breakDue": false,
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "30:00",
+                    "expect": {
+                        "alert": null,
+                        "breakDue": false,
+                        "breakLeftMs": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the break's time is added on as a stoppage that ends with it",
+            "ids": [
+                "TMR-12"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "trackStoppage": true,
+                "breakStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:40",
+                    "do": "startBreak",
+                    "expect": {
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "23:40",
+                    "expect": {
+                        "alert": "breakEnd",
+                        "stoppageRunning": false
+                    }
+                },
+                {
+                    "at": "23:45",
+                    "expect": {
+                        "stoppageMs": 120000,
+                        "last": {
+                            "type": "S",
+                            "extra": 120
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "with break as stoppage off, nothing is added",
+            "ids": [
+                "TMR-12"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "trackStoppage": true,
+                "breakStoppage": false
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:40",
+                    "do": "startBreak",
+                    "expect": {
+                        "stoppageRunning": false
+                    }
+                },
+                {
+                    "at": "23:40",
+                    "expect": {
+                        "alert": "breakEnd"
+                    }
+                },
+                {
+                    "at": "23:45",
+                    "expect": {
+                        "stoppageMs": 0
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a stoppage the referee started stays theirs to end, counted once",
+            "ids": [
+                "TMR-12"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120,
+                "trackStoppage": true,
+                "breakStoppage": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "21:35",
+                    "do": "stoppage"
+                },
+                {
+                    "at": "21:40",
+                    "do": "startBreak"
+                },
+                {
+                    "at": "23:40",
+                    "expect": {
+                        "alert": "breakEnd",
+                        "stoppageRunning": true
+                    }
+                },
+                {
+                    "at": "23:50",
+                    "do": "stoppage",
+                    "expect": {
+                        "stoppageMs": 135000
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a due break not taken is dropped at half-time",
+            "ids": [
+                "TMR-7"
+            ],
+            "format": {
+                "midBreak": true,
+                "breakLenSec": 120
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "21:30",
+                    "expect": {
+                        "alert": "breakStart"
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "breakDue": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "no halfway break when it's off",
+            "ids": [
+                "TMR-7"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ],
+                    "expect": {
+                        "breakDueInMs": null
+                    }
+                },
+                {
+                    "at": "30:00",
+                    "expect": {
+                        "alert": null,
+                        "breakDue": false,
+                        "breakLeftMs": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "centered on halfway: 18:30 for 3 minutes in a 40-minute half, nothing before kickoff",
+            "ids": [
+                "TMR-7"
+            ],
+            "format": {
+                "periodSec": 2400,
+                "midBreak": true,
+                "breakLenSec": 180
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": {
+                        "kickoff": "home"
+                    },
+                    "expect": {
+                        "breakDueInMs": null
+                    }
+                },
+                {
+                    "at": "0:00",
+                    "do": "start",
+                    "expect": {
+                        "breakDueInMs": 1110000
+                    }
+                }
+            ]
+        }
+    ]
+}

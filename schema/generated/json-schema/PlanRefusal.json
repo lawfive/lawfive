@@ -1,0 +1,41 @@
+{
+  "$id": "PlanRefusal.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "string"
+    },
+    "limit": {
+      "description": "The plan's limit that was reached (PLAN-4).",
+      "type": "string",
+      "enum": [
+        "matches",
+        "referees",
+        "venues",
+        "storageMb",
+        "photoMb",
+        "fileMb",
+        "devices",
+        "pushPerDay",
+        "apiKeys",
+        "apiCallsPerMinute",
+        "apiCallsPerDay",
+        "webhooks",
+        "assignorCalendars",
+        "addressSearchesPerDay"
+      ]
+    },
+    "allowed": {
+      "description": "What the plan allows of it.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "additionalProperties": false,
+  "description": "An ApiError; over a plan's limit, it says which (PLAN-4)."
+}

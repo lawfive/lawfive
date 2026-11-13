@@ -1,0 +1,535 @@
+{
+    "$comment": "WCH-2: periods, half-time, extra time and the decision after regular time (TMR-1, ET-1, ET-2, ET-7).",
+    "match": [
+        {
+            "name": "the second half starts at its scheduled time",
+            "ids": [
+                "TMR-11",
+                "UI-3"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ],
+                    "expect": {
+                        "periodLabel": "1H"
+                    }
+                },
+                {
+                    "at": "47:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "62:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "clock": "45:00",
+                        "periodLabel": "2H",
+                        "period": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "the last period ends the match",
+            "ids": [
+                "TMR-1"
+            ],
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "60:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "105:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "done"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "a cup match level after regular time: extra time, then penalties",
+            "ids": [
+                "ET-1",
+                "ET-2",
+                "ET-3"
+            ],
+            "format": {
+                "extraTime": true,
+                "penalties": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "60:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "105:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "decide",
+                        "decision": "extraTime"
+                    }
+                },
+                {
+                    "at": "105:00",
+                    "do": [
+                        "chooseExtraTime",
+                        "endHalftime",
+                        {
+                            "kickoff": "home"
+                        }
+                    ]
+                },
+                {
+                    "at": "120:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "periodLabel": "ET1",
+                        "clock": "90:00"
+                    }
+                },
+                {
+                    "at": "123:00",
+                    "expect": {
+                        "clock": "93:00"
+                    }
+                },
+                {
+                    "at": "135:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "150:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "periodLabel": "ET2"
+                    }
+                },
+                {
+                    "at": "165:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "decide",
+                        "decision": "penalties"
+                    }
+                },
+                {
+                    "at": "165:00",
+                    "do": "choosePenalties",
+                    "expect": {
+                        "phase": "penalties"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "extra time has its own toss, and the other team kicks off ET2",
+            "ids": [
+                "ET-7"
+            ],
+            "format": {
+                "extraTime": true,
+                "penalties": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "45:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "60:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "105:00",
+                    "do": [
+                        "endPeriod",
+                        "chooseExtraTime",
+                        "endHalftime"
+                    ],
+                    "expect": {
+                        "kickoffOnScreen": null
+                    }
+                },
+                {
+                    "at": "120:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "phase": "nextKickoff"
+                    }
+                },
+                {
+                    "at": "120:00",
+                    "do": {
+                        "kickoff": "away"
+                    },
+                    "expect": {
+                        "kickoffOnScreen": "away"
+                    }
+                },
+                {
+                    "at": "120:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "phase": "running",
+                        "kickoff": "away"
+                    }
+                },
+                {
+                    "at": "135:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ],
+                    "expect": {
+                        "kickoffOnScreen": "home"
+                    }
+                },
+                {
+                    "at": "140:00",
+                    "do": [
+                        "startNextPeriod",
+                        "swapKickoff"
+                    ],
+                    "expect": {
+                        "kickoff": "home"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "extra time uses the break's length before it, and its own period length",
+            "ids": [
+                "ET-2"
+            ],
+            "format": {
+                "extraTime": true,
+                "penalties": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "46:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "61:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "108:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "decide",
+                        "decision": "extraTime"
+                    }
+                },
+                {
+                    "at": "108:00",
+                    "do": "chooseExtraTime",
+                    "expect": {
+                        "phase": "break",
+                        "breakLeftMs": 900000
+                    }
+                },
+                {
+                    "at": "108:00",
+                    "do": "endHalftime",
+                    "expect": {
+                        "phase": "nextKickoff",
+                        "kickoffOnScreen": null
+                    }
+                },
+                {
+                    "at": "124:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "phase": "nextKickoff"
+                    }
+                },
+                {
+                    "at": "124:00",
+                    "do": [
+                        {
+                            "kickoff": "away"
+                        },
+                        "startNextPeriod"
+                    ],
+                    "expect": {
+                        "kickoff": "away",
+                        "periodLabel": "ET1"
+                    }
+                },
+                {
+                    "at": "138:59",
+                    "expect": {
+                        "alerting": false
+                    }
+                },
+                {
+                    "at": "139:00",
+                    "expect": {
+                        "alerting": true
+                    }
+                },
+                {
+                    "at": "140:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "break"
+                    }
+                },
+                {
+                    "at": "140:00",
+                    "do": "endHalftime",
+                    "expect": {
+                        "kickoffOnScreen": "home"
+                    }
+                },
+                {
+                    "at": "142:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "periodLabel": "ET2"
+                    }
+                },
+                {
+                    "at": "158:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "decide",
+                        "decision": "penalties"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "not level after regular time: still asked, end match first",
+            "ids": [
+                "ET-1"
+            ],
+            "format": {
+                "extraTime": true
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "10:00",
+                    "do": {
+                        "event": "G",
+                        "team": "away",
+                        "player": 9
+                    }
+                },
+                {
+                    "at": "46:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "61:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "108:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "decide",
+                        "decision": "endMatch"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "one extra-time period, then the choice again",
+            "ids": [
+                "ET-2"
+            ],
+            "format": {
+                "extraTime": true,
+                "penalties": true,
+                "etPeriods": 1
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "46:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "61:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "108:00",
+                    "do": [
+                        "endPeriod",
+                        "chooseExtraTime",
+                        "endHalftime",
+                        {
+                            "kickoff": "home"
+                        }
+                    ]
+                },
+                {
+                    "at": "124:00",
+                    "do": "startNextPeriod",
+                    "expect": {
+                        "periodLabel": "ET1"
+                    }
+                },
+                {
+                    "at": "140:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "decide"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "one extra-time period without penalties ends the match",
+            "ids": [
+                "ET-2"
+            ],
+            "format": {
+                "extraTime": true,
+                "etPeriods": 1
+            },
+            "steps": [
+                {
+                    "at": "0:00",
+                    "do": [
+                        {
+                            "kickoff": "home"
+                        },
+                        "start"
+                    ]
+                },
+                {
+                    "at": "46:00",
+                    "do": [
+                        "endPeriod",
+                        "endHalftime"
+                    ]
+                },
+                {
+                    "at": "61:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "108:00",
+                    "do": [
+                        "endPeriod",
+                        "chooseExtraTime",
+                        "endHalftime",
+                        {
+                            "kickoff": "home"
+                        }
+                    ]
+                },
+                {
+                    "at": "124:00",
+                    "do": "startNextPeriod"
+                },
+                {
+                    "at": "140:00",
+                    "do": "endPeriod",
+                    "expect": {
+                        "phase": "done"
+                    }
+                }
+            ]
+        }
+    ]
+}

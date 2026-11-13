@@ -1,0 +1,120 @@
+# Tests every push and pull request. Pushes to main (and v* tags) then build the server image (the
+# API plus the web UI, server/Dockerfile) for Intel and ARM hosts and publish it to the GitHub
+# Container Registry as ghcr.io/<owner>/<repo> (VER-5): `edge` and `sha-<commit>` from main; a
+# release's tag (v2026.11.12, made by tools/release.sh) as its version and `latest`, then its
+# GitHub release with notes. Nothing but the repo's own GITHUB_TOKEN is used.
+# Actions are pinned to commits; the comment gives the version.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+
+  image:
+    needs: test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # The whole history, for the version (the day of the server's last change).
+          fetch-depth: 0
+      # VER-1: the server's version, from git.
+      - id: version
+        run: |
+          read -r version commit _ <<< "$(tools/version.sh server)"
+          if [[ "$GITHUB_REF" == refs/tags/v* && "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::$GITHUB_REF_NAME isn't the server's version here (v$version); release with tools/release.sh"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ghcr.io/${{ github.repository }}
+          # VER-5: `latest` is the newest release, never a build of main.
+          flavor: latest=false
+          tags: |
+            type=raw,value=edge,enable={{is_default_branch}}
+            type=sha
+            type=match,pattern=v(.*),group=1
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: server/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            LAWFIVE_VERSION=${{ steps.version.outputs.version }}
+            LAWFIVE_COMMIT=${{ steps.version.outputs.commit }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # VER-5: a release's notes, once its image is published: the server's changes since the last
+  # release, from the commit messages. The maintainer adds anything to do before upgrading.
+  release:
+    needs: image
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          previous=$(git describe --tags --abbrev=0 --match 'v*' "$TAG^" 2>/dev/null || true)
+          range=${previous:+$previous..}$TAG
+          {
+            echo "Image: \`ghcr.io/${GITHUB_REPOSITORY,,}:${TAG#v}\`, also \`latest\`. To upgrade: https://lawfive.dev/run/upgrades/"
+            echo
+            echo "## Changes${previous:+ since $previous}"
+            echo
+            git log --no-merges --format='- %s' "$range" -- server web schema pnpm-lock.yaml compose.yaml .env.example
+          } > notes.md
+          gh release create "$TAG" --title "$TAG" --notes-file notes.md --verify-tag

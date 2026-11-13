@@ -1,0 +1,41 @@
+{
+  "$id": "AccountPlan.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "plan": {
+      "$ref": "PlanName.json"
+    },
+    "limits": {
+      "$ref": "PlanLimits.json"
+    },
+    "since": {
+      "$ref": "Timestamp.json"
+    },
+    "endsAt": {
+      "description": "When it ends: the end of endsOn in the account's time zone.",
+      "$ref": "Timestamp.json"
+    },
+    "endsOn": {
+      "description": "Its last day.",
+      "type": "string",
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "then": {
+      "description": "The plan that follows when it ends.",
+      "$ref": "PlanName.json"
+    },
+    "usage": {
+      "$ref": "PlanUsage.json"
+    }
+  },
+  "required": [
+    "plan",
+    "limits",
+    "since",
+    "usage"
+  ],
+  "additionalProperties": false,
+  "description": "The signed-in account's plan, when it ends, and what it's using (PLAN-6)."
+}

@@ -1,0 +1,178 @@
+{
+  "id": "890b6e19-669c-583d-bcae-8fb92ca0e36a",
+  "version": 1,
+  "updatedAt": "2026-10-25T19:40:00Z",
+  "matchId": "d3ac0703-1115-55e0-a25f-62d2e69fa2ae",
+  "device": "garmin:venu2",
+  "outcome": "completed",
+  "periods": [
+    {
+      "period": 1,
+      "extraTime": false,
+      "startedAt": "2026-10-25T10:01:12-07:00",
+      "playedSec": 2840
+    },
+    {
+      "period": 2,
+      "extraTime": false,
+      "startedAt": "2026-10-25T11:03:05-07:00",
+      "playedSec": 2831
+    }
+  ],
+  "score": {
+    "home": 3,
+    "away": 1
+  },
+  "distanceM": 9150,
+  "events": [
+    {
+      "type": "caution",
+      "when": "beforeKickoff",
+      "team": "away",
+      "offender": {
+        "kind": "teamOfficial",
+        "role": "headCoach"
+      },
+      "misconduct": {
+        "scheme": "ussf",
+        "code": "DT"
+      }
+    },
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 1,
+      "periodSec": 754,
+      "team": "home",
+      "player": 9,
+      "goalType": "goal"
+    },
+    {
+      "type": "stoppage",
+      "when": "play",
+      "period": 1,
+      "periodSec": 1210,
+      "lengthSec": 95
+    },
+    {
+      "type": "caution",
+      "when": "play",
+      "period": 1,
+      "periodSec": 1630,
+      "team": "away",
+      "offender": {
+        "kind": "player",
+        "number": 4
+      },
+      "misconduct": {
+        "scheme": "ussf",
+        "code": "UB"
+      }
+    },
+    {
+      "type": "injury",
+      "when": "play",
+      "period": 1,
+      "periodSec": 2200,
+      "team": "away",
+      "player": 7,
+      "lengthSec": 120,
+      "note": "Ankle; subbed off"
+    },
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 1,
+      "periodSec": 2512,
+      "team": "away",
+      "player": 10,
+      "goalType": "directFreeKick"
+    },
+    {
+      "type": "periodEnd",
+      "when": "play",
+      "period": 1,
+      "periodSec": 2840
+    },
+    {
+      "type": "caution",
+      "when": "break",
+      "period": 1,
+      "team": "home",
+      "offender": {
+        "kind": "player",
+        "number": 6
+      },
+      "misconduct": {
+        "scheme": "ussf",
+        "code": "DT"
+      }
+    },
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 2,
+      "periodSec": 600,
+      "team": "home",
+      "player": 9,
+      "goalType": "penalty"
+    },
+    {
+      "type": "secondCaution",
+      "when": "play",
+      "period": 2,
+      "periodSec": 1500,
+      "team": "away",
+      "offender": {
+        "kind": "player",
+        "number": 4
+      },
+      "misconduct": {
+        "scheme": "ussf",
+        "code": "DT"
+      }
+    },
+    {
+      "type": "goal",
+      "when": "play",
+      "period": 2,
+      "periodSec": 2300,
+      "team": "home",
+      "player": 5,
+      "goalType": "ownGoal"
+    },
+    {
+      "type": "sendOff",
+      "when": "play",
+      "period": 2,
+      "periodSec": 2510,
+      "team": "away",
+      "offender": {
+        "kind": "player",
+        "number": 3
+      },
+      "misconduct": {
+        "scheme": "ussf",
+        "code": "DGF"
+      }
+    },
+    {
+      "type": "periodEnd",
+      "when": "play",
+      "period": 2,
+      "periodSec": 2831
+    },
+    {
+      "type": "caution",
+      "when": "afterFullTime",
+      "team": "away",
+      "offender": {
+        "kind": "player"
+      },
+      "misconduct": {
+        "scheme": "ussf",
+        "code": "DT"
+      }
+    }
+  ]
+}

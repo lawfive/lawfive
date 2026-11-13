@@ -1,0 +1,11 @@
+{
+  "$id": "Gender.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "male",
+    "female",
+    "coed"
+  ],
+  "description": "Who plays: male, female or co-ed (mixed)."
+}

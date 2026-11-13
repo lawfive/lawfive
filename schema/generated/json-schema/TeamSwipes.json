@@ -1,0 +1,10 @@
+{
+  "$id": "TeamSwipes.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "upDown",
+    "sideways"
+  ],
+  "description": "How a swipe on the watch's match screen opens a team's controls (INP-10): upDown is down for home and up for away, with sideways swipes for the game menu; sideways is right for home and left for away, with up for the game menu."
+}

@@ -1,0 +1,4 @@
+<!-- UI-25: the running screen's time of day at 20 px, for 454x454 screens (tools/fonts/README.md). -->
+<fonts>
+    <font id="TimeOfDay" filename="time.fnt" antialias="true" filter="0123456789: APM" />
+</fonts>

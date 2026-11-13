@@ -1,0 +1,54 @@
+{
+  "$id": "AssignorCalendarPreview.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "calendarName": {
+      "description": "What the calendar calls itself (X-WR-CALNAME).",
+      "type": "string"
+    },
+    "games": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "description": "Games still to come."
+    },
+    "from": {
+      "description": "The first one's kickoff.",
+      "$ref": "Timestamp.json"
+    },
+    "to": {
+      "description": "The last one's kickoff.",
+      "$ref": "Timestamp.json"
+    },
+    "inLawFive": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "description": "Of those, how many are already in LawFive at the same kickoff."
+    },
+    "first": {
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "$ref": "AssignorCalendarEvent.json"
+      },
+      "description": "The first three, as they'd be saved."
+    },
+    "skipped": {
+      "type": "array",
+      "items": {
+        "$ref": "AssignorCalendarSkipped.json"
+      },
+      "description": "Events that couldn't be read, at most 20."
+    }
+  },
+  "required": [
+    "games",
+    "inLawFive",
+    "first",
+    "skipped"
+  ],
+  "additionalProperties": false,
+  "description": "What a calendar link holds, before connecting it; nothing is saved (FEED-1)."
+}

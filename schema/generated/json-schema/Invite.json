@@ -1,0 +1,62 @@
+{
+  "$id": "Invite.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "Id.json"
+    },
+    "email": {
+      "description": "Who it's for; only this address can use it. None for a link anyone can use once.",
+      "type": "string"
+    },
+    "name": {
+      "description": "Their name, to fill in the sign-up form.",
+      "type": "string"
+    },
+    "link": {
+      "type": "string",
+      "description": "The link to send: the web app's invitation page."
+    },
+    "createdBy": {
+      "type": "string",
+      "description": "The name of the admin who made it."
+    },
+    "createdAt": {
+      "$ref": "Timestamp.json"
+    },
+    "expiresAt": {
+      "$ref": "Timestamp.json"
+    },
+    "usedAt": {
+      "$ref": "Timestamp.json"
+    },
+    "usedBy": {
+      "description": "The name of the account made with it.",
+      "type": "string"
+    },
+    "emailedAt": {
+      "description": "When it was emailed, if it was.",
+      "$ref": "Timestamp.json"
+    },
+    "plan": {
+      "description": "The plan the account joins (PLAN-5); the default (or the sign-up trial) when there's none.",
+      "$ref": "PlanName.json"
+    },
+    "planDays": {
+      "description": "For how many days, then the default plan; none: it doesn't end.",
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "id",
+    "link",
+    "createdBy",
+    "createdAt",
+    "expiresAt"
+  ],
+  "additionalProperties": false,
+  "description": "An invitation to make an account, even when sign-up is closed (USR-3). It works once, for 14 days."
+}
