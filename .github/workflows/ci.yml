@@ -116,5 +116,17 @@ jobs:
             echo "## Changes${previous:+ since $previous}"
             echo
             git log --no-merges --format='- %s' "$range" -- server web schema pnpm-lock.yaml compose.yaml .env.example
+            # The database changes it makes when it starts, which can't be undone without a backup.
+            if [ -n "$previous" ]; then
+              migrations=$(git diff --name-only --diff-filter=A "$previous" "$TAG" -- 'server/drizzle/*.sql')
+              if [ -n "$migrations" ]; then
+                echo
+                echo "## Database changes"
+                echo
+                echo "The server changes its database when it starts. Back up first: going back to an older version needs that backup (https://lawfive.dev/run/backups/)."
+                echo
+                echo "$migrations" | sed 's#.*/#- #'
+              fi
+            fi
           } > notes.md
           gh release create "$TAG" --title "$TAG" --notes-file notes.md --verify-tag

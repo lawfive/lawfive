@@ -26,6 +26,8 @@ To stay on a known version rather than `latest`, set `LAWFIVE_IMAGE` to a [speci
 
 Your server can be older than the apps. It publishes what it supports in `GET /v1/meta`, and the apps adapt. You don't have to update on the same day as an app release.
 
+The apps work with every server from `v2026.11.13` on. If that ever has to end, it will be announced in the [release notes](https://github.com/lawfive/lawfive/releases) at least three months ahead, as far as we're able.
+
 ## Before you upgrade
 
 `SIGN_UP` in the environment beats a choice made on the People page, and the old `.env.example` set `SIGN_UP=open`. If your `.env` came from that version and you chose differently on the People page, remove the line or set it to your choice before upgrading.

@@ -106,6 +106,7 @@ export default defineConfig({
                         { slug: "run/first-run" },
                         { slug: "run/https" },
                         { slug: "run/people" },
+                        { slug: "run/responsibilities" },
                         { slug: "run/settings" },
                         { slug: "run/services" },
                         { slug: "run/notifications" },

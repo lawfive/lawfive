@@ -16,7 +16,7 @@ A product for soccer referees, named after Law 5 ("The Referee") of the Laws of 
 | [schema/](schema/) | Shared data model and API description: Zod definitions, generated JSON Schema, OpenAPI, Kotlin and Swift, examples, misconduct codes | In use by everything above |
 | [relay/](relay/) | Push relay, at push.lawfive.app, which notifications go through (Cloudflare Workers) | Live; tried on an emulator so far |
 | [site/](site/) | Marketing website, at lawfive.app: static pages, with the quiz, the match screen setup, Try a match and the replay built in from `web/` | Live |
-| [docs-site/](docs-site/) | Docs for self-hosters and developers, at [lawfive.dev](https://lawfive.dev) | Live as a preview |
+| [docs-site/](docs-site/) | Docs for self-hosters and developers, at [lawfive.dev](https://lawfive.dev) | Live |
 | [docs/](docs/) | [Requirements](docs/requirements/), [architecture](docs/ARCHITECTURE.md), the [match data fields](docs/MATCH_CONFIG.md), the [quiz format](docs/QUIZ.md), [plans](docs/plans/) | The requirements are the source of truth for behavior |
 | [DESIGN.md](DESIGN.md) | How LawFive looks, on every device | |
 | `compose.yaml`, `.env.example` | Run your own server with Docker: `cp .env.example .env`, set `AUTH_SECRET`, `docker compose up -d`, then open it; a wizard walks you through the rest, with a code from `docker compose logs server` | See the [server README](server/README.md) |

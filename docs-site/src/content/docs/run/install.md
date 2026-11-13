@@ -11,6 +11,12 @@ This is the way to run a real server.
 
 1. Make a folder on the Docker host, and put these two files from [the repository](https://github.com/lawfive/lawfive) in it: `compose.yaml`, and `.env.example` saved as `.env`.
 
+   ```sh
+   mkdir lawfive && cd lawfive
+   curl -O https://raw.githubusercontent.com/lawfive/lawfive/main/compose.yaml
+   curl -o .env https://raw.githubusercontent.com/lawfive/lawfive/main/.env.example
+   ```
+
 2. Make a secret. It signs sign-in sessions, and has to be at least 32 characters.
 
    ```sh

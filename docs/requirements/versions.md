@@ -25,6 +25,7 @@ How each part of LawFive gets its version, where it shows, and how apps and serv
 ## Working across versions
 
 - **VER-4** **No shared schema version.** Apps and servers of different versions keep working together because the API under `/v1` only grows: new fields are optional, apps ignore fields they don't know, and servers accept requests without the new ones. A change older apps couldn't follow would raise `GET /v1/meta`'s `apiVersion` (and go under `/v2`). Its `capabilities` say what a server offers, so a newer app can work with an older self-hosted server.
+  - The apps support every server from `v2026.11.13` on. Ending that is announced in the release notes at least three months ahead, on a best-effort basis (lawfive.dev's Upgrades says so).
 
 ## Status
 

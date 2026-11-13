@@ -19,6 +19,7 @@ Pages are in `src/content/docs/`; the sidebar is in `astro.config.mjs`. Write fo
 | `run/settings`, `run/services` | `.env.example`, `compose.yaml`; `security.md` (SEC-14) |
 | `run/https` | `web/src/pages/HttpsGuide.tsx`, the same guide inside a server; `security.md` (SEC-14) |
 | `run/first-run`, `run/people` | `server-settings.md`, `people.md`, `plans-and-limits.md` |
+| `run/responsibilities` | `compose.yaml`, `SECURITY.md`, `push-relay.md`, and what a self-hosted server shows (SITE-5's links only on the hosted service) |
 | `api/keys`, `api/webhooks` | `api-keys.md`, `webhooks.md` |
 | `run/notifications`, `contribute/relay` | `push-relay.md`, `relay/README.md` |
 | `run/requirements`, `run/install`, `run/upgrades`, `run/backups` | `compose.yaml`, `.env.example`, `server/README.md`, `versions.md` (VER-5) for image tags and releases; `data-export.md` (DATA-2, DATA-4) for backups |
