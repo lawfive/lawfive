@@ -92,7 +92,7 @@ class Match {
     var periodSec as Number;
     var halftimeSec as Number;          // break between periods, also before and within extra time (ET-2)
     var teamSize as Number;
-    var breakAtSec as Number;           // mid-period break: centred on halfway through each regular period, or -1 (TMR-7)
+    var breakAtSec as Number;           // the halfway break's time into each regular period, or -1 (TMR-7)
     var breakLenSec as Number;
     var extraTime as Boolean;
     var etPeriods as Number;
@@ -199,18 +199,6 @@ class Match {
         homeColor = numberOr(d.get("homeColor"), -1);
         awayColor = numberOr(d.get("awayColor"), -1);
         teamSize = numberOr(d.get("teamSize"), 11);
-        // A new match has "midBreak"; a saved one keeps the break time it started with. TMR-7: the
-        // break is centred on halfway, so it is due half the break length before it (21:30 for a
-        // 2-minute break in a 45-minute half).
-        var breakAt = d.get("breakAtSec");
-        if (breakAt instanceof Number) {
-            breakAtSec = breakAt;
-        } else if (booleanOr(d.get("midBreak"), false)) {
-            breakAtSec = (periodSec - breakLenSec) / 2;
-            breakAtSec = breakAtSec < 0 ? 0 : breakAtSec;
-        } else {
-            breakAtSec = -1;
-        }
         extraTime = booleanOr(d.get("extraTime"), false);
         etPeriods = numberOr(d.get("etPeriods"), 2);
         etPeriodSec = numberOr(d.get("etPeriodSec"), 15 * 60);
@@ -227,6 +215,9 @@ class Match {
         if (stoppingClock) {
             trackStoppage = true;
         }
+        // A new match has "midBreak"; a saved one keeps the break time it started with (TMR-7).
+        var breakAt = d.get("breakAtSec");
+        breakAtSec = breakAt instanceof Number ? breakAt : halfwayBreakAtSec(d);
         // EVT-12: matches saved before sin bins have none.
         sinBins = booleanOr(d.get("sinBins"), false);
         sinBinSec = numberOr(d.get("sinBinSec"), 600);
@@ -1945,6 +1936,23 @@ function loadMatch() as Match? {
         return new Match(stored as MatchData);
     }
     return null;
+}
+
+//! TMR-7: when a setup's halfway break is due, in seconds into each regular period, or -1 for none.
+//! Added on as stoppage (TMR-12; a stopping clock always stops for it, TMR-15), it's due at halfway, as it
+//! takes none of the period's time (22:30 in a 45-minute half); otherwise it's centered on halfway, due
+//! half its length before it (21:30 for a 2-minute break).
+function halfwayBreakAtSec(setup as MatchData) as Number {
+    if (!booleanOr(setup.get("midBreak"), false)) {
+        return -1;
+    }
+    var periodSec = setup.get("periodSec") as Number;
+    var stopping = booleanOr(setup.get("stoppingClock"), false);
+    if ((booleanOr(setup.get("trackStoppage"), false) || stopping) && (booleanOr(setup.get("breakStoppage"), false) || stopping)) {
+        return periodSec / 2;
+    }
+    var at = (periodSec - (setup.get("breakLenSec") as Number)) / 2;
+    return at < 0 ? 0 : at;
 }
 
 function stringOr(value as Application.Storage.ValueType, fallback as String) as String {

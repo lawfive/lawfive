@@ -15,7 +15,7 @@ final class WatchPreviewTests: XCTestCase {
     }
 
     func testPlayThrough() {
-        XCTAssertEqual(WatchPreview.playAt(0).breakDueInMs, at(21, 30))
+        XCTAssertEqual(WatchPreview.playAt(0).breakDueInMs, at(22, 30))
         XCTAssertTrue(WatchPreview.playAt(0.5).halftime)
         XCTAssertEqual(WatchPreview.playAt(1).period, 1)
         XCTAssertEqual(WatchPreview.playAt(1).stoppageMs, at(3, 30))

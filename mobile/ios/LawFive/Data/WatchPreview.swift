@@ -61,6 +61,7 @@ struct MatchMoment: Equatable {
     var elapsedMs: Int64
     var stoppageMs: Int64 = 0
     var stoppageRunning = false
+    /// Timed as with stoppage tracked: added on as stoppage, so due at halfway (TMR-7, TMR-12); screenAt brings it forward when it isn't.
     var breakDueInMs: Int64?
     var breakDue = false
     var breakLeftMs: Int64?
@@ -136,12 +137,14 @@ enum WatchPreview {
             let left = max(length - m.elapsedMs, 0)
             return ScreenAt(halftime: true, period: label, clock: "", breakClock: breakClockText(setup.breakClock, left, length), breakOver: left == 0)
         }
+        // TMR-7: with no stoppage to add it to, the break is centered on halfway, due half its length earlier.
+        let dueInMs = m.breakDueInMs.map { tracked ? $0 : $0 - Int64(breakSec) * 1000 / 2 }
         var breakPill: ScreenPill?
-        if m.breakDue {
+        if m.breakDue || (dueInMs ?? 1) <= 0 {
             breakPill = ScreenPill(text: "Break due", solid: true)
         } else if let left = m.breakLeftMs {
             breakPill = ScreenPill(text: breakClockText(setup.breakClock, left, Int64(breakSec) * 1000), solid: true)
-        } else if let dueIn = m.breakDueInMs {
+        } else if let dueIn = dueInMs {
             breakPill = ScreenPill(text: formatCountdown(dueIn), solid: false)
         }
         return ScreenAt(
@@ -173,14 +176,14 @@ enum WatchPreview {
         ("added", "Added time", MatchMoment(period: 1, elapsedMs: mins(46, 12), stoppageMs: mins(2)), false),
         ("stoppage", "Stoppage running", MatchMoment(elapsedMs: mins(31, 5), stoppageMs: mins(0, 24), stoppageRunning: true), true),
         ("paused", "Stoppage paused", MatchMoment(elapsedMs: mins(33, 40), stoppageMs: mins(1, 10)), true),
-        ("coming", "Break coming up", MatchMoment(elapsedMs: mins(12), breakDueInMs: mins(9, 30)), false),
-        ("due", "Break due", MatchMoment(elapsedMs: mins(21, 40), stoppageMs: mins(0, 30), breakDue: true), false),
-        ("break", "Break running", MatchMoment(elapsedMs: mins(22, 30), stoppageMs: mins(1, 10), stoppageRunning: true, breakLeftMs: mins(1, 20)), false),
+        ("coming", "Break coming up", MatchMoment(elapsedMs: mins(12), breakDueInMs: mins(10, 30)), false),
+        ("due", "Break due", MatchMoment(elapsedMs: mins(22, 40), stoppageMs: mins(0, 30), breakDue: true), false),
+        ("break", "Break running", MatchMoment(elapsedMs: mins(23, 30), stoppageMs: mins(1, 10), stoppageRunning: true, breakLeftMs: mins(1, 20)), false),
         ("halftime", "Half-time", MatchMoment(halftime: true, elapsedMs: mins(3)), false),
     ]
 
     /// Play through (UI-27): a whole 2 × 45 match at a point from 0 to 1, as the website's: the halfway break
-    /// taken at 21:50 and added on (TMR-12), the first half ending at 47:00, half-time, and a second half with
+    /// due at halfway, taken at 22:50 and added on (TMR-7, TMR-12), the first half ending at 47:00, half-time, and a second half with
     /// a 1:30 stoppage at 30:00 too, ending at 48:30.
     static func playAt(_ at: Double) -> MatchMoment {
         let first = mins(47), half = mins(15), second = mins(48, 30)
@@ -192,7 +195,7 @@ enum WatchPreview {
     }
 
     private static func halfAt(_ period: Int, _ t: Int64, _ stoppages: [(Int64, Int64)]) -> MatchMoment {
-        let due = mins(21, 30), taken = mins(21, 50), end = taken + mins(2)
+        let due = mins(22, 30), taken = mins(22, 50), end = taken + mins(2)
         let all = [(taken, end)] + stoppages
         return MatchMoment(
             period: period, elapsedMs: t,

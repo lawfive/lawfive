@@ -9,7 +9,7 @@
 | Stoppage | A pause in play the referee wants added back as added time. |
 | Stoppage clock | Counts up while a stoppage runs and shows the period's total: the added time to signal. |
 | Break clock | Times half-time or a halfway break, counting down or up. Stoppages don't affect it. |
-| Halfway break | A drinks or cooling break centered on halfway through each regular period, for example 2 minutes due at 21:30 in a 45-minute half. It becomes due then, and starts only when the referee accepts it at a natural stoppage. |
+| Halfway break | A drinks or cooling break halfway through each regular period: due at 22:30 in a 45-minute half when its time is added on as stoppage, otherwise centered on halfway (2 minutes due at 21:30). It becomes due then, and starts only when the referee accepts it at a natural stoppage. |
 | Short name | A team's name on the match screen, up to 4 characters, for example `RIV` for Riverside FC. |
 | Kickoff team | The team that kicks off the first period. |
 | Shoot-out | Penalty kicks after a drawn match to decide a winner (ET-3). |

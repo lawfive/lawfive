@@ -20,13 +20,15 @@ The match clock, the stoppage clock and the break clock on the watch. Everything
 
 - **TMR-5** Ending a period that isn't the last starts the half-time break (15 minutes by default). The next period starts only after End HT, then Start on the kickoff screen (PRE-7).
 - **TMR-6** Ending the last period ends the match, unless extra time or penalties are on, when the watch asks what comes next (ET-1).
-- **TMR-7** **The halfway break** (for drinks or cooling), switched on before the match with a length (2 minutes by default). It's centered on halfway through each regular period: due at half the period's length less half the break's (21:30 for a 2-minute break in a 45-minute half). There's none in extra time.
+- **TMR-7** **The halfway break** (for drinks or cooling), switched on before the match with a length (2 minutes by default). It comes in each regular period, and none in extra time.
+  - When its time is added on as stoppage (TMR-12, or always with a clock that stops, TMR-15), it's due at exactly halfway: 22:30 in a 45-minute half, whatever its length, as it takes none of the period's time.
+  - Otherwise it's centered on halfway, due half its length before it: 21:30 for a 2-minute break in a 45-minute half.
   - Until it's due, the break pill counts down to it (UI-4).
   - When it's due, the watch vibrates (VIB-4) and shows a blue "break due" pill, but the break doesn't start, as play may not have stopped.
-  - The referee starts it at a natural stoppage, with Start/Stop, by tapping the pill or with Start break in the game menu. It then runs its full length.
+  - The referee starts it at a natural stoppage, with Start/Stop, by tapping the pill or with Start break, at the top of the game menu while it's due (INP-3). It then runs its full length.
   - Skip break drops it, and a due break not started by the period's end is dropped.
   - End break ends a running break early, keeping the time it took.
-- **TMR-12** **Break as stoppage**, per match, on by default, as Law 7 allows for drinks and cooling breaks. It applies only with stoppage tracked and a halfway break. When on, the break's time is added on as a stoppage, with no stoppage reminders (VIB-2) during it. A stoppage already running when the break starts carries on through it, so the time is counted once. Older matches count as off.
+- **TMR-12** **Break as stoppage**, per match, on by default, as Law 7 allows for drinks and cooling breaks. It applies only with stoppage tracked and a halfway break. When on, the break's time is added on as a stoppage, with no stoppage reminders (VIB-2) during it, and the break is due at exactly halfway (TMR-7). A stoppage already running when the break starts carries on through it, so the time is counted once. Older matches count as off.
 - **TMR-9** Actions that can't easily be put right ask for confirmation (UI-7): ending a period, ending the match, Cancel match, Restart match, Undo and Change kickoff.
 
 ## Stoppage time

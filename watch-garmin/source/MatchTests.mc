@@ -886,14 +886,26 @@ function testGoldenGoal(logger as Logger) as Boolean {
     return true;
 }
 
-//! TMR-7: the halfway break is centred on halfway, so it is due half its length earlier.
+//! TMR-7: the halfway break is centered on halfway, so it is due half its length earlier, unless it's
+//! added on as stoppage (TMR-12, or a stopping clock's, TMR-15), when it's due at halfway.
 (:test)
 function testMidBreakHalfway(logger as Logger) as Boolean {
     var setup = Settings.matchSetup(false);
     setup["periodSec"] = 45 * 60;
     setup["breakLenSec"] = 2 * 60;
     setup["midBreak"] = true;
+    setup["trackStoppage"] = false;
+    setup["breakStoppage"] = true;
+    setup["stoppingClock"] = false;
     Test.assertEqualMessage(new Match(setup).breakAtSec, 21 * 60 + 30, "due at 21:30 for 2 minutes in a 45-minute half");
+    setup["trackStoppage"] = true;
+    Test.assertEqualMessage(new Match(setup).breakAtSec, 22 * 60 + 30, "added on as stoppage: due at halfway, 22:30");
+    setup["breakStoppage"] = false;
+    Test.assertEqualMessage(new Match(setup).breakAtSec, 21 * 60 + 30, "tracked, but not added on: centered");
+    setup["stoppingClock"] = true;
+    Test.assertEqualMessage(new Match(setup).breakAtSec, 22 * 60 + 30, "a stopping clock stops for it whatever the setting");
+    setup["stoppingClock"] = false;
+    setup["trackStoppage"] = false;
     setup["periodSec"] = 40 * 60;
     setup["breakLenSec"] = 3 * 60;
     Test.assertEqualMessage(new Match(setup).breakAtSec, 18 * 60 + 30, "due at 18:30 for 3 minutes in a 40-minute half");
@@ -1550,7 +1562,7 @@ function syncedMatch() as Dictionary {
         "where" => "Twin Creeks, Field 3", "home" => "STR", "away" => "ROV", "homeName" => "Strikers U12", "awayName" => "Rovers U12",
         "homeColor" => 0xC8102E, "awayColor" => -1, "numPeriods" => 2, "periodSec" => 1800, "halftimeSec" => 300, "teamSize" => 9,
         "midBreak" => true, "breakLenSec" => 120, "extraTime" => false, "etPeriods" => 2, "etPeriodSec" => 600, "penalties" => false,
-        "clockStyle" => CLOCK_DOWN, "trackStoppage" => true, "goalTypes" => false, "weather" => "54° rain"
+        "clockStyle" => CLOCK_DOWN, "trackStoppage" => true, "breakStoppage" => true, "goalTypes" => false, "weather" => "54° rain"
     };
 }
 
@@ -1563,7 +1575,7 @@ function testSyncedMatchSetup(logger as Logger) as Boolean {
     Test.assertEqualMessage(match.homeColor, 0xC8102E, "colour");
     Test.assertEqualMessage(match.periodSec, 1800, "2 x 30");
     Test.assertEqualMessage(match.teamSize, 9, "9 a side");
-    Test.assertEqualMessage(match.breakAtSec, 840, "halfway break due at 14:00 (TMR-7)");
+    Test.assertEqualMessage(match.breakAtSec, 900, "halfway break added on as stoppage, so due at halfway, 15:00 (TMR-7)");
     Test.assertEqualMessage(match.details["id"] as String, "3f2a1b4c-5d6e-4f70-8a9b-0c1d2e3f4a5b", "planned match id kept");
     Test.assertMessage(match.vibeFullTime, "alerts from this watch's settings");
     var text = Sync.describe(syncedMatch());

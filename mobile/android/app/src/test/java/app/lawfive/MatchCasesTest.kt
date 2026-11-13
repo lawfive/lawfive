@@ -21,8 +21,8 @@ import org.junit.Test
 // WCH-2, UI-27: the match screen setup's pictures read the clocks as the watches do, by the shared
 // screen cases (schema/match-cases/screen.json), which the watches' engines run too.
 class MatchCasesTest {
-    // The pictures' halfway break: 2 minutes, due at 21:30.
-    private val breakDue = (21 * 60 + 30) * 1000L
+    // The pictures' halfway break: 2 minutes, timed as added on as stoppage, so due at halfway, 22:30 (TMR-7).
+    private val breakDue = (22 * 60 + 30) * 1000L
     private val breakLength = 2 * 60 * 1000L
 
     private fun JsonObject.text(key: String) = this[key]?.jsonPrimitive?.contentOrNull

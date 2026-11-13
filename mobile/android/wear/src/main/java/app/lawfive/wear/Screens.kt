@@ -275,7 +275,7 @@ private fun LazyListScope.formatRows(f: MatchSetup, push: (Page) -> Unit, set: (
         item { ToggleRow("Golden goal", f.goldenGoal, if (f.goldenGoal) "First ET goal wins" else "Off") { v -> set { it.copy(goldenGoal = v) } } }
     }
     item { ToggleRow("Penalties", f.penalties, if (f.penalties) "On" else "Off") { v -> set { it.copy(penalties = v) } } }
-    item { ToggleRow("Halfway $brk", f.midBreak, if (f.midBreak) "At ${formatClock((f.periodSec - f.breakLenSec) / 2 * 1000L)}" else "Off") { v -> set { it.copy(midBreak = v) } } }
+    item { ToggleRow("Halfway $brk", f.midBreak, if (f.midBreak) "At ${formatClock(halfwayBreakAtSec(f) * 1000L)}" else "Off") { v -> set { it.copy(midBreak = v) } } }
     if (f.midBreak) {
         item { MenuRow("${brk.capitalized()} length", formatClock(f.breakLenSec * 1000L)) {
             push(Page.Picker("${brk.capitalized()} length", (30..300 step 30).map { it to formatClock(it * 1000L) }, f.breakLenSec) { v -> set { it.copy(breakLenSec = v) } })

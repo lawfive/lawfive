@@ -387,9 +387,28 @@
       }
     },
     {
-      "name": "the halfway break counting down to when it's due",
+      "name": "the halfway break counting down to halfway, added on as stoppage",
       "screen": {},
       "tracked": true,
+      "at": {
+        "phase": "running",
+        "period": 0,
+        "elapsed": 720000,
+        "halfwayBreak": "coming",
+        "stoppage": 0,
+        "stoppageRunning": false
+      },
+      "expect": {
+        "breakPill": {
+          "text": "10:30",
+          "solid": false
+        }
+      }
+    },
+    {
+      "name": "stoppage not tracked: the halfway break centered on halfway, a minute earlier",
+      "screen": {},
+      "tracked": false,
       "at": {
         "phase": "running",
         "period": 0,
@@ -406,13 +425,32 @@
       }
     },
     {
+      "name": "stoppage not tracked: the halfway break due from 21:30",
+      "screen": {},
+      "tracked": false,
+      "at": {
+        "phase": "running",
+        "period": 0,
+        "elapsed": 1290000,
+        "halfwayBreak": "coming",
+        "stoppage": 0,
+        "stoppageRunning": false
+      },
+      "expect": {
+        "breakPill": {
+          "text": "Break due",
+          "solid": true
+        }
+      }
+    },
+    {
       "name": "the halfway break due",
       "screen": {},
       "tracked": true,
       "at": {
         "phase": "running",
         "period": 0,
-        "elapsed": 1300000,
+        "elapsed": 1360000,
         "stoppage": 30000,
         "halfwayBreak": "due",
         "stoppageRunning": false
@@ -431,11 +469,11 @@
       "at": {
         "phase": "running",
         "period": 0,
-        "elapsed": 1350000,
+        "elapsed": 1410000,
         "stoppage": 70000,
         "stoppageRunning": true,
         "halfwayBreak": "running",
-        "breakStarted": 1310000
+        "breakStarted": 1370000
       },
       "expect": {
         "breakPill": {
@@ -453,11 +491,11 @@
       "at": {
         "phase": "running",
         "period": 0,
-        "elapsed": 1350000,
+        "elapsed": 1410000,
         "stoppage": 70000,
         "stoppageRunning": true,
         "halfwayBreak": "running",
-        "breakStarted": 1310000
+        "breakStarted": 1370000
       },
       "expect": {
         "breakPill": {
@@ -2683,7 +2721,7 @@
       ]
     },
     {
-      "name": "breaks › due at 21:30, repeating until started, added on as stoppage, over after its length",
+      "name": "breaks › added on as stoppage, due at halfway (22:30), repeating until started, over after its length",
       "format": {
         "midBreak": true,
         "breakLenSec": 120,
@@ -2704,14 +2742,14 @@
           ]
         },
         {
-          "at": 1230000,
+          "at": 1290000,
           "do": [],
           "expect": {
             "breakDueInMs": 60000
           }
         },
         {
-          "at": 1289000,
+          "at": 1349000,
           "do": [],
           "expect": {
             "alert": null,
@@ -2719,7 +2757,7 @@
           }
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart",
@@ -2727,21 +2765,21 @@
           }
         },
         {
-          "at": 1291000,
+          "at": 1351000,
           "do": [],
           "expect": {
             "alert": null
           }
         },
         {
-          "at": 1300000,
+          "at": 1360000,
           "do": [],
           "expect": {
             "alert": "breakStart"
           }
         },
         {
-          "at": 1320000,
+          "at": 1380000,
           "do": [
             {
               "do": "startBreak"
@@ -2753,14 +2791,14 @@
           }
         },
         {
-          "at": 1380000,
+          "at": 1440000,
           "do": [],
           "expect": {
             "breakLeftMs": 60000
           }
         },
         {
-          "at": 1440000,
+          "at": 1500000,
           "do": [],
           "expect": {
             "alert": "breakEnd",
@@ -2769,7 +2807,7 @@
           }
         },
         {
-          "at": 1500000,
+          "at": 1560000,
           "do": [],
           "expect": {
             "stoppageMs": 120000
@@ -2848,14 +2886,14 @@
           ]
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart"
           }
         },
         {
-          "at": 1300000,
+          "at": 1360000,
           "do": [
             {
               "do": "startBreak"
@@ -2863,7 +2901,7 @@
           ]
         },
         {
-          "at": 1330000,
+          "at": 1390000,
           "do": [
             {
               "do": "endBreakEarly"
@@ -2876,7 +2914,7 @@
           }
         },
         {
-          "at": 1340000,
+          "at": 1400000,
           "do": [],
           "expect": {
             "breakLeftMs": null
@@ -2907,14 +2945,14 @@
           ]
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart"
           }
         },
         {
-          "at": 1300000,
+          "at": 1360000,
           "do": [
             {
               "do": "startBreak"
@@ -2925,7 +2963,7 @@
           ]
         },
         {
-          "at": 1320000,
+          "at": 1380000,
           "do": [],
           "expect": {
             "alerting": false,
@@ -2936,7 +2974,7 @@
           }
         },
         {
-          "at": 1320000,
+          "at": 1380000,
           "do": [
             {
               "do": "startBreak"
@@ -2944,7 +2982,7 @@
           ]
         },
         {
-          "at": 1350000,
+          "at": 1410000,
           "do": [],
           "expect": {
             "breakLeftMs": 90000
@@ -3356,14 +3394,14 @@
           ]
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart"
           }
         },
         {
-          "at": 1300000,
+          "at": 1360000,
           "do": [
             {
               "do": "startBreak"
@@ -3374,7 +3412,7 @@
           }
         },
         {
-          "at": 1420000,
+          "at": 1480000,
           "do": [],
           "expect": {
             "alert": "breakEnd",
@@ -3382,7 +3420,7 @@
           }
         },
         {
-          "at": 1425000,
+          "at": 1485000,
           "do": [],
           "expect": {
             "last": {
@@ -3473,14 +3511,14 @@
           ]
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart"
           }
         },
         {
-          "at": 1295000,
+          "at": 1355000,
           "do": [
             {
               "do": "stoppage"
@@ -3488,7 +3526,7 @@
           ]
         },
         {
-          "at": 1300000,
+          "at": 1360000,
           "do": [
             {
               "do": "startBreak"
@@ -3496,7 +3534,7 @@
           ]
         },
         {
-          "at": 1420000,
+          "at": 1480000,
           "do": [],
           "expect": {
             "alert": "breakEnd",
@@ -3504,7 +3542,7 @@
           }
         },
         {
-          "at": 1430000,
+          "at": 1490000,
           "do": [
             {
               "do": "stoppage"
@@ -3588,7 +3626,7 @@
       ]
     },
     {
-      "name": "breaks › centered on halfway: 18:30 for 3 minutes in a 40-minute half, nothing before kickoff",
+      "name": "breaks › centered on halfway when not added on: 18:30 for 3 minutes in a 40-minute half, nothing before kickoff",
       "format": {
         "periodSec": 2400,
         "midBreak": true,
@@ -3617,6 +3655,91 @@
           ],
           "expect": {
             "breakDueInMs": 1110000
+          }
+        }
+      ]
+    },
+    {
+      "name": "breaks › added on as stoppage, at halfway whatever its length: 20:00 for 3 minutes in a 40-minute half",
+      "format": {
+        "periodSec": 2400,
+        "midBreak": true,
+        "breakLenSec": 180,
+        "trackStoppage": true
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ],
+          "expect": {
+            "breakDueInMs": 1200000
+          }
+        },
+        {
+          "at": 1199000,
+          "do": [],
+          "expect": {
+            "breakDue": false
+          }
+        },
+        {
+          "at": 1200000,
+          "do": [],
+          "expect": {
+            "alert": "breakStart",
+            "breakDue": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "breaks › tracked with break as stoppage off, still centered: 18:30 for 3 minutes in a 40-minute half",
+      "format": {
+        "periodSec": 2400,
+        "midBreak": true,
+        "breakLenSec": 180,
+        "breakStoppage": false,
+        "trackStoppage": true
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ],
+          "expect": {
+            "breakDueInMs": 1110000
+          }
+        },
+        {
+          "at": 1109000,
+          "do": [],
+          "expect": {
+            "breakDue": false
+          }
+        },
+        {
+          "at": 1110000,
+          "do": [],
+          "expect": {
+            "alert": "breakStart",
+            "breakDue": true
           }
         }
       ]
@@ -8371,15 +8494,15 @@
           ]
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart",
-            "sinBinPill": "HOM 2 3:30"
+            "sinBinPill": "HOM 2 2:30"
           }
         },
         {
-          "at": 1290000,
+          "at": 1350000,
           "do": [
             {
               "do": "startBreak"
@@ -8390,20 +8513,20 @@
           }
         },
         {
-          "at": 1350000,
+          "at": 1410000,
           "do": [],
           "expect": {
-            "sinBinPill": "HOM 2 3:30"
+            "sinBinPill": "HOM 2 2:30"
           }
         },
         {
-          "at": 1410000,
+          "at": 1470000,
           "do": [],
           "expect": {
             "alert": "breakEnd",
             "stoppageMs": 120000,
             "breakStoppageRunning": false,
-            "sinBinPill": "HOM 2 3:30"
+            "sinBinPill": "HOM 2 2:30"
           }
         },
         {
@@ -10258,7 +10381,7 @@
       ]
     },
     {
-      "name": "stopping-clock › the halfway break stops it, with no reminders, whatever break as stoppage says",
+      "name": "stopping-clock › the halfway break comes at halfway and stops it, with no reminders, whatever break as stoppage says",
       "format": {
         "midBreak": true,
         "breakLenSec": 120,
@@ -10280,7 +10403,14 @@
           ]
         },
         {
-          "at": 1290000,
+          "at": 1349000,
+          "do": [],
+          "expect": {
+            "breakDue": false
+          }
+        },
+        {
+          "at": 1350000,
           "do": [],
           "expect": {
             "alert": "breakStart",
@@ -10288,35 +10418,35 @@
           }
         },
         {
-          "at": 1300000,
+          "at": 1360000,
           "do": [
             {
               "do": "startBreak"
             }
           ],
           "expect": {
-            "clock": "21:40",
+            "clock": "22:40",
             "clockStopped": true,
             "breakStoppageRunning": true,
             "breakLeftMs": 120000
           }
         },
         {
-          "at": 1360000,
+          "at": 1420000,
           "do": [],
           "expect": {
-            "clock": "21:40",
+            "clock": "22:40",
             "alert": null,
             "breakLeftMs": 60000
           }
         },
         {
-          "at": 1420000,
+          "at": 1480000,
           "do": [],
           "expect": {
             "last": {
               "type": "S",
-              "seconds": 1300,
+              "seconds": 1360,
               "extra": 120
             },
             "alert": "breakEnd",
@@ -10325,10 +10455,10 @@
           }
         },
         {
-          "at": 1480000,
+          "at": 1540000,
           "do": [],
           "expect": {
-            "clock": "22:40"
+            "clock": "23:40"
           }
         }
       ]

@@ -18,7 +18,7 @@ test("the break clock's text, counting down or up (TMR-4)", () => {
 
 test("play through runs a whole match", () => {
     assert.equal(playAt(0).elapsedMs, 0);
-    assert.equal(playAt(0).breakDueInMs, at(21, 30));
+    assert.equal(playAt(0).breakDueInMs, at(22, 30), "added on as stoppage, the break is due at halfway (TMR-7)");
     const firstEnd = at(47) / at(110, 30);
     assert.equal(playAt(firstEnd - 0.0001).phase, "running");
     assert.equal(playAt(firstEnd + 0.001).phase, "halftime");

@@ -2220,7 +2220,7 @@ function matchCases() as Array<Dictionary> {
             ]
         },
         {
-            "name" => "breaks › due at 21:30, repeating until started, added on as stoppage, over after its length",
+            "name" => "breaks › added on as stoppage, due at halfway (22:30), repeating until started, over after its length",
             "format" => {
                 "midBreak" => true,
                 "breakLenSec" => 120,
@@ -2241,14 +2241,14 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1230000,
+                    "at" => 1290000,
                     "do" => [],
                     "expect" => {
                         "breakDueInMs" => 60000
                     }
                 },
                 {
-                    "at" => 1289000,
+                    "at" => 1349000,
                     "do" => [],
                     "expect" => {
                         "alert" => null,
@@ -2256,7 +2256,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart",
@@ -2264,21 +2264,21 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1291000,
+                    "at" => 1351000,
                     "do" => [],
                     "expect" => {
                         "alert" => null
                     }
                 },
                 {
-                    "at" => 1300000,
+                    "at" => 1360000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart"
                     }
                 },
                 {
-                    "at" => 1320000,
+                    "at" => 1380000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -2290,14 +2290,14 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1380000,
+                    "at" => 1440000,
                     "do" => [],
                     "expect" => {
                         "breakLeftMs" => 60000
                     }
                 },
                 {
-                    "at" => 1440000,
+                    "at" => 1500000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakEnd",
@@ -2306,7 +2306,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1500000,
+                    "at" => 1560000,
                     "do" => [],
                     "expect" => {
                         "stoppageMs" => 120000
@@ -2385,14 +2385,14 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart"
                     }
                 },
                 {
-                    "at" => 1300000,
+                    "at" => 1360000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -2400,7 +2400,7 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1330000,
+                    "at" => 1390000,
                     "do" => [
                         {
                             "do" => "endBreakEarly"
@@ -2413,7 +2413,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1340000,
+                    "at" => 1400000,
                     "do" => [],
                     "expect" => {
                         "breakLeftMs" => null
@@ -2444,14 +2444,14 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart"
                     }
                 },
                 {
-                    "at" => 1300000,
+                    "at" => 1360000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -2462,7 +2462,7 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1320000,
+                    "at" => 1380000,
                     "do" => [],
                     "expect" => {
                         "alerting" => false,
@@ -2473,7 +2473,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1320000,
+                    "at" => 1380000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -2481,7 +2481,7 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1350000,
+                    "at" => 1410000,
                     "do" => [],
                     "expect" => {
                         "breakLeftMs" => 90000
@@ -2893,14 +2893,14 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart"
                     }
                 },
                 {
-                    "at" => 1300000,
+                    "at" => 1360000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -2911,7 +2911,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1420000,
+                    "at" => 1480000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakEnd",
@@ -2919,7 +2919,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1425000,
+                    "at" => 1485000,
                     "do" => [],
                     "expect" => {
                         "last" => {
@@ -3010,14 +3010,14 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart"
                     }
                 },
                 {
-                    "at" => 1295000,
+                    "at" => 1355000,
                     "do" => [
                         {
                             "do" => "stoppage"
@@ -3025,7 +3025,7 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1300000,
+                    "at" => 1360000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -3033,7 +3033,7 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1420000,
+                    "at" => 1480000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakEnd",
@@ -3041,7 +3041,7 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1430000,
+                    "at" => 1490000,
                     "do" => [
                         {
                             "do" => "stoppage"
@@ -3125,7 +3125,7 @@ function matchCases() as Array<Dictionary> {
             ]
         },
         {
-            "name" => "breaks › centered on halfway: 18:30 for 3 minutes in a 40-minute half, nothing before kickoff",
+            "name" => "breaks › centered on halfway when not added on: 18:30 for 3 minutes in a 40-minute half, nothing before kickoff",
             "format" => {
                 "periodSec" => 2400,
                 "midBreak" => true,
@@ -3154,6 +3154,91 @@ function matchCases() as Array<Dictionary> {
                     ],
                     "expect" => {
                         "breakDueInMs" => 1110000
+                    }
+                }
+            ]
+        },
+        {
+            "name" => "breaks › added on as stoppage, at halfway whatever its length: 20:00 for 3 minutes in a 40-minute half",
+            "format" => {
+                "periodSec" => 2400,
+                "midBreak" => true,
+                "breakLenSec" => 180,
+                "trackStoppage" => true
+            },
+            "screen" => {},
+            "steps" => [
+                {
+                    "at" => 0,
+                    "do" => [
+                        {
+                            "do" => "kickoff",
+                            "team" => "home"
+                        },
+                        {
+                            "do" => "start"
+                        }
+                    ],
+                    "expect" => {
+                        "breakDueInMs" => 1200000
+                    }
+                },
+                {
+                    "at" => 1199000,
+                    "do" => [],
+                    "expect" => {
+                        "breakDue" => false
+                    }
+                },
+                {
+                    "at" => 1200000,
+                    "do" => [],
+                    "expect" => {
+                        "alert" => "breakStart",
+                        "breakDue" => true
+                    }
+                }
+            ]
+        },
+        {
+            "name" => "breaks › tracked with break as stoppage off, still centered: 18:30 for 3 minutes in a 40-minute half",
+            "format" => {
+                "periodSec" => 2400,
+                "midBreak" => true,
+                "breakLenSec" => 180,
+                "breakStoppage" => false,
+                "trackStoppage" => true
+            },
+            "screen" => {},
+            "steps" => [
+                {
+                    "at" => 0,
+                    "do" => [
+                        {
+                            "do" => "kickoff",
+                            "team" => "home"
+                        },
+                        {
+                            "do" => "start"
+                        }
+                    ],
+                    "expect" => {
+                        "breakDueInMs" => 1110000
+                    }
+                },
+                {
+                    "at" => 1109000,
+                    "do" => [],
+                    "expect" => {
+                        "breakDue" => false
+                    }
+                },
+                {
+                    "at" => 1110000,
+                    "do" => [],
+                    "expect" => {
+                        "alert" => "breakStart",
+                        "breakDue" => true
                     }
                 }
             ]
@@ -7908,15 +7993,15 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart",
-                        "sinBinPill" => "HOM 2 3:30"
+                        "sinBinPill" => "HOM 2 2:30"
                     }
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1350000,
                     "do" => [
                         {
                             "do" => "startBreak"
@@ -7927,20 +8012,20 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1350000,
+                    "at" => 1410000,
                     "do" => [],
                     "expect" => {
-                        "sinBinPill" => "HOM 2 3:30"
+                        "sinBinPill" => "HOM 2 2:30"
                     }
                 },
                 {
-                    "at" => 1410000,
+                    "at" => 1470000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakEnd",
                         "stoppageMs" => 120000,
                         "breakStoppageRunning" => false,
-                        "sinBinPill" => "HOM 2 3:30"
+                        "sinBinPill" => "HOM 2 2:30"
                     }
                 },
                 {
@@ -9795,7 +9880,7 @@ function matchCases() as Array<Dictionary> {
             ]
         },
         {
-            "name" => "stopping-clock › the halfway break stops it, with no reminders, whatever break as stoppage says",
+            "name" => "stopping-clock › the halfway break comes at halfway and stops it, with no reminders, whatever break as stoppage says",
             "format" => {
                 "midBreak" => true,
                 "breakLenSec" => 120,
@@ -9817,7 +9902,14 @@ function matchCases() as Array<Dictionary> {
                     ]
                 },
                 {
-                    "at" => 1290000,
+                    "at" => 1349000,
+                    "do" => [],
+                    "expect" => {
+                        "breakDue" => false
+                    }
+                },
+                {
+                    "at" => 1350000,
                     "do" => [],
                     "expect" => {
                         "alert" => "breakStart",
@@ -9825,35 +9917,35 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1300000,
+                    "at" => 1360000,
                     "do" => [
                         {
                             "do" => "startBreak"
                         }
                     ],
                     "expect" => {
-                        "clock" => "21:40",
+                        "clock" => "22:40",
                         "clockStopped" => true,
                         "breakStoppageRunning" => true,
                         "breakLeftMs" => 120000
                     }
                 },
                 {
-                    "at" => 1360000,
+                    "at" => 1420000,
                     "do" => [],
                     "expect" => {
-                        "clock" => "21:40",
+                        "clock" => "22:40",
                         "alert" => null,
                         "breakLeftMs" => 60000
                     }
                 },
                 {
-                    "at" => 1420000,
+                    "at" => 1480000,
                     "do" => [],
                     "expect" => {
                         "last" => {
                             "type" => "S",
-                            "seconds" => 1300,
+                            "seconds" => 1360,
                             "extra" => 120
                         },
                         "alert" => "breakEnd",
@@ -9862,10 +9954,10 @@ function matchCases() as Array<Dictionary> {
                     }
                 },
                 {
-                    "at" => 1480000,
+                    "at" => 1540000,
                     "do" => [],
                     "expect" => {
-                        "clock" => "22:40"
+                        "clock" => "23:40"
                     }
                 }
             ]

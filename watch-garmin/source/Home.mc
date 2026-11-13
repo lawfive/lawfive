@@ -265,9 +265,13 @@ class PlannedMatchMenu extends WatchUi.Menu2 {
     function initialize(match as Dictionary, index as Number) {
         synced = match;
         row = index;
-        var text = Sync.describe(match);
-        Menu2.initialize({:title => new TimedTitle(text[0])});
-        addItem(iconItem("Start match", text[1].length() > 0 ? text[1] : null, :start, Rez.Drawables.IconStart));
+        Menu2.initialize({:title => new TimedTitle(Sync.describe(match)[0])});
+        // UI-19: under Start match, the kickoff's day and time, then the format the match starts with
+        // ("Sat 9:00 · 2x45' · HT 15'"); the forecast and venue have their own rows.
+        var setup = Sync.setupFor(match);
+        var format = Format.summary(setup["numPeriods"] as Number, setup["periodSec"] as Number, setup["halftimeSec"] as Number);
+        var kickoff = Sync.kickoffText(match);
+        addItem(iconItem("Start match", kickoff != null ? kickoff + " · " + format : format, :start, Rez.Drawables.IconStart));
         var fee = match["fee"];
         if (fee instanceof Dictionary) {
             addItem(new WatchUi.ToggleMenuItem("Fee " + (fee["text"] as String), {:enabled => "Paid", :disabled => "Not paid"}, :fee, (fee["paid"] as Boolean?) == true, null));

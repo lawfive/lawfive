@@ -334,8 +334,7 @@ class Match(
         battery()?.let { if (batteryLog.size < 24) batteryLog.add(listOf(period, at, it)) }
     }
 
-    // TMR-7: centered on halfway, so due half the break's length before it.
-    val breakAtSec: Int get() = if (setup.midBreak) maxOf((setup.periodSec - setup.breakLenSec) / 2, 0) else -1
+    val breakAtSec: Int get() = halfwayBreakAtSec(setup)
 
     @kotlinx.serialization.Transient private var lastRepeat = 0L
     @kotlinx.serialization.Transient private var lastReminder = 0L
@@ -1133,6 +1132,17 @@ noteBattery(1)
 
 /** SET-16: a period's label before a time, "1H 23:40", or the time alone for a match of one period. */
 fun withPeriod(period: Int, numPeriods: Int, text: String) = periodLabel(period, numPeriods).let { if (it.isEmpty()) text else "$it $text" }
+
+/**
+ * TMR-7: when the halfway break is due, in seconds into each regular period, or -1 for none. Added on as
+ * stoppage (TMR-12; a stopping clock always stops for it, TMR-15), it's due at halfway, as it takes none
+ * of the period's time; otherwise it's centered on halfway, due half its length before it.
+ */
+fun halfwayBreakAtSec(f: MatchSetup): Int = when {
+    !f.midBreak -> -1
+    f.tracked && (f.breakStoppage || f.stoppingClock) -> f.periodSec / 2
+    else -> maxOf((f.periodSec - f.breakLenSec) / 2, 0)
+}
 
 /** The format in short, "2×45' · HT 15'", and "1×20'" for one period, whose break is only before extra time (SET-16). */
 fun formatSummary(f: MatchSetup): String {

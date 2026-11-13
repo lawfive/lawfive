@@ -306,7 +306,7 @@ struct FormatRows: View {
             ToggleRow(label: "Golden goal", sub: f.goldenGoal == true ? "First ET goal wins" : "Off", on: f.goldenGoal == true) { v in set { $0.goldenGoal = v } }
         }
         ToggleRow(label: "Penalties", sub: f.penalties ? "On" : "Off", on: f.penalties) { v in set { $0.penalties = v } }
-        ToggleRow(label: "Halfway \(brk)", sub: f.midBreak ? "At \(formatClock(Int64((f.periodSec - f.breakLenSec) / 2) * 1000))" : "Off", on: f.midBreak) { v in set { $0.midBreak = v } }
+        ToggleRow(label: "Halfway \(brk)", sub: f.midBreak ? "At \(formatClock(Int64(f.halfwayBreakAtSec) * 1000))" : "Off", on: f.midBreak) { v in set { $0.midBreak = v } }
         if f.midBreak {
             NavigationLink {
                 ChoicePage(title: "\(brk.capitalized1) length", values: stride(from: 30, through: 300, by: 30).map { ($0, formatClock(Int64($0) * 1000)) }, current: f.breakLenSec) { v in set { $0.breakLenSec = v } }

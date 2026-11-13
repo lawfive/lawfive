@@ -53,7 +53,7 @@ export const ScreenCase = z.strictObject({
         /** Stoppage so far, and whether one is running now. */
         stoppage: Time.optional(),
         stoppageRunning: z.boolean().optional(),
-        /** TMR-7: the halfway break of the setup's pictures (2 minutes, due at 21:30): to come, due, or running since breakStarted. */
+        /** TMR-7: the halfway break of the setup's pictures (2 minutes, added on as stoppage so due at 22:30, or centered at 21:30 when not tracked): to come, due, or running since breakStarted. */
         halfwayBreak: z.enum(["coming", "due", "running"]).optional(),
         breakStarted: Time.optional(),
     }),

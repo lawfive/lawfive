@@ -26,7 +26,7 @@ class WatchPreviewTest {
     }
 
     @Test fun playThrough() {
-        assertEquals(at(21, 30), playAt(0f).breakDueInMs)
+        assertEquals(at(22, 30), playAt(0f).breakDueInMs)
         assertEquals(true, playAt(0.5f).halftime)
         assertEquals(1, playAt(1f).period)
         assertEquals(at(3, 30), playAt(1f).stoppageMs)

@@ -69,6 +69,7 @@ data class MatchMoment(
     val elapsedMs: Long,
     val stoppageMs: Long = 0,
     val stoppageRunning: Boolean = false,
+    /** Timed as with stoppage tracked: added on as stoppage, so due at halfway (TMR-7, TMR-12); screenAt brings it forward when it isn't. */
     val breakDueInMs: Long? = null,
     val breakDue: Boolean = false,
     val breakLeftMs: Long? = null,
@@ -138,10 +139,12 @@ fun screenAt(setup: ScreenSetup, m: MatchMoment, tracked: Boolean): ScreenAt {
         val left = max(length - m.elapsedMs, 0L)
         return ScreenAt(true, period, "", breakClock = breakClockText(setup.breakClock, left, length), breakOver = left == 0L)
     }
+    // TMR-7: with no stoppage to add it to, the break is centered on halfway, due half its length earlier.
+    val dueInMs = if (m.breakDueInMs == null || tracked) m.breakDueInMs else m.breakDueInMs - PreviewFormat.BREAK_SEC * 1000L / 2
     val breakPill = when {
-        m.breakDue -> Pill("Break due", true)
+        m.breakDue || (dueInMs != null && dueInMs <= 0) -> Pill("Break due", true)
         m.breakLeftMs != null -> Pill(breakClockText(setup.breakClock, m.breakLeftMs, PreviewFormat.BREAK_SEC * 1000L), true)
-        m.breakDueInMs != null -> Pill(formatCountdown(m.breakDueInMs), false)
+        dueInMs != null -> Pill(formatCountdown(dueInMs), false)
         else -> null
     }
     return ScreenAt(
@@ -175,15 +178,15 @@ val moments = listOf(
     NamedMoment("added", "Added time", MatchMoment(period = 1, elapsedMs = mins(46, 12), stoppageMs = mins(2))),
     NamedMoment("stoppage", "Stoppage running", MatchMoment(elapsedMs = mins(31, 5), stoppageMs = mins(0, 24), stoppageRunning = true), stoppage = true),
     NamedMoment("paused", "Stoppage paused", MatchMoment(elapsedMs = mins(33, 40), stoppageMs = mins(1, 10)), stoppage = true),
-    NamedMoment("coming", "Break coming up", MatchMoment(elapsedMs = mins(12), breakDueInMs = mins(9, 30))),
-    NamedMoment("due", "Break due", MatchMoment(elapsedMs = mins(21, 40), stoppageMs = mins(0, 30), breakDue = true)),
-    NamedMoment("break", "Break running", MatchMoment(elapsedMs = mins(22, 30), stoppageMs = mins(1, 10), stoppageRunning = true, breakLeftMs = mins(1, 20))),
+    NamedMoment("coming", "Break coming up", MatchMoment(elapsedMs = mins(12), breakDueInMs = mins(10, 30))),
+    NamedMoment("due", "Break due", MatchMoment(elapsedMs = mins(22, 40), stoppageMs = mins(0, 30), breakDue = true)),
+    NamedMoment("break", "Break running", MatchMoment(elapsedMs = mins(23, 30), stoppageMs = mins(1, 10), stoppageRunning = true, breakLeftMs = mins(1, 20))),
     NamedMoment("halftime", "Half-time", MatchMoment(halftime = true, elapsedMs = mins(3))),
 )
 
 /**
  * Play through (UI-27): a whole 2 × 45 match at a point from 0 to 1, as the website's: the halfway
- * break taken at 21:50 and added on (TMR-12), the first half ending at 47:00, half-time, and a second
+ * break due at halfway, taken at 22:50 and added on (TMR-7, TMR-12), the first half ending at 47:00, half-time, and a second
  * half with a 1:30 stoppage at 30:00 too, ending at 48:30.
  */
 fun playAt(at: Float): MatchMoment {
@@ -198,8 +201,8 @@ fun playAt(at: Float): MatchMoment {
 }
 
 private fun halfAt(period: Int, t: Long, stoppages: List<Pair<Long, Long>>): MatchMoment {
-    val due = mins(21, 30)
-    val taken = mins(21, 50)
+    val due = mins(22, 30)
+    val taken = mins(22, 50)
     val end = taken + mins(2)
     val all = listOf(taken to end) + stoppages
     return MatchMoment(

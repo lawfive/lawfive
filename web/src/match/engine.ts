@@ -112,6 +112,19 @@ export function formatSummary(s: { numPeriods: number; periodSec: number; halfti
     return s.numPeriods === 1 ? periods : `${periods} · HT ${s.halftimeSec / 60}'`;
 }
 
+/**
+ * TMR-7: when the halfway break is due, in seconds into each regular period, or -1 for none. Added on as
+ * stoppage (TMR-12; a stopping clock always stops for it, TMR-15), it's due at halfway, as it takes none
+ * of the period's time; otherwise it's centered on halfway, due half its length before it.
+ */
+export function halfwayBreakAtSec(s: Pick<MatchSetup, "midBreak" | "periodSec" | "breakLenSec" | "trackStoppage" | "breakStoppage" | "stoppingClock">): number {
+    if (!s.midBreak) {
+        return -1;
+    }
+    const addedOn = (s.trackStoppage || s.stoppingClock) && (s.breakStoppage || s.stoppingClock);
+    return addedOn ? Math.trunc(s.periodSec / 2) : Math.max(Math.trunc((s.periodSec - s.breakLenSec) / 2), 0);
+}
+
 /** SET-16: a period's label before a time, "1H 23:40", or the time alone for a match of one period. */
 export function withPeriod(period: number, numPeriods: number, text: string): string {
     const label = periodLabel(period, numPeriods);
@@ -273,9 +286,8 @@ export class Match {
         return this.setup.stoppingClock && this.stoppageStart !== undefined;
     }
 
-    // TMR-7: centered on halfway, so due half the break's length before it.
     get breakAtSec() {
-        return this.setup.midBreak ? Math.max(Math.trunc((this.setup.periodSec - this.setup.breakLenSec) / 2), 0) : -1;
+        return halfwayBreakAtSec(this.setup);
     }
     get isExtraTime() {
         return this.period >= this.setup.numPeriods;

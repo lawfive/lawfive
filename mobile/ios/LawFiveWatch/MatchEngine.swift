@@ -211,6 +211,14 @@ struct MatchSetup: Codable, Equatable {
     var stoppageTimer: String { stoppageLabel ?? "stoppage" }
     var breakTimer: String { breakLabel ?? "break" }
 
+    /// TMR-7: when the halfway break is due, in seconds into each regular period, or -1 for none. Added on as
+    /// stoppage (TMR-12; a stopping clock always stops for it, TMR-15), it's due at halfway, as it takes none
+    /// of the period's time; otherwise it's centered on halfway, due half its length before it.
+    var halfwayBreakAtSec: Int {
+        if !midBreak { return -1 }
+        return (trackStoppage || stops) && (breakStoppage || stops) ? periodSec / 2 : max((periodSec - breakLenSec) / 2, 0)
+    }
+
     /// "2×45' · HT 15'", and "1×20'" for one period, whose break is only before extra time (SET-16).
     var summary: String {
         let periods = "\(numPeriods)×\(periodSec / 60)'"
@@ -366,8 +374,7 @@ final class Match: Codable {
     /// TMR-15: the stopping clock standing still, while a stoppage runs (shown in orange).
     var clockStopped: Bool { setup.stops && stoppageStart != nil }
 
-    // TMR-7: centered on halfway, so due half the break's length before it.
-    var breakAtSec: Int { setup.midBreak ? max((setup.periodSec - setup.breakLenSec) / 2, 0) : -1 }
+    var breakAtSec: Int { setup.halfwayBreakAtSec }
     var isExtraTime: Bool { period >= setup.numPeriods }
     var currentPeriodSec: Int { isExtraTime ? setup.etPeriodSec : setup.periodSec }
     var isStoppageActive: Bool { stoppageStart != nil }

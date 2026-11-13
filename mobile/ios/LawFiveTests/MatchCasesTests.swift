@@ -34,8 +34,8 @@ final class MatchCasesTests: XCTestCase {
         var expect: [String: Value]
     }
 
-    // The pictures' halfway break: 2 minutes, due at 21:30.
-    private let breakDue: Int64 = (21 * 60 + 30) * 1000
+    // The pictures' halfway break: 2 minutes, timed as added on as stoppage, so due at halfway, 22:30 (TMR-7).
+    private let breakDue: Int64 = (22 * 60 + 30) * 1000
     private let breakLength: Int64 = 2 * 60 * 1000
 
     func testScreenCases() throws {

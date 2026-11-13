@@ -983,7 +983,8 @@ private fun FullTimeScreen(m: Match, events: () -> Unit) {
 }
 
 /**
- * INP-3, UI-7. During play (INP-3): the period's end first, as it's done every match, then stoppage and the break,
+ * INP-3, UI-7. During play (INP-3): the period's end first, as it's done every match (but for a due break's Start,
+ * TMR-7), then stoppage and the break,
  * Undo (this period's events only, INP-6), the kickoff's corrections, and Restart, Suspend and Abandon last (TMR-13).
  * While suspended: Resume first, Lightning again, the cards, Undo and Abandon. Before kickoff and at the breaks: Coin
  * toss first (PRE-9), then the kickoff screen's own rows, the cards, and the way out.
@@ -1020,14 +1021,13 @@ private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> 
     }
     WatchList("Game") {
         if (m.phase == Phase.Running) {
+            // INP-3, TMR-7: a due halfway break's Start leads, as it's what the menu is opened for then.
+            if (m.breakDue) item { MenuRow("Start ${m.setup.breakLabel}", formatClock(m.setup.breakLenSec * 1000L)) { act { startBreak(System.currentTimeMillis()) } } }
             item { MenuRow(endLabel, m.clockDisplay(now).first, onClick = endPeriod) }
             // TMR-15: on a stopping clock, the stoppage stops and starts the clock, so it's named that way.
             val stoppageRow = if (m.setup.stoppingClock) (if (m.isStoppageActive) "Start clock" else "Stop clock") else (if (m.isStoppageActive) "End " else "Start ") + m.setup.stoppageLabel
             if (m.setup.tracked) item { MenuRow(stoppageRow) { act { toggleStoppage(System.currentTimeMillis()) } } }
-            if (m.breakDue) {
-                item { MenuRow("Start ${m.setup.breakLabel}", formatClock(m.setup.breakLenSec * 1000L)) { act { startBreak(System.currentTimeMillis()) } } }
-                item { MenuRow("Skip ${m.setup.breakLabel}") { act { skipBreak() } } }
-            }
+            if (m.breakDue) item { MenuRow("Skip ${m.setup.breakLabel}") { act { skipBreak() } } }
             m.breakRemainingMs(now)?.let { left ->
                 item { MenuRow("End ${m.setup.breakLabel}", "${formatCountdown(left)} left") { act { endBreakEarly(System.currentTimeMillis()) } } }
                 // TMR-7: Reset is out of the menu for now (the user's choice); the rest of it stays, to bring back.

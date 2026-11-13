@@ -129,7 +129,7 @@ function formatItems(setup as MatchData) as Array<WatchUi.MenuItem> {
             "goldenGoal", booleanOr(setup["goldenGoal"], false), null));
     }
     items.add(new WatchUi.ToggleMenuItem("Penalties", {:enabled => "On", :disabled => "Off"}, "penalties", setup["penalties"] as Boolean, null));
-    items.add(new WatchUi.ToggleMenuItem("Halfway " + breakLabel, {:enabled => "At " + Format.seconds((periodSec - (setup["breakLenSec"] as Number)) / 2), :disabled => "Off"},
+    items.add(new WatchUi.ToggleMenuItem("Halfway " + breakLabel, {:enabled => "At " + Format.seconds(halfwayBreakAtSec(setup)), :disabled => "Off"},
         "midBreak", midBreak, null));
     if (midBreak) {
         items.add(new WatchUi.MenuItem(Format.capitalize(breakLabel) + " length", Format.seconds(setup["breakLenSec"] as Number), "breakLenSec", null));

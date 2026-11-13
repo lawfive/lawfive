@@ -582,14 +582,18 @@ export class TryMatch {
         const endRow = { id: "end", label: m.periodEndsMatch ? "End match" : `End ${this.periodWords(m.period)}` };
         switch (m.phase) {
             case "running": {
-                // During play: the period's end first, as it's done every match; then stoppage and the halfway break;
+                // During play: the period's end first, as it's done every match (but for a due halfway break's Start,
+                // which is what the menu is opened for then, TMR-7); then stoppage and the halfway break;
                 // Undo (this period's events only, INP-6); the kickoff's corrections; Restart and Abandon last.
+                if (m.breakDue) {
+                    rows.push({ id: "startBreak", label: "Start break", sub: formatClock(m.setup.breakLenSec * 1000) });
+                }
                 rows.push(endRow);
                 if (m.setup.trackStoppage) {
                     rows.push({ id: "stoppage", label: this.stoppageWords });
                 }
                 if (m.breakDue) {
-                    rows.push({ id: "startBreak", label: "Start break", sub: formatClock(m.setup.breakLenSec * 1000) }, { id: "skipBreak", label: "Skip break" });
+                    rows.push({ id: "skipBreak", label: "Skip break" });
                 }
                 const left = m.breakRemainingMs(now);
                 if (left !== undefined) {

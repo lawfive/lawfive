@@ -93,10 +93,10 @@
             "steps": [
                 { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
                 { "at": "15:00", "do": { "event": "SB", "team": "home", "player": 2 } },
-                { "at": "21:30", "expect": { "alert": "breakStart", "sinBinPill": "HOM 2 3:30" } },
-                { "at": "21:30", "do": "startBreak", "expect": { "breakStoppageRunning": true } },
-                { "at": "22:30", "expect": { "sinBinPill": "HOM 2 3:30" } },
-                { "at": "23:30", "expect": { "alert": "breakEnd", "breakStoppageRunning": false, "stoppageMs": 120000, "sinBinPill": "HOM 2 3:30" } },
+                { "at": "22:30", "expect": { "alert": "breakStart", "sinBinPill": "HOM 2 2:30" } },
+                { "at": "22:30", "do": "startBreak", "expect": { "breakStoppageRunning": true } },
+                { "at": "23:30", "expect": { "sinBinPill": "HOM 2 2:30" } },
+                { "at": "24:30", "expect": { "alert": "breakEnd", "breakStoppageRunning": false, "stoppageMs": 120000, "sinBinPill": "HOM 2 2:30" } },
                 { "at": "25:00", "expect": { "sinBinPill": "HOM 2 2:00" } },
                 { "at": "26:59", "expect": { "alert": null, "sinBinPill": "HOM 2 0:01" } },
                 { "at": "27:00", "expect": { "alert": "sinBinEnd", "sinBinReturn": { "team": "home", "player": 2 } } }

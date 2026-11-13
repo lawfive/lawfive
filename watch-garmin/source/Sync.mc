@@ -606,10 +606,9 @@ module Sync {
     //! (the forecast, WX-7, when the server has one).
     function describe(synced as Dictionary) as [String, String] {
         var parts = [] as Array<String>;
-        var kickoff = synced["kickoff"];
-        if (kickoff instanceof Number) {
-            var info = Gregorian.info(new Time.Moment(kickoff), Time.FORMAT_MEDIUM);
-            parts.add(info.day_of_week + " " + clockTime(info.hour, info.min));
+        var kickoff = kickoffText(synced);
+        if (kickoff != null) {
+            parts.add(kickoff);
         }
         var weather = synced["weather"];
         if (weather instanceof String) {
@@ -624,6 +623,16 @@ module Sync {
             sub += (i > 0 ? " · " : "") + parts[i];
         }
         return [stringOr(synced["title"] as String?, "Match"), sub];
+    }
+
+    //! A downloaded match's kickoff, "Sat 9:00", or null when it has none.
+    function kickoffText(synced as Dictionary) as String? {
+        var kickoff = synced["kickoff"];
+        if (!(kickoff instanceof Number)) {
+            return null;
+        }
+        var info = Gregorian.info(new Time.Moment(kickoff), Time.FORMAT_MEDIUM);
+        return info.day_of_week + " " + clockTime(info.hour, info.min);
     }
 
     function isRunning() as Boolean {

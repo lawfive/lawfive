@@ -25,8 +25,9 @@ interface ScreenCase {
 
 const all = JSON.parse(readFileSync(new URL("../../schema/generated/match-cases.json", import.meta.url), "utf8")) as { screen: ScreenCase[]; match: MatchCase[] };
 const cases = all.screen;
-// The pictures' halfway break: 2 minutes, due at 21:30 (watchPreview.ts's playAt).
-const breakDue = (21 * 60 + 30) * 1000;
+// The pictures' halfway break: 2 minutes, timed as added on as stoppage, so due at halfway, 22:30 (TMR-7,
+// watchPreview.ts's playAt); screenAt brings it forward when stoppage isn't tracked.
+const breakDue = (22 * 60 + 30) * 1000;
 const breakLength = 2 * 60 * 1000;
 // What a case leaves out of its screen: one clock counting up, as the watches' runners have it.
 const caseScreen: ScreenSetup = { clocks: "one", mainClock: "up", secondClock: "down", breakClock: "down", edge: "none", names: true };

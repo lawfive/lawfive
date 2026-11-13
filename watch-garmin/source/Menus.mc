@@ -685,12 +685,16 @@ function gameMenu(match as Match) as WatchUi.Menu2 {
     return menu;
 }
 
-//! INP-3: the game menu during play. The period's end first, as it's done every match; then stoppage
-//! and the halfway break; Undo (this period's events only, INP-6); the clock's corrections (TMR-14);
-//! the kickoff's corrections; and Restart, Suspend (TMR-13) and Abandon last, as they stop play.
+//! INP-3: the game menu during play. The period's end first, as it's done every match, but for a due
+//! halfway break's Start, which is what the menu is opened for then (TMR-7); then stoppage and the
+//! halfway break; Undo (this period's events only, INP-6); the clock's corrections (TMR-14); the
+//! kickoff's corrections; and Restart, Suspend (TMR-13) and Abandon last, as they stop play.
 function playMenu(match as Match) as WatchUi.Menu2 {
     var menu = systemMenu("Game");
     var now = Clock.nowMs();
+    if (match.breakDue) {
+        menu.addItem(new WatchUi.MenuItem("Start " + match.breakLabel, Format.seconds(match.breakLenSec), :startBreak, null));
+    }
     menu.addItem(endPeriodItem(match, now));
     if (match.stoppingClock) {
         // TMR-15: a stoppage stops the clock, so it's named for what it does.
@@ -699,7 +703,6 @@ function playMenu(match as Match) as WatchUi.Menu2 {
         menu.addItem(new WatchUi.MenuItem((match.isStoppageActive() ? "End " : "Start ") + match.stoppageLabel, null, :stoppage, null));
     }
     if (match.breakDue) {
-        menu.addItem(new WatchUi.MenuItem("Start " + match.breakLabel, Format.seconds(match.breakLenSec), :startBreak, null));
         menu.addItem(new WatchUi.MenuItem("Skip " + match.breakLabel, null, :skipBreak, null));
     }
     var remaining = match.breakRemainingMs(now);

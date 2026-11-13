@@ -470,7 +470,8 @@ function tourSteps(t: Controller): TourStep[] {
     if (s.midBreak) {
         steps.push({
             title: "The halfway break",
-            text: (kind) => `Skip to the halfway break. At 21:30 it's due and the watch buzzes; ${buttoned(kind) ? "Start" : "the game menu's Start break"} starts its countdown.`,
+            // TMR-7: at halfway when it's added on as stoppage, else centered on it.
+            text: (kind, c) => `Skip to the halfway break. At ${formatClock(c.match.breakAtSec * 1000)} it's due and the watch buzzes; ${buttoned(kind) ? "Start" : "the game menu's Start break, at the top,"} starts its countdown.`,
             done: (c) => c.match.breakRemainingMs(Number.MAX_SAFE_INTEGER) !== undefined || (c.match.scheduledBreakDone && !c.match.breakDue),
             control: (kind) => (buttoned(kind) ? "start" : `swipe:${ways.game}`),
             skipTo: "halfway",

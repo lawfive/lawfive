@@ -19,7 +19,11 @@ export interface MatchMoment {
     elapsedMs: number;
     stoppageMs: number;
     stoppageRunning: boolean;
-    /** The halfway break: still to come (in this long), due, or running (this long left). */
+    /**
+     * The halfway break: still to come (in this long), due, or running (this long left). It's timed as with
+     * stoppage tracked, added on as stoppage and so due at halfway (TMR-7, TMR-12); screenAt brings it forward
+     * when stoppage isn't tracked.
+     */
     breakDueInMs?: number;
     breakDue?: boolean;
     breakLeftMs?: number;
@@ -71,11 +75,13 @@ export function screenAt(setup: ScreenSetup, m: MatchMoment, tracked: boolean): 
     }
     // TMR-16: from the period's length, the added time left.
     const stoppage = tracked ? stoppagePillAt(m.stoppageMs, m.stoppageRunning, m.elapsedMs, periodMs) : undefined;
-    const breakPill = m.breakDue
+    // TMR-7: with no stoppage to add it to, the break is centered on halfway, due half its length earlier.
+    const dueInMs = m.breakDueInMs === undefined || tracked ? m.breakDueInMs : m.breakDueInMs - (f.breakSec * 1000) / 2;
+    const breakPill = m.breakDue || (dueInMs !== undefined && dueInMs <= 0)
         ? { text: "Break due", solid: true }
         : m.breakLeftMs !== undefined
             ? { text: breakClockText(setup.breakClock, m.breakLeftMs, f.breakSec * 1000), solid: true }
-            : m.breakDueInMs !== undefined ? { text: formatCountdown(m.breakDueInMs), solid: false } : undefined;
+            : dueInMs !== undefined ? { text: formatCountdown(dueInMs), solid: false } : undefined;
     return {
         phase: "running",
         period,
@@ -107,15 +113,15 @@ export const moments: { id: string; name: string; stoppage?: boolean; moment: Ma
     { id: "added", name: "Added time", moment: { phase: "running", period: 1, elapsedMs: min(46, 12), stoppageMs: min(2), stoppageRunning: false } },
     { id: "stoppage", name: "Stoppage running", stoppage: true, moment: { phase: "running", period: 0, elapsedMs: min(31, 5), stoppageMs: min(0, 24), stoppageRunning: true } },
     { id: "paused", name: "Stoppage paused", stoppage: true, moment: { phase: "running", period: 0, elapsedMs: min(33, 40), stoppageMs: min(1, 10), stoppageRunning: false } },
-    { id: "coming", name: "Break coming up", moment: { phase: "running", period: 0, elapsedMs: min(12), stoppageMs: 0, stoppageRunning: false, breakDueInMs: min(9, 30) } },
-    { id: "due", name: "Break due", moment: { phase: "running", period: 0, elapsedMs: min(21, 40), stoppageMs: min(0, 30), stoppageRunning: false, breakDue: true } },
-    { id: "break", name: "Break running", moment: { phase: "running", period: 0, elapsedMs: min(22, 30), stoppageMs: min(1, 10), stoppageRunning: true, breakLeftMs: min(1, 20) } },
+    { id: "coming", name: "Break coming up", moment: { phase: "running", period: 0, elapsedMs: min(12), stoppageMs: 0, stoppageRunning: false, breakDueInMs: min(10, 30) } },
+    { id: "due", name: "Break due", moment: { phase: "running", period: 0, elapsedMs: min(22, 40), stoppageMs: min(0, 30), stoppageRunning: false, breakDue: true } },
+    { id: "break", name: "Break running", moment: { phase: "running", period: 0, elapsedMs: min(23, 30), stoppageMs: min(1, 10), stoppageRunning: true, breakLeftMs: min(1, 20) } },
     { id: "halftime", name: "Half-time", moment: { phase: "halftime", period: 0, elapsedMs: min(3), stoppageMs: 0, stoppageRunning: false } },
 ];
 
 /**
  * Play through (UI-27): a whole 2 × 45 match at a point from 0 to 1. The first half has its halfway
- * break taken at 21:50, added on as stoppage (TMR-12), and ends when that's used up at 47:00; then
+ * break due at halfway and taken at 22:50, added on as stoppage (TMR-7, TMR-12), and ends when that's used up at 47:00; then
  * half-time; the second half has a 1:30 stoppage at 30:00 too and ends at 48:30.
  */
 export function playAt(at: number): MatchMoment {
@@ -134,8 +140,8 @@ export function playAt(at: number): MatchMoment {
 }
 
 function halfAt(period: number, t: number, stoppages: [number, number][]): MatchMoment {
-    const due = min(21, 30);
-    const taken = min(21, 50);
+    const due = min(22, 30);
+    const taken = min(22, 50);
     const end = taken + min(2);
     const all: [number, number][] = [[taken, end], ...stoppages];
     const stoppageMs = all.reduce((sum, [a, b]) => sum + Math.max(0, Math.min(t, b) - a), 0);

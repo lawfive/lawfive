@@ -47,12 +47,14 @@ test("a half on a Garmin's five buttons", () => {
     assert.equal(t.match.isStoppageActive, true);
     t.press("start", at(16));
     assert.equal(t.match.isStoppageActive, false);
-    // The halfway break: due at 21:30; the first press only silences it (VIB-6), the next starts it.
-    assert.equal(t.tick(at(21, 30)), "breakStart");
-    t.press("start", at(21, 31));
+    // The halfway break: added on as stoppage, so due at halfway, 22:30 (TMR-7); the first press only silences it
+    // (VIB-6), the next starts it.
+    assert.equal(t.tick(at(22, 29)), undefined);
+    assert.equal(t.tick(at(22, 30)), "breakStart");
+    t.press("start", at(22, 31));
     assert.equal(t.match.breakDue, true, "silenced, still due");
-    t.press("start", at(21, 32));
-    assert.equal(t.match.breakRemainingMs(at(21, 32)), 120_000);
+    t.press("start", at(22, 32));
+    assert.equal(t.match.breakRemainingMs(at(22, 32)), 120_000);
     // Back: the game menu; the period's end is first (INP-3), in Garmin's words, and asks first.
     t.press("back", at(48));
     assert.equal(over(t)?.kind, "menu");
@@ -161,6 +163,20 @@ test("during play the game menu leads with the period's end, and offers Undo onl
     t.openGameMenu(at(61));
     assert.equal(menu(t)?.rows[0].label, "End match");
     assert.ok(!menu(t)?.rows.some((r) => r.label === "Undo last event"), "not the first half's in the second");
+});
+
+test("while the halfway break is due, the game menu leads with Start break (INP-3, TMR-7)", () => {
+    const t = new TryMatch({ midBreak: true }, { watch: "apple", swipes: "upDown", screen: defaultScreen });
+    t.tap("team:0", t0);
+    t.tap("start", t0);
+    // Not added on as stoppage (stoppage isn't tracked), so centered on halfway: 21:30.
+    t.tick(at(21, 30));
+    assert.equal(t.match.breakDue, true);
+    t.openGameMenu(at(21, 31));
+    assert.deepEqual(menu(t)?.rows.slice(0, 3).map((r) => r.label), ["Start break", "End first half", "Skip break"]);
+    t.match.skipBreak();
+    t.openGameMenu(at(21, 32));
+    assert.equal(menu(t)?.rows[0].label, "End first half", "once it's skipped, the period's end leads again");
 });
 
 test("a team official's card asks the role, and an injury the number and starts the stoppage (EVT-15, EVT-16)", () => {

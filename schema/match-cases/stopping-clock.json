@@ -109,16 +109,17 @@
             ]
         },
         {
-            "name": "the halfway break stops it, with no reminders, whatever break as stoppage says",
+            "name": "the halfway break comes at halfway and stops it, with no reminders, whatever break as stoppage says",
             "ids": ["TMR-15", "TMR-7", "TMR-12", "VIB-2", "VIB-3"],
             "format": { "stoppingClock": true, "midBreak": true, "breakLenSec": 120, "breakStoppage": false },
             "steps": [
                 { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
-                { "at": "21:30", "expect": { "alert": "breakStart", "breakDue": true } },
-                { "at": "21:40", "do": "startBreak", "expect": { "breakLeftMs": 120000, "clockStopped": true, "breakStoppageRunning": true, "clock": "21:40" } },
-                { "at": "22:40", "expect": { "alert": null, "clock": "21:40", "breakLeftMs": 60000 } },
-                { "at": "23:40", "expect": { "alert": "breakEnd", "clockStopped": false, "breakLeftMs": null, "last": { "type": "S", "seconds": 1300, "extra": 120 } } },
-                { "at": "24:40", "expect": { "clock": "22:40" } }
+                { "at": "22:29", "expect": { "breakDue": false } },
+                { "at": "22:30", "expect": { "alert": "breakStart", "breakDue": true } },
+                { "at": "22:40", "do": "startBreak", "expect": { "breakLeftMs": 120000, "clockStopped": true, "breakStoppageRunning": true, "clock": "22:40" } },
+                { "at": "23:40", "expect": { "alert": null, "clock": "22:40", "breakLeftMs": 60000 } },
+                { "at": "24:40", "expect": { "alert": "breakEnd", "clockStopped": false, "breakLeftMs": null, "last": { "type": "S", "seconds": 1360, "extra": 120 } } },
+                { "at": "25:40", "expect": { "clock": "23:40" } }
             ]
         },
         {

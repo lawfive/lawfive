@@ -981,9 +981,12 @@ private struct GameMenu: View {
         ScrollView {
             VStack(spacing: 5) {
                 if m.phase == .running {
-                    // INP-3: during play, the period's end first, as it's done every match; then stoppage and the halfway
-                    // break; Undo (this period's events only, INP-6); the kickoff's corrections; Restart, Suspend (TMR-13)
-                    // and Abandon last.
+                    // INP-3: during play, the period's end first, as it's done every match (but for a due halfway break's
+                    // Start, what the menu is opened for then, TMR-7); then stoppage and the halfway break; Undo (this
+                    // period's events only, INP-6); the kickoff's corrections; Restart, Suspend (TMR-13) and Abandon last.
+                    if m.breakDue {
+                        MenuRow(label: "Start \(m.setup.breakTimer)", sub: formatClock(Int64(m.setup.breakLenSec) * 1000)) { act { $0.startBreak(nowMs()) } }
+                    }
                     MenuRow(label: endLabel, sub: m.clockDisplay(now).clock, action: endPeriod)
                     // TMR-15: with a stopping clock, the stoppage is the clock standing still.
                     if m.setup.stops {
@@ -992,7 +995,6 @@ private struct GameMenu: View {
                         MenuRow(label: (m.isStoppageActive ? "End " : "Start ") + m.setup.stoppageTimer) { act { $0.toggleStoppage(nowMs()) } }
                     }
                     if m.breakDue {
-                        MenuRow(label: "Start \(m.setup.breakTimer)", sub: formatClock(Int64(m.setup.breakLenSec) * 1000)) { act { $0.startBreak(nowMs()) } }
                         MenuRow(label: "Skip \(m.setup.breakTimer)") { act { $0.skipBreak() } }
                     }
                     if let left = m.breakRemainingMs(now) {
