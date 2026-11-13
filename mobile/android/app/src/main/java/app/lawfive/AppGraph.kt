@@ -76,7 +76,7 @@ class AppGraph(private val context: Context) {
     val sync = SyncEngine(api, db, session, syncActivity, fromWatch) { forgetAccount() }
     val health = HealthSave(context, api, db)
     val records = Records(db) { requestSync() }
-    val reminders = Reminders(context)
+    val reminders = Reminders(context, records)
     /** Notifications from the server, through the push relay (PUSH-4, PUSH-5). */
     val push = Push(context, this)
     /** The Garmin watch's sync through this phone (APP-7). */
@@ -131,7 +131,8 @@ class AppGraph(private val context: Context) {
     private suspend fun syncAndRefresh() {
         if (sync.sync()) {
             fillTimeZone()
-            reminders.reschedule()
+            // APP-6: the account's reminder times, the phone's own from before uploaded once if it has none.
+            reminders.afterSync()
             watch.relay.refresh()
             onWatch.refresh()
             weather.refresh()
@@ -330,7 +331,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
     override suspend fun doWork(): Result {
         val graph = applicationContext.graph
         return if (graph.sync.sync()) {
-            graph.reminders.reschedule()
+            graph.reminders.afterSync()
             graph.watch.relay.refresh()
             graph.onWatch.refresh()
             runCatching { graph.push.refresh() }

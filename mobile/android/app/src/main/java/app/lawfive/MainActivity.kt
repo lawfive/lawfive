@@ -62,6 +62,13 @@ class MainActivity : ComponentActivity() {
             androidx.core.app.NotificationManagerCompat.from(this).notify(7303, matchNotification(this, Reminders.CHANNEL, "", "Strikers v Rovers",
                 reminderText(time, "Central Park", left), 33.6, -117.6, null, kickoff, countdown = left <= COUNTDOWN_WITHIN))
         }
+        // For testing on an emulator (--ez dayReminder true): the day before's reminder for two matches (APP-6).
+        if (BuildConfig.DEBUG && intent?.getBooleanExtra("dayReminder", false) == true) {
+            val lines = listOf("STR v ROV · 9:00 AM · Central Park", "LIO v TIG · 12:30 PM · Twin Creeks")
+            lifecycleScope.launch {
+                showReminder(this@MainActivity, ReminderNote("", "2 matches tomorrow", null, null, lines, java.time.Instant.now().plus(java.time.Duration.ofHours(16)), 33.6, -117.6))
+            }
+        }
     }
 
     override fun onResume() {

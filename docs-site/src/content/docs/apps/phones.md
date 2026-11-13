@@ -3,7 +3,7 @@ title: Phone apps
 description: Connect the LawFive Android and iPhone apps to your own server.
 ---
 
-The same apps work with the hosted service and with your own server.
+The same apps work with the hosted service and with your own server. What each asks the phone for (notifications, the local network and the rest), when it asks, and what still works without each, is on [Permissions](https://lawfive.app/permissions) at lawfive.app.
 
 :::note[Availability]
 The apps aren't in Google Play or the App Store yet. Until they are, [build them from source](/contribute/overview/).
@@ -50,7 +50,11 @@ Every place a match or venue shows has a **Directions** button. It opens Google 
 
 ## Reminders
 
-Match reminders are scheduled on the phone after each sync, so they work on any server. On Android, a reminder in the last 3 hours before kickoff counts down to it live, and goes away at kickoff. Tapping one opens the match, and a match with a place has a **Directions** button.
+Match reminders are scheduled on the phone after each sync, so they work on any server. Each phone has its own **Remind me of matches** switch in Settings; the times are your account's, the same as your calendar feed's, so you set them once on the website or any phone and the rest follow.
+
+Reminders before kickoff come one per match. On Android, one in the last 3 hours counts down to kickoff live, and goes away at kickoff. The day before and the day of come as one notification for the day's matches: "2 matches tomorrow", with a line for each ("STR v ROV · 9:00 AM · Central Park"). Tapping one opens the match (the day's first), and a match with a place has a **Directions** button.
+
+On Android 12 and later, reminders arrive on the minute when you allow LawFive **Alarms & reminders**, which the app asks for when you turn them on. Without it they still come, but Android can hold them back a few minutes.
 
 ## Weather risks
 

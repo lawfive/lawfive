@@ -29,7 +29,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 
 ## Reminders, erasing and deleting
 
-- **IOS-6** **Match reminders** as APP-6, without the live countdown. iOS keeps at most 64 waiting, so the soonest 60 are scheduled, again after each sync.
+- **IOS-6** **Match reminders** as APP-6, at the account's times, with a day's matches in one notification, without the live countdown. iOS keeps at most 64 waiting, so the soonest 60 are scheduled, again after each sync. iOS shows each at the moment it's set for, so the iPhone needs nothing like APP-28.
 - **IOS-5** **Erase this phone's LawFive data** as APP-11, except that the app returns to signing in rather than closing, as iPhone apps don't close themselves.
 - **IOS-10** **Deleting the account in the app** as APP-21.
 
@@ -62,3 +62,4 @@ Not built yet:
 - Proving IOS-9 on hardware.
 - Linking the Apple Watch (WCH-12) on hardware (R-6, R-13).
 - The App Store listing (IOS-10, IOS-11).
+- Notifications from the server: weather risks and matches from integrations (PUSH-5, NOTE-4), with their settings.

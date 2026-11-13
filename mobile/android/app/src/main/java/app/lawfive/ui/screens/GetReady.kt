@@ -126,7 +126,13 @@ fun GetReadyList(ready: GetReadyState) {
     fun keep(change: (UserSettingsGetReady) -> UserSettingsGetReady) {
         scope.launch { graph.records.saveSettings { s -> s.copy(getReady = change(s.getReady ?: UserSettingsGetReady())) } }
     }
-    val turnOn = { scope.launch { graph.reminders.update(ready.reminders.copy(enabled = true)) }; Unit }
+    // APP-28: then Alarms & reminders, so they come on the minute.
+    val askForExact = rememberAskForExactAlarms()
+    val turnOn = {
+        scope.launch { graph.reminders.update(ready.reminders.copy(enabled = true)) }
+        askForExact()
+    }
+    val times by graph.reminders.times.collectAsStateWithLifecycle(app.lawfive.ReminderTimes())
     val ask = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted -> if (granted) turnOn() }
     val d = ready.done
     val muted = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, lineHeight = 19.sp)
@@ -143,7 +149,7 @@ fun GetReadyList(ready: GetReadyState) {
         }) { lead, m -> StepButton("Link a watch", Ph.Watch, lead, m) { nav.navigate("link") } },
         Step("reminders", "Turn on reminders", d.reminders, {
             Text(
-                if (ready.reminders.enabled) "On: ${ready.reminders.minutesBefore.sortedDescending().joinToString(" and ") { beforeText(it) }} before kickoff"
+                if (ready.reminders.enabled) remindersOnText(times)
                 else "A notification on this phone before each kickoff, with the venue and directions.",
                 style = muted, color = colors.muted,
             )

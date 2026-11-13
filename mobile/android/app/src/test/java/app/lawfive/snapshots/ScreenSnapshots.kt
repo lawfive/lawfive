@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import app.lawfive.AppGraph
+import app.lawfive.ReminderSettings
 import app.lawfive.data.AppClock
 import app.lawfive.data.quizAnswerIsRight
 import app.lawfive.data.quizPool
@@ -126,7 +127,9 @@ class ScreenSnapshots {
         signIn(graph, "demo")
         snap("matches", wait = "Rovers U12", foot = 120) { MatchesScreen() }
         snap("match-played", wait = "Where you went") { MatchScreen(ids["withTrack"]!!.jsonPrimitive.content) }
-        snap("settings", wait = "Where you're signed in") { SettingsScreen() }
+        // APP-6: with this phone's reminders on, so their times show; off again for the screens after.
+        snap("settings", wait = "Where you're signed in", setup = { runBlocking { graph.reminders.save(ReminderSettings(enabled = true)) } }) { SettingsScreen() }
+        runBlocking { graph.reminders.save(ReminderSettings()) }
         snap("match-form", wait = "Fee and notes", foot = 130) { MatchEditScreen(null) }
         snap("stats", wait = "Where on the pitch") { StatsScreen() }
         val bank = graph.quiz.local()

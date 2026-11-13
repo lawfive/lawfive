@@ -582,6 +582,7 @@ On every watch the same drawing shows how to hold the watch: the forearm in `#55
 - **The hero**: an eyebrow (a mint mono label on a board tag), the title with the hero offset (up to 132px on the home page, 112px elsewhere, 44–72px on phones), a chalk lede, then the halfway line. Screens are framed in the board's black (a screen, a phone, a watch), never anyone's product art.
 - **Sections**: a mono label over a 44–72px black italic heading; groups are labels at 34px (28px on phones) with a chalk line running on.
 - **Chalk panels** hold dense words (What it does, topics, questions, legal text).
+- **Permissions** (`permissions.html`): the legal pages' look, the apps as board tags to jump to, then a chalk panel per app (a mint mono label, Phone or Watch, over its name). Each permission is a row between hairlines: its name as the system shows it in condensed extra-bold, its identifiers beside it as [code](#code), then For, Asked and If you say no as small mono labels in pitch green beside the words (over them on phones). What's allowed without asking follows under a heavy rule and a mono label, as a list.
 - **Boards** hold the big moments:
   - **The closer look**: the [slab](#slab) in the site's own classes (`.look-tab`, `.look-tag`, `.look-face`, so they can't reach a playable part's `.slab`), the tab 28–38px (24px on phones), a mint tag naming its page, sides alternating.
   - **Find out more**: a board per page, lit with a mint bar on hover; five or six in a row, three under 1100px, two under 700px, a list under 600px.

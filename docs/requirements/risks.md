@@ -22,7 +22,7 @@ Most of LawFive has been checked in unit tests, the shared match cases, simulato
 - **R-18** **Push notifications.** The relay at `push.lawfive.app` has delivered to an emulator. Still to check: a real phone, delivery while it's asleep, the daily limits in production, and for integrations (NOTE-1 to NOTE-4) the wording for one match and several, and a canceled match's reminders going.
 - **R-20** **Plan limits from a phone offline.** Plans (PLAN-4) refuse a match, referee or venue a phone made offline once the account is at its limit; the phone keeps it and the sync fails for it, as for any refused save. Not yet tried on a phone. The watch's own recordings are never refused.
 
-Android's checks still to do (APP-13, APP-14, APP-27): the scanner reading a real QR code, the camera opening Get the app, Open in the app, the launcher and notification icons, and the look in sunlight and at night. Deleting a match (RES-8) with and without signal on both phones.
+Android's checks still to do (APP-6, APP-13, APP-14, APP-27, APP-28): the scanner reading a real QR code, the camera opening Get the app, Open in the app, the launcher and notification icons, and the look in sunlight and at night; a reminder arriving on the minute while the phone is asleep, after a restart and after an update, a few minutes late with Alarms & reminders refused, and a day's matches in one notification in the shade. Deleting a match (RES-8) with and without signal on both phones.
 
 ## Platform limits
 

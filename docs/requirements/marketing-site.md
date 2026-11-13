@@ -50,6 +50,8 @@ The marketing site at lawfive.app, with its feature pages, playable parts and le
   - The privacy policy names injuries among the match details, and says data is kept in the United States, so people elsewhere send it there when they use LawFive. It names the companies that run the hosted service, keep its encrypted backups and send its account email. Account email covers notice of changes to a plan, the service, the terms or the policy, and there's no marketing without asking.
   - The privacy policy and the deletion page say backups and server logs are kept 30 days, and they are.
 - **SITE-11** **A support page**, `lawfive.app/support`, linked from every page's footer and given to the stores as the support address. It says to write to support@lawfive.app and what to put in the message; answers the common questions (signing in, invitations, watches, TestFlight feedback); points to Download everything, the deletion page and privacy@lawfive.app; sends people on someone else's server to its owner and self-hosters to lawfive.dev; and asks for security problems by email, not in public.
+- **SITE-14** **A permissions page**, `lawfive.app/permissions`, linked from every page's footer, the privacy policy, the FAQ and lawfive.dev's pages on the phone and watch apps, and given to the stores' reviewers. For each app in turn (Android, iPhone, Garmin, Wear OS, Apple Watch) it lists every permission the app asks for, by the name the phone or watch shows: what LawFive uses it for, when it's asked, and what still works if the answer is no. Those the system grants without asking, and those a library lists that LawFive never asks for, are named too, briefly. Each entry carries the system's identifiers for the stores' reviewers.
+  - It's kept in step with the apps: a permission added to or removed from any app changes the page in the same piece of work, and the root tests fail when an app's manifest or Info.plist declares a permission the page doesn't name, or the page names one the app doesn't declare (apart from a short list of known reasons, such as permissions libraries add).
 
 ## The look
 
@@ -71,6 +73,8 @@ The marketing site at lawfive.app, with its feature pages, playable parts and le
 ## Status
 
 Everything above is built, with every page of lawfive.app and lawfive.dev checked from phone to desktop widths in light and dark.
+
+The permissions page's (SITE-14) Garmin entries use Garmin's names for the permissions, still to be checked against what the Connect IQ Store shows.
 
 Not built yet:
 - Legal review of the privacy policy and terms, and their effective date (SITE-5).

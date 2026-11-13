@@ -84,6 +84,9 @@ final class ScreenSnapshots: XCTestCase {
 
     func testSettings() async throws {
         let graph = try await graph(.demo)
+        // APP-6: with this phone's reminders on, so their times show; off again for the screens after.
+        graph.reminders.update(ReminderSettings(enabled: true), matches: [], venues: [])
+        defer { graph.reminders.update(ReminderSettings(), matches: [], venues: []) }
         try await Snapshots.take("settings") { self.app(graph, tab: .more, [.settings]) }
     }
 

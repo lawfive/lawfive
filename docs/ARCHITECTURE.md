@@ -80,7 +80,7 @@ Rules:
 | Feature | How |
 |---|---|
 | Weather | A server job keeps Open-Meteo forecasts by place (squares about 5 km across), only for places with a match in the next 16 days, more often as kickoff nears, within a daily limit. Apps read each match's weather and risks from `GET /v1/weather`; the watch gets a short line. Self-hosters need no key ([weather](requirements/weather.md)). |
-| Notifications | Match reminders are scheduled on the phone (APP-6, IOS-6). The server decides on new weather risks (PUSH-5) and on matches an integration adds or changes ([integration notifications](requirements/integration-notifications.md)), and sends them through the push relay. |
+| Notifications | Match reminders are scheduled on the phone, at the account's reminder times (APP-6, IOS-6, CAL-3). The server decides on new weather risks (PUSH-5) and on matches an integration adds or changes ([integration notifications](requirements/integration-notifications.md)), and sends them through the push relay. |
 | Assignor calendars | The server reads each assignor system's private calendar link (stored encrypted) every 30 minutes: one reader, with small rules per system for how it writes its games, saving through the import. Each event's text is kept with its match, so rules added later can read old games again. Arbiter is first ([assignor calendars](requirements/assignor-calendars.md)). |
 | Calendar feed | A subscribable ICS feed per user, built on each fetch ([calendar feed](requirements/calendar-feed.md)). |
 | Quiz | Questions are files in `schema/quiz/`, served at `GET /v1/quiz`; each app works out an attempt with the same rules and saves nothing ([quiz](requirements/quiz.md)). |

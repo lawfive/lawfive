@@ -3,8 +3,9 @@
   "private": true,
   "packageManager": "pnpm@12.11.2",
   "scripts": {
-    "test": "pnpm -r test && node tools/check-links.mjs",
+    "test": "pnpm -r test && node tools/check-links.mjs && node tools/check-permissions.mjs",
     "test:watches": "bash tools/test-watches.sh",
-    "test:links": "node tools/check-links.mjs"
+    "test:links": "node tools/check-links.mjs",
+    "test:permissions": "node tools/check-permissions.mjs"
   }
 }

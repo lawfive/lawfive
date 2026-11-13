@@ -141,7 +141,7 @@ export function Settings() {
                             <SettingsRow label="Events start" hint="When your calendar shows you as busy from, for travel and warming up. The description gives the kickoff.">
                                 <MinutesSelect label="Events start" value={settings.calendarArriveMin ?? 30} options={arriveOptions} onChange={(calendarArriveMin) => change({ calendarArriveMin })} />
                             </SettingsRow>
-                            <SettingsRow label="Reminders in your calendar app" hint="Alerts your calendar app gives before kickoff, for matches still to come: as many as you like, and the day before and the day of at times you choose (in the match's time zone). Google Calendar uses its own notification settings for calendars you subscribe to. For notifications from LawFive itself, turn on Match reminders in the phone app.">
+                            <SettingsRow label="Reminders in your calendar app" hint="Alerts your calendar app gives before kickoff, for matches still to come: as many as you like, and the day before and the day of at times you choose (in the match's time zone). Google Calendar uses its own notification settings for calendars you subscribe to. The LawFive phone apps' Match reminders use these times too, on each phone where they're turned on.">
                                 <CalendarReminders settings={settings} onChange={change} />
                             </SettingsRow>
                         </CalendarFeedSettings>

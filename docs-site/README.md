@@ -24,8 +24,8 @@ Pages are in `src/content/docs/`; the sidebar is in `astro.config.mjs`. Write fo
 | `run/notifications`, `contribute/relay` | `push-relay.md`, `relay/README.md` |
 | `run/requirements`, `run/install`, `run/upgrades`, `run/backups` | `compose.yaml`, `.env.example`, `server/README.md`, `versions.md` (VER-5) for image tags and releases; `data-export.md` (DATA-2, DATA-4) for backups |
 | `run/troubleshooting` | `server-settings.md` (ADM-7), `security.md` (SEC-2, SEC-12, SEC-14), `webhooks.md` (HOOK-4), and the server's log messages (`server/src/push.ts`) |
-| `apps/phones` | `android.md`, `iphone.md` (APP-2, APP-6, APP-13 to APP-15), and STAT-13 (`stats.md`), DUP-12 (`merging.md`), PUSH-5 (`push-relay.md`), NOTE-4 (`integration-notifications.md`), WEB-14 (`web-app.md`) |
-| `apps/watches` | `sync.md` (SYNC-1, SYNC-8, SYNC-9), `security.md` (SEC-13), `wear-os-and-apple-watch.md` (WCH-4), APP-7 (`android.md`), IOS-9 (`iphone.md`) |
+| `apps/phones` | `android.md`, `iphone.md` (APP-2, APP-6, APP-13 to APP-15, APP-28), CAL-3 (`calendar-feed.md`), and STAT-13 (`stats.md`), DUP-12 (`merging.md`), PUSH-5 (`push-relay.md`), NOTE-4 (`integration-notifications.md`), WEB-14 (`web-app.md`), SITE-14 (`marketing-site.md`) |
+| `apps/watches` | `sync.md` (SYNC-1, SYNC-8, SYNC-9), `security.md` (SEC-13), `wear-os-and-apple-watch.md` (WCH-4), APP-7 (`android.md`), IOS-9 (`iphone.md`), SITE-14 (`marketing-site.md`) |
 | `api/overview`, `api/sync` | `schema/src/endpoints.ts`, `server/README.md`, `agent-descriptions.md` |
 | `index.mdx` | `compose.yaml`, `.env.example` |
 | `contribute/architecture` | `docs/ARCHITECTURE.md` |

@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
     <!-- APP-6: match reminders. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- APP-28: reminders on the minute, when the person allows "Alarms & reminders". Not USE_EXACT_ALARM,
+         which Google Play keeps for alarm clocks and calendars. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- APP-28: exact alarms are cleared when the phone restarts, so they're set again. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- ACT-1, WCH-7: Wear OS matches saved to Health Connect, which isn't on watches. -->
     <uses-permission android:name="android.permission.health.WRITE_EXERCISE" />
     <uses-permission android:name="android.permission.health.WRITE_EXERCISE_ROUTE" />
@@ -55,6 +60,22 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <!-- APP-28: a reminder's exact alarm. -->
+        <receiver
+            android:name=".ReminderAlarmReceiver"
+            android:exported="false" />
+        <!-- APP-28: the reminders' alarms again after a restart, an update, a new clock time or time zone, or Alarms & reminders allowed. -->
+        <receiver
+            android:name=".RemindersRescheduleReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <!-- APP-7: the watch's messages from Garmin Connect, which start the app when it isn't running. -->
         <receiver
             android:name=".watch.WatchMessageReceiver"

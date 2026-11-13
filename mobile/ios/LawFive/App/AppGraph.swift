@@ -50,6 +50,8 @@ final class AppGraph {
         db = Db(file: dbFile)
         records = Records(db: db)
         reminders = Reminders(defaults: defaults)
+        // CAL-3: the reminders' times are the account's.
+        reminders.account = { [records] in records.effectiveSettings }
         sync = SyncEngine(api: api, db: db, session: session) { [weak self] in await self?.forgetAccount() }
         watch = WatchBridge(api: api) { [weak session] in
             guard let session, session.signedIn else { return nil }
@@ -114,12 +116,27 @@ final class AppGraph {
         if !gone.isEmpty { session.shownFromWatch(gone) }
         if worked {
             await fillTimeZone()
+            await adoptPhoneTimes()
             reminders.reschedule(matches: records.matches ?? [], venues: records.venues ?? [])
             await weather.refresh()
             await watch.relay.refresh()
             await onWatch.refresh()
         }
         return worked
+    }
+
+    /// APP-6: before the reminders' times were the account's, each phone kept its own. The first sync after
+    /// uploads them if the account has none, then forgets them here.
+    private func adoptPhoneTimes() async {
+        guard let taken = reminders.takePhoneTimes(),
+              let up = ReminderTimes.toUpload(phone: taken.times, enabled: taken.enabled, account: records.settings) else { return }
+        await records.saveSettings { up.into(&$0) }
+    }
+
+    /// CAL-3: new reminder times for the account, which the calendar feed and the other phones follow.
+    func updateReminderTimes(_ next: ReminderTimes) async {
+        await records.saveSettings { next.into(&$0) }
+        reminders.reschedule(matches: records.matches ?? [], venues: records.venues ?? [])
     }
 
     /// PLAN-9: an account's time zone comes from the first browser or phone that signs in. Only on a

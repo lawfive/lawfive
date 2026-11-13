@@ -83,6 +83,9 @@ After no answer, the watch asks for the phone app at most every 10 minutes (`RET
 adb shell am start -n app.lawfive/.MainActivity --ez watchSync true        # act out a watch handing over matches and a track (APP-16)
 adb shell pm grant app.lawfive android.permission.POST_NOTIFICATIONS
 adb shell am start -n app.lawfive/.MainActivity --el reminderIn 2700       # a match reminder for a kickoff that many seconds away (APP-6)
+adb shell am start -n app.lawfive/.MainActivity --ez dayReminder true      # the day before's reminder for two matches (APP-6)
+adb shell appops set app.lawfive SCHEDULE_EXACT_ALARM deny                 # reminders without Alarms & reminders (APP-28); allow to undo
+adb shell dumpsys alarm | grep -A3 app.lawfive                             # the reminders' exact alarms
 ```
 
 What came in from the watch (APP-26): signed in and synced once, save a new match report with a `device` (such as `garmin:venu2`) for one of the account's matches (`PUT /v1/match-records/{id}`), then pull down on Matches. Run the `watchSync` command after to see the sync screen hand over to it. `files/from-watch.json` holds what's waiting.
@@ -100,7 +103,7 @@ Code is in `app/src/main/java/app/lawfive/`; the API's types are generated into 
 | `data/Contours.kt`, `ui/screens/Heatmap.kt` | The heatmap (TRK-9), a port of `web/src/contours.ts` tested with its cases (`ContoursTest`). |
 | `data/Merging.kt`, `ui/screens/Merge.kt` | Duplicates and merging (DUP-11, DUP-12), worked out by the server. |
 | `data/Quiz.kt`, `ui/screens/Quiz.kt` | The quiz (QUIZ-1 to QUIZ-7); `build.gradle.kts` adds `schema/quiz/` to the assets. |
-| `Reminders.kt` | Match reminders (APP-6) with WorkManager, and `lawFiveNotification`, every notification's look (APP-24). |
+| `Reminders.kt` | Match reminders (APP-6) at the account's times, a day's matches in one notification, as exact alarms with WorkManager when they aren't allowed (APP-28), and `lawFiveNotification`, every notification's look (APP-24). |
 | `Notices.kt`, `Push.kt` | Notifications for matches from integrations (NOTE-1 to NOTE-4) and from the server through the relay (PUSH-4, PUSH-5). |
 | `data/HealthSave.kt`, `HealthRationaleActivity.kt` | Saving a Wear OS watch's matches to Health Connect, and its rationale page (WCH-7). |
 | `watch/` | The Garmin watch through the phone (APP-7): `WatchRelay` answers the watch's sync requests (with signal, using the watch's token; without, from its outbox and the last matches), `WatchBridge` connects to Garmin's Connect IQ SDK, `WatchMessageReceiver` starts the app for a watch's message, `WatchLinker` links a watch (APP-12). |

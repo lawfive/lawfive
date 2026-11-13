@@ -7,6 +7,8 @@ description: Connect Garmin, Wear OS and Apple Watch apps to your own LawFive se
 The watch apps aren't in their stores yet. Until they are, [build them from source](/contribute/overview/).
 :::
 
+What each watch app asks the watch for (location, heart rate and the rest), when it asks, and what still works without each, is on [Permissions](https://lawfive.app/permissions) at lawfive.app.
+
 ## Linking a watch
 
 The Garmin, Wear OS and Apple Watch apps all link the same way:

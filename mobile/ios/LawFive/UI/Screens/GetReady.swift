@@ -112,7 +112,7 @@ struct GetReadyList: View {
                  actions: [StepAction(text: "Link a watch", icon: .watch) { nav.push(.link) }]),
             Step(key: "reminders", title: "Turn on reminders", done: d.reminders,
                  line: Text(denied ? "Notifications are off for LawFive in the phone's settings."
-                            : r.enabled ? "On: \(r.minutesBefore.sorted(by: >).map(beforeText).joined(separator: " and ")) before kickoff"
+                            : r.enabled ? remindersOnText(ReminderTimes(graph.records.effectiveSettings))
                             : "A notification on this phone before each kickoff, with the venue and directions."),
                  actions: denied
                     ? [StepAction(text: "Open Settings", icon: .settings) { if let url = URL(string: UIApplication.openNotificationSettingsURLString) { openURL(url) } }]

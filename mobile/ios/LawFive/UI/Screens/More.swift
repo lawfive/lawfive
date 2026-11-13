@@ -298,7 +298,14 @@ struct DeleteAccountSheet: View {
     }
 }
 
-/// The phone's match reminders (IOS-6), in Settings → Match day.
+/// Get ready's line once reminders are on: "On: 1 hour and 30 min before kickoff", or the day's ones when there are none before it.
+func remindersOnText(_ t: ReminderTimes) -> String {
+    if !t.minutesBefore.isEmpty { return "On: \(t.minutesBefore.sorted(by: >).map(beforeText).joined(separator: " and ")) before kickoff" }
+    let days = [t.dayBefore.map { _ in "the day before" }, t.dayOf.map { _ in "the day of" }].compactMap { $0 }
+    return days.isEmpty ? "On, with no times chosen yet" : "On: \(days.joined(separator: " and "))"
+}
+
+/// The phone's match reminders (IOS-6) in Settings → Match day: this phone's switch, and the account's times (CAL-3).
 struct RemindersSettings: View {
     @Environment(AppGraph.self) private var graph
     @Environment(\.openURL) private var openURL
@@ -310,8 +317,15 @@ struct RemindersSettings: View {
         graph.reminders.update(next, matches: graph.records.matches ?? [], venues: graph.records.venues ?? [])
     }
 
+    private func updateTimes(_ change: (inout ReminderTimes) -> Void) {
+        var next = ReminderTimes(graph.records.effectiveSettings)
+        change(&next)
+        Task { await graph.updateReminderTimes(next) }
+    }
+
     var body: some View {
         let s = graph.reminders.settings
+        let t = ReminderTimes(graph.records.effectiveSettings)
         LfCard {
             ToggleRow("Remind me of matches", sub: "Notifications on this phone, as well as or instead of your calendar's", divider: false, isOn: Binding(get: { s.enabled }, set: { on in
                 guard on else {
@@ -338,9 +352,9 @@ struct RemindersSettings: View {
                 VStack(alignment: .leading, spacing: 10) {
                     FieldLabel(text: "Before kickoff")
                     Flow {
-                        ForEach(s.minutesBefore.sorted(), id: \.self) { m in
+                        ForEach(t.minutesBefore.sorted(), id: \.self) { m in
                             // A brand chip with Phosphor's close: tapping it removes the reminder.
-                            Button { update { $0.minutesBefore.removeAll { $0 == m } } } label: {
+                            Button { updateTimes { $0.minutesBefore.removeAll { $0 == m } } } label: {
                                 HStack(spacing: 4) {
                                     Text(beforeText(m)).font(.lfLabelMedium).foregroundStyle(LF.brandStrong)
                                     PhIcon(.close, size: 12, tint: LF.brandStrong, label: "Remove")
@@ -351,11 +365,14 @@ struct RemindersSettings: View {
                             .buttonStyle(PressStyle())
                         }
                     }
-                    Choice("Add a reminder", value: Int?.none, options: stride(from: 15, through: 180, by: 15).filter { !s.minutesBefore.contains($0) }, text: { $0.map(beforeText) ?? "Choose" }) { m in
-                        if let m, s.minutesBefore.count < 12 { update { $0.minutesBefore.append(m) } }
+                    Choice("Add a reminder", value: Int?.none, options: ReminderTimes.steps.filter { !t.minutesBefore.contains($0) }, text: { $0.map(beforeText) ?? "Choose" }) { m in
+                        if let m, t.minutesBefore.count < 12 { updateTimes { $0.minutesBefore.append(m) } }
                     }
-                    Choice("The day before, at", value: s.dayBefore, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in update { $0.dayBefore = v } }
-                    Choice("The day of, at", value: s.dayOf, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in update { $0.dayOf = v } }
+                    Choice("The day before, at", value: t.dayBefore, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in updateTimes { $0.dayBefore = v } }
+                    Choice("The day of, at", value: t.dayOf, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in updateTimes { $0.dayOf = v } }
+                    // CAL-3: one set of times for the account.
+                    Text("These times are your account's: your calendar feed and LawFive on your other phones use them too.")
+                        .font(.lfBodySmall).foregroundStyle(LF.muted).fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(16)
             }

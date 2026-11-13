@@ -39,7 +39,7 @@ The push relay at `push.lawfive.app` ([relay/](../../relay/), [ARCHITECTURE.md](
 
 ## Status
 
-The relay is live with its limits, controls and keys (the hosted server sends with its key); the server's sending, new weather risks, the admin's test notification, and Android's setting and notification, opening its match when tapped, are built.
+The relay is live with its limits, controls and keys (the hosted server sends with its key); the server's sending, new weather risks, the admin's test notification, and Android's settings and notifications, opening their match when tapped, are built.
 
 Not built yet:
 - Weather risk notifications on the iPhone (PUSH-5).

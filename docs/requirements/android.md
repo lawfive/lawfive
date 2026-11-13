@@ -71,10 +71,19 @@ The Android phone app: most of what the website does, on match day, without sign
 
 ## Match reminders
 
-- **APP-6** **Match reminders** as notifications on the phone, with their own settings, off until turned on (so someone using the calendar feed doesn't get two): minutes before kickoff (15-minute steps up to 3 hours, several allowed), and the day before and the day of at chosen times (CAL-3).
-  - Tapping one opens its match; a match with a place has a **Directions** button. Both phones.
-  - On Android, within 3 hours of kickoff a reminder counts down live beside the app's name ("LawFive · 44:12"), with the kickoff time and venue ("11:30 AM · Central Park"); further off it says "in 5 hours" or "tomorrow".
-  - Every reminder leaves the notification shade at kickoff.
+- **APP-6** **Match reminders** as notifications on the phone. **Remind me of matches** is each phone's own, off until turned on (so someone using the calendar feed doesn't get two).
+  - The times are the account's reminders, the same ones the calendar feed uses (CAL-3), so they're set once for the feed and every phone: minutes before kickoff (15-minute steps up to 3 hours, several allowed), and the day before and the day of at chosen times, in each match's time zone. They show under the switch while it's on, with a hint that the calendar feed and the other phones use them too, and can be changed there, without signal too, as other settings can.
+  - An account that has never chosen several reminders has the one it had before (an hour before kickoff when none), as the website shows it. When the app is first updated to shared times, a phone that had its own sends them to an account that hasn't chosen any; otherwise the account's stay. Either way the phone's own copies are then forgotten.
+  - Before kickoff, one reminder for each match. On Android, within 3 hours of kickoff it counts down live beside the app's name ("LawFive · 44:12"), with the kickoff time and venue ("11:30 AM · Central Park"); further off it says "in 5 hours" or "tomorrow".
+  - The day before and the day of, one notification for all the matches whose reminder comes at that moment: "2 matches tomorrow" (or "today"), then a line for each in short names (SET-5) with its kickoff on the phone's 12- or 24-hour clock and its venue: "STR v ROV · 9:00 AM · Central Park". The day of's lists only matches that kick off after it. With one match it reads as a reminder before kickoff does, and a match with a reminder before kickoff at that same moment is left to that one.
+  - Only matches still on: canceled, postponed and played matches have none.
+  - Tapping one opens its match (a day's, the day's first); a match with a place has a **Directions** button. Both phones.
+  - Every reminder leaves the notification shade at kickoff (a day's, at its last match's).
+- **APP-28** **Reminders on the minute.** Android can hold back the app's scheduled work a few minutes while the phone is idle, so reminders are set as exact alarms when the person allows LawFive **Alarms & reminders** (Android 12 and later; earlier versions need nothing).
+  - Turning on Remind me of matches (in Settings or Get ready) first says why ("so yours arrive on the minute"), then opens the system's Alarms & reminders page.
+  - Without it, reminders still come, a few minutes late at worst; while they're on, the card says so, with **Allow** for the system's page. Coming back from it, the card and the reminders follow at once.
+  - The alarms are set again when the phone restarts, the app is updated, the clock or time zone changes, and when the permission is given.
+  - It's the permission the person grants, not the one Google Play keeps for alarm clocks and calendars.
 
 ## The Garmin watch through the phone
 
@@ -112,3 +121,4 @@ Not built yet:
 - Deleting the account (APP-21) is checked only by the build and the server's tests.
 - Only the server's own answers (APP-23) is checked by unit tests, not yet by a sync during a real restart.
 - Saving Wear OS matches to Health Connect (WCH-7) on a real phone.
+- Reminders on the minute (APP-28) on a real phone: an exact alarm while it's asleep, after a restart and an update, and with Alarms & reminders refused; a day's matches in one notification in a real phone's shade (APP-6).
