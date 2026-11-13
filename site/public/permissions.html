@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Permissions | LawFive</title>
+    <meta name="description" content="Every permission the LawFive apps ask for on Android, iPhone, Garmin, Wear OS and Apple Watch: what it's for, when it's asked, and what still works if you say no.">
+    <meta name="theme-color" content="#0b0e0d" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+    <link rel="canonical" href="https://lawfive.app/permissions">
+    <link rel="icon" href="favicon.ico" sizes="32x32">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="top">
+        <a class="wordmark" href="/" aria-label="LawFive"><svg class="logo-mark" viewBox="0 0 126 100" aria-hidden="true"><g transform="translate(22 0) skewX(-12)"><path class="l" d="M0 0H26V76H52L41 100H0Z"/><path class="five" d="M35 0H104L99 22H60V32H78A22 22 0 0 1 100 54V78A22 22 0 0 1 78 100H54L64 78H75V55H35Z"/><path class="fold" d="M54 100L64 78H84Z"/></g></svg><span class="wordmark-name" aria-hidden="true">LAW<span>FIVE</span></span></a>
+        <a class="btn" href="https://app.lawfive.app">Sign in</a>
+    </header>
+    <!-- SITE-14: every permission each app declares, in the apps' own order. Each section's data-app and each
+         entry's data-permission (the identifiers it covers) are checked against the apps' manifests by
+         tools/check-permissions.mjs, so an app that asks for something new fails the tests until it's here. -->
+    <main class="pitch-frame legal permissions">
+        <div class="frame-corners" aria-hidden="true"></div>
+        <h1>Permissions</h1>
+        <p class="lede">What each LawFive app asks your phone or watch for: what it's for, when it's asked, and what still works if you say no. None of it is used for ads or tracking, and saying no never stops you running a match. What LawFive keeps is in the <a href="privacy.html">privacy policy</a>.</p>
+        <nav class="perm-index" aria-label="Apps">
+            <a href="#android">Android</a>
+            <a href="#iphone">iPhone</a>
+            <a href="#garmin">Garmin</a>
+            <a href="#wear-os">Wear OS</a>
+            <a href="#apple-watch">Apple Watch</a>
+        </nav>
+
+        <section class="legal-body perm-app" id="android" data-app="android" aria-labelledby="android-title">
+            <p class="perm-device">Phone</p>
+            <h2 id="android-title">Android</h2>
+            <p>The app asks only when you turn on something that needs it, never when it first opens. Scanning a QR code uses Google's code scanner, taking a photo uses the phone's camera app, and choosing one uses the system's photo picker, so LawFive itself needs no camera or photos permission.</p>
+
+            <article class="perm" data-permission="android.permission.POST_NOTIFICATIONS">
+                <h3>Notifications <span class="perm-ids"><code>POST_NOTIFICATIONS</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Match reminders before kickoff and on the day. Where your server offers them, also weather risks to your matches, and matches added or changed by an app that sends your assignments.</dd>
+                    <dt>Asked</dt><dd>When you turn one of those on, in Settings under Match day, or from Get ready. On Android 13 and later; before that, notifications are allowed unless you turn them off.</dd>
+                    <dt>If you say no</dt><dd>LawFive sends no notifications. Everything else works, and your calendar can still remind you of matches through LawFive's calendar feed.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="android.permission.SCHEDULE_EXACT_ALARM">
+                <h3>Alarms &amp; reminders <span class="perm-ids"><code>SCHEDULE_EXACT_ALARM</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>So match reminders arrive on the minute.</dd>
+                    <dt>Asked</dt><dd>When you turn on match reminders, if the phone doesn't already allow it: LawFive says why, then opens Android's Alarms &amp; reminders page for it.</dd>
+                    <dt>If you say no</dt><dd>Reminders still come, but can be a few minutes late.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="android.permission.ACCESS_LOCAL_NETWORK">
+                <h3>Nearby devices <span class="perm-ids"><code>ACCESS_LOCAL_NETWORK</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Reaching a LawFive server on your home network. From Android 17, the phone counts anything on the local network as a nearby device.</dd>
+                    <dt>Asked</dt><dd>Only on Android 17 and later, when signing in to a server on your local network can't reach it without this. Once allowed, the app tries again.</dd>
+                    <dt>If you say no</dt><dd>Servers on the internet, including the hosted service at app.lawfive.app, work as before. A server at home can't be reached until you allow it in the phone's settings for LawFive.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="android.permission.health.WRITE_EXERCISE android.permission.health.WRITE_EXERCISE_ROUTE android.permission.health.WRITE_HEART_RATE android.permission.health.WRITE_DISTANCE">
+                <h3>Health Connect <span class="perm-ids"><code>health.WRITE_EXERCISE</code> <code>health.WRITE_EXERCISE_ROUTE</code> <code>health.WRITE_HEART_RATE</code> <code>health.WRITE_DISTANCE</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Saving each match from your Wear OS watch to Health Connect as a soccer exercise, with its route, heart rate and distance, as Wear OS watches have no Health Connect of their own. LawFive only writes these; it reads nothing from Health Connect.</dd>
+                    <dt>Asked</dt><dd>When you turn on <strong>Save Wear OS matches</strong>, or tap <strong>Allow in Health Connect</strong> beside it, in Settings under Your watch. It's shown only with a Wear OS watch linked, on a phone that has Health Connect.</dd>
+                    <dt>If you say no</dt><dd>Your Wear OS matches still sync to LawFive with their tracks; they just aren't copied to Health Connect. Allow everything but the route, and they're saved without it.</dd>
+                </dl>
+            </article>
+
+            <h3 class="perm-group">Listed, never asked</h3>
+            <ul class="perm-list">
+                <li data-permission="android.permission.ACCESS_FINE_LOCATION android.permission.ACCESS_COARSE_LOCATION"><strong>Location</strong> <span class="perm-ids"><code>ACCESS_FINE_LOCATION</code> <code>ACCESS_COARSE_LOCATION</code></span>: the map library LawFive uses (MapLibre) lists it, to show where you are on a map. LawFive doesn't use that and never asks for it, so the phone never gives it your location.</li>
+            </ul>
+
+            <h3 class="perm-group">Also, without asking</h3>
+            <p class="perm-note">Android allows these when the app is installed. Google Play lists them under the app's other permissions.</p>
+            <ul class="perm-list">
+                <li data-permission="android.permission.INTERNET"><strong>Full network access</strong> <span class="perm-ids"><code>INTERNET</code></span>: to sync with your server.</li>
+                <li data-permission="android.permission.ACCESS_NETWORK_STATE"><strong>View network connections</strong> <span class="perm-ids"><code>ACCESS_NETWORK_STATE</code></span>: to sync once a connection comes back.</li>
+                <li data-permission="android.permission.ACCESS_WIFI_STATE"><strong>View Wi-Fi connections</strong> <span class="perm-ids"><code>ACCESS_WIFI_STATE</code></span>: used by the map library.</li>
+                <li data-permission="com.google.android.c2dm.permission.RECEIVE"><strong>Receive data from the internet</strong> <span class="perm-ids"><code>c2dm.permission.RECEIVE</code></span>: Google's push messages (Firebase Cloud Messaging), used only once you turn on a notification that comes from your server, such as weather risks.</li>
+                <li data-permission="android.permission.WAKE_LOCK"><strong>Prevent phone from sleeping</strong> <span class="perm-ids"><code>WAKE_LOCK</code></span>: briefly, while a sync or a notification is handled.</li>
+                <li data-permission="android.permission.RECEIVE_BOOT_COMPLETED"><strong>Run at startup</strong> <span class="perm-ids"><code>RECEIVE_BOOT_COMPLETED</code></span>: so match reminders are set again, and background sync carries on, after the phone restarts.</li>
+                <li data-permission="android.permission.FOREGROUND_SERVICE"><strong>Run foreground service</strong> <span class="perm-ids"><code>FOREGROUND_SERVICE</code></span>: for background work that has to finish, such as a sync.</li>
+            </ul>
+        </section>
+
+        <section class="legal-body perm-app" id="iphone" data-app="iphone" aria-labelledby="iphone-title">
+            <p class="perm-device">Phone</p>
+            <h2 id="iphone-title">iPhone</h2>
+            <p>The app asks only when you first use something that needs it. Photos come through the system's photo picker, which needs no permission. You can change any answer later in the iPhone's Settings, under LawFive.</p>
+
+            <article class="perm" data-permission="UNUserNotificationCenter">
+                <h3>Notifications</h3>
+                <dl>
+                    <dt>For</dt><dd>Match reminders before kickoff and on the day.</dd>
+                    <dt>Asked</dt><dd>When you turn on <strong>Remind me of matches</strong>, in Settings under Match day, or from Get ready.</dd>
+                    <dt>If you say no</dt><dd>No reminders; the switch says notifications are off, with <strong>Open Settings</strong> to allow them. Your calendar can still remind you through LawFive's calendar feed.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="NSCameraUsageDescription">
+                <h3>Camera <span class="perm-ids"><code>NSCameraUsageDescription</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Scanning a LawFive QR code, to sign in from the website or to take up an invitation, and <strong>Take a photo</strong> for a match, venue or referee.</dd>
+                    <dt>Asked</dt><dd>The first time you scan a code or take a photo.</dd>
+                    <dt>If you say no</dt><dd>Choose <strong>Enter a code</strong> instead of scanning, and add photos from your library.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="NSLocalNetworkUsageDescription">
+                <h3>Local Network <span class="perm-ids"><code>NSLocalNetworkUsageDescription</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Reaching a LawFive server on your home network.</dd>
+                    <dt>Asked</dt><dd>By the iPhone, the first time the app reaches a server on your local network.</dd>
+                    <dt>If you say no</dt><dd>Servers on the internet, including the hosted service at app.lawfive.app, work as before. A server at home can't be reached until you allow it in Settings, under Privacy &amp; Security, Local Network.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="NSBluetoothAlwaysUsageDescription NSBluetoothPeripheralUsageDescription">
+                <h3>Bluetooth <span class="perm-ids"><code>NSBluetoothAlwaysUsageDescription</code> <code>NSBluetoothPeripheralUsageDescription</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Talking to your Garmin watch, so it gets its matches and sends the ones you referee through this phone, even without signal at the ground.</dd>
+                    <dt>Asked</dt><dd>Only once you share a Garmin watch with LawFive through Garmin Connect, from <strong>More → Link a watch</strong>. Never when the app opens, so people without a Garmin aren't asked.</dd>
+                    <dt>If you say no</dt><dd>Your Garmin syncs straight with your server through Garmin Connect instead, which needs signal when it syncs. You can still link it with the code it shows.</dd>
+                </dl>
+            </article>
+
+            <h3 class="perm-group">Also, without asking</h3>
+            <ul class="perm-list">
+                <li data-permission="UIBackgroundModes:fetch"><strong>Background App Refresh</strong> <span class="perm-ids"><code>fetch</code></span>: to sync now and then while the app isn't open. Turn it off in Settings, under General, Background App Refresh.</li>
+                <li data-permission="UIBackgroundModes:bluetooth-central"><strong>Bluetooth in the background</strong> <span class="perm-ids"><code>bluetooth-central</code></span>: so your Garmin watch can reach the phone while LawFive isn't open. Only once you've shared a watch and allowed Bluetooth.</li>
+            </ul>
+        </section>
+
+        <section class="legal-body perm-app" id="garmin" data-app="garmin" aria-labelledby="garmin-title">
+            <p class="perm-device">Watch</p>
+            <h2 id="garmin-title">Garmin</h2>
+            <p>A Garmin watch doesn't ask one by one: the Connect IQ Store shows what the app uses before you install it, and installing allows all four. The watch doesn't ask again, but you choose what reaches LawFive.</p>
+
+            <article class="perm" data-permission="Communications">
+                <h3>Communications <span class="perm-ids"><code>Communications</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Syncing with your LawFive server through Garmin Connect on your phone, and talking to the LawFive phone app, which can sync for the watch.</dd>
+                    <dt>Asked</dt><dd>At install.</dd>
+                    <dt>If you'd rather not</dt><dd>Don't link the watch: quick matches run with no phone or account, and nothing is sent.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="Fit">
+                <h3>Fit <span class="perm-ids"><code>Fit</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Recording each match as a soccer activity, with a lap for each period, saved to Garmin Connect at full time like any other activity.</dd>
+                    <dt>Asked</dt><dd>At install.</dd>
+                    <dt>If you'd rather not</dt><dd>Delete a match's activity in Garmin Connect, as you would any other. A canceled match saves none.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="Positioning">
+                <h3>Positioning <span class="perm-ids"><code>Positioning</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>GPS during a match: the activity's route in Garmin Connect, your track in LawFive for its distance, speeds and heatmap, and the corners when you mark a pitch.</dd>
+                    <dt>Asked</dt><dd>At install.</dd>
+                    <dt>If you'd rather not</dt><dd>Turn <strong>Record track</strong> off in LawFive's settings on the watch, and no track is sent to LawFive. The Garmin activity keeps its route, as any activity does.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="Sensor">
+                <h3>Sensor <span class="perm-ids"><code>Sensor</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Your heart rate during a match, and the compass for the kickoff direction.</dd>
+                    <dt>Asked</dt><dd>At install.</dd>
+                    <dt>If you'd rather not</dt><dd><strong>Record track</strong> off keeps the heart rate out of LawFive too.</dd>
+                </dl>
+            </article>
+        </section>
+
+        <section class="legal-body perm-app" id="wear-os" data-app="wear-os" aria-labelledby="wear-os-title">
+            <p class="perm-device">Watch</p>
+            <h2 id="wear-os-title">Wear OS</h2>
+            <p>The first time you open LawFive on the watch, it says what it will ask for and why, then the watch asks for them together, or you choose <strong>Not now</strong>. It never asks at Quick match or the kickoff. <strong>Settings → Permissions</strong> in LawFive shows what's allowed, and allows the rest.</p>
+
+            <article class="perm" data-permission="android.permission.ACCESS_FINE_LOCATION android.permission.ACCESS_COARSE_LOCATION">
+                <h3>Location <span class="perm-ids"><code>ACCESS_FINE_LOCATION</code> <code>ACCESS_COARSE_LOCATION</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>GPS: your track during a match, for its distance, speeds and heatmap, and the corners when you mark a pitch. Only precise location will do; an approximate one is too far out for a track.</dd>
+                    <dt>Asked</dt><dd>When the app first opens, and again by Mark pitch if it's still off.</dd>
+                    <dt>If you say no</dt><dd>The match still runs, with no track. The kickoff direction's compass works without it.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="android.permission.health.READ_HEART_RATE android.permission.BODY_SENSORS">
+                <h3>Heart rate <span class="perm-ids"><code>health.READ_HEART_RATE</code> <code>BODY_SENSORS</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>Your heart rate during a match, kept with its track. Before Wear OS 6, the watch calls this Body sensors.</dd>
+                    <dt>Asked</dt><dd>When the app first opens.</dd>
+                    <dt>If you say no</dt><dd>The match still runs, with no heart rate.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="android.permission.ACTIVITY_RECOGNITION">
+                <h3>Physical activity <span class="perm-ids"><code>ACTIVITY_RECOGNITION</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>The distance you run in a match, as the watch measures it.</dd>
+                    <dt>Asked</dt><dd>When the app first opens.</dd>
+                    <dt>If you say no</dt><dd>The match still runs, with no distance.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="android.permission.POST_NOTIFICATIONS">
+                <h3>Notifications <span class="perm-ids"><code>POST_NOTIFICATIONS</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>The match clock in the watch's notifications while the screen is off.</dd>
+                    <dt>Asked</dt><dd>When the app first opens, on Wear OS 4 and later.</dd>
+                    <dt>If you say no</dt><dd>The match still runs and alerts still vibrate, with no clock in the notifications.</dd>
+                </dl>
+            </article>
+
+            <h3 class="perm-group">Also, without asking</h3>
+            <ul class="perm-list">
+                <li data-permission="android.permission.INTERNET"><strong>Full network access</strong> <span class="perm-ids"><code>INTERNET</code></span>: to sync with your server over the watch's own connection.</li>
+                <li data-permission="android.permission.VIBRATE"><strong>Control vibration</strong> <span class="perm-ids"><code>VIBRATE</code></span>: the match's alerts.</li>
+                <li data-permission="android.permission.WAKE_LOCK"><strong>Prevent the watch from sleeping</strong> <span class="perm-ids"><code>WAKE_LOCK</code></span>: so the clocks and alerts keep going with the screen off.</li>
+                <li data-permission="android.permission.FOREGROUND_SERVICE android.permission.FOREGROUND_SERVICE_SPECIAL_USE android.permission.FOREGROUND_SERVICE_HEALTH android.permission.FOREGROUND_SERVICE_LOCATION"><strong>Run foreground service</strong> <span class="perm-ids"><code>FOREGROUND_SERVICE</code> <code>_SPECIAL_USE</code> <code>_HEALTH</code> <code>_LOCATION</code></span>: the match runs as a service while it's on, timing it with the screen off, with the heart rate and GPS where they're allowed.</li>
+            </ul>
+        </section>
+
+        <section class="legal-body perm-app" id="apple-watch" data-app="apple-watch" aria-labelledby="apple-watch-title">
+            <p class="perm-device">Watch</p>
+            <h2 id="apple-watch-title">Apple Watch</h2>
+            <p>The first time you open LawFive on the watch, it says what it will ask for and why; then Apple asks, Health first and then Location. It never asks between Start match and the kickoff. You can change either answer in the watch's Settings, under Privacy &amp; Security.</p>
+
+            <article class="perm" data-permission="NSHealthShareUsageDescription NSHealthUpdateUsageDescription">
+                <h3>Health <span class="perm-ids"><code>NSHealthShareUsageDescription</code> <code>NSHealthUpdateUsageDescription</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>The match runs as a soccer workout, which keeps it going with the screen off so alerts still vibrate. LawFive reads your heart rate, distance and active energy during it, and at full time saves the workout with its route to Apple Health, so it shows in Fitness. <strong>Save to Health</strong>, in Settings → Account, stops the saving.</dd>
+                    <dt>Asked</dt><dd>When the app first opens.</dd>
+                    <dt>If you say no</dt><dd>The match still runs, but its alerts stop when the screen goes off, and there's no heart rate. The kickoff screen says so, and how to allow it.</dd>
+                </dl>
+            </article>
+            <article class="perm" data-permission="NSLocationWhenInUseUsageDescription">
+                <h3>Location <span class="perm-ids"><code>NSLocationWhenInUseUsageDescription</code></span></h3>
+                <dl>
+                    <dt>For</dt><dd>While the app is in use: your track during a match, for its distance, speeds and heatmap, and the corners when you mark a pitch. Only precise location will do; an approximate one is too far out for a track.</dd>
+                    <dt>Asked</dt><dd>When the app first opens, after Health, and by Mark pitch if it hasn't been asked yet.</dd>
+                    <dt>If you say no</dt><dd>The match still runs, with no track. The kickoff direction's compass works without it.</dd>
+                </dl>
+            </article>
+
+            <h3 class="perm-group">Also, without asking</h3>
+            <ul class="perm-list">
+                <li data-permission="WKBackgroundModes:workout-processing"><strong>Workout in the background</strong> <span class="perm-ids"><code>workout-processing</code></span>: keeps the match's workout running with the screen off, once Health is allowed.</li>
+            </ul>
+        </section>
+
+        <p class="perm-foot">A question about any of these? Write to <a href="mailto:support@lawfive.app">support@lawfive.app</a>.</p>
+    </main>
+    <footer class="foot">
+        <svg class="logo-mark foot-mark" viewBox="0 0 126 100" aria-hidden="true"><g transform="translate(22 0) skewX(-12)"><path class="l" d="M0 0H26V76H52L41 100H0Z"/><path class="five" d="M35 0H104L99 22H60V32H78A22 22 0 0 1 100 54V78A22 22 0 0 1 78 100H54L64 78H75V55H35Z"/><path class="fold" d="M54 100L64 78H84Z"/></g></svg>
+        <span>LawFive, after Law 5 of the Laws of the Game: The Referee.</span>
+        <span><a href="support.html">Support</a> · <a href="privacy.html">Privacy</a> · <a href="permissions.html">Permissions</a> · <a href="terms.html">Terms</a> · <a href="delete-account.html">Delete your account</a></span>
+    </footer>
+</body>
+</html>

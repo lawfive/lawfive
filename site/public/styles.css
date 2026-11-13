@@ -543,6 +543,44 @@ article[id] { scroll-margin-top: 16px; }
 .legal-draft strong { color: inherit; }
 .legal-note { color: var(--muted); }
 
+/* Permissions (SITE-14): a legal page with a chalk panel per app. Under the app's name, each permission is a
+   row between hairlines: its name as the system shows it, with the identifiers in mono for the stores'
+   reviewers, beside what it's for, when it's asked and what happens without it, each led by a small label. */
+.perm-index { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.perm-index a {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: var(--radius); text-decoration: none;
+    background: var(--board); color: var(--on-board); box-shadow: inset 0 0 0 1px var(--board-edge), 0 3px 0 rgb(0 0 0 / 25%);
+    font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.perm-index a:hover { color: var(--on-board-strong); background: #1a201d; }
+.perm-app { scroll-margin-top: 16px; }
+.legal-body.perm-app { margin-top: 26px; padding-top: 26px; }
+.legal-body.perm-app + .legal-body.perm-app { margin-top: 22px; }
+.legal-body .perm-device { margin: 0 0 6px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); }
+.legal-body.perm-app h2 { font-size: 44px; margin: 0 0 12px; }
+.perm { padding: 20px 0 22px; border-top: 1px solid var(--border); }
+.perm:first-of-type { margin-top: 20px; }
+.perm h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 0 0 12px; font-family: var(--display); font-weight: 800; font-size: 24px; line-height: 1.05; color: var(--text); }
+.perm-ids { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.perm-app code {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 400; line-height: 1.5; letter-spacing: 0; text-transform: none; color: var(--text);
+    padding: 1px 5px; border-radius: 4px; background: color-mix(in srgb, var(--text) 7%, transparent); overflow-wrap: anywhere;
+}
+.perm dl { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 8px 18px; margin: 0; }
+.perm dt { padding-top: 4px; font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; line-height: 1.4; text-transform: uppercase; color: var(--brand); }
+.perm dd { margin: 0; color: var(--muted); }
+.perm-group {
+    display: flex; align-items: center; gap: 14px; margin: 10px 0 12px; padding-top: 22px; border-top: var(--line) solid var(--text);
+    font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text);
+}
+.legal-body .perm-note { margin-top: -4px; font-size: 15.5px; }
+.legal-body .perm-list { padding-left: 0; list-style: none; gap: 12px; }
+.perm-list li { padding-left: 16px; border-left: var(--line) solid var(--border); }
+.perm-list .perm-ids { display: inline; margin-left: 2px; }
+.perm-list code { margin-right: 1px; }
+.legal > .perm-foot { margin-top: 26px; color: var(--muted); }
+.perm-foot a { color: var(--brand-strong); font-weight: 600; text-underline-offset: 3px; }
+
 /* SITE-1: the playable parts, the website's own quiz, match screen setup, Try a match and replay,
    built from web/src/site/ into play/. Each takes the place of its picture as it nears the screen;
    until then, and without JavaScript, the picture shows. They bring the website's styles, scoped to
@@ -681,6 +719,14 @@ article[id] { scroll-margin-top: 16px; }
     .legal-body { padding: 4px 18px 20px; }
     .legal-body h2 { font-size: 26px; }
     .legal-draft { margin-bottom: 20px; }
+    .legal-body.perm-app { padding-top: 20px; }
+    .legal-body.perm-app h2 { font-size: 36px; }
+    .perm h3 { font-size: 21px; }
+    .perm dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .perm dt { padding-top: 14px; }
+    .perm dt:first-child { padding-top: 0; }
+    .perm dd { margin-top: 2px; }
+    .perm-index a { min-height: 38px; padding: 0 11px; font-size: 16px; }
     .foot { padding: 22px 21px 30px; }
     .halfway:where(:not([data-lawfive] *)) span { width: 12px; height: 12px; }
 }

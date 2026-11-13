@@ -24,14 +24,16 @@ Without the build, the pages still work and show pictures where the playable par
 | `faq.html` | Questions and answers, as `<details>` that open. |
 | `privacy.html`, `terms.html`, `delete-account.html` | The legal pages. |
 | `support.html` | How to get help, at `lawfive.app/support`, the address given to the app stores. |
+| `permissions.html` | Every permission each app asks for, at `lawfive.app/permissions`, the page given to the stores' reviewers. |
 
-Every page shares the header (the stadium board: the L5 mark and LAWFIVE, then Try it, Quiz, FAQ, Docs and Sign in, the current page a tunnel in the grass) and the footer (a strip of the board with the mark). The legal pages and `support.html` keep only the mark and Sign in in the header, with their own four links in the footer.
+Every page shares the header (the stadium board: the L5 mark and LAWFIVE, then Try it, Quiz, FAQ, Docs and Sign in, the current page a tunnel in the grass) and the footer (a strip of the board with the mark). The legal pages, `support.html` and `permissions.html` keep only the mark and Sign in in the header, with their own five links in the footer.
 
 - The feature pages and FAQ end with the same Find out more cards and invitation: change one, change all.
 - Sections link to where each thing is shown in more detail or can be played, by the ids on the feature pages' topics, so renaming an id means updating its links.
 - Every link to lawfive.dev carries the `ext-icon` arrow and its hidden words.
 - The pages say only what's built. When a feature changes or reaches another platform, update the page that describes it.
 - The Garmin watches listed on `watch.html` and in the FAQ follow `watch-garmin/manifest.xml`.
+- `permissions.html` follows the apps' manifests and Info.plists: each app's section (`data-app`) names every permission it declares, each entry by its identifiers (`data-permission`). `node tools/check-permissions.mjs`, part of the root `pnpm test`, fails when they differ.
 
 ## Playable parts
 
