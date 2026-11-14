@@ -578,6 +578,10 @@ private struct KickoffScreen: View {
                     KickoffArrow(match: match, target: target, size: size)
                 }
             }
+            // ACT-5: until the first kickoff, low under Start, in its own slot; the warning above has it while shown.
+            if let ready = state.gpsReady, !(match.phase == .pre && (state.healthRefused || state.locationApproximate)) {
+                Text(ready ? "GPS ready" : "GPS searching").font(.barlow(w * 0.062)).foregroundStyle(ready ? C.start : C.dim).at(0.5, 0.88, size)
+            }
         }
     }
 }

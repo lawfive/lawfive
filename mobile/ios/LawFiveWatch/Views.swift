@@ -146,12 +146,13 @@ struct HomePage: View {
     }
 }
 
-/// MenuRow's look, for NavigationLink.
+/// MenuRow's look, for NavigationLink; `subLines` for a sentence that wraps.
 struct RowLabel: View {
     let label: String
     var sub: String?
     var icon: String?
     var swatch: Int?
+    var subLines = 1
 
     var body: some View {
         HStack(spacing: 8) {
@@ -165,11 +166,12 @@ struct RowLabel: View {
             if let swatch { Swatch(color: swatch).padding(.trailing, 2) }
             VStack(alignment: .leading, spacing: 0) {
                 Text(label).font(.barlow(15, .semibold)).foregroundStyle(C.text).lineLimit(1)
-                if let sub { Text(sub).font(.barlow(12, .regular)).foregroundStyle(C.dim).lineLimit(1) }
+                if let sub { Text(sub).font(.barlow(12, .regular)).foregroundStyle(C.dim).lineLimit(subLines).fixedSize(horizontal: false, vertical: subLines > 1) }
             }
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 10)
+        .padding(.vertical, subLines > 1 ? 7 : 0)
         .frame(maxWidth: .infinity, minHeight: sub != nil ? 50 : 44)
         .background(C.row, in: RoundedRectangle(cornerRadius: 14))
     }
@@ -475,6 +477,8 @@ struct AboutPage: View {
                 if let version = s.serverVersion { RowLabel(label: "Server version", sub: version) }
                 RowLabel(label: "History", sub: "\(s.history.count) of \(historyKept) matches kept")
                 RowLabel(label: "Open source", sub: "lawfive.dev")
+                // WX-12: the licenses in full are on the iPhone and the website.
+                RowLabel(label: "Licenses", sub: "See Data and licenses in the LawFive phone app", subLines: 3)
                 MenuRow(label: "Reset LawFive", sub: "Erase everything here") { confirming = true }
             }
         }

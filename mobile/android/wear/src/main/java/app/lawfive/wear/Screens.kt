@@ -536,6 +536,8 @@ private fun AboutPage() {
         s.serverVersion?.let { item { MenuRow("Server version", it) {} } }
         item { MenuRow("History", "${s.history.size} of $HISTORY_KEPT matches kept") {} }
         item { MenuRow("Open source", "lawfive.dev") {} }
+        // WX-12: the libraries' licenses in full are on the phone (its list has this app's too) and the website.
+        item { MenuRow("Licenses", "See Data and licenses in the LawFive phone app", subLines = 3) {} }
         item { MenuRow("Reset LawFive", "Erase everything here") { confirming = true } }
     }
 }

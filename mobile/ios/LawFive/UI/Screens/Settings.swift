@@ -689,9 +689,10 @@ private struct PasswordSheet: View {
 }
 
 /// Data and licenses (WX-8), as the website's and Android's: where the data comes from (following what
-/// this server uses), LawFive's own, and what the app is built with.
+/// this server uses), LawFive's own, what the app is built with, and the full license texts (WX-12).
 struct LicensesScreen: View {
     @Environment(AppGraph.self) private var graph
+    @Environment(Nav.self) private var nav
     @Environment(\.openURL) private var openURL
     @State private var meta: ServerMeta?
 
@@ -705,7 +706,8 @@ struct LicensesScreen: View {
     var body: some View {
         let mit = ("MIT", "https://opensource.org/license/mit")
         let odbl = ("ODbL", "https://opendatacommons.org/licenses/odbl/")
-        let ofl = ("SIL Open Font License 1.1", "https://openfontlicense.org")
+        // Its short name, so the chip fits beside the typeface's name (the full name is on its page in Full license texts).
+        let ofl = ("OFL 1.1", "https://openfontlicense.org")
         let data: [Credit]? = meta.map { m in
             [
                 m.weather.map { _ in Credit(name: "Open-Meteo", url: "https://open-meteo.com", what: "Weather forecasts for matches, from national weather services' models", license: ("CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/")) },
@@ -734,6 +736,12 @@ struct LicensesScreen: View {
             }
             SectionTitle("Built with")
             credits(software)
+            // WX-12: each one's copyright and license in full, as the licenses ask.
+            SectionTitle("Licenses")
+            LfCard {
+                ListRow(title: "Full license texts", sub: "Each font, icon set and library in the app, with its copyright and license", divider: false,
+                        action: { nav.push(.licenseTexts) }, leading: { EmptyView() }, trailing: { RowArrow() })
+            }
         }
         .task { meta = await graph.meta() }
     }

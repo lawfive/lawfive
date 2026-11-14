@@ -53,3 +53,41 @@ data class TrackChunk(val text: String = "", val count: Int = 0, val lastTDs: In
 /** A finished track waiting to go up, a chunk a request (POST /v1/watch/tracks). */
 @Serializable
 data class TrackUpload(val created: Long, val start: Long, val count: Int, val next: Int = 0)
+
+/**
+ * SYNC-7: the distance covered, worked out from the positions taken during play where the watch's exercise doesn't
+ * measure it (WCH-7). Each step between good positions counts as the server's track summary counts one (schema/src/track.ts,
+ * summarizeTrack): no more than 15 s apart, so a break or a suspension isn't a step, and no faster than any referee.
+ * A position worse than GPS ready's 25 m isn't one to step from or to, so its jump adds nothing. Times are the track's,
+ * in tenths of a second; positions in millionths of a degree, as the track packs them.
+ */
+@Serializable
+data class Covered(val meters: Double = 0.0, val lastTDs: Int? = null, val lastLat: Int? = null, val lastLon: Int? = null) {
+    /** With a position at [tDs], its accuracy in meters when the watch gives one. */
+    fun add(tDs: Int, lat: Int, lon: Int, accuracy: Double?): Covered {
+        if (accuracy != null && accuracy > GPS_USABLE_M) return this
+        val step = if (lastTDs != null && lastLat != null && lastLon != null) {
+            val sec = (tDs - lastTDs) / 10.0
+            val moved = metersBetween(lastLat / 1e6, lastLon / 1e6, lat / 1e6, lon / 1e6)
+            if (sec > 0 && sec <= GAP_SEC && moved / sec <= MAX_SPEED_MPS) moved else 0.0
+        } else 0.0
+        return Covered(meters + step, tDs, lat, lon)
+    }
+
+    companion object {
+        /** The server's trackRules: gapMs and maxSpeedMps. */
+        const val GAP_SEC = 15.0
+        const val MAX_SPEED_MPS = 10.0
+    }
+}
+
+/** ACT-5: a position within this, Garmin's "usable" (as Mark pitch's, TRK-13, and the Apple Watch's), says GPS ready. */
+const val GPS_USABLE_M = 25.0
+
+/** Meters between two positions in degrees: the server's flat-earth maths (metresBetween), accurate over a pitch. */
+fun metersBetween(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+    val radians = Math.PI / 180
+    val x = (lon2 - lon1) * radians * Math.cos((lat1 + lat2) / 2 * radians)
+    val y = (lat2 - lat1) * radians
+    return Math.hypot(x, y) * 6_371_008.8
+}

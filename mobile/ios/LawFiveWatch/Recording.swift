@@ -6,7 +6,11 @@ import HealthKit
 // running with the screen off for the whole match (WCH-5), with no hour's limit as the extended runtime
 // session had (R-16), and gives the heart rate and the distance; the location comes from Core Location.
 // Paused between periods (ACT-2), saved to Apple Health at full time unless that's switched off (ACT-4),
-// and dropped with a canceled match.
+// and dropped with a canceled match. ACT-5: from the match's setup it's prepared, and Core Location started,
+// so the heart rate and the position are there at the first kickoff.
+
+/// ACT-5: a position within this, Garmin's "usable" (as Mark pitch's, TRK-13), says GPS ready.
+let gpsUsableMeters = 25.0
 
 @MainActor
 final class Workout: NSObject {
@@ -18,6 +22,11 @@ final class Workout: NSObject {
     /// The latest reading, while a period is played.
     private(set) var heartRate: Int?
     private(set) var location: CLLocation?
+    /// ACT-5: between warmUp and the first kickoff, or a cancel; when the location's began, as a fix from
+    /// before then may be from somewhere else; and asking watchOS for a session left from before.
+    private var warming = false
+    private var warmedSince: Date?
+    private var recovering = false
 
     /// What it asks Apple Health for: to save the workout, its route and what was measured, and to read
     /// the heart rate and distance as the match goes.
@@ -33,6 +42,19 @@ final class Workout: NSObject {
         locations.authorizationStatus == .authorizedWhenInUse && locations.accuracyAuthorization == .reducedAccuracy
     }
 
+    /// ACT-5: the location allowed, precisely, so a track gets positions.
+    var locationPrecise: Bool {
+        [.authorizedWhenInUse, .authorizedAlways].contains(locations.authorizationStatus) && locations.accuracyAuthorization == .fullAccuracy
+    }
+
+    /// ACT-5: since the warm-up began (or just before, as the first fix can be), a position accurate enough to use,
+    /// and the latest still is. watchOS sends nothing new while the watch stands still, so the last fix stands until
+    /// another comes.
+    var gpsReady: Bool {
+        guard let location, let warmedSince, location.timestamp >= warmedSince.addingTimeInterval(-10) else { return false }
+        return location.horizontalAccuracy >= 0 && location.horizontalAccuracy <= gpsUsableMeters
+    }
+
     /// The location hasn't been asked about yet, or the answer hasn't come.
     var locationUndecided: Bool { locations.authorizationStatus == .notDetermined }
     /// No location for LawFive: no track. The kickoff direction's compass reads the magnetic heading, which needs none.
@@ -46,24 +68,59 @@ final class Workout: NSObject {
         if locations.authorizationStatus == .notDetermined { locations.requestWhenInUseAuthorization() }
     }
 
-    /// A period is being played: the workout starts, or carries on after a break.
-    func run() {
-        startLocations()
-        if let session {
-            if session.state == .paused { session.resume() }
-            return
+    /// ACT-5: a match set up, before its first kickoff. The workout session is prepared, so watchOS warms up its
+    /// sensors, and with `track`, Core Location starts. A
+    /// session left by an app that went away mid-setup is ended and a fresh one prepared, as watchOS discards the
+    /// builder of a session recovered before it started. Called again as the setup changes, it does nothing more.
+    func warmUp(track: Bool) {
+        warming = true
+        if track, warmedSince == nil {
+            warmedSince = Date()
+            startLocations()
         }
-        guard HKHealthStore.isHealthDataAvailable() else { return }
+        guard session == nil, !recovering, HKHealthStore.isHealthDataAvailable(), !refused else { return }
+        recovering = true
+        store.recoverActiveWorkoutSession { recovered, _ in
+            Task { @MainActor in
+                self.recovering = false
+                recovered?.end()
+                // Unless kickoff or a cancel came first.
+                guard self.session == nil, self.warming else { return }
+                self.makeSession()?.prepare()
+            }
+        }
+    }
+
+    /// A period is being played: the workout starts (from its warm-up, ACT-5), or carries on after a break.
+    func run() {
+        warming = false
+        startLocations()
+        if session?.state == .ended { drop() }
+        if session == nil, HKHealthStore.isHealthDataAvailable() { makeSession() }
+        guard let session, let builder else { return }
+        switch session.state {
+        case .notStarted, .prepared:
+            let start = Date()
+            session.startActivity(with: start)
+            builder.beginCollection(withStart: start) { _, _ in }
+        case .paused:
+            session.resume()
+        default:
+            break
+        }
+    }
+
+    /// A new soccer workout, outdoors, not started.
+    @discardableResult
+    private func makeSession() -> HKWorkoutSession? {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .soccer
         configuration.locationType = .outdoor
-        guard let new = try? HKWorkoutSession(healthStore: store, configuration: configuration) else { return }
+        guard let new = try? HKWorkoutSession(healthStore: store, configuration: configuration) else { return nil }
         let builder = new.associatedWorkoutBuilder()
         builder.dataSource = HKLiveWorkoutDataSource(healthStore: store, workoutConfiguration: configuration)
         attach(new, builder)
-        let start = Date()
-        new.startActivity(with: start)
-        builder.beginCollection(withStart: start) { _, _ in }
+        return new
     }
 
     /// The app started again mid-match (R-5): the workout watchOS kept going is picked up again, and kept paused
@@ -92,17 +149,19 @@ final class Workout: NSObject {
     }
 
     /// Full time saves the workout to Apple Health, with its route, unless `save` is off; a canceled
-    /// match drops it.
+    /// match drops it, and one canceled before its kickoff ends its warm-up (ACT-5).
     func finish(save: Bool) {
         locations.stopUpdatingLocation()
         location = nil
         heartRate = nil
+        warmedSince = nil
+        warming = false
         guard let session, let builder else { return }
         let route = self.route
-        self.session = nil
-        self.builder = nil
-        self.route = nil
+        drop()
         session.end()
+        // Only prepared: nothing was collected.
+        guard session.startDate != nil else { return }
         builder.endCollection(withEnd: Date()) { _, _ in
             if !save {
                 builder.discardWorkout()
@@ -112,6 +171,12 @@ final class Workout: NSObject {
                 if let workout, let route { route.finishRoute(with: workout, metadata: nil) { _, _ in } }
             }
         }
+    }
+
+    private func drop() {
+        session = nil
+        builder = nil
+        route = nil
     }
 
     private func attach(_ session: HKWorkoutSession, _ builder: HKLiveWorkoutBuilder) {

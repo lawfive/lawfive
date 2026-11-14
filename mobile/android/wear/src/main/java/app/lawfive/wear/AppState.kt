@@ -27,6 +27,7 @@ object AppState {
     private lateinit var server: Server
     private lateinit var context: Context
     private lateinit var track: TrackLog
+    private lateinit var distance: DistanceLog
     /** Goes up each time the app comes to the front, so what the system allows is read again (WCH-7). */
     var resumes by mutableStateOf(0)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -73,14 +74,23 @@ object AppState {
         server = Server { serverUrl }
         this.context = context.applicationContext
         track = TrackLog(context.applicationContext)
+        distance = DistanceLog(context.applicationContext)
         saved = store.load()
         // EVT-12: the sin bins waiting for "can return" are the match's own events again.
         saved.match?.restored()
         battery = { (context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager)?.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)?.takeIf { it in 0..100 } }
         // DIAG-1: a match already running means the app went away mid-match.
         saved.match?.let { if (it.phase != Phase.Done && it.startedAt.isNotEmpty()) it.restarts += 1 }
-        // TMR-13, ACT-2: a match that comes back suspended keeps its exercise paused until Resume.
-        if (saved.match?.phase == Phase.Suspended) Workout.holdPaused(this.context)
+        // R-5: the recording goes on as the match left it: a match still being set up warms the GPS up again (ACT-5), one
+        // in a period records again, and one between periods or suspended keeps its exercise paused until the next
+        // period or Resume (ACT-2, TMR-13).
+        saved.match?.takeIf { it.phase != Phase.Done }?.let { m ->
+            when {
+                beforeFirstKickoff(m) -> Workout.prepare(this.context)
+                m.phase == Phase.Running || m.phase == Phase.Golden -> Workout.run(this.context, first = false)
+                m.startedAt.isNotEmpty() -> Workout.holdPaused(this.context)
+            }
+        }
         sendSignOuts()
     }
 
@@ -101,11 +111,16 @@ object AppState {
         if (wasPlayed && m.startedAt.isEmpty()) {
             Workout.end()
             track.discard(m.created)
+            distance.discard()
+            // ACT-5: back before the first kickoff, so the GPS warms up again for it.
+            Workout.prepare(context)
         }
-        follow(m)
+        follow(m, first = !wasPlayed && m.startedAt.isNotEmpty())
         if (before != Phase.Done && m.phase == Phase.Done) {
-            // SYNC-7: the distance, before the exercise ends.
-            Workout.distance?.let { m.distanceM = it }
+            // SYNC-7: the distance, before the exercise ends: the watch's own measure, else the one from its positions
+            // where the watch's soccer exercise doesn't measure it (WCH-7).
+            val fromFixes = distance.finish(m.created)
+            (Workout.distance ?: fromFixes)?.let { m.distanceM = it }
             Workout.end()
             if (m.recordTrack) track.finish(m.created)?.let(::queueTrack)
             matchFinished(m)
@@ -114,12 +129,32 @@ object AppState {
 
     // ---- Recording (WCH-7, TRK-7) ----
 
-    /** The exercise runs while a period is played, and pauses between them and while play is suspended (ACT-2, TMR-13). */
-    private fun follow(m: Match) {
+    /** ACT-5: set up, at "Who kicks off?" or Start, and not yet kicked off; Restart match comes back here (PRE-6). */
+    fun beforeFirstKickoff(m: Match) = m.startedAt.isEmpty() && (m.phase == Phase.Pre || m.phase == Phase.Ready)
+
+    /**
+     * ACT-5: the kickoff screens say whether the GPS is ready only when the match will record a position: a track, the
+     * location allowed, and a GPS to give it, through the soccer exercise or straight (WCH-7).
+     */
+    fun showsGps(m: Match) = beforeFirstKickoff(m) && m.recordTrack && Workout.hasLocation(context) && Workout.gpsAvailable(context)
+
+    /**
+     * WCH-5: the match's foreground service runs from the first kickoff, or from the setup when the GPS or the heart
+     * rate warm up for it (ACT-5): Health Services wants the warm-up in a foreground service, so it goes on with the
+     * screen off.
+     */
+    fun wantsService(m: Match) = m.phase != Phase.Done && (m.periodStart != null || (beforeFirstKickoff(m) && Workout.warmsUp(context)))
+
+    /**
+     * The exercise runs while a period is played, and pauses between them and while play is suspended (ACT-2, TMR-13).
+     * [first]: the match has just kicked off, so the exercise starts, from its warm-up (ACT-5).
+     */
+    private fun follow(m: Match, first: Boolean) {
         when (m.phase) {
             Phase.Running, Phase.Golden -> {
-                Workout.run(context)
+                Workout.run(context, first)
                 if (m.recordTrack) track.begin(m.created, System.currentTimeMillis())
+                distance.begin(m.created, System.currentTimeMillis())
             }
             Phase.Break, Phase.NextKickoff, Phase.Decide, Phase.Penalties, Phase.Suspended -> Workout.pause()
             else -> Unit
@@ -139,9 +174,12 @@ object AppState {
         // VIB-1: full time's one vibration with stoppage tracked is saved, so it comes once, and so is whether it repeats.
         val before = listOf(m.breakDue, m.scheduledBreakDone, m.breakEnd, m.breakEndAlerted, m.stoppageStart, m.lightningAlerted, m.sinBinReturns.size, m.fullTimeAcked, m.fullTimeRepeats)
         val alert = m.tick(now)
-        // TRK-7: a sample a second while play goes on.
-        if (m.recordTrack && (m.phase == Phase.Running || m.phase == Phase.Golden)) {
-            track.sample(m.created, now, Workout.takeFix(), Workout.heartRate)?.let { m.noteGps(it, now) }
+        if (m.phase == Phase.Running || m.phase == Phase.Golden) {
+            val fix = Workout.takeFix()
+            // SYNC-7: the distance from the positions, with Record track on or off (WCH-7).
+            fix?.let { distance.add(m.created, now, it) }
+            // TRK-7: a sample a second while play goes on.
+            if (m.recordTrack) track.sample(m.created, now, fix, Workout.heartRate)?.let { m.noteGps(it, now) }
         }
         if (before != listOf(m.breakDue, m.scheduledBreakDone, m.breakEnd, m.breakEndAlerted, m.stoppageStart, m.lightningAlerted, m.sinBinReturns.size, m.fullTimeAcked, m.fullTimeRepeats)) {
             revision++
@@ -161,6 +199,8 @@ object AppState {
             misconductScheme = Misconduct.scheme(setup.misconductScheme ?: s.misconductScheme),
         )
         update { it.copy(match = m, lastFormat = setup.format()) }
+        // ACT-5: the GPS and the heart rate start warming up now, at "Who kicks off?", not at kickoff.
+        Workout.prepare(context)
     }
 
     // ---- Create match (SET-9, SET-13, SET-14): the match being set up, not kept ----
@@ -201,6 +241,7 @@ object AppState {
             }
             val s = saved
             track.eraseAll()
+            distance.discard()
             update {
                 Saved(
                     quick = s.quick, faceLayout = s.faceLayout, secondClock = s.secondClock, screen = s.screen, screenAt = s.screenAt,
@@ -221,6 +262,7 @@ object AppState {
             // Canceled: nothing of it is kept.
             Workout.end()
             track.discard(it.created)
+            distance.discard()
         }
         update { it.copy(match = null) }
     }

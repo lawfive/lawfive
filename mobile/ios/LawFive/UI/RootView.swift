@@ -15,6 +15,9 @@ enum Route: Hashable {
     case settingsAt(String)
     /// WX-8: Data and licenses, from Settings → About.
     case licenses
+    /// WX-12: the full license texts, and one of them (a font's, an icon set's or a library's id).
+    case licenseTexts
+    case license(String)
     /// UI-27: the match screen setup, from Settings.
     case matchScreen
     case link
@@ -266,6 +269,8 @@ struct SignedIn: View {
         case .settings: SettingsScreen()
         case .settingsAt(let group): SettingsScreen(at: group)
         case .licenses: LicensesScreen()
+        case .licenseTexts: LicenseTextsScreen()
+        case .license(let id): LicenseScreen(id: id)
         case .matchScreen: MatchScreenSetupScreen()
         case .link: LinkWatchScreen()
         case .importMatches: ImportScreen()

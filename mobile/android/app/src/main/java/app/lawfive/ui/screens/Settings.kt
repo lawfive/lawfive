@@ -676,10 +676,11 @@ private fun DialogButtons(text: String, enabled: Boolean = true, close: (() -> U
     }
 }
 
-/** Data and licenses (WX-8), as the website's: where the data comes from (following what this server uses), LawFive's own, and what the app is built with. */
+/** Data and licenses (WX-8), as the website's: where the data comes from (following what this server uses), LawFive's own, what the app is built with, and the full license texts (WX-12). */
 @Composable
 fun LicensesScreen() {
     val graph = LocalGraph.current
+    val nav = LocalNav.current
     val context = LocalContext.current
     var meta by remember { mutableStateOf<ServerMeta?>(null) }
     LaunchedEffect(Unit) { meta = graph.meta() }
@@ -687,7 +688,8 @@ fun LicensesScreen() {
     val mit = "MIT" to "https://opensource.org/license/mit"
     val apache = "Apache 2.0" to "https://www.apache.org/licenses/LICENSE-2.0"
     val odbl = "ODbL" to "https://opendatacommons.org/licenses/odbl/"
-    val ofl = "SIL Open Font License 1.1" to "https://openfontlicense.org"
+    // Its short name, so the chip fits beside the typeface's name (the full name is on its page in Full license texts).
+    val ofl = "OFL 1.1" to "https://openfontlicense.org"
     // Only the words of a provider's credit, which comes as HTML from the server's settings.
     fun words(html: String) = androidx.core.text.HtmlCompat.fromHtml(html, androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT).toString().trim()
     val data = meta?.let { m ->
@@ -736,6 +738,14 @@ fun LicensesScreen() {
         }
         item { SectionTitle("Built with") }
         item { Credits(software) }
+        // WX-12: each library's copyright and license in full, as the licenses ask.
+        item { SectionTitle("Licenses") }
+        item {
+            LfCard {
+                ListRow("Full license texts", "Each font, icon set and library in the app, with its copyright and license", divider = false,
+                    onClick = { nav.navigate("settings/licenses/texts") }, trailing = { PhIcon(Ph.Next, tint = colors.muted) })
+            }
+        }
     }
 }
 

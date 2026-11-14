@@ -1,6 +1,6 @@
 # LawFive for Wear OS
 
-The match on a Wear OS watch ([wear-os-and-apple-watch.md](../../../docs/requirements/wear-os-and-apple-watch.md)), in the look in [DESIGN.md](../../../DESIGN.md#wear-os-and-apple-watch). Kotlin and Compose, a module beside the [phone app](../README.md), syncing straight with the server. A match is a Health Services exercise (WCH-7), giving heart rate, location and distance for its track. What still needs checking on a real watch is in [R-13](../../../docs/requirements/risks.md).
+The match on a Wear OS watch ([wear-os-and-apple-watch.md](../../../docs/requirements/wear-os-and-apple-watch.md)), in the look in [DESIGN.md](../../../DESIGN.md#wear-os-and-apple-watch). Kotlin and Compose, a module beside the [phone app](../README.md), syncing straight with the server. A match is a Health Services exercise (WCH-7), giving heart rate for its track, and location and distance where the watch's soccer exercise measures them; where it doesn't (a Galaxy Watch's soccer has only heart rate), the position comes straight from the watch's GPS, and the distance from its positions (with Record track off too, as no track is kept then). What still needs checking on a real watch is in [R-13](../../../docs/requirements/risks.md).
 
 ## Build and test
 
@@ -18,6 +18,8 @@ adb shell pm grant app.lawfive android.permission.health.READ_HEART_RATE   # and
 adb shell am broadcast -a whs.USE_SYNTHETIC_PROVIDERS com.google.android.wearable.healthservices
 adb shell am broadcast -a whs.synthetic.user.START_RUNNING com.google.android.wearable.healthservices
 ```
+
+To try the GPS straight there (the emulator's soccer has location, a Galaxy Watch's hasn't), stop the app (`adb shell am force-stop app.lawfive`) and launch it with `--ez directGps true`, then send `adb emu geo fix <lon> <lat>` every second or so: GPS ready needs a fix within 25 m, and the emulator's are 5 m.
 
 The track being recorded is in `files/tracks/current.json` (`adb shell run-as app.lawfive cat files/tracks/current.json`). Mark pitch (TRK-13) uses the emulator's GPS: send `adb emu geo fix <lon> <lat>` every second or so while a corner is averaged.
 
@@ -42,6 +44,7 @@ adb shell am start -n app.lawfive/app.lawfive.wear.MainActivity --es server http
 | `sinBins` | `team,player,secondsAgo;…` (team 0 home, 1 away, player 0 for none), with `"sinBins":true` in `format` (EVT-12) |
 | `cardReasons` (`--ez`) | Card reasons on or off (EVT-14) |
 | `heading` (`--ef`) | A made-up compass reading in radians |
+| `directGps` (`--ez`) | The GPS straight from the watch rather than through Health Services' soccer exercise, as on a watch whose soccer has no location, and the distance from its positions (WCH-7); with the app stopped first, until it's stopped again |
 
 ## How it's laid out
 

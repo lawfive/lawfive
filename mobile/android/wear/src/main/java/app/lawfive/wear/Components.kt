@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -210,13 +211,14 @@ fun WatchList(title: String? = null, titleTeam: Int = -1, titleColor: Int = -1, 
     }
 }
 
-/** A menu row: an optional icon on a green circle (UI-18) or a team color's swatch (SET-14), a label and a muted line. */
+/** A menu row: an optional icon on a green circle (UI-18) or a team color's swatch (SET-14), a label and a muted line (`subLines` for a sentence that wraps). */
 @Composable
-fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? = null, textColor: Color = C.text, swatch: Int? = null, onClick: () -> Unit) {
+fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? = null, textColor: Color = C.text, swatch: Int? = null, subLines: Int = 1, onClick: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().height(if (sub != null) 54.dp else 48.dp).background(fill ?: C.row, RoundedCornerShape(24.dp))
+        Modifier.fillMaxWidth().then(if (subLines > 1) Modifier.heightIn(min = 54.dp) else Modifier.height(if (sub != null) 54.dp else 48.dp))
+            .background(fill ?: C.row, RoundedCornerShape(24.dp))
             // Far enough in that the label clears a round screen's curve on the lower rows.
-            .clickable(onClick = onClick).padding(horizontal = 18.dp),
+            .clickable(onClick = onClick).padding(horizontal = 18.dp, vertical = if (subLines > 1) 9.dp else 0.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon != null) {
@@ -231,7 +233,7 @@ fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? 
         }
         Column(Modifier.weight(1f)) {
             T(label, 14.5.sp, textColor, FontWeight.SemiBold, center = false, lines = 1)
-            if (sub != null) T(sub, 12.sp, if (fill != null) textColor else C.dim, FontWeight.Normal, center = false, lines = 1)
+            if (sub != null) T(sub, 12.sp, if (fill != null) textColor else C.dim, FontWeight.Normal, center = false, lines = subLines)
         }
     }
 }

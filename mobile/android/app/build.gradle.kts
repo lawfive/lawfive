@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.aboutlibraries.android)
 }
 
 // Kept out of the repo: the SDK's place, another server to build in instead of the hosted service
@@ -111,6 +112,33 @@ tasks.withType<Test>().configureEach {
 
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
+}
+
+// WX-12: the libraries each build bundles, with their licenses, as Gradle resolves them (AboutLibraries,
+// at build time only: res/raw/aboutlibraries.json, read by data/Licenses.kt and drawn in LawFive's own
+// screens). A library whose license names its own copyright holder has its own text in
+// src/main/assets/licenses/libraries/, which LicensesTest asks for.
+aboutLibraries {
+    collect { includePlatform = false }
+    export { excludeFields.addAll("funding", "description") }
+}
+
+// WX-12: the Wear OS app's libraries too (its About points here), from its own release build's list.
+abstract class WearLibraries : DefaultTask() {
+    @get:InputFile abstract val list: RegularFileProperty
+    @get:OutputDirectory abstract val output: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        list.get().asFile.copyTo(output.get().file("licenses/wear-libraries.json").asFile, overwrite = true)
+    }
+}
+val wearLibraries = tasks.register<WearLibraries>("wearLibraryDefinitions") {
+    dependsOn(":wear:prepareLibraryDefinitionsRelease")
+    list.set(project(":wear").layout.buildDirectory.file("generated/aboutLibraries/release/res/raw/aboutlibraries.json"))
+}
+androidComponents.onVariants { variant ->
+    variant.sources.assets?.addGeneratedSourceDirectory(wearLibraries, WearLibraries::output)
 }
 
 dependencies {

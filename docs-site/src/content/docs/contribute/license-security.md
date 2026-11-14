@@ -7,9 +7,9 @@ description: LawFive's license, and how to report a security problem.
 
 LawFive is open source under the Apache License 2.0: the server, the website, the watch and phone apps, and everything else in the repository. The repository has the [license](https://github.com/lawfive/lawfive/blob/main/LICENSE) and its [notice file](https://github.com/lawfive/lawfive/blob/main/NOTICE); anyone sharing a copy, changed or not, keeps both with it.
 
-The iPhone app also includes Garmin's Connect IQ SDK, a closed library under Garmin's own license, so anyone building the iPhone app accepts Garmin's terms for it.
+Both phone apps also include Garmin's Connect IQ mobile SDK, a closed library under Garmin's own license, so anyone building either phone app accepts Garmin's terms for it.
 
-The apps use open-source fonts and icons with their own licenses, listed in the apps. Fonts are from Google Fonts under the OFL, and icons are from [Phosphor](https://phosphoricons.com) under MIT.
+The apps use open-source fonts, icons and libraries with their own licenses, each shown in full in the phone apps (Settings, then Data and licenses, then Full license texts). Fonts are from Google Fonts under the OFL, and icons are from [Phosphor](https://phosphoricons.com) under MIT.
 
 ## Reporting a security problem
 

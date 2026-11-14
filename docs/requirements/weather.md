@@ -43,15 +43,16 @@ Forecasts for matches, and the weather a match was played in. The server works t
 ## Credits and licenses
 
 - **WX-8** The weather credits Open-Meteo (CC BY 4.0) with its details, in the match page's weather Details. Settings has a **Data and licenses** page (`/settings/licenses`) listing the data services the server uses (weather, maps, satellite imagery, address search) with their licenses, and the open-source software LawFive is built with.
-- **WX-12 (Draft)** Data and licenses carries the notices the libraries' licenses ask for, beyond WX-8's list of names and license links (MIT, BSD and Apache 2.0 want the copyright notice and license text with each copy, and Apache 2.0 a library's own `NOTICE`).
-  - On both phones, a **Full license texts** row at the end opens each bundled library's copyright line and full license. On Android it's built from what Gradle bundles (for example with AboutLibraries), so it stays current; on the iPhone it's a short list kept by hand: Garmin's SDK, Phosphor and the fonts.
-  - The watches say where to find them: "Licenses: see Data and licenses on your phone or the website".
+- **WX-12** Data and licenses carries the notices the libraries' licenses ask for, beyond WX-8's list of names and license links (MIT, BSD, Apache 2.0 and the OFL want the copyright notice and license text with each copy, and Apache 2.0 a library's own `NOTICE`).
+  - On both phones, a **Full license texts** row at the end opens a list of the fonts and icons, then the libraries, each with who made it and its license. Each opens its own page: its website, its `NOTICE` where it has one, and its license in full with its copyright line, set in paragraphs for the phone. Terms kept on the web rather than a license text (Garmin's, Google's) are a link to them.
+  - On Android the list is what Gradle bundles in the phone app and the Wear OS app, made with each build, so it stays current. A library whose license names its own copyright holder (MIT, BSD) shows its own copy of it. On the iPhone it's a short list kept by hand: Garmin's SDK, Phosphor and the fonts.
+  - The Wear OS and Apple Watch apps' About say where to find them: "Licenses: see Data and licenses in the LawFive phone app".
   - Needed before the first public store release.
 
 ## Status
 
-Forecasts, risks and past weather on the server, the website, both phones, the watch's start-menu line, Data and licenses, and risk notifications on Android are built.
+Forecasts, risks and past weather on the server, the website, both phones, the watch's start-menu line, Data and licenses with the full license texts on both phones (and the pointer to them on Wear OS and Apple Watch), and risk notifications on Android are built.
 
 Not built yet:
 - Risk notifications on the iPhone (WX-11, PUSH-5).
-- The full license texts on the phones and the watches' pointer to them (WX-12).
+- The Garmin watch's pointer to the license texts (WX-12).

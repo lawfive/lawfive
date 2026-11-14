@@ -90,6 +90,14 @@ final class ScreenSnapshots: XCTestCase {
         try await Snapshots.take("settings") { self.app(graph, tab: .more, [.settings]) }
     }
 
+    /// WX-8, WX-12: Data and licenses, its full license texts, and one of them (a font's).
+    func testLicenses() async throws {
+        let graph = try await graph(.demo)
+        try await Snapshots.take("licenses") { self.app(graph, tab: .more, [.settings, .licenses]) }
+        try await Snapshots.take("licenses-full") { self.app(graph, tab: .more, [.settings, .licenses, .licenseTexts]) }
+        try await Snapshots.take("license") { self.app(graph, tab: .more, [.settings, .licenses, .licenseTexts, .license("font:barlow")]) }
+    }
+
     /// A new match's form, as its sheet holds it (the sheet's own frame and the page behind aren't drawn).
     func testTheMatchForm() async throws {
         let graph = try await graph(.demo)

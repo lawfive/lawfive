@@ -53,7 +53,7 @@ An emulator: `sdkmanager "emulator" "system-images;android-37.0;google_apis;arm6
 Pictures of the main screens from the shared fixtures (`schema/generated/fixtures`), drawn by Android's own code on Robolectric (native graphics) and written by Roborazzi, with no emulator. They're for looking at: every run writes them all, nothing is compared or committed, and a changed picture never fails the build.
 
 - **Where:** `mobile/android/build/snapshots/` (gitignored), as `{screen}__{width}-{theme}-{text}.png`, such as `matches__412-light-1x.png`. The iPhone's use the same screen keys, with widths `iphone17` and `se`, so `tools/snapshot-sheet.mjs` can pair them.
-- **Screens:** `matches` (the demo account), `matches-new` (a new account), `match-played` (a match with a track), `settings`, `match-form`, `stats`, `quiz` and `quiz-result`.
+- **Screens:** `matches` (the demo account), `matches-new` (a new account), `match-played` (a match with a track), `settings`, `licenses` (Data and licenses), `licenses-full` (its Full license texts), `license` (a font's), `match-form`, `stats`, `quiz` and `quiz-result`.
 - **Variants:** light and dark, 412 and 320 dp wide, font scale 1.0 (`1x`) and 1.3 (`large`), at 2x. Each page is drawn whole, as tall as its content (at least the phone's height).
 - **The data:** an in-test server on 127.0.0.1 (`app/src/test/.../snapshots/FakeServer.kt`) answers from the fixtures, through the app's own sync and stores. The clock is stopped at the fixtures' moment (`AppClock`) in their time zone. The test's log lists requests the fixtures don't cover.
 - **What differs from a phone:** no status, navigation or tab bar; maps are their empty panel (MapLibre can't run on the JVM).
@@ -106,11 +106,12 @@ Code is in `app/src/main/java/app/lawfive/`; the API's types are generated into 
 | `Reminders.kt` | Match reminders (APP-6) at the account's times, a day's matches in one notification, as exact alarms with WorkManager when they aren't allowed (APP-28), and `lawFiveNotification`, every notification's look (APP-24). |
 | `Notices.kt`, `Push.kt` | Notifications for matches from integrations (NOTE-1 to NOTE-4) and from the server through the relay (PUSH-4, PUSH-5). |
 | `data/HealthSave.kt`, `HealthRationaleActivity.kt` | Saving a Wear OS watch's matches to Health Connect, and its rationale page (WCH-7). |
+| `data/Licenses.kt`, `ui/screens/Licenses.kt` | Data and licenses' Full license texts (WX-12). The AboutLibraries Gradle plugin (build time only) lists what each build bundles, the phone's and the Wear OS app's, with their licenses; the screens are LawFive's own. A library whose license names its own copyright holder (MIT, BSD) needs its own text in `app/src/main/assets/licenses/libraries/` (`group_artifact.txt`, and `.notice.txt` for an Apache `NOTICE`): `LicensesTest` fails until it's there. |
 | `watch/` | The Garmin watch through the phone (APP-7): `WatchRelay` answers the watch's sync requests (with signal, using the watch's token; without, from its outbox and the last matches), `WatchBridge` connects to Garmin's Connect IQ SDK, `WatchMessageReceiver` starts the app for a watch's message, `WatchLinker` links a watch (APP-12). |
 
 From the repo root after `pnpm install`, `node mobile/android/tools/icons.mts` makes the Phosphor icons as vector drawables (the Wear OS app's in bold, UI-18), and `node mobile/android/tools/logo.mts` the L5 mark from `web/src/logo.ts`: launcher, launch screen, notification and Wear OS icons, and `ui/theme/LogoShapes.kt`. Rerun it after the mark changes; never edit its output.
 
-Fonts are from Google Fonts (OFL, licenses in `app/src/main/assets/licences`): Barlow, Barlow Condensed and JetBrains Mono, in the weights the website loads. Icons are Phosphor (MIT).
+Fonts are from Google Fonts (OFL, licenses in `app/src/main/assets/licenses`): Barlow, Barlow Condensed and JetBrains Mono, in the weights the website loads. Icons are Phosphor (MIT, its license there too).
 
 ## Pitfalls
 

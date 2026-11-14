@@ -38,6 +38,9 @@ import app.lawfive.ui.LocalGraph
 import app.lawfive.ui.LocalNav
 import app.lawfive.ui.screens.Attempt
 import app.lawfive.ui.screens.Kept
+import app.lawfive.ui.screens.LicenseScreen
+import app.lawfive.ui.screens.LicenseTextsScreen
+import app.lawfive.ui.screens.LicensesScreen
 import app.lawfive.ui.screens.MatchEditScreen
 import app.lawfive.ui.screens.MatchScreen
 import app.lawfive.ui.screens.MatchesScreen
@@ -130,6 +133,10 @@ class ScreenSnapshots {
         // APP-6: with this phone's reminders on, so their times show; off again for the screens after.
         snap("settings", wait = "Where you're signed in", setup = { runBlocking { graph.reminders.save(ReminderSettings(enabled = true)) } }) { SettingsScreen() }
         runBlocking { graph.reminders.save(ReminderSettings()) }
+        // WX-8, WX-12: Data and licenses, its full license texts, and one of them (a font's).
+        snap("licenses", wait = "Full license texts") { LicensesScreen() }
+        snap("licenses-full", wait = "okhttp") { LicenseTextsScreen() }
+        snap("license", wait = "Reserved Font Name") { LicenseScreen("font:barlow") }
         snap("match-form", wait = "Fee and notes", foot = 130) { MatchEditScreen(null) }
         snap("stats", wait = "Where on the pitch") { StatsScreen() }
         val bank = graph.quiz.local()

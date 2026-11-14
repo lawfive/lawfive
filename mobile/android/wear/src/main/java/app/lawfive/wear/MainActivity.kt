@@ -13,6 +13,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // WCH-7: for testing on an emulator, the GPS straight, as on a watch whose soccer exercise has no location.
+        if (BuildConfig.DEBUG && intent.getBooleanExtra("directGps", false)) Workout.forceDirectGps = true
         AppState.start(this)
         // For testing on an emulator: its address for the demo, and a layout to look at.
         if (BuildConfig.DEBUG) {
@@ -84,8 +86,8 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         AppState.resumes++
-        // A match in progress goes on, whatever happened to the app (R-5).
-        if (AppState.match?.let { it.phase != Phase.Done && it.periodStart != null } == true) MatchService.start(this)
+        // A match in progress goes on, whatever happened to the app (R-5), as does one warming up for its kickoff (ACT-5).
+        if (AppState.match?.let(AppState::wantsService) == true) MatchService.start(this)
         AppState.sync()
     }
 

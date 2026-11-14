@@ -37,7 +37,7 @@ On a real iPhone: choose your Apple account's team under Signing & Capabilities 
 
 `tools/snapshots.sh` draws the main screens straight from their views, as unit tests, from the demo account's and a new account's data in `schema/generated/fixtures/`, at the fixtures' clock and time zone. They're for looking at: nothing is compared or committed, and they don't run in CI.
 
-- **Screens:** `matches`, `matches-new`, `match-played`, `settings`, `match-form`, `stats`, `quiz` and `quiz-result`.
+- **Screens:** `matches`, `matches-new`, `match-played`, `settings`, `licenses`, `licenses-full`, `license`, `match-form`, `stats`, `quiz` and `quiz-result`.
 - **Variants:** iPhone 17 and iPhone SE (375 × 667) sizes, light and dark, default and largest standard text, each the page's whole height.
 - **Where:** `build/snapshots/{screen}__{iphone17|se}-{light|dark}-{1x|large}.png` (gitignored), named as Android's so `tools/snapshot-sheet.mjs` can pair them.
 - **Running:** it builds for testing into `build/DerivedData` (incremental; `--no-build` skips it; `LAWFIVE_DERIVED_DATA` for another), then tests on one simulator (`LAWFIVE_SIMULATOR`, iPhone 17 by default), shut down after unless it was up already or `--keep` is given. Test names run only those screens; a full run starts afresh. In a plain unit test run they skip.
@@ -69,18 +69,18 @@ The API's types are generated into `schema/generated/swift/LawFive.swift` (`pnpm
 
 The tabs are the board along the bottom (`BoardTabBar`), over the system's tabs with their bar hidden, so each tab keeps its own navigation stack; pages keep its height clear at their foot. UI tests find a tab by `tab.<name>` (`tab.Matches`) and scroll what they tap clear of it (`reveal`).
 
-Fonts are from Google Fonts (OFL, licenses in `LawFive/Resources/Licenses`): Barlow, Barlow Condensed and JetBrains Mono, in the weights the website loads. Icons are Phosphor (MIT).
+Fonts are from Google Fonts (OFL, licenses in `LawFive/Resources/Licenses`): Barlow, Barlow Condensed and JetBrains Mono, in the weights the website loads. Icons are Phosphor (MIT, its license there too). Data and licenses' Full license texts (WX-12) list them and the Swift packages the app bundles, by hand in `Data/Licenses.swift`; `LicensesTests` checks every package in `Package.resolved` that isn't only for tests is there.
 
 ## Apple Watch
 
-`LawFiveWatch/` is the watch app ([wear-os-and-apple-watch.md](../../docs/requirements/wear-os-and-apple-watch.md)), embedded in the iPhone app and syncing straight with the server. A match is a HealthKit workout (WCH-7), which keeps it running with the screen off and records the track. Touch lock (INP-12) uses the system's Water Lock (`WKInterfaceDevice.enableWaterLock()`). What still needs checking on a real watch is in [R-13](../../docs/requirements/risks.md).
+`LawFiveWatch/` is the watch app ([wear-os-and-apple-watch.md](../../docs/requirements/wear-os-and-apple-watch.md)), embedded in the iPhone app and syncing straight with the server. A match is a HealthKit workout (WCH-7), which keeps it running with the screen off and records the track; it's prepared, and Core Location started, from the match's setup, so GPS and the heart rate are ready at kickoff (ACT-5). Touch lock (INP-12) uses the system's Water Lock (`WKInterfaceDevice.enableWaterLock()`). What still needs checking on a real watch is in [R-13](../../docs/requirements/risks.md).
 
 ```bash
 tools/test-watch-engine.sh    # the match's rules and linking, on the Mac, with the shared match cases (or pnpm test:watches from the root)
 xcodebuild -project LawFive.xcodeproj -scheme LawFiveWatch -destination 'platform=watchOS Simulator,name=Apple Watch Series 12 (46mm)' test    # a whole match through the controls
 ```
 
-- **Positions.** Mark pitch (TRK-13) uses the simulator's position: `xcrun simctl location <watch> set <lat,lon>` (`testMarkingAPitch` needs one). For a track, play a route: `xcrun simctl location <watch> start --speed=4 <lat,lon> <lat,lon> ...`.
+- **Positions.** Mark pitch (TRK-13) and the kickoff screen's GPS ready (ACT-5) use the simulator's position: `xcrun simctl location <watch> set <lat,lon>` (`testMarkingAPitch` needs one); with none, the kickoff screen says GPS searching. For a track, play a route: `xcrun simctl location <watch> start --speed=4 <lat,lon> <lat,lon> ...`.
 - **Linking from the iPhone** works with a paired iPhone and watch simulator (`xcrun simctl list pairs`). Install the watch app after the iPhone app (`xcrun simctl install <watch> .../Debug-watchsimulator/LawFiveWatch.app`), open it, run `Walkthrough/testLinkingTheAppleWatch` on the iPhone and, once it's offering, `LawFiveWatchUITests/PhoneLinkFlow` on the watch with `TEST_RUNNER_LAWFIVE_PAIRED=1` (`test-without-building`).
 
 Debug builds take launch arguments for reaching a screen quickly:

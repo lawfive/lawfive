@@ -522,6 +522,11 @@ final class WatchFlow: XCTestCase {
                 system.buttons[name].tap()
             } else if let name = names.first(where: { system.cells[$0].exists && system.cells[$0].isHittable }) {
                 system.cells[name].tap()
+            } else if let name = names.first(where: { system.buttons[$0].exists }) {
+                // Below the fold on a small watch: scrolled to, then tapped where it is.
+                system.swipeUp()
+                sleep(1)
+                if !system.buttons[name].isHittable { system.buttons[name].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap() }
             } else if let off = system.switches.allElementsBoundByIndex.first(where: { ($0.value as? String) == "0" && $0.isHittable }) {
                 off.tap()
             } else if system.collectionViews.firstMatch.exists {
@@ -536,7 +541,8 @@ final class WatchFlow: XCTestCase {
     // WCH-7, TRK-7: with the workout on, the first launch says what LawFive asks for and why, then Apple Health and
     // the location ask; nothing asks between Start match and the kickoff; then a period records, and abandoning ends
     // the workout. Run with a route playing (xcrun simctl location <watch> start ...) to have positions in the track;
-    // the app's files show it.
+    // the app's files show it. ACT-5: GPS warms up from "Who kicks off?" (ready with a position set or playing),
+    // a cancel there stops it, and the next match's warms up again; once kicked off, the line goes.
     func testRecordingAMatch() {
         continueAfterFailure = false
         app.launchArguments = ["-reset", "1"]
@@ -552,9 +558,24 @@ final class WatchFlow: XCTestCase {
         tap("New match, Quick · 2×45' · HT 15'")
         tap("Quick match, 2×45' · HT 15'")
         see("Who kicks off?")
+        let gps = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'GPS '")).firstMatch
+        XCTAssertTrue(gps.waitForExistence(timeout: 5), "no GPS line: \(app.debugDescription)")
+        shot("kickoff gps")
+        swipeForMenu()
+        let cancel = app.buttons["Cancel match"]
+        for _ in 0..<6 where !cancel.isHittable { app.swipeUp() }
+        cancel.tap()
+        tap("Cancel match")
+        tap("New match, Quick · 2×45' · HT 15'")
+        tap("Quick match, 2×45' · HT 15'")
+        see("Who kicks off?")
+        XCTAssertTrue(gps.waitForExistence(timeout: 5))
         tap("HOM")
+        XCTAssertTrue(gps.waitForExistence(timeout: 5), "under Start too")
+        shot("kickoff gps start")
         tap("Start")
         see("1H")
+        XCTAssertFalse(gps.exists, "only before the first kickoff")
         sleep(30)
         shot("recording")
         swipeForMenu()

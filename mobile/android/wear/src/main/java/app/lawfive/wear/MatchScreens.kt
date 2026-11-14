@@ -108,7 +108,8 @@ fun MatchFlow(button: SharedFlow<Unit>) {
     }
     val match = AppState.match ?: return
     KeepScreenOn(match.wantsScreenOn(now))
-    LaunchedEffect(match.phase) { if (match.phase != Phase.Done && match.periodStart != null) MatchService.start(context) }
+    // WCH-5, ACT-5: from the setup when the GPS warms up for kickoff, else from the kickoff.
+    LaunchedEffect(match.phase) { if (AppState.wantsService(match)) MatchService.start(context) }
     // INP-4: the other button acknowledges an alert first, then starts and ends a stoppage.
     LaunchedEffect(Unit) {
         button.collect {
@@ -469,7 +470,7 @@ private fun BoxWithConstraintsScope.ScoreLine(m: Match, y: Float, scores: List<I
     }
 }
 
-/** PRE-1, PRE-2, PRE-7, UI-13. */
+/** PRE-1, PRE-2, PRE-7, UI-13, ACT-5. */
 @Composable
 private fun KickoffScreen(m: Match) {
     AppState.revision // The match changes in place: this draws it again when it does.
@@ -496,6 +497,13 @@ private fun KickoffScreen(m: Match) {
                     AppState.changeMatch { if (phase == Phase.Ready) start(at, saved.chosenScreen) else startNextPeriod(at) }
                 }
             }
+        }
+        // ACT-5: until the first kickoff, low under Start, whether the GPS has a position yet: gray searching, then
+        // the start green. Its own slot, so nothing else moves when it changes or goes (UI-1).
+        AppState.resumes // Location allowed or refused in Settings since: read again on coming back.
+        if (AppState.showsGps(m)) {
+            val ready = Workout.gpsReady
+            At(0.84f) { T(if (ready) "GPS ready" else "GPS searching", fraction(0.05f), if (ready) C.start else C.dim, lines = 1) }
         }
     }
 }

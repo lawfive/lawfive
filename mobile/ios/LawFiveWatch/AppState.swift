@@ -238,6 +238,9 @@ final class AppState {
     private(set) var healthRefused = false
     /// TRK-7: the location is only approximate, so the track gets no positions.
     private(set) var locationApproximate = false
+    /// ACT-5: from the match's setup to its first kickoff, with a track to record and the location allowed precisely,
+    /// whether GPS has a position to use (GPS ready) or is still searching; nil when the kickoff screen says nothing of it.
+    private(set) var gpsReady: Bool?
     private var ticker: Timer?
 
     var linked: Bool { saved.token != nil }
@@ -265,6 +268,9 @@ final class AppState {
         if let m = saved.match, m.phase != .done, !m.startedAt.isEmpty, recording {
             workout.recover(paused: m.phase != .running && m.phase != .golden)
             if m.recordTrack != false { track.begin(m.created, now: nowMs()) }
+        } else if let m = saved.match, m.startedAt.isEmpty {
+            // ACT-5: one being set up warms up again, picking up the workout session watchOS kept prepared.
+            follow(m)
         }
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.tick() }
@@ -446,6 +452,8 @@ final class AppState {
             s.match = m
             s.lastFormat = setup.format
         }
+        // ACT-5: GPS and the heart rate warm up from "Who kicks off?".
+        follow(m)
     }
 
     // MARK: Create match (SET-9, SET-13, SET-14): the match being set up, not kept
@@ -528,6 +536,7 @@ final class AppState {
             track.discard(m.created)
         }
         update { $0.match = nil }
+        refreshGps(nil)
     }
 
     // MARK: Recording (WCH-7, TRK-7)
@@ -541,18 +550,31 @@ final class AppState {
         #endif
     }
 
-    /// The workout runs while a period is played, and pauses between them (ACT-2) and while play is suspended (TMR-13).
+    /// The workout warms up from the match's setup to its first kickoff (ACT-5), runs while a period is played, and
+    /// pauses between them (ACT-2) and while play is suspended (TMR-13).
     private func follow(_ m: Match) {
         guard recording else { return }
         switch m.phase {
+        case .pre, .ready:
+            if m.startedAt.isEmpty { workout.warmUp(track: m.recordTrack != false) }
         case .running, .golden:
             workout.run()
             if m.recordTrack != false { track.begin(m.created, now: nowMs()) }
         case .breakTime, .nextKickoff, .decide, .penalties, .suspended:
             workout.pause()
-        case .pre, .ready, .done:
+        case .done:
             break
         }
+        refreshGps(m)
+    }
+
+    /// ACT-5: the kickoff screen's GPS line, before the first kickoff only, and only when the match will record positions.
+    private func refreshGps(_ m: Match?) {
+        var ready: Bool?
+        if let m, recording, m.recordTrack != false, m.startedAt.isEmpty, m.phase == .pre || m.phase == .ready, workout.locationPrecise {
+            ready = workout.gpsReady
+        }
+        if ready != gpsReady { gpsReady = ready }
     }
 
     /// Newest last; beyond 3, the oldest goes with its chunks, as on Garmin.
@@ -572,6 +594,8 @@ final class AppState {
         guard let m = saved.match else { return }
         // Before the kickoff, as the location's question is answered.
         if m.phase == .pre, recording, m.recordTrack != false, workout.approximate != locationApproximate { locationApproximate = workout.approximate }
+        // ACT-5: searching turns to ready as a usable position comes.
+        refreshGps(m)
         // TMR-13: the lightning countdown's vibration is saved, so it comes once; VIB-1: full time's one vibration with
         // stoppage tracked too, and whether it repeats.
         let before = [m.breakDue, m.scheduledBreakDone, m.breakEndAlerted, m.isStoppageActive, m.lightningAlerted == true, m.fullTimeAcked, m.fullTimeRepeats == true]

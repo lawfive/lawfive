@@ -198,6 +198,9 @@ private fun SignedIn() {
                 // Get ready's Change opens it at a group (WEB-32).
                 composable("settings?at={at}", listOf(androidx.navigation.navArgument("at") { defaultValue = "" })) { SettingsScreen(it.arguments?.getString("at")?.ifEmpty { null }) }
                 composable("settings/licenses") { app.lawfive.ui.screens.LicensesScreen() }
+                // WX-12: the full license texts, and one library's.
+                composable("settings/licenses/texts") { app.lawfive.ui.screens.LicenseTextsScreen() }
+                composable("settings/licenses/texts/{id}") { app.lawfive.ui.screens.LicenseScreen(it.arguments!!.getString("id")!!) }
                 composable("settings/match-screen") { app.lawfive.ui.screens.MatchScreenSetupScreen() }
                 composable("link") { LinkWatchScreen() }
             }

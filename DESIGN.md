@@ -379,6 +379,7 @@ A venue and a referee open on their own page; Edit opens the form, whose back li
 - **Index**: sticky on the left (188px, the current one with a 3px chalk bar); under 960px, wrapping chips at the top.
 - **Rows**: label and hint left, control right (stacked on phones). A named part of a panel is a mono subhead (`.settings-subhead`); **Advanced** is a fold (`.settings-advanced`); a change waiting is an amber-soft row.
 - **Where you're signed in**: this device and the four most recent others, then Show all (n).
+- **Data and licenses**: rows with the license as a chip. On the phones, **Full license texts** lists the fonts and icons, then the libraries, a row each with who made it and its license's chip; each opens a page with its Website row and its license on a chalk panel, the text's wrapped lines rejoined into paragraphs for the phone's width, headings in bold (Android draws a long one a paragraph at a time as pieces of one panel).
 - **`ServerSettings.tsx`**: each field saves on its own; addresses in mono (`.setting-input`); one set by the environment is read-only ("Set by `SMTP_URL` on the server"); a secret shows only whether it's set.
 - **`Plans.tsx`**: a row per plan with its code in a mono `.plan-code` tag. **`.plan-usage`**: a label, a condensed figure with "of 50" muted, and a thin bar, green, yellow from 80%, red when full. A plan ending within a week shows a brand-soft notice atop every page.
 

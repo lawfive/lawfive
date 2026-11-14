@@ -29,7 +29,7 @@ Pages are in `src/content/docs/`; the sidebar is in `astro.config.mjs`. Write fo
 | `api/overview`, `api/sync` | `schema/src/endpoints.ts`, `server/README.md`, `agent-descriptions.md` |
 | `index.mdx` | `compose.yaml`, `.env.example` |
 | `contribute/architecture` | `docs/ARCHITECTURE.md` |
-| `contribute/license-security` | `security.md`, `LICENSE`, `NOTICE`, `SECURITY.md` |
+| `contribute/license-security` | `security.md`, `weather.md` (WX-12), `LICENSE`, `NOTICE`, `SECURITY.md` |
 | `contribute/*` | Each component's README |
 
 `api/reference.md`, `api/examples.md`, `public/openapi.json`, `public/schemas/`, `public/agents/` and `public/llms.txt` aren't committed: `scripts/sync-api.mjs` makes them from `schema/generated/` before each build. The examples' source is `schema/guides/`.

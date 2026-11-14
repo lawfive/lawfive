@@ -24,6 +24,8 @@ import androidx.wear.ongoing.Status
 class MatchService : Service() {
     private val handler = Handler(Looper.getMainLooper())
     private var lock: PowerManager.WakeLock? = null
+    // ACT-5: before the first kickoff the service only warms up GPS and heart rate, so it says so.
+    private var shownSetUp: Boolean? = null
 
     private val tick = object : Runnable {
         override fun run() {
@@ -33,6 +35,7 @@ class MatchService : Service() {
                 return
             }
             AppState.tickMatch(System.currentTimeMillis())?.let { Haptics.play(this@MatchService, it) }
+            if (AppState.beforeFirstKickoff(match) != shownSetUp) post()
             handler.postDelayed(this, 1000)
         }
     }
@@ -46,11 +49,7 @@ class MatchService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // WCH-7: the exercise's types only with the permissions they need, or starting would fail.
-        var types = ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
-        if (Workout.hasHeartRate(this)) types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
-        if (Workout.hasLocation(this)) types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-        startForeground(1, notification(), types)
+        post()
         handler.removeCallbacks(tick)
         handler.post(tick)
         return START_STICKY
@@ -62,21 +61,32 @@ class MatchService : Service() {
         super.onDestroy()
     }
 
-    private fun notification(): Notification {
+    /** Shows the service's notification, or updates it when the first kickoff comes. */
+    private fun post() {
+        // WCH-7: the exercise's types only with the permissions they need, or starting would fail.
+        var types = ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+        if (Workout.hasHeartRate(this)) types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH
+        if (Workout.hasLocation(this)) types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+        val setUp = AppState.match?.let(AppState::beforeFirstKickoff) ?: false
+        shownSetUp = setUp
+        startForeground(1, notification(if (setUp) "Match set up" else "Match in progress"), types)
+    }
+
+    private fun notification(status: String): Notification {
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(NotificationChannel("match", "Match in progress", NotificationManager.IMPORTANCE_LOW))
         val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
         val builder = NotificationCompat.Builder(this, "match")
             .setSmallIcon(R.drawable.ph_watch)
             .setContentTitle("LawFive")
-            .setContentText("Match in progress")
+            .setContentText(status)
             .setCategory(NotificationCompat.CATEGORY_WORKOUT)
             .setOngoing(true)
             .setContentIntent(open)
         OngoingActivity.Builder(this, 1, builder)
             .setStaticIcon(R.drawable.ph_watch)
             .setTouchIntent(open)
-            .setStatus(Status.forPart(Status.TextPart("Match in progress")))
+            .setStatus(Status.forPart(Status.TextPart(status)))
             .build()
             .apply(this)
         return builder.build()

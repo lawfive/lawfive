@@ -4,6 +4,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    // WX-12: the list of its libraries and their licenses, which the phone app shows (About points there).
+    alias(libs.plugins.aboutlibraries.android)
+}
+
+aboutLibraries {
+    collect { includePlatform = false }
+    export { excludeFields.addAll("funding", "description") }
 }
 
 // WCH-1: the Wear OS watch app. The same kept-out-of-the-repo settings as the phone app's: another
