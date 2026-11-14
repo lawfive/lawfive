@@ -118,7 +118,7 @@
     --outline: var(--chalk-line);
     --hover: rgb(255 255 255 / 9%);
 }
-:where(.feature, .topic, .faq details, .legal-body, .legal-draft) {
+:where(.feature, .topic, .faq details, .legal-body) {
     --text: var(--ink);
     --muted: var(--ink-muted);
     --border: var(--ink-border);
@@ -539,8 +539,6 @@ article[id] { scroll-margin-top: 16px; }
 .legal-body li::marker { color: var(--ink-brand); font-weight: 700; }
 .legal-body a, .legal > .lede a { color: var(--brand); font-weight: 600; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 .legal > .lede a { color: var(--brand-strong); }
-.legal-draft { margin-bottom: 26px; padding: 12px 16px; border-radius: var(--radius); background: var(--ink-amber-soft); color: var(--ink-amber-text); font-size: 15.5px; }
-.legal-draft strong { color: inherit; }
 .legal-note { color: var(--muted); }
 
 /* Permissions (SITE-14): a legal page with a chalk panel per app. Under the app's name, each permission is a
@@ -718,7 +716,6 @@ article[id] { scroll-margin-top: 16px; }
     .faq .answer { padding: 0 18px 18px; }
     .legal-body { padding: 4px 18px 20px; }
     .legal-body h2 { font-size: 26px; }
-    .legal-draft { margin-bottom: 20px; }
     .legal-body.perm-app { padding-top: 20px; }
     .legal-body.perm-app h2 { font-size: 36px; }
     .perm h3 { font-size: 21px; }

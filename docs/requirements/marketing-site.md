@@ -43,7 +43,7 @@ The marketing site at lawfive.app, with its feature pages, playable parts and le
 
 - **SITE-5** **Privacy, terms and account deletion**: `lawfive.app/privacy`, `/terms` and `/delete-account`, linked from the site's footer.
   - They cover the hosted service. Someone else's server is theirs to answer for, apart from notifications, which pass through the project's relay and Firebase from any server (PUSH-2).
-  - The privacy policy and terms are drafts awaiting legal review, marked so on the page; their effective date goes in on the day they go final.
+  - The privacy policy and terms each give the date they took effect, and a changed version gets a new one. Search engines may list all three pages.
   - On the hosted service, the sign-up and invitation forms link to them, as do Settings → About on the website and phones. A self-hosted server doesn't show them.
   - The publisher is a sole proprietor in California, doing business as LawFive, with no street address; privacy@lawfive.app is the contact. The terms name the Apache License 2.0 and are governed by California law. Liability is capped at the greater of what someone paid in the last 12 months or US$50. There's 30 days' notice before a shutdown, and at least 30 days' email notice before a free account's limits (such as storage) change.
   - The minimum age is 16 everywhere, with a parent's or guardian's permission under 18. The terms' Acceptable use and the privacy policy's Young referees say no personal information may identify anyone under 16 (names, photos, contact details); team names, age groups and shirt numbers are fine.
@@ -77,5 +77,4 @@ Everything above is built, with every page of lawfive.app and lawfive.dev checke
 The permissions page's (SITE-14) Garmin entries use Garmin's names for the permissions, still to be checked against what the Connect IQ Store shows.
 
 Not built yet:
-- Legal review of the privacy policy and terms, and their effective date (SITE-5).
 - The support page linked from the apps' About.

@@ -54,7 +54,7 @@ It follows [DESIGN.md](../DESIGN.md): the website's Pitch & Scoreboard, a little
 
 ## Legal pages
 
-`privacy.html`, `terms.html` and `delete-account.html` are drafts awaiting legal review: remove the draft banner, fill in the [brackets] and remove `noindex` before they count. If what LawFive collects changes, change `privacy.html` and each store's privacy answers with it.
+`privacy.html`, `terms.html` and `delete-account.html` are in effect. If what LawFive collects changes, change `privacy.html` and each store's privacy answers with it; a change to the privacy policy or terms gets a new effective date, and account email tells people of it (SITE-5).
 
 ## Pictures
 
