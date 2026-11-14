@@ -673,7 +673,7 @@ module Sync {
         return false;
     }
 
-    //! "synced 8:42" (or the day), or the last problem: for the start menu's Matches row.
+    //! "synced 8:42" (or the day), or the last problem: for Settings' Account row.
     function shortStatus() as String {
         var problem = lastProblem;
         if (problem != null) {

@@ -138,7 +138,7 @@ struct HomePage: View {
     var body: some View {
         let s = state.saved
         WatchList(title: "LawFive") {
-            NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: !state.linked ? "Link to get your matches" : s.matches.first?.title ?? "None coming up", icon: "matches") }.buttonStyle(.plain)
+            NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: !state.linked ? "Link to sync" : s.matches.first?.title ?? "None coming up", icon: "matches") }.buttonStyle(.plain)
             NavigationLink { NewMatchPage() } label: { RowLabel(label: "New match", sub: "Quick · \(s.quick.summary)", icon: "plus") }.buttonStyle(.plain)
             NavigationLink { HistoryPage() } label: { RowLabel(label: "History", sub: s.history.isEmpty ? "None yet" : "\(s.history.count) kept", icon: "history") }.buttonStyle(.plain)
             NavigationLink { SettingsPage() } label: { RowLabel(label: "Settings", sub: state.linked ? "Linked" : "Not linked", icon: "settings") }.buttonStyle(.plain)

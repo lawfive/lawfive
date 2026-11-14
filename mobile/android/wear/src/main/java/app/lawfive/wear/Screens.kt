@@ -157,7 +157,7 @@ private fun HomePage(push: (Page) -> Unit) {
     WatchList("LawFive") {
         item {
             val next = s.matches.firstOrNull()
-            MenuRow("Matches", if (!AppState.linked) "Link to get your matches" else next?.let(::plannedTitle) ?: "None coming up", R.drawable.ph_matches) {
+            MenuRow("Matches", if (!AppState.linked) "Link to sync" else next?.let(::plannedTitle) ?: "None coming up", R.drawable.ph_matches) {
                 push(if (AppState.linked) Page.Matches else Page.Link)
             }
         }

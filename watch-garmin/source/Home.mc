@@ -63,13 +63,14 @@ class StartMenu extends WatchUi.Menu2 {
         current = self;
     }
 
-    //! The sub-labels, in place: the rows never move, so neither does the highlight.
+    //! The sub-labels, in place: the rows never move, so neither does the highlight. UI-15: short enough
+    //! for the smallest round screens (about 13 characters); the details are a row further in.
     function refresh() as Void {
         setSub(HOME_MATCHES, matchesSummary());
-        setSub(HOME_NEW, "Quick · " + Settings.timingSummary());
+        setSub(HOME_NEW, "Quick · " + Settings.periodsSummary());
         var last = History.all();
         setSub(HOME_HISTORY, last.size() > 0 ? "Last: " + History.title(last[0]) : "None yet");
-        setSub(HOME_SETTINGS, Sync.isLinked() ? "Linked · " + Sync.serverHost() : "Not linked");
+        setSub(HOME_SETTINGS, Sync.isLinked() ? "Linked" : "Not linked");
     }
 
     private function setSub(index as Number, text as String) as Void {
@@ -91,14 +92,17 @@ class StartMenu extends WatchUi.Menu2 {
     }
 }
 
-//! "3 coming up · synced 8:42", or how to get matches when not linked.
+//! "3 coming up", the last sync's problem in its place, or how to get matches when not linked.
 function matchesSummary() as String {
     if (!Sync.isLinked()) {
-        return "Link to get your matches";
+        return "Link to sync";
+    }
+    var problem = Sync.lastProblem;
+    if (problem != null) {
+        return problem;
     }
     var count = Sync.matches().size();
-    var coming = count == 0 ? "None coming up" : count == 1 ? "1 coming up" : count + " coming up";
-    return coming + " · " + Sync.shortStatus();
+    return count == 0 ? "None yet" : count + " coming up";
 }
 
 function startMenu() as [WatchUi.Views, WatchUi.InputDelegates] {
@@ -445,7 +449,7 @@ class SettingsMenu extends WatchUi.Menu2 {
     }
 
     function refresh() as Void {
-        setSub(0, Sync.isLinked() ? "Linked · " + Sync.shortStatus() : "Not linked");
+        setSub(0, Sync.isLinked() ? Format.capitalize(Sync.shortStatus()) : "Not linked");
         setSub(1, alertsSummary());
         setSub(2, controlsSummary());
         setSub(4, screenSummary());
