@@ -109,8 +109,9 @@ class NoticeWorker(context: Context, params: WorkerParameters) : CoroutineWorker
         val graph = applicationContext.graph
         val id = inputData.getString("notice") ?: return Result.success()
         if (!graph.session.current.signedIn || !graph.reminders.settings.first().integrations || !graph.reminders.canNotify()) return Result.success()
-        // The match list, the match page and the reminders follow straight away (APP-6).
-        runCatching { graph.sync.sync() }
+        // The match list, the match page and the reminders follow straight away (APP-6): the sync alone keeps the
+        // reminders of a canceled or moved match, so they're planned again from what it brought.
+        runCatching { if (graph.sync.sync()) graph.reminders.afterSync() }
         val body = runCatching { graph.api.call("GET", "/v1/notices/$id") }.getOrNull() ?: return Result.retry()
         val notice = runCatching { json.decodeFromJsonElement(MatchNotice.serializer(), body) }.getOrNull() ?: return Result.success()
         val context = applicationContext

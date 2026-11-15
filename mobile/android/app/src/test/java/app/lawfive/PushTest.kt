@@ -43,20 +43,30 @@ class PushTest {
 
     // NOTE-5: the server is told again when matches from integrations are turned on or off.
     @Test fun integrationsSwitchedTellsTheServerWithTheSameHandle() {
-        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = false))
-        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = false, told = true))
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = false, risks = false, toldRisks = false))
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = false, told = true, risks = false, toldRisks = false))
     }
 
     @Test fun nothingChangedTellsNothing() {
-        assertEquals(PushStep.Nothing, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = true))
+        assertEquals(PushStep.Nothing, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = true, risks = false, toldRisks = false))
     }
 
     @Test fun aHandleFromBeforeItWasKeptRegistersAgain() {
-        assertEquals(PushStep.Register, pushStep(needsRegistering = false, handle = null, integrations = false, told = null))
+        assertEquals(PushStep.Register, pushStep(needsRegistering = false, handle = null, integrations = false, told = null, risks = false, toldRisks = false))
+    }
+
+    // PUSH-4: and when weather risks are turned on or off, as an iPhone shows every push it's sent.
+    @Test fun weatherRisksSwitchedTellsTheServerWithTheSameHandle() {
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = true, risks = true, toldRisks = false))
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = true, risks = false, toldRisks = true))
+    }
+
+    @Test fun aPhoneThatNeverSaidAboutRisksTellsOnce() {
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = true, risks = true, toldRisks = null))
     }
 
     @Test fun aNewTokenStillRegisters() {
-        assertEquals(PushStep.Register, pushStep(needsRegistering = true, handle = "v1.h", integrations = true, told = true))
+        assertEquals(PushStep.Register, pushStep(needsRegistering = true, handle = "v1.h", integrations = true, told = true, risks = false, toldRisks = false))
     }
 }
 

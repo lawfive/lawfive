@@ -71,13 +71,13 @@ private val RENEW_AFTER: Duration = Duration.ofDays(30)
 internal enum class PushStep { Register, Tell, Nothing }
 
 /**
- * NOTE-5: the server also keeps whether this phone wants matches from integrations, so it's told
- * again when that changes, with the handle it has. Registering again is only for a new token or
- * server, an old handle, or a handle from before it was kept.
+ * NOTE-5, PUSH-4: the server also keeps whether this phone wants matches from integrations and weather
+ * risks, so it's told again when either changes, with the handle it has. Registering again is only for
+ * a new token or server, an old handle, or a handle from before it was kept.
  */
-internal fun pushStep(needsRegistering: Boolean, handle: String?, integrations: Boolean, told: Boolean?): PushStep = when {
+internal fun pushStep(needsRegistering: Boolean, handle: String?, integrations: Boolean, told: Boolean?, risks: Boolean, toldRisks: Boolean?): PushStep = when {
     needsRegistering -> PushStep.Register
-    told == integrations -> PushStep.Nothing
+    told == integrations && toldRisks == risks -> PushStep.Nothing
     handle == null -> PushStep.Register
     else -> PushStep.Tell
 }
@@ -96,6 +96,7 @@ class Push(private val context: Context, private val graph: AppGraph) {
         val at = longPreferencesKey("at")
         val handle = stringPreferencesKey("handle")
         val notices = booleanPreferencesKey("notices")
+        val risks = booleanPreferencesKey("risks")
     }
 
     /** Not the API's client: that one adds the session's sign-in, which the relay has no business seeing. */
@@ -137,12 +138,12 @@ class Push(private val context: Context, private val graph: AppGraph) {
         if (!offered()) return
         val token = firebaseToken() ?: return
         val registering = needsRegistering(token, session.server, saved[Keys.token], saved[Keys.server], saved[Keys.at]?.let(Instant::ofEpochMilli), Instant.now())
-        val step = pushStep(registering, saved[Keys.handle], settings.integrations, saved[Keys.notices])
+        val step = pushStep(registering, saved[Keys.handle], settings.integrations, saved[Keys.notices], settings.weatherRisks, saved[Keys.risks])
         if (step == PushStep.Nothing) return
         val handle = if (step == PushStep.Register) register(token, session.server) else saved[Keys.handle]!!
-        // NOTE-5: with whether this phone wants matches from integrations, so the server sends them
-        // only where they'll show, and the website can say when no phone will be told.
-        graph.api.call("PUT", "/v1/devices/current/push", JsonObject(mapOf("handle" to JsonPrimitive(handle), "notices" to JsonPrimitive(settings.integrations))))
+        // NOTE-5, PUSH-4: with whether this phone wants matches from integrations and weather risks, so the
+        // server sends each only where it'll show, and the website can say when no phone will be told.
+        graph.api.call("PUT", "/v1/devices/current/push", JsonObject(mapOf("handle" to JsonPrimitive(handle), "notices" to JsonPrimitive(settings.integrations), "risks" to JsonPrimitive(settings.weatherRisks))))
         context.pushStore.edit {
             if (step == PushStep.Register) {
                 it[Keys.token] = token
@@ -151,6 +152,7 @@ class Push(private val context: Context, private val graph: AppGraph) {
                 it[Keys.handle] = handle
             }
             it[Keys.notices] = settings.integrations
+            it[Keys.risks] = settings.weatherRisks
         }
     }
 
@@ -244,7 +246,8 @@ class RiskWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
         val graph = applicationContext.graph
         val id = inputData.getString("match") ?: return Result.success()
         if (!graph.session.current.signedIn || !graph.reminders.settings.first().weatherRisks || !graph.reminders.canNotify()) return Result.success()
-        runCatching { graph.sync.sync() }
+        // Whatever else the sync brought, the reminders follow it (APP-6).
+        runCatching { if (graph.sync.sync()) graph.reminders.afterSync() }
         graph.weather.refresh(force = true)
         val weather = graph.weather.byMatch.value[id]?.takeIf { it.risks.isNotEmpty() } ?: return Result.success()
         val record = graph.db.records().all("matches").firstNotNullOfOrNull { row ->

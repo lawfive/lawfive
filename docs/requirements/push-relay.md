@@ -45,6 +45,5 @@ The relay is live with its limits, controls and keys (the hosted server sends wi
 The iPhone's settings and notifications (IOS-14) are built and checked on a simulator.
 
 Not built yet:
-- Android saying which notifications it wants (PUSH-4): it gets both and drops weather risks when they're off, which still counts toward its limits.
 - Telling a server's admin in the website when a limit is reached.
 - Notifications checked on a real phone (R-18).
