@@ -91,7 +91,9 @@ export function useGetReady() {
     const feeds = useMeta().data?.capabilities.includes("assignor-calendars") ?? false;
     const calendars = useQuery({
         queryKey: ["assignor-calendars"],
-        queryFn: async () => (await request<{ calendars: unknown[] }>("GET", "/assignor-calendars")).calendars,
+        // The whole answer is cached, as Settings caches it under the same key; this card only needs the list.
+        queryFn: () => request<{ calendars: unknown[] }>("GET", "/assignor-calendars"),
+        select: (d) => d.calendars,
         enabled: feeds && !state.hidden,
     });
     const loaded = devices.isSuccess && matches.isSuccess && !!record && (!feeds || !calendars.isPending);
