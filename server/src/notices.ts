@@ -14,7 +14,9 @@ import { onRecordWrite, type RecordWrite } from "./records.ts";
 // changes are collected for about a minute and sent as one notification (so 30 matches added use
 // one of the day's 25, PUSH-1), except a change to a match kicking off within a day, which goes at
 // once. The push is the relay's match-changed event with the notice's id; the phone fetches the
-// notice and writes the words (PUSH-2). Saves made by the person themselves never notify.
+// notice and writes the words (PUSH-2). Saves made by the person themselves never notify. A notice
+// that reached no phone, as when none has matches from integrations on, is kept as that, with
+// reached 0 and no sent_at (NOTE-5).
 //
 //   GET /v1/notices/:id   a notice, for the phone
 
@@ -145,7 +147,7 @@ export class Notices {
             return;
         }
         const [open] = await this.db.select().from(matchNotice)
-            .where(and(eq(matchNotice.userId, write.userId), eq(matchNotice.keyId, actor.keyId), eq(matchNotice.urgent, false), isNull(matchNotice.sentAt)))
+            .where(and(eq(matchNotice.userId, write.userId), eq(matchNotice.keyId, actor.keyId), eq(matchNotice.urgent, false), isNull(matchNotice.sentAt), isNull(matchNotice.reached)))
             .orderBy(desc(matchNotice.createdAt)).limit(1);
         if (!open) {
             await this.db.insert(matchNotice).values({
@@ -161,15 +163,20 @@ export class Notices {
         await this.db.update(matchNotice).set({ matches }).where(eq(matchNotice.id, open.id));
     }
 
-    /** Sends the notices that are due: each one notification to the person's phones. */
+    /**
+     * Sends the notices that are due: each one notification to the person's phones. Each is taken as
+     * reaching none until the relay takes it for a phone, so it's never sent twice (NOTE-5).
+     */
     async flush(now = this.now()) {
         const { matchNotice } = tables;
-        const due = await this.db.update(matchNotice).set({ sentAt: new Date(now) })
-            .where(and(isNull(matchNotice.sentAt), lte(matchNotice.sendAt, new Date(now))))
+        const due = await this.db.update(matchNotice).set({ reached: 0 })
+            .where(and(isNull(matchNotice.sentAt), isNull(matchNotice.reached), lte(matchNotice.sendAt, new Date(now))))
             .returning();
         for (const notice of due.sort((a, b) => a.sendAt.getTime() - b.sendAt.getTime())) {
-            if (Object.values(notice.matches).some((m) => noticeChanges(m.before, m.after).length > 0)) {
-                await this.push.notify(notice.userId, "match-changed", notice.id, now);
+            const news = Object.values(notice.matches).some((m) => noticeChanges(m.before, m.after).length > 0);
+            const reached = news ? await this.push.notify(notice.userId, "match-changed", notice.id, now) : 0;
+            if (reached > 0) {
+                await this.db.update(matchNotice).set({ reached, sentAt: new Date(now) }).where(eq(matchNotice.id, notice.id));
             }
         }
         await this.db.delete(matchNotice).where(lt(matchNotice.createdAt, new Date(now - KEEP_MS)));

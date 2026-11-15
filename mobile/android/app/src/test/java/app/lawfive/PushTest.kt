@@ -40,6 +40,24 @@ class PushTest {
     @Test fun neverRegisteredRegisters() {
         assertTrue(needsRegistering("t", "https://a.example", null, null, null, now))
     }
+
+    // NOTE-5: the server is told again when matches from integrations are turned on or off.
+    @Test fun integrationsSwitchedTellsTheServerWithTheSameHandle() {
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = false))
+        assertEquals(PushStep.Tell, pushStep(needsRegistering = false, handle = "v1.h", integrations = false, told = true))
+    }
+
+    @Test fun nothingChangedTellsNothing() {
+        assertEquals(PushStep.Nothing, pushStep(needsRegistering = false, handle = "v1.h", integrations = true, told = true))
+    }
+
+    @Test fun aHandleFromBeforeItWasKeptRegistersAgain() {
+        assertEquals(PushStep.Register, pushStep(needsRegistering = false, handle = null, integrations = false, told = null))
+    }
+
+    @Test fun aNewTokenStillRegisters() {
+        assertEquals(PushStep.Register, pushStep(needsRegistering = true, handle = "v1.h", integrations = true, told = true))
+    }
 }
 
 // PUSH-5: what the notification says. Friday 6:00 PM in Los Angeles, the evening before Saturday's match.

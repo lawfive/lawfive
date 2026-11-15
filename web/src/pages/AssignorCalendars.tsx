@@ -6,11 +6,13 @@ import type { z } from "zod";
 import { ApiError, request, useMeta } from "../api.ts";
 import { Field, Icon, Select, TextInput, Toggle } from "../components/ui.tsx";
 import { formatShortDay, timeAgo } from "../format.ts";
+import { NoPhoneWillHear, type NoticesHeard } from "./ApiKeys.tsx";
 
 // Assignor calendars (FEED-1 to FEED-10), on the Settings page: the private calendar link an
 // assignor system gives each official, read by the server every 30 minutes into the matches. Each
 // shows how its latest read went, what it couldn't save, and whether it tells the phones; adding
-// one previews what the link holds before anything is saved.
+// one previews what the link holds before anything is saved. A calendar set to notify says so while
+// no phone would hear it (NOTE-5).
 
 type AssignorCalendar = z.infer<typeof schema.AssignorCalendar>;
 type Preview = z.infer<typeof schema.AssignorCalendarPreview>;
@@ -42,12 +44,13 @@ function lastRead(c: AssignorCalendar): string {
 export function AssignorCalendars({ adding, onDone }: { adding: boolean; onDone: () => void }) {
     const client = useQueryClient();
     const notices = useMeta().data?.capabilities.includes("notices") ?? false;
-    const calendars = useQuery({ queryKey: ["assignor-calendars"], queryFn: async () => (await request<{ calendars: AssignorCalendar[] }>("GET", "/assignor-calendars")).calendars });
+    const list = useQuery({ queryKey: ["assignor-calendars"], queryFn: () => request<{ calendars: AssignorCalendar[] } & NoticesHeard>("GET", "/assignor-calendars") });
+    const unheard = list.data && !list.data.phoneWillHear ? list.data : undefined;
     const refresh = () => client.invalidateQueries({ queryKey: ["assignor-calendars"] });
     const changed = () => Promise.all([refresh(), client.invalidateQueries({ queryKey: ["matches"] }), client.invalidateQueries({ queryKey: ["venues"] }), client.invalidateQueries({ queryKey: ["account-plan"] })]);
     return (
         <>
-            {calendars.isSuccess && calendars.data.length === 0 && (
+            {list.isSuccess && list.data.calendars.length === 0 && (
                 <div className="list-row">
                     <div className="avatar"><Icon name="assignor" size={18} /></div>
                     <div className="grow">
@@ -56,13 +59,13 @@ export function AssignorCalendars({ adding, onDone }: { adding: boolean; onDone:
                     </div>
                 </div>
             )}
-            {calendars.data?.map((c) => <CalendarRow key={c.id} calendar={c} notices={notices} onChange={changed} />)}
+            {list.data?.calendars.map((c) => <CalendarRow key={c.id} calendar={c} notices={notices} unheard={unheard} onChange={changed} />)}
             {adding && <AddCalendar notices={notices} onClose={onDone} onAdded={changed} />}
         </>
     );
 }
 
-function CalendarRow({ calendar: c, notices, onChange }: { calendar: AssignorCalendar; notices: boolean; onChange: () => void }) {
+function CalendarRow({ calendar: c, notices, unheard, onChange }: { calendar: AssignorCalendar; notices: boolean; unheard?: NoticesHeard; onChange: () => void }) {
     const [newLink, setNewLink] = useState<string>();
     const [linking, setLinking] = useState(false);
     const change = useMutation({
@@ -100,6 +103,8 @@ function CalendarRow({ calendar: c, notices, onChange }: { calendar: AssignorCal
                 {notices && (
                     <div className="key-notify">
                         <Toggle label="Tell my phones when it adds, moves or cancels a match" checked={c.notify} disabled={busy} onChange={(notify) => change.mutate({ notify })} />
+                        {/* NOTE-5: on, but no phone has the setting that hears it. */}
+                        {c.notify && unheard && <NoPhoneWillHear reason={unheard.noPhoneReason} />}
                     </div>
                 )}
                 {linking ? (

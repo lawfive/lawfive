@@ -10,6 +10,7 @@ The Android phone app ([android.md](../../docs/requirements/android.md)), in Kot
   - `sdk.dir=/Users/you/Library/Android/sdk`.
   - Optional: `lawfive.server=https://lawfive.example.com` to build in another server than the hosted `https://api.lawfive.app` (the sign-in screen's Use another server takes any address anyway).
   - Optional, to sign release builds: `lawfive.keystore=…`, `lawfive.keystore.password=…`, `lawfive.keystore.alias=…`. Make the key once and keep it safe outside the repo, as a phone only takes updates signed with the same key: `keytool -genkeypair -keystore ~/lawfive-release.jks -alias lawfive -keyalg RSA -keysize 4096 -validity 10000`.
+  - Optional, to upload to Google Play's testing tracks with `tools/play.py` (`tracks`, `upload <bundle> <track>`, `release <version code> <track>`): `lawfive.play.key=…`, the JSON key of a service account given only "View app information" and "Release apps to testing tracks" in Play Console. Keep it outside the repo. Production stays a click in Play Console.
   - Optional, for notifications from the server (weather risks, PUSH-5; matches from integrations, NOTE-4) through the [push relay](../../relay/): the values from a Firebase app registered as `app.lawfive` (its `google-services.json`). They identify the app rather than being secret, but stay out of the repo so a fork makes its own. Without them the app works and doesn't offer the setting.
 
 ```ini

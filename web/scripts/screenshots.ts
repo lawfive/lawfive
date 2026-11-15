@@ -180,6 +180,11 @@ for (const [device, viewport] of [["desktop", { width: 1280, height: 900 }], ["p
     await page.fill(".key-modal input", `Screenshots ${device}`);
     await page.getByLabel("Matches: Read and write").check();
     await page.getByLabel("Venues: Read", { exact: true }).check();
+    // NOTE-1: set to notify, on a server with notices, so the list shows that no demo phone hears it (NOTE-5).
+    const notify = page.locator(".key-modal").getByLabel("Tell my phones when it adds or changes matches");
+    if (await notify.count()) {
+        await notify.check();
+    }
     await shot("api-key-new", false);
     await page.click("text=Make key");
     await page.waitForSelector(".key-reveal");

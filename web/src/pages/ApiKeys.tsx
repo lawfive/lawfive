@@ -10,7 +10,8 @@ import { formatShortDay, timeAgo } from "../format.ts";
 // API keys for scripts and integrations (KEY-1 to KEY-4), on the Settings page: the list with
 // Delete for each, and a dialog to make one, choosing what it can reach. The new key is shown
 // once; the server keeps only a hash. A key that can change matches can also tell your phones
-// when it adds or changes one (NOTE-1), on the server's that offer it.
+// when it adds or changes one (NOTE-1), on the server's that offer it, and says so beside it while
+// none of the account's phones would hear it (NOTE-5).
 
 type ApiKey = z.infer<typeof schema.ApiKey>;
 type CreatedApiKey = z.infer<typeof schema.CreatedApiKey>;
@@ -40,10 +41,31 @@ function describeScopes(scopes: string[]): string {
 /** Whether a key can add or change matches, which is all its notices are about. */
 const writesMatches = (scopes: string[]) => scopes.includes("matches:write");
 
+/** Whether a phone hears matches from integrations, and if not why, as the server's lists say (NOTE-5). */
+export interface NoticesHeard {
+    phoneWillHear: boolean;
+    noPhoneReason?: "setting-off" | "iphone-only";
+}
+
+/**
+ * NOTE-5: beside an integration set to notify (a key, or an assignor calendar) while no phone hears
+ * it: the setting to turn on, or, when every phone is an iPhone, that there's none yet (PUSH-5).
+ */
+export function NoPhoneWillHear({ reason }: { reason: NoticesHeard["noPhoneReason"] }) {
+    return (
+        <p className="key-unheard" role="status">
+            <Icon name="bellOff" size={16} />
+            {reason === "iphone-only"
+                ? <span>No phone will be told: notifications for these are on Android only for now.</span>
+                : <span>No phone will be told. Turn on <strong>Tell me about matches from integrations</strong> in the LawFive app on your phone.</span>}
+        </p>
+    );
+}
+
 export function ApiKeys({ making, onDone }: { making: boolean; onDone: () => void }) {
     const client = useQueryClient();
     const notices = useMeta().data?.capabilities.includes("notices") ?? false;
-    const keys = useQuery({ queryKey: ["api-keys"], queryFn: async () => (await request<{ keys: ApiKey[] }>("GET", "/api-keys")).keys });
+    const list = useQuery({ queryKey: ["api-keys"], queryFn: () => request<{ keys: ApiKey[] } & NoticesHeard>("GET", "/api-keys") });
     const remove = useMutation({
         mutationFn: (id: string) => request("DELETE", `/api-keys/${id}`),
         onSuccess: () => client.invalidateQueries({ queryKey: ["api-keys"] }),
@@ -55,7 +77,7 @@ export function ApiKeys({ making, onDone }: { making: boolean; onDone: () => voi
 
     return (
         <>
-            {keys.isSuccess && keys.data.length === 0 && (
+            {list.isSuccess && list.data.keys.length === 0 && (
                 <div className="list-row">
                     <div className="avatar"><Icon name="key" size={18} /></div>
                     <div className="grow">
@@ -64,7 +86,7 @@ export function ApiKeys({ making, onDone }: { making: boolean; onDone: () => voi
                     </div>
                 </div>
             )}
-            {keys.data?.map((k) => {
+            {list.data?.keys.map((k) => {
                 const expired = k.expiresAt !== undefined && new Date(k.expiresAt) <= new Date();
                 return (
                     <div key={k.id} className="list-row">
@@ -80,6 +102,8 @@ export function ApiKeys({ making, onDone }: { making: boolean; onDone: () => voi
                                 <div className="key-notify">
                                     <Toggle label="Tell my phones when it adds or changes matches" checked={k.notify} disabled={notify.isPending}
                                         onChange={(on) => notify.mutate({ id: k.id, on })} />
+                                    {/* NOTE-5: on, but no phone has the setting that hears it. */}
+                                    {k.notify && list.data?.phoneWillHear === false && <NoPhoneWillHear reason={list.data.noPhoneReason} />}
                                 </div>
                             )}
                         </div>

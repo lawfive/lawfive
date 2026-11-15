@@ -64,7 +64,7 @@ Where the account is signed in.
 
 ### PUT /v1/devices/current/push
 
-**Say how to reach this phone.** Keeps the handle the push relay gave this phone with its session, so signing out removes it. Needs an X-LawFive-Device header. Not with API keys. Only when `GET /v1/meta` lists `push`. Not with API keys.
+**Say how to reach this phone.** Keeps the handle the push relay gave this phone with its session, so signing out removes it, and whether it wants matches from integrations. Send it again when that changes. Needs an X-LawFive-Device header. Not with API keys. Only when `GET /v1/meta` lists `push`. Not with API keys.
 
 **Body:** [PushHandle](#pushhandle)
 
@@ -248,6 +248,7 @@ How much of each limit the account is using; per-minute and per-file limits aren
 | Field | Type | Description |
 |---|---|---|
 | `handle` | string \| null | What the push relay gave this phone, which only it can read; null to stop notifications. |
+| `notices` (optional) | boolean | Whether this phone has Tell me about matches from integrations on. False, it isn't sent them and doesn't count as a phone that hears them. Left out, as by apps from before it, it's taken as on. |
 
 ### SignOutOthers
 

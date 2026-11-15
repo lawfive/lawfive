@@ -8,11 +8,11 @@ Keys for scripts and integrations, made in the web app's Settings. A key is sent
 
 ### GET /v1/api-keys
 
-**The account's API keys.** Newest first. The keys themselves aren't kept, only their first characters. Not with API keys.
+**The account's API keys.** Newest first. The keys themselves aren't kept, only their first characters. With whether a key set to notify reaches a phone. Not with API keys.
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { keys: [ApiKey](#apikey)[] } | The keys. |
+| 200 | { keys: [ApiKey](#apikey)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The keys. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval. |
 | 413 | [ApiError](#apierror) | The request is too big. |

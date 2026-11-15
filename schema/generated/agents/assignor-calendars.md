@@ -8,11 +8,11 @@ An assignor system's private calendar link (ArbiterSports, Assignr, HorizonWebRe
 
 ### GET /v1/assignor-calendars
 
-**The account's assignor calendars.** Oldest first, each with how its latest read went. Only when `GET /v1/meta` lists `assignor-calendars`. Not with API keys.
+**The account's assignor calendars.** Oldest first, each with how its latest read went. With whether a calendar set to notify reaches a phone. Only when `GET /v1/meta` lists `assignor-calendars`. Not with API keys.
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[] } | The calendars. |
+| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The calendars. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval. |
 | 413 | [ApiError](#apierror) | The request is too big. |

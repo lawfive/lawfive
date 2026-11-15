@@ -62,6 +62,7 @@ describe("API keys", () => {
         assert.deepEqual(list.body.keys.map((k: { name: string }) => k.name), ["Read venues", "RefSix import"]);
         assert.ok(list.body.keys.every((k: object) => !("key" in k)), "listed keys don't include the key");
         assert.ok(list.body.keys[0].expiresAt);
+        assert.equal(list.body.phoneWillHear, false, "a server without notices tells no phone (NOTE-5)");
     });
 
     test("bad requests are refused", async () => {

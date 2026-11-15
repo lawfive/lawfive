@@ -1206,11 +1206,11 @@ An assignor system's private calendar link (ArbiterSports, Assignr, HorizonWebRe
 
 ### GET /v1/assignor-calendars
 
-**The account's assignor calendars.** Oldest first, each with how its latest read went. Only when `GET /v1/meta` lists `assignor-calendars`. Not with API keys.
+**The account's assignor calendars.** Oldest first, each with how its latest read went. With whether a calendar set to notify reaches a phone (NOTE-5). Only when `GET /v1/meta` lists `assignor-calendars`. Not with API keys.
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[] } | The calendars. |
+| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The calendars. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval (USR-4). |
 | 413 | [ApiError](#apierror) | The request is too big. |
@@ -1477,7 +1477,7 @@ Where the account is signed in.
 
 ### PUT /v1/devices/current/push
 
-**Say how to reach this phone.** Keeps the handle the push relay gave this phone with its session, so signing out removes it (PUSH-4). Needs an X-LawFive-Device header. Not with API keys. Only when `GET /v1/meta` lists `push`. Not with API keys.
+**Say how to reach this phone.** Keeps the handle the push relay gave this phone with its session, so signing out removes it (PUSH-4), and whether it wants matches from integrations (NOTE-4, NOTE-5). Send it again when that changes. Needs an X-LawFive-Device header. Not with API keys. Only when `GET /v1/meta` lists `push`. Not with API keys.
 
 **Body:** [PushHandle](#pushhandle)
 
@@ -1890,11 +1890,11 @@ Keys for scripts and integrations (KEY-1 to KEY-4), made in the web app's Settin
 
 ### GET /v1/api-keys
 
-**The account's API keys.** Newest first. The keys themselves aren't kept, only their first characters. Not with API keys.
+**The account's API keys.** Newest first. The keys themselves aren't kept, only their first characters. With whether a key set to notify reaches a phone (NOTE-5). Not with API keys.
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { keys: [ApiKey](#apikey)[] } | The keys. |
+| 200 | { keys: [ApiKey](#apikey)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The keys. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval (USR-4). |
 | 413 | [ApiError](#apierror) | The request is too big. |
@@ -2920,6 +2920,7 @@ How much of each limit the account is using; per-minute and per-file limits aren
 | Field | Type | Description |
 |---|---|---|
 | `handle` | string \| null | What the push relay gave this phone (PUSH-2), which only it can read; null to stop notifications. |
+| `notices` (optional) | boolean | Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on. |
 
 ### RefereeMerge
 

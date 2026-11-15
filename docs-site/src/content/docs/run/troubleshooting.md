@@ -79,7 +79,7 @@ Start with **Send a test notification** under **Settings → Server**, which say
 - **Is it turned on?** Each person turns on **Tell me about weather risks** or **Tell me about matches from integrations** in the app's Settings, under Match reminders, and the phone has to allow the app's notifications. It's on Android for now.
 - **Doesn't the setting show?** The app has to be a build with Firebase settings, and the server has to offer notifications, so check `push` (and `notices`, for matches from integrations) is in `capabilities` from `/v1/meta` and that `PUSH_RELAY_URL` isn't `off`.
 - **Is there a match to warn about?** It only covers scheduled matches with a venue on the map, kicking off in the next 3 days, when weather is on. Each risk notifies once, plus once more if it becomes likely.
-- **Matches from integrations?** Only saves made with an API key set to notify count, and only for matches that haven't kicked off.
+- **Matches from integrations?** Only saves made with an API key or assignor calendar set to notify count, and only for matches that haven't kicked off. **Settings** on the website says beside such a key or calendar when none of the person's phones has the setting on. A change made then reaches no phone, and isn't sent later.
 - **Is the server at a limit?** Look for `Over the push relay's` in `docker compose logs server`. See [the limits](/run/notifications/#limits).
 - **Can the server reach the relay?** Look for `The push relay can't be reached` in the logs, and check it can make outgoing HTTPS requests.
 

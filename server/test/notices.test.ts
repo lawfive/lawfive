@@ -1,5 +1,6 @@
 import { PGlite } from "@electric-sql/pglite";
 import { defaultFormat } from "@lawfive/schema";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import assert from "node:assert/strict";
@@ -14,7 +15,8 @@ import { checkAnswer } from "./contract.ts";
 
 // Notices of what integrations did (NOTE-1 to NOTE-4): only an API key whose owner asked, only
 // matches that haven't kicked off, a burst collected into one notification, a change within a day
-// sent at once, and the notice read by the phone. Against PGlite, a made-up relay and a clock.
+// sent at once, the notice read by the phone, and one no phone hears kept as that (NOTE-5). Against
+// PGlite, a made-up relay and a clock.
 
 const migrationsFolder = new URL("../drizzle", import.meta.url).pathname;
 const phone = "android; model=Pixel 9; os=17; app=2026.11.2";
@@ -172,5 +174,51 @@ describe("notices", () => {
         assert.equal(notice.source, "My script");
         assert.equal((await call("GET", `/v1/notices/${notice.id}`, refsync)).status, 403);
         assert.equal((await call("GET", `/v1/notices/${crypto.randomUUID()}`, session)).status, 404);
+    });
+
+    test("while no phone hears them, the keys say so and a notice is kept as reaching none (NOTE-5)", async () => {
+        const hears = async () => (await call("GET", "/v1/api-keys", session)).body.phoneWillHear;
+        // The phone registered without saying, as apps from before it do: taken as on.
+        assert.equal(await hears(), true);
+        // Registered for weather risks only.
+        await call("PUT", "/v1/devices/current/push", session, { handle: "v1.phone", notices: false }, phone);
+        assert.equal(await hears(), false);
+        const first = crypto.randomUUID();
+        await call("PUT", `/v1/matches/${first}`, refsync, match());
+        await aMinuteLater();
+        assert.deepEqual(sent, [], "no phone is sent it");
+        const unheard = (await db.select().from(tables.matchNotice)).find((n) => first in n.matches)!;
+        assert.equal(unheard.reached, 0);
+        assert.equal(unheard.sentAt, null);
+        // A later change makes a notice of its own, rather than joining the one that went nowhere.
+        await call("PUT", "/v1/devices/current/push", session, { handle: "v1.phone", notices: true }, phone);
+        assert.equal(await hears(), true);
+        const second = crypto.randomUUID();
+        await call("PUT", `/v1/matches/${second}`, refsync, match());
+        await aMinuteLater();
+        const [notice, ...more] = await delivered();
+        assert.equal(more.length, 0);
+        assert.deepEqual(notice.matches.map((m: { matchId: string }) => m.matchId), [second]);
+        const [row] = await db.select().from(tables.matchNotice).where(eq(tables.matchNotice.id, notice.id));
+        assert.equal(row.reached, 1);
+        assert.ok(row.sentAt);
+        // No handle at all, as after a fresh install.
+        await call("PUT", "/v1/devices/current/push", session, { handle: null }, phone);
+        assert.equal(await hears(), false);
+        assert.equal((await db.select().from(tables.device))[0].pushNotices, null);
+        assert.equal((await call("GET", "/v1/api-keys", session)).body.noPhoneReason, "setting-off");
+    });
+
+    test("when every phone is an iPhone, the reason says so: it has no setting yet (NOTE-5)", async () => {
+        const res = await app.request("/v1/auth/sign-up/email", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ name: "Pat Lee", email: "pat@example.com", password: "correct-horse-battery" }),
+        });
+        const pat = res.headers.get("set-auth-token")!;
+        assert.deepEqual((await call("GET", "/v1/api-keys", pat)).body, { keys: [], phoneWillHear: false, noPhoneReason: "setting-off" }, "no phone at all");
+        const answer = (await call("GET", "/v1/api-keys", pat, undefined, "ios; model=iPhone17,1; os=26.1; app=2026.11.2")).body;
+        assert.equal(answer.phoneWillHear, false);
+        assert.equal(answer.noPhoneReason, "iphone-only");
     });
 });

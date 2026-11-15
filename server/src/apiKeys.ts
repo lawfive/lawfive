@@ -5,13 +5,14 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { z } from "zod";
 import { type Db, tables } from "./db/index.ts";
 import { plansOf } from "./plans.ts";
+import { noticesHeard } from "./push.ts";
 
 // API keys for scripts and integrations (KEY-1 to KEY-4). A key is "lf_" and 43 random characters;
 // the server keeps only its SHA-256 (the key is random enough that a slow hash adds nothing) and
 // its first characters. Only a signed-in session manages keys; app.ts checks a key's scopes
 // against the endpoint it calls.
 //
-//   GET    /v1/api-keys        the account's keys, newest first
+//   GET    /v1/api-keys        the account's keys, newest first, and whether a phone hears notices (NOTE-5)
 //   POST   /v1/api-keys        make one; the answer has the key, shown only this once
 //   PATCH  /v1/api-keys/:id    whether it notifies the user's phones (NOTE-1)
 //   DELETE /v1/api-keys/:id    delete one; it stops working straight away
@@ -56,13 +57,16 @@ export async function checkKey(db: Db, key: string, now = new Date()): Promise<K
     return { key: { id: row.id, userId: row.userId, name: row.name, scopes: row.scopes, notify: row.notify } };
 }
 
-export function apiKeysApi(db: Db) {
+/** `notices`: the server tells phones what integrations do (NOTE-1), so a key set to notify can reach one. */
+export function apiKeysApi(db: Db, { notices = false }: { notices?: boolean } = {}) {
     const api = new Hono<{ Variables: { userId: string } }>();
     const { apiKey } = tables;
 
     api.get("/api-keys", async (c) => {
         const rows = await db.select().from(apiKey).where(eq(apiKey.userId, c.var.userId)).orderBy(desc(apiKey.createdAt));
-        return c.json({ keys: rows.map(toApiKey) });
+        // NOTE-5: for the website to say, beside a key set to notify, when no phone will be told.
+        const heard = notices ? await noticesHeard(db, c.var.userId) : { phoneWillHear: false };
+        return c.json({ keys: rows.map(toApiKey), ...heard });
     });
 
     api.post("/api-keys", async (c) => {

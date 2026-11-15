@@ -8,6 +8,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -54,8 +55,9 @@ import kotlin.coroutines.resume
 
 // Notifications from the server (PUSH-4, PUSH-5, NOTE-4). The phone gets a Firebase token, swaps it
 // at the push relay for a handle only the relay can read, and gives that to its server, while weather
-// risks or matches from integrations are turned on. A push says only which match or notice; the phone
-// asks its own server for the rest and writes the notification itself (Notices.kt for integrations).
+// risks or matches from integrations are turned on, saying whether it wants the latter (NOTE-5). A
+// push says only which match or notice; the phone asks its own server for the rest and writes the
+// notification itself (Notices.kt for integrations).
 
 private val Context.pushStore: DataStore<Preferences> by preferencesDataStore("push")
 
@@ -64,6 +66,21 @@ internal fun needsRegistering(token: String, server: String, registeredToken: St
     token != registeredToken || server != registeredServer || registeredAt == null || Duration.between(registeredAt, now) > RENEW_AFTER
 
 private val RENEW_AFTER: Duration = Duration.ofDays(30)
+
+/** What [Push.refresh] does: get a handle from the relay and give it to the server, only tell the server what's wanted, or nothing. */
+internal enum class PushStep { Register, Tell, Nothing }
+
+/**
+ * NOTE-5: the server also keeps whether this phone wants matches from integrations, so it's told
+ * again when that changes, with the handle it has. Registering again is only for a new token or
+ * server, an old handle, or a handle from before it was kept.
+ */
+internal fun pushStep(needsRegistering: Boolean, handle: String?, integrations: Boolean, told: Boolean?): PushStep = when {
+    needsRegistering -> PushStep.Register
+    told == integrations -> PushStep.Nothing
+    handle == null -> PushStep.Register
+    else -> PushStep.Tell
+}
 
 /** "Lightning likely, Rain possible": the likeliest first. */
 internal fun riskLine(w: MatchWeather): String = w.risks.sortedBy { it.level != "likely" }.joinToString(", ") { riskTitle(it) }
@@ -77,6 +94,8 @@ class Push(private val context: Context, private val graph: AppGraph) {
         val token = stringPreferencesKey("token")
         val server = stringPreferencesKey("server")
         val at = longPreferencesKey("at")
+        val handle = stringPreferencesKey("handle")
+        val notices = booleanPreferencesKey("notices")
     }
 
     /** Not the API's client: that one adds the session's sign-in, which the relay has no business seeing. */
@@ -106,7 +125,8 @@ class Push(private val context: Context, private val graph: AppGraph) {
         val session = graph.session.current
         if (!available || !session.signedIn) return
         val saved = context.pushStore.data.first()
-        val wanted = graph.reminders.settings.first().let { it.weatherRisks || it.integrations }
+        val settings = graph.reminders.settings.first()
+        val wanted = settings.weatherRisks || settings.integrations
         if (!wanted || !graph.reminders.canNotify()) {
             if (saved[Keys.at] != null) {
                 graph.api.call("PUT", "/v1/devices/current/push", JsonObject(mapOf("handle" to JsonNull)))
@@ -116,13 +136,21 @@ class Push(private val context: Context, private val graph: AppGraph) {
         }
         if (!offered()) return
         val token = firebaseToken() ?: return
-        if (!needsRegistering(token, session.server, saved[Keys.token], saved[Keys.server], saved[Keys.at]?.let(Instant::ofEpochMilli), Instant.now())) return
-        val handle = register(token, session.server)
-        graph.api.call("PUT", "/v1/devices/current/push", JsonObject(mapOf("handle" to JsonPrimitive(handle))))
+        val registering = needsRegistering(token, session.server, saved[Keys.token], saved[Keys.server], saved[Keys.at]?.let(Instant::ofEpochMilli), Instant.now())
+        val step = pushStep(registering, saved[Keys.handle], settings.integrations, saved[Keys.notices])
+        if (step == PushStep.Nothing) return
+        val handle = if (step == PushStep.Register) register(token, session.server) else saved[Keys.handle]!!
+        // NOTE-5: with whether this phone wants matches from integrations, so the server sends them
+        // only where they'll show, and the website can say when no phone will be told.
+        graph.api.call("PUT", "/v1/devices/current/push", JsonObject(mapOf("handle" to JsonPrimitive(handle), "notices" to JsonPrimitive(settings.integrations))))
         context.pushStore.edit {
-            it[Keys.token] = token
-            it[Keys.server] = session.server
-            it[Keys.at] = Instant.now().toEpochMilli()
+            if (step == PushStep.Register) {
+                it[Keys.token] = token
+                it[Keys.server] = session.server
+                it[Keys.at] = Instant.now().toEpochMilli()
+                it[Keys.handle] = handle
+            }
+            it[Keys.notices] = settings.integrations
         }
     }
 

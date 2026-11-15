@@ -820,6 +820,7 @@ export const PlanRefusal = z
 export const PushHandle = z
     .object({
         handle: z.string().min(1).max(4096).nullable().describe("What the push relay gave this phone (PUSH-2), which only it can read; null to stop notifications."),
+        notices: z.boolean().optional().describe("Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on."),
     })
     .meta({ id: "PushHandle" });
 

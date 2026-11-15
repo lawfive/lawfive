@@ -388,7 +388,7 @@ export function createApp(db: Db, auth: Auth, options: AppOptions = {}) {
             return store ? store.webhookAllowPrivate() : typeof allow === "function" ? allow() : allow ?? false;
         },
     });
-    api.route("/", assignorCalendarsApi(db, assignorCalendars));
+    api.route("/", assignorCalendarsApi(db, assignorCalendars, { notices: !!options.notices }));
     api.route("/", shareApi(db, access.publicUrl));
     api.route("/", backupApi(db, storageLimit));
     if (options.files) {
@@ -399,7 +399,7 @@ export function createApp(db: Db, auth: Auth, options: AppOptions = {}) {
     api.route("/", quizApi());
     api.route("/", devicesApi(db));
     api.route("/", appSignInApi(db, access));
-    api.route("/", apiKeysApi(db));
+    api.route("/", apiKeysApi(db, { notices: !!options.notices }));
     api.route("/", accessApi(db, access, auth, storageLimit));
     api.route("/", calendarApi(db, access.publicUrl));
     api.route("/", watchApi(db, weather, options.version?.version));

@@ -308,4 +308,13 @@ describe("assignor calendars", () => {
         assert.deepEqual((await call("GET", "/v1/assignor-calendars")).body.calendars, []);
         assert.equal((await db.select().from(tables.assignorEvent)).length, 0);
     });
+
+    test("the list says whether a phone hears its notices (NOTE-5)", async () => {
+        const phone = "android; model=Pixel 9; os=17; app=2026.11.6";
+        assert.equal((await call("GET", "/v1/assignor-calendars")).body.phoneWillHear, true);
+        await call("PUT", "/v1/devices/current/push", { handle: "v1.phone", notices: false }, phone);
+        assert.equal((await call("GET", "/v1/assignor-calendars")).body.phoneWillHear, false);
+        await call("PUT", "/v1/devices/current/push", { handle: "v1.phone", notices: true }, phone);
+        assert.equal((await call("GET", "/v1/assignor-calendars")).body.phoneWillHear, true);
+    });
 });

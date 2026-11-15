@@ -9809,7 +9809,7 @@
           "Assignor calendars"
         ],
         "summary": "The account's assignor calendars",
-        "description": "Oldest first, each with how its latest read went. Only when GET /v1/meta lists the assignor-calendars capability. Not with API keys.",
+        "description": "Oldest first, each with how its latest read went. With whether a calendar set to notify reaches a phone (NOTE-5). Only when GET /v1/meta lists the assignor-calendars capability. Not with API keys.",
         "responses": {
           "200": {
             "description": "The calendars.",
@@ -9823,10 +9823,23 @@
                       "items": {
                         "$ref": "#/components/schemas/AssignorCalendar"
                       }
+                    },
+                    "phoneWillHear": {
+                      "type": "boolean",
+                      "description": "Whether any of the account's phones hears matches from integrations, so a calendar set to notify reaches one (NOTE-5). False while none has Tell me about matches from integrations on, and on a server without notices."
+                    },
+                    "noPhoneReason": {
+                      "type": "string",
+                      "enum": [
+                        "setting-off",
+                        "iphone-only"
+                      ],
+                      "description": "Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on; iphone-only, every phone signed in is an iPhone, which has no notifications yet."
                     }
                   },
                   "required": [
-                    "calendars"
+                    "calendars",
+                    "phoneWillHear"
                   ],
                   "additionalProperties": false
                 }
@@ -10999,7 +11012,7 @@
           "Devices"
         ],
         "summary": "Say how to reach this phone",
-        "description": "Keeps the handle the push relay gave this phone with its session, so signing out removes it (PUSH-4). Needs an X-LawFive-Device header. Not with API keys. Only when GET /v1/meta lists the push capability. Not with API keys.",
+        "description": "Keeps the handle the push relay gave this phone with its session, so signing out removes it (PUSH-4), and whether it wants matches from integrations (NOTE-4, NOTE-5). Send it again when that changes. Needs an X-LawFive-Device header. Not with API keys. Only when GET /v1/meta lists the push capability. Not with API keys.",
         "requestBody": {
           "required": true,
           "content": {
@@ -11298,7 +11311,7 @@
           "API keys"
         ],
         "summary": "The account's API keys",
-        "description": "Newest first. The keys themselves aren't kept, only their first characters. Not with API keys.",
+        "description": "Newest first. The keys themselves aren't kept, only their first characters. With whether a key set to notify reaches a phone (NOTE-5). Not with API keys.",
         "responses": {
           "200": {
             "description": "The keys.",
@@ -11312,10 +11325,23 @@
                       "items": {
                         "$ref": "#/components/schemas/ApiKey"
                       }
+                    },
+                    "phoneWillHear": {
+                      "type": "boolean",
+                      "description": "Whether any of the account's phones hears matches from integrations, so a key set to notify reaches one (NOTE-5). False while none has Tell me about matches from integrations on, and on a server without notices."
+                    },
+                    "noPhoneReason": {
+                      "type": "string",
+                      "enum": [
+                        "setting-off",
+                        "iphone-only"
+                      ],
+                      "description": "Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on; iphone-only, every phone signed in is an iPhone, which has no notifications yet."
                     }
                   },
                   "required": [
-                    "keys"
+                    "keys",
+                    "phoneWillHear"
                   ],
                   "additionalProperties": false
                 }
@@ -23010,6 +23036,10 @@
               }
             ],
             "description": "What the push relay gave this phone (PUSH-2), which only it can read; null to stop notifications."
+          },
+          "notices": {
+            "description": "Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on.",
+            "type": "boolean"
           }
         },
         "required": [

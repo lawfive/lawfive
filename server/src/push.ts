@@ -1,5 +1,5 @@
 import type { WeatherRisk } from "@lawfive/schema";
-import { and, eq, gt, isNotNull, lt } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
 import { type Db, tables } from "./db/index.ts";
 import { plansOf } from "./plans.ts";
 import type { Weather } from "./weather/service.ts";
@@ -10,6 +10,41 @@ import type { Weather } from "./weather/service.ts";
 export type PushEvent = "weather-risk" | "match-changed" | "test";
 
 type Fetch = typeof fetch;
+
+/**
+ * A person's phones that a push of this kind would go to: a current session with a handle. For
+ * matches from integrations, not one that said it has them off (NOTE-5); one that didn't say, from
+ * an app before it, counts, so "no phone will be told" is only said when it's so.
+ */
+function phonesFor(db: Db, userId: string, now: number, type?: PushEvent) {
+    const { device, session } = tables;
+    return db.select({ sessionId: device.sessionId, handle: device.pushHandle }).from(device)
+        .innerJoin(session, eq(session.id, device.sessionId))
+        .where(and(
+            eq(session.userId, userId), gt(session.expiresAt, new Date(now)), isNotNull(device.pushHandle),
+            type === "match-changed" ? or(isNull(device.pushNotices), eq(device.pushNotices, true)) : undefined,
+        ));
+}
+
+/** Why no phone hears matches from integrations (NOTE-5): none has the setting on, or every phone is an iPhone. */
+export type NoPhoneReason = "setting-off" | "iphone-only";
+
+/**
+ * NOTE-5: whether any of a person's phones hears matches from integrations, and if none does, why,
+ * for the website to say. "iphone-only" while every phone signed in is an iPhone, which has no
+ * notifications yet (PUSH-5), so there's no setting to point to; it goes when the iPhone has them.
+ */
+export async function noticesHeard(db: Db, userId: string, now = Date.now()): Promise<{ phoneWillHear: boolean; noPhoneReason?: NoPhoneReason }> {
+    if ((await phonesFor(db, userId, now, "match-changed").limit(1)).length > 0) {
+        return { phoneWillHear: true };
+    }
+    const { device, session } = tables;
+    const phones = await db.select({ kind: device.kind }).from(device)
+        .innerJoin(session, eq(session.id, device.sessionId))
+        .where(and(eq(session.userId, userId), gt(session.expiresAt, new Date(now)), inArray(device.kind, ["android", "ios"])));
+    const iphoneOnly = phones.length > 0 && phones.every((p) => p.kind === "ios");
+    return { phoneWillHear: false, noPhoneReason: iphoneOnly ? "iphone-only" : "setting-off" };
+}
 
 export class Push {
     private readonly db: Db;
@@ -32,16 +67,9 @@ export class Push {
         this.key = key || undefined;
     }
 
-    private phones(userId: string, now: number) {
-        const { device, session } = tables;
-        return this.db.select({ sessionId: device.sessionId, handle: device.pushHandle }).from(device)
-            .innerJoin(session, eq(session.id, device.sessionId))
-            .where(and(eq(session.userId, userId), gt(session.expiresAt, new Date(now)), isNotNull(device.pushHandle)));
-    }
-
     /** PUSH-6: a test to a person's own phones: how many took it, and if none did, why. */
     async test(userId: string, now = Date.now()): Promise<{ phones: number; sent: number; problem?: string }> {
-        const phones = await this.phones(userId, now);
+        const phones = await phonesFor(this.db, userId, now);
         this.problem = undefined;
         let sent = 0;
         for (const phone of phones) {
@@ -55,13 +83,14 @@ export class Push {
     /**
      * Tells each of a person's phones; how many the relay took. A failure is logged, never thrown.
      * PLAN-8: over the account's plan for the day, nothing is sent, as if no phone took it.
+     * NOTE-5: matches from integrations go only to phones that hear them.
      */
     async notify(userId: string, type: PushEvent, id: string, now = Date.now()): Promise<number> {
         const plans = plansOf(this.db);
         if (now < this.pausedUntil || !await plans.pushAllowed(userId, now)) {
             return 0;
         }
-        const phones = await this.phones(userId, now);
+        const phones = await phonesFor(this.db, userId, now, type);
         let sent = 0;
         for (const phone of phones) {
             if (phone.handle && await this.sendOne(phone.sessionId, phone.handle, type, id, now)) {

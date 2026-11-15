@@ -7,6 +7,7 @@ import { type Db, tables } from "../db/index.ts";
 import { importMatches } from "../import.ts";
 import { asActor } from "../notices.ts";
 import { plansOf } from "../plans.ts";
+import { noticesHeard } from "../push.ts";
 import { tooManyRecords } from "../usage.ts";
 import { type CalendarEvent, NotACalendar, parseCalendar } from "./ical.ts";
 import { type CalendarFetcher, calendarUrl, fetchCalendar, linkStart } from "./fetch.ts";
@@ -497,11 +498,16 @@ export function calendarOut(row: Row): Out {
     };
 }
 
-export function assignorCalendarsApi(db: Db, calendars: AssignorCalendars) {
+/** `notices`: the server tells phones what integrations do (NOTE-1), so a calendar set to notify can reach one. */
+export function assignorCalendarsApi(db: Db, calendars: AssignorCalendars, { notices = false }: { notices?: boolean } = {}) {
     const api = new Hono<{ Variables: { userId: string } }>();
     const invalid = (message: string) => ({ error: message, issues: [{ code: "custom", path: ["url"], message }] });
 
-    api.get("/assignor-calendars", async (c) => c.json({ calendars: (await calendars.list(c.var.userId)).map(calendarOut) }));
+    // NOTE-5: with whether a phone hears them, for the website to say when none will.
+    api.get("/assignor-calendars", async (c) => c.json({
+        calendars: (await calendars.list(c.var.userId)).map(calendarOut),
+        ...(notices ? await noticesHeard(db, c.var.userId) : { phoneWillHear: false }),
+    }));
 
     api.post("/assignor-calendars/preview", async (c) => {
         const body = AssignorCalendarLink.safeParse(await c.req.json().catch(() => undefined));

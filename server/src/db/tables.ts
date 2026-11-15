@@ -111,6 +111,11 @@ export const device = pgTable("device", {
     lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull(),
     /** PUSH-4: how to reach this phone through the push relay, which only the relay can read. */
     pushHandle: text("push_handle"),
+    /**
+     * NOTE-5: whether the phone has matches from integrations on, as it said with its handle. Null
+     * when it didn't say (apps from before it), taken as on; false, it isn't sent them.
+     */
+    pushNotices: boolean("push_notices"),
 });
 
 // SYNC-14: the matches in each watch's latest download of its next matches (GET /v1/watch/matches),
@@ -429,7 +434,14 @@ export const matchNotice = pgTable("match_notice", {
     matches: jsonb("matches").notNull().$type<Record<string, { before?: NoticeState; after?: NoticeState }>>(),
     urgent: boolean("urgent").notNull(),
     sendAt: timestamp("send_at", { withTimezone: true }).notNull(),
+    /** When it reached a phone; empty while it's waiting, and for one that reached none. */
     sentAt: timestamp("sent_at", { withTimezone: true }),
+    /**
+     * NOTE-5: once it was due, how many phones the relay took it for. 0 is a notice that reached no
+     * phone (none had matches from integrations on, say), so sent_at stays empty. Empty while it's
+     * waiting, and for notices sent before this was kept.
+     */
+    reached: integer("reached"),
     createdAt,
 }, (t) => [index("match_notice_due").on(t.sentAt, t.sendAt)]);
 

@@ -1935,6 +1935,8 @@ struct Position: Codable, Hashable, Sendable {
 struct PushHandle: Codable, Hashable, Sendable {
     /// What the push relay gave this phone (PUSH-2), which only it can read; null to stop notifications.
     var handle: String? = nil
+    /// Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on.
+    var notices: Bool? = nil
 }
 
 struct QuizBankSource: Codable, Hashable, Sendable {

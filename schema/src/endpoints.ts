@@ -107,6 +107,9 @@ export function responsesOf(e: Endpoint): Record<number, EndpointResponse> {
     };
 }
 
+/** NOTE-5: why no phone hears matches from integrations, for the website to say. */
+const NoPhoneReason = z.enum(["setting-off", "iphone-only"]).describe("Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on; iphone-only, every phone signed in is an iPhone, which has no notifications yet.");
+
 const patterns = () => endpoints.map((e) => ({ e, pattern: new RegExp(`^${e.path.replace(/\{\w+\}/g, "[^/]+")}$`) }));
 let compiled: ReturnType<typeof patterns> | undefined;
 
@@ -852,8 +855,17 @@ export const endpoints: Endpoint[] = [
     },
     {
         method: "get", path: "/v1/assignor-calendars", group: "Assignor calendars", capability: "assignor-calendars", summary: "The account's assignor calendars",
-        description: "Oldest first, each with how its latest read went.",
-        responses: { 200: { description: "The calendars.", body: z.object({ calendars: z.array(AssignorCalendar) }) } },
+        description: "Oldest first, each with how its latest read went. With whether a calendar set to notify reaches a phone (NOTE-5).",
+        responses: {
+            200: {
+                description: "The calendars.",
+                body: z.object({
+                    calendars: z.array(AssignorCalendar),
+                    phoneWillHear: z.boolean().describe("Whether any of the account's phones hears matches from integrations, so a calendar set to notify reaches one (NOTE-5). False while none has Tell me about matches from integrations on, and on a server without notices."),
+                    noPhoneReason: NoPhoneReason.optional(),
+                }),
+            },
+        },
     },
     {
         method: "post", path: "/v1/assignor-calendars/preview", group: "Assignor calendars", capability: "assignor-calendars", summary: "Preview a calendar link",
@@ -944,7 +956,7 @@ export const endpoints: Endpoint[] = [
 
     {
         method: "put", path: "/v1/devices/current/push", group: "Devices", capability: "push", summary: "Say how to reach this phone",
-        description: "Keeps the handle the push relay gave this phone with its session, so signing out removes it (PUSH-4). Needs an X-LawFive-Device header. Not with API keys.",
+        description: "Keeps the handle the push relay gave this phone with its session, so signing out removes it (PUSH-4), and whether it wants matches from integrations (NOTE-4, NOTE-5). Send it again when that changes. Needs an X-LawFive-Device header. Not with API keys.",
         body: PushHandle,
         responses: { 200: { description: "Kept.", body: z.object({ ok: z.literal(true) }) }, 400: jsonError("The body doesn't match, or there's no device header.") },
     },
@@ -968,8 +980,17 @@ export const endpoints: Endpoint[] = [
 
     {
         method: "get", path: "/v1/api-keys", group: "API keys", summary: "The account's API keys",
-        description: "Newest first. The keys themselves aren't kept, only their first characters.",
-        responses: { 200: { description: "The keys.", body: z.object({ keys: z.array(ApiKey) }) } },
+        description: "Newest first. The keys themselves aren't kept, only their first characters. With whether a key set to notify reaches a phone (NOTE-5).",
+        responses: {
+            200: {
+                description: "The keys.",
+                body: z.object({
+                    keys: z.array(ApiKey),
+                    phoneWillHear: z.boolean().describe("Whether any of the account's phones hears matches from integrations, so a key set to notify reaches one (NOTE-5). False while none has Tell me about matches from integrations on, and on a server without notices."),
+                    noPhoneReason: NoPhoneReason.optional(),
+                }),
+            },
+        },
     },
     {
         method: "post", path: "/v1/api-keys", group: "API keys", summary: "Make an API key",

@@ -176,6 +176,13 @@
       "when": 1794388529026,
       "tag": "0024_short_names_follow_names",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794700213029,
+      "tag": "0025_notices_that_reach_no_phone",
+      "breakpoints": true
     }
   ]
 }

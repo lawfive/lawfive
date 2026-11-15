@@ -1793,6 +1793,9 @@ select.input:disabled { opacity: 0.6; }
 .attribution a { text-decoration: underline; text-underline-offset: 2px; }
 .link { color: var(--brand); font-weight: 600; }
 .key-notify { margin-top: 6px; font-size: 14px; }
+/* NOTE-5: a key or assignor calendar set to notify that no phone will hear. */
+.key-unheard { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 0; padding: 8px 10px; border-radius: var(--radius); background: var(--amber-soft); font-size: 13.5px; max-width: 520px; }
+.key-unheard svg { flex: none; margin-top: 2px; color: var(--amber-text); }
 .key-prefix { font-size: 12.5px; font-weight: 500; }
 .key-modal { max-width: 520px; }
 .key-access { width: 100%; border-collapse: collapse; }
