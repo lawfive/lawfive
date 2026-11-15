@@ -126,21 +126,30 @@ final class NotificationRouter: NSObject, UNUserNotificationCenterDelegate, @unc
         (info["match"] as? String) ?? (info["matches"] as? Bool == true ? "" : nil)
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-        if notification.request.content.userInfo["type"] != nil { await serverNotified?() }
-        return [.banner, .sound]
+    // The completion-handler forms, called back on the main thread: the async forms in a class that isn't on the
+    // main actor finish on a background thread, and UIKit aborts when iOS's handler then updates the app's snapshot
+    // off the main thread (a tapped notification crashed build 202 on a real iPad).
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let fromServer = notification.request.content.userInfo["type"] != nil
+        Task { @MainActor in
+            if fromServer { self.serverNotified?() }
+            completionHandler([.banner, .sound])
+        }
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
         let info = response.notification.request.content.userInfo
-        if response.actionIdentifier == NotificationRouter.directions {
-            if let lat = info["lat"] as? Double, let lon = info["lon"] as? Double {
-                await openDirections?(lat, lon)
-            }
-        } else if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
-            guard let target = NotificationRouter.target(info) else { return }
-            await MainActor.run {
-                if let openMatch { openMatch(target.isEmpty ? nil : target) } else { waiting = target }
+        let action = response.actionIdentifier
+        let place = (info["lat"] as? Double).flatMap { lat in (info["lon"] as? Double).map { (lat, $0) } }
+        let target = NotificationRouter.target(info)
+        Task { @MainActor in
+            defer { completionHandler() }
+            if action == NotificationRouter.directions {
+                if let place { self.openDirections?(place.0, place.1) }
+            } else if action == UNNotificationDefaultActionIdentifier, let target {
+                if let openMatch = self.openMatch { openMatch(target.isEmpty ? nil : target) } else { self.waiting = target }
             }
         }
     }
