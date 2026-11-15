@@ -92,6 +92,9 @@ data class LawFiveColors(
     val onBoardDim: Color,
     /** The board's mint labels ("NEXT MATCH", "FULL TIME"). */
     val boardAccent: Color,
+    /** A match that won't be played (to the end) on its board: red words on a red tag (WEB-24), the night chip's colors day and night. */
+    val boardRed: Color,
+    val boardRedSoft: Color,
     val panel: Color,
     val panel2: Color,
     /** A panel's 1 dp edge at night (none by day). */
@@ -160,6 +163,8 @@ private class Palette(val dark: Boolean) {
     val onBoardMuted = if (dark) Color(0xFFA7B1AB) else Color(0xFFB6BFBA)
     val onBoardDim = if (dark) Color(0xFF7C8580) else Color(0xFF7F8883)
     val boardAccent = Color(0xFF2FAE7A)
+    val boardRed = Color(0xFFFF8589)
+    val boardRedSoft = Color(0xFF3A1B1C)
     val panel = if (dark) Color(0xFF0F1B15) else Color(0xFFF4F2E9)
     val panel2 = if (dark) Color(0xFF16241D) else Color(0xFFE9E7DC)
     val panelEdge = if (dark) Color(0xFF5D6A63) else Color.Transparent
@@ -211,6 +216,7 @@ private class Palette(val dark: Boolean) {
             pitch = pitch, pitchStripe = pitchStripe, chalk = chalk, chalkLine = chalkLine, chalkMuted = chalkMuted, chalkFaint = chalkFaint,
             heroShadow = heroShadow, board = board, boardEdge = boardEdge, boardDots = boardDots, boardRule = boardRule,
             onBoard = onBoard, onBoardStrong = white, onBoardMuted = onBoardMuted, onBoardDim = onBoardDim, boardAccent = boardAccent,
+            boardRed = boardRed, boardRedSoft = boardRedSoft,
             panel = panel, panel2 = panel2, panelEdge = panelEdge, panelShadow = panelShadow, ink = ink, inkMuted = inkMuted, inkBrand = inkBrand,
             kitBlank = Color(0xFF3A403D), yellow = Color(0xFFF7C600), red = Color(0xFFD4202A), redStrong = Color(0xFFB8232A),
             onYellow = Color(0xFF1B1600), speed = speed, inkRule = inkRule, contour = contour,

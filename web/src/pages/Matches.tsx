@@ -650,7 +650,8 @@ function RefereeChip({ role, referee, together }: { role: string; referee: Refer
 export function StatusChip({ match }: { match: Match }) {
     switch (match.status) {
         case "postponed": return <span className="chip chip-amber">Postponed</span>;
-        case "cancelled": return <span className="chip">Canceled</span>;
+        // WEB-24: a match that won't be played (to the end) is red, as on the phones.
+        case "cancelled": return <span className="chip chip-red">Canceled</span>;
         case "abandoned": return <span className="chip chip-red">Abandoned</span>;
         default: return null;
     }

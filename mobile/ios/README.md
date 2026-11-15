@@ -38,7 +38,7 @@ On a real iPhone: choose your Apple account's team under Signing & Capabilities 
 
 `tools/snapshots.sh` draws the main screens straight from their views, as unit tests, from the demo account's and a new account's data in `schema/generated/fixtures/`, at the fixtures' clock and time zone. They're for looking at: nothing is compared or committed, and they don't run in CI.
 
-- **Screens:** `matches`, `matches-new`, `match-played`, `settings`, `settings-notifications` (the iPhone's alone so far: Settings where the build and server offer notifications from the server), `licenses`, `licenses-full`, `license`, `match-form`, `stats`, `quiz` and `quiz-result`.
+- **Screens:** `matches`, `matches-new`, `match-played`, `match-canceled`, `settings`, `settings-notifications` (the iPhone's alone so far: Settings where the build and server offer notifications from the server), `licenses`, `licenses-full`, `license`, `match-form`, `stats`, `quiz` and `quiz-result`.
 - **Variants:** iPhone 17 and iPhone SE (375 × 667) sizes, light and dark, default and largest standard text, each the page's whole height.
 - **Where:** `build/snapshots/{screen}__{iphone17|se}-{light|dark}-{1x|large}.png` (gitignored), named as Android's so `tools/snapshot-sheet.mjs` can pair them.
 - **Running:** it builds for testing into `build/DerivedData` (incremental; `--no-build` skips it; `LAWFIVE_DERIVED_DATA` for another), then tests on one simulator (`LAWFIVE_SIMULATOR`, iPhone 17 by default), shut down after unless it was up already or `--keep` is given. Test names run only those screens; a full run starts afresh. In a plain unit test run they skip.

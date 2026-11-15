@@ -234,6 +234,9 @@ enum LF {
     static let onBoardDim = fixed(\.onBoardDim)
     /// The board's mint labels ("NEXT MATCH", "FULL TIME").
     static let boardAccent = Color(uiColor: UIColor(hex: 0x2FAE7A))
+    /// A match that won't be played (to the end) on its board: red words on a red tag (WEB-24), the night chip's colors day and night.
+    static let boardRed = Color(uiColor: UIColor(hex: 0xFF8589))
+    static let boardRedSoft = Color(uiColor: UIColor(hex: 0x3A1B1C))
     static let panel = fixed(\.panel)
     static let panel2 = fixed(\.panel2)
     /// A panel's 1 pt edge at night (none by day).

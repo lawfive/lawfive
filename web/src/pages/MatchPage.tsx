@@ -175,6 +175,8 @@ export function Scoreboard({ match, record, distance }: { match: Match; record?:
     const when = match.kickoff ? `${formatShortDay(match.kickoff)} · ${formatTime(match.kickoff)}` : "Time to be set";
     const status = record ? (record.outcome === "abandoned" ? "Abandoned" : "Full time")
         : match.status === "postponed" ? "Postponed" : match.status === "cancelled" ? "Canceled" : match.status === "abandoned" ? "Abandoned" : "Kickoff";
+    // WEB-24: canceled and abandoned are red on the board, as their chips are on the match's row.
+    const off = status === "Canceled" || status === "Abandoned";
     const { home, away } = record?.score ?? { home: 0, away: 0 };
     const pens = record?.penalties;
     const lost = (side: "home" | "away") => {
@@ -191,7 +193,7 @@ export function Scoreboard({ match, record, distance }: { match: Match; record?:
         <section className={`scoreboard-area${record ? " played" : ""}`} aria-label="Scoreboard">
             <div className="board scoreboard">
                 <div className="board-head">
-                    <span className="board-label">{status}</span>
+                    <span className={`board-label${off ? " board-label-red" : ""}`}>{status}</span>
                     <span>{when}</span>
                 </div>
                 {record ? (

@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -195,11 +196,25 @@ fun Board(modifier: Modifier = Modifier, shadow: Boolean = true, content: @Compo
     ) { OnBoard { Column { content() } } }
 }
 
-/** A board's head: the mint label on the left, small muted words on the right, then anything else (a caret). */
+/**
+ * A board's head: the mint label on the left, small muted words on the right, then anything else (a caret).
+ * `red` is for a match that won't be played (to the end), canceled or abandoned (WEB-24): its label red
+ * on a red tag, like its row's chip.
+ */
 @Composable
-fun BoardHead(label: String, about: String? = null, modifier: Modifier = Modifier, trailing: (@Composable RowScope.() -> Unit)? = null) {
+fun BoardHead(label: String, about: String? = null, modifier: Modifier = Modifier, red: Boolean = false, trailing: (@Composable RowScope.() -> Unit)? = null) {
     Row(modifier.fillMaxWidth().padding(start = 14.dp, end = 14.dp, top = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(label.uppercase(), style = LfType.label(11.sp, colors.boardAccent), maxLines = 1)
+        val c = colors
+        Text(
+            label.uppercase(), style = LfType.label(11.sp, if (red) c.boardRed else c.boardAccent), maxLines = 1,
+            // The tag reaches past the words without moving them, so they stay in line with the board's edge, as on the website;
+            // its right side takes room, so the gap to the words beside it holds.
+            modifier = if (red) Modifier.padding(end = 7.dp).drawBehind {
+                val x = 7.dp.toPx()
+                val y = 3.dp.toPx()
+                drawRoundRect(c.boardRedSoft, Offset(-x, -y), Size(size.width + 2 * x, size.height + 2 * y), CornerRadius(4.dp.toPx()))
+            } else Modifier,
+        )
         Text(about?.uppercase() ?: "", style = LfType.label(11.sp, colors.onBoardMuted), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f), textAlign = TextAlign.End)
         trailing?.invoke(this)
     }

@@ -170,11 +170,17 @@ struct Board<Content: View>: View {
 struct BoardHead<Trailing: View>: View {
     let label: String
     var about: String?
+    /// A match that won't be played (to the end), canceled or abandoned (WEB-24): its label red on a red tag, like its row's chip.
+    var red = false
     @ViewBuilder var trailing: () -> Trailing
 
     var body: some View {
         HStack(spacing: 12) {
-            Text(label.uppercased()).lfLabel(11).foregroundStyle(LF.boardAccent).lineLimit(1).layoutPriority(1)
+            Text(label.uppercased()).lfLabel(11).foregroundStyle(red ? LF.boardRed : LF.boardAccent).lineLimit(1).layoutPriority(1)
+                // The tag reaches past the words without moving them, so they stay in line with the board's edge, as on the website;
+                // its right side takes room, so the gap to the words beside it holds.
+                .background { if red { RoundedRectangle(cornerRadius: 4).fill(LF.boardRedSoft).padding(.horizontal, -7).padding(.vertical, -3) } }
+                .padding(.trailing, red ? 7 : 0)
             Text(about?.uppercased() ?? "").lfLabel(11).foregroundStyle(LF.onBoardMuted).lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .trailing)
             trailing()
@@ -184,9 +190,10 @@ struct BoardHead<Trailing: View>: View {
 }
 
 extension BoardHead where Trailing == EmptyView {
-    init(_ label: String, about: String? = nil) {
+    init(_ label: String, about: String? = nil, red: Bool = false) {
         self.label = label
         self.about = about
+        self.red = red
         trailing = { EmptyView() }
     }
 }

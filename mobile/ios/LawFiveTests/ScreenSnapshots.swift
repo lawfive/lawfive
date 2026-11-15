@@ -84,6 +84,13 @@ final class ScreenSnapshots: XCTestCase {
         try await Snapshots.take("match-played", settle: 1.2) { self.app(graph, tab: .matches, [.match(id)]) }
     }
 
+    /// WEB-24: a canceled match, its status red on the board as its chip is on the row.
+    func testACanceledMatch() async throws {
+        let graph = try await graph(.demo)
+        let id = try XCTUnwrap(Fixtures.index.demo.matches["canceled"])
+        try await Snapshots.take("match-canceled") { self.app(graph, tab: .matches, [.match(id)]) }
+    }
+
     func testSettings() async throws {
         let graph = try await graph(.demo)
         // APP-6: with this phone's reminders on, so their times show; off again for the screens after.

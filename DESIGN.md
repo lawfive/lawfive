@@ -110,6 +110,7 @@ Colors are CSS custom properties on `:root` in [web/src/styles.css](web/src/styl
 | `--on-board`, `--on-board-strong`, `--on-board-muted`, `--on-board-dim` | `#f4f2e9`, `#fff`, `#b6bfba`, `#7f8883` | `#e6e9e3`, `#fff`, `#a7b1ab`, `#7c8580` | Words and figures on the board; dim for the side that lost |
 | `--board-dots` | `#1c2420` | `#232c27` | The lit-dot matrix |
 | `--board-accent` | `#2fae7a` | same | The board's mint labels ("NEXT MATCH", "FULL TIME") |
+| `--board-red`, `--board-red-soft` | `#ff8589`, `#3a1b1c` | same | A match that won't be played (to the end) on its board: its status as a red tag (the night red chip's colors, as the board is the same day and night) |
 | `--panel`, `--panel-2` | `#f4f2e9`, `#e9e7dc` | `#0f1b15`, `#16241d` (edge `#5d6a63`) | Chalk panels; hover and wells on them |
 | `--ink`, `--ink-muted` | `#0e1311`, `#4d5650` | `#e6e9e3`, `#a3aea7` | Words on a panel |
 | `--ink-border`, `--ink-rule` | `#d6d4c8`, `#0e1311` | `#26332c`, `#7d8a83` | A panel's hairlines; its heavy 3px rules |
@@ -125,8 +126,8 @@ Colors are CSS custom properties on `:root` in [web/src/styles.css](web/src/styl
 | `--coin`, `--coin-edge`, `--coin-ink` | `#d9a92c`, `#8a6508`, `#5f4503` | same | The watch's coin, in a tip's picture |
 | `--qr-ink`, `--qr-paper`, `--qr-arc` | `#0c1f18`, `#ffffff`, `#0b6b47` | same | A QR code: dark on white in dark mode too, as scanners expect |
 
-- **Contrast**: every text color is 4.5:1 or more on its real background (chalk on the grass 6.7:1, pale green 5.2:1, ink-muted on chalk 6.8:1, the board's muted words 10:1); 3:1 at 24px and up.
-- **Yellow and red** are for cautions and send-offs (and yellow for things waiting on you), never decoration.
+- **Contrast**: every text color is 4.5:1 or more on its real background (chalk on the grass 6.7:1, pale green 5.2:1, ink-muted on chalk 6.8:1, the board's muted words 10:1, its red tag 6.6:1); 3:1 at 24px and up.
+- **Yellow and red** are for cautions and send-offs (and yellow for things waiting on you), never decoration. The softer reds (`--red-soft`, `--red-text`, `--board-red`) also say something's wrong or off: errors, danger, likely risks, and a match canceled or abandoned.
 - **Gradients** are only functional: the half-yellow, half-red second caution, the striped "no color" swatch, the mowing stripes and the panels' corner arcs.
 - **The phone's own bars** take `--board` in light and dark: the `theme-color` tags in [web/index.html](web/index.html), the manifest's colors and the icons' board (`boardColors` in `web/src/logo.ts`) can't read the tokens, so change them with `--board`.
 
@@ -199,6 +200,7 @@ In styles.css and ui.tsx. The phones have the same components under the same nam
 ### Chips and badges
 
 - **`.chip`**: 4px corners, Barlow Condensed bold capitals, always panel-colored so they read on the grass. `chip-brand` (a green slab), `chip-amber`, `chip-red`, `chip-blue`. Risk badges are chips.
+- **A match's status chip**: Postponed amber; Canceled and Abandoned red, as a match that won't be played (to the end); Played plain on the phones.
 - **Crew chips**: your role in green with a small "you", in its place among Referee, AR1, AR2, 4th.
 - **Tags**: choices and suggestions show in `.chip-layer` under the search or tag box; suggested tags with a plus; values typed before (`SuggestInput`) as plain chips.
 - **Team badge**: the short name in Barlow Condensed extra-bold italic on its color; small, normal, large.
@@ -216,7 +218,7 @@ In styles.css and ui.tsx. The phones have the same components under the same nam
 
 ### Board pieces and pitch lines
 
-- **`.board-head`** (mint `.board-label` left, muted right) and **`.board-foot`**: small labels.
+- **`.board-head`** (mint `.board-label` left, muted right) and **`.board-foot`**: small labels. `.board-label-red` is the label as a red tag (`--board-red` on `--board-red-soft`, 4px corners) for a match canceled or abandoned; the tag reaches past the words, so they stay in line with the board's edge.
 - **`.dots`**: the lit-dot matrix behind the biggest figures. On a scoreboard before kickoff it runs edge to edge behind the kits; on phones, behind the time alone.
 - **`Halfway`**: touchline to touchline with its center spot.
 - **`CentreCircle`**: a chalk circle (up to 340px) around a page's main figure; `line` runs the halfway line out from it.
@@ -334,7 +336,7 @@ In styles.css and ui.tsx. The phones have the same components under the same nam
 
 ### Scoreboard and events
 
-- **`Scoreboard`**: the status in mint; the kits with the score at 136px between them (the loser dimmed), or the kickoff before. On phones each team takes a row.
+- **`Scoreboard`**: the status in mint (Canceled and Abandoned as a red tag, as their chips are red on the row); the kits with the score at 136px between them (the loser dimmed), or the kickoff before. On phones each team takes a row.
 - **`Events`**: the timeline down a chalk halfway line, home's events left and away's right, the minute in a board-black circle ringed in chalk. A goal is the score after it at 46px (the scorer's side chalk, the rest pale green); a card a tilted card; neutral events muted. Each period a chalk band as wide as the kits; the end on the board ("Full time 3–1").
 - A corrected match ends with "Edited after the match", Show as recorded and Put back the watch's.
 
@@ -447,7 +449,7 @@ Pitch & Scoreboard on Material 3's components ([mobile/android/](mobile/android/
 
 ### Tokens and type
 
-- `ui/theme/Theme.kt` holds the website's tokens by the same names, light and dark: the ground (`pitch`, `chalk`, `chalkMuted`, `heroShadow`…), the board (`board`, `boardEdge`, `boardDots`, `onBoard`, `boardAccent`…), the panel (`panel`, `panelEdge`, `ink`, `inkBrand`…), the cards, `kitBlank`, `onYellow`.
+- `ui/theme/Theme.kt` holds the website's tokens by the same names, light and dark: the ground (`pitch`, `chalk`, `chalkMuted`, `heroShadow`…), the board (`board`, `boardEdge`, `boardDots`, `onBoard`, `boardAccent`, `boardRed`…), the panel (`panel`, `panelEdge`, `ink`, `inkBrand`…), the cards, `kitBlank`, `onYellow`.
 - **Grounds**: the working tokens (`text`, `muted`, `borderInput`, `surface`, `field`, `brand`, the soft colors, `weatherAmber`, `chartGrid`…) come from a `Ground` (Grass, Panel, Board), read through `colors`. `LfCard`, dialogs, menus, sheets, chips and maps provide `OnPanel`; `Board`, the tab bar, the segmented control, the Save bar and the photo viewer provide `OnBoard`. Each ground also sets Material's color scheme, so Material's parts match and no Material purple shows.
 - **Type**: the website's fonts and weights, bundled. `LfType.display` (black italic, tabular figures), `LfType.label` (mono bold capitals, 0.12–0.16em), `LfType.word` (condensed extra-bold). Material's `headline*` and `display*` are black italic; `titleSmall` the mono label; `labelLarge` the button's word.
 - Figures sized to their room don't grow with the text size; words do, stepping down only so a word never breaks (`FitText`, `WordFitText`).
@@ -467,7 +469,7 @@ Pitch & Scoreboard on Material 3's components ([mobile/android/](mobile/android/
 
 ### Surfaces and controls
 
-- **`LfCard`**: chalk, 6 dp corners, a hard 3 dp drop in dark green at 45% by day (`hardDrop`); a 1 dp `panelEdge` at night. **`Board`**: a 3 dp drop and a soft shadow by day, a 1 dp edge at night; `BoardHead`; `dots` (1.3 dp every 7 dp).
+- **`LfCard`**: chalk, 6 dp corners, a hard 3 dp drop in dark green at 45% by day (`hardDrop`); a 1 dp `panelEdge` at night. **`Board`**: a 3 dp drop and a soft shadow by day, a 1 dp edge at night; `BoardHead` (`red` for a canceled or abandoned match's status tag); `dots` (1.3 dp every 7 dp).
 - **Pitch pieces** (`ui/components/Pitch.kt`): `Halfway` (16 dp spot), `ChalkRule` (3 dp), `ChalkFigures`, `cornerArcs`, `KitPanels`, `CardShape`. A kit's name starts at no more than 22% of its panel (never under 14 sp), steps down until its longest word fits (to 9 sp), then wraps between words.
 - **Buttons**: 44 dp (for gloves), 6 dp corners. Primary a brand slab with a 3 dp board drop; `danger` the one red button; secondary a 2 dp `borderInput` outline; `LinkButton` a ghost; `IconAction` a 2 dp outline. Words step down where narrow, to 10 sp, never cut.
 - **Chips** 4 dp; **team badges** 4 dp; **fields** 6 dp, brand when focused; **avatars** as the website's.

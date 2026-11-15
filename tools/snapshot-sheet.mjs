@@ -25,6 +25,7 @@ const screens = [
     ["matches", "Matches", "matches"],
     ["matches-new", "Matches, a new account", undefined],
     ["match-played", "A played match", "match-played"],
+    ["match-canceled", "A canceled match", "match-canceled"],
     ["match-form", "A new match", "match-edit"],
     ["settings", "Settings", undefined],
     ["stats", "Stats", "stats"],

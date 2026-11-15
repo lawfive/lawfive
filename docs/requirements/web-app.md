@@ -4,7 +4,7 @@ How the website looks, moves and lays out its pages, beyond what each feature's 
 
 ## The look
 
-- **WEB-24** **Pitch & Scoreboard**, as DESIGN.md sets out: the page is the pitch, figures sit on stadium boards, teams are kits, cards are physical cards (yellow and red only for cards), dense content sits on chalk panels. Every page has its own treatment, quieter where it's a form.
+- **WEB-24** **Pitch & Scoreboard**, as DESIGN.md sets out: the page is the pitch, figures sit on stadium boards, teams are kits, cards are physical cards (the cards' own yellow and red are kept for cards; a softer red marks a match that wasn't played, canceled or abandoned, in its chip and on its scoreboard), dense content sits on chalk panels. Every page has its own treatment, quieter where it's a form.
   - Light and dark follow the system.
   - Every page's title, and the hero figures sitting directly on the grass, take a hard offset shadow, on phones too. Nothing else does.
   - On wide screens the stadium board runs across the top and stays as the page scrolls (WEB-31). Under 820px a bottom tab bar takes its place.

@@ -382,7 +382,9 @@ private fun Scoreboard(m: Match, record: MatchRecord?, distance: Double?, unit: 
         else -> "Kickoff"
     }
     Board {
-        BoardHead(label, kickoff?.let { "${formatShortDay(it)} · ${formatTime(it, context)}" } ?: "Time to be set", Modifier.padding(bottom = 12.dp))
+        // WEB-24: canceled and abandoned are red on the board, as their chips are on the match's row.
+        BoardHead(label, kickoff?.let { "${formatShortDay(it)} · ${formatTime(it, context)}" } ?: "Time to be set", Modifier.padding(bottom = 12.dp),
+            red = label == "Canceled" || label == "Abandoned")
         if (record == null && kickoff != null) {
             val (time, ampm) = timeParts(kickoff, context)
             Row(Modifier.fillMaxWidth().dots(c.boardDots).padding(vertical = 10.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Bottom) {

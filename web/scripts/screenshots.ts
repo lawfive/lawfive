@@ -90,6 +90,11 @@ for (const [device, viewport] of [["desktop", { width: 1280, height: 900 }], ["p
     await page.click(".match-row:has-text('Rangers') .match-link");
     await page.waitForSelector(".timeline");
     await shot("match-cards");
+    // WEB-24: a canceled match, its status red on the board as its chip is on the row.
+    await page.goto(`${base}/matches?show=past`);
+    await page.click(".match-row:has(.chip:text-is('Canceled')) .match-link");
+    await page.waitForSelector(".scoreboard");
+    await shot("match-canceled");
     await page.goto(`${base}/matches`);
     await page.click(".match-link >> nth=0");
     await page.waitForSelector(".scoreboard");

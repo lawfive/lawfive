@@ -277,7 +277,9 @@ private struct Scoreboard: View {
             }
         }()
         Board {
-            BoardHead(label, about: kickoff.map { "\(formatShortDay($0, zone: zone)) · \(formatTime($0, zone: zone))" } ?? "Time to be set")
+            // WEB-24: canceled and abandoned are red on the board, as their chips are on the match's row.
+            BoardHead(label, about: kickoff.map { "\(formatShortDay($0, zone: zone)) · \(formatTime($0, zone: zone))" } ?? "Time to be set",
+                      red: label == "Canceled" || label == "Abandoned")
                 .padding(.bottom, 12)
             if record == nil, let kickoff {
                 let (time, ampm) = timeParts(kickoff, zone: zone)

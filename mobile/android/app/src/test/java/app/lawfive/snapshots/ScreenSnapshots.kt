@@ -130,6 +130,8 @@ class ScreenSnapshots {
         signIn(graph, "demo")
         snap("matches", wait = "Rovers U12", foot = 120) { MatchesScreen() }
         snap("match-played", wait = "Where you went") { MatchScreen(ids["withTrack"]!!.jsonPrimitive.content) }
+        // WEB-24: a canceled match, its status red on the board as its chip is on the row.
+        snap("match-canceled", wait = "forfeited") { MatchScreen(ids["canceled"]!!.jsonPrimitive.content) }
         // APP-6: with this phone's reminders on, so their times show; off again for the screens after.
         snap("settings", wait = "Where you're signed in", setup = { runBlocking { graph.reminders.save(ReminderSettings(enabled = true)) } }) { SettingsScreen() }
         runBlocking { graph.reminders.save(ReminderSettings()) }
