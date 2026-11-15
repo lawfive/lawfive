@@ -12,7 +12,7 @@ An assignor system's private calendar link (ArbiterSports, Assignr, HorizonWebRe
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The calendars. |
+| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" } | The calendars. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval. |
 | 413 | [ApiError](#apierror) | The request is too big. |

@@ -1019,6 +1019,45 @@ final class Walkthrough: XCTestCase {
         shot("plan-time-zone")
     }
 
+    /// PUSH-5, NOTE-4: Settings' notifications from the server, turned on, allowing notifications when
+    /// iOS asks. Needs a build with Firebase's settings and a demo that sends through a relay
+    /// (`PUSH_RELAY_URL=https://push.lawfive.app pnpm demo`, as LAWFIVE_DEMO); skipped elsewhere.
+    func testNotificationsFromTheServer() throws {
+        continueAfterFailure = false
+        app.launch()
+        signIn()
+        XCTAssertTrue(tabButton("Matches").waitForExistence(timeout: 20), "signed in")
+        tab("More")
+        let settings = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Settings'")).firstMatch
+        if !settings.waitForExistence(timeout: 10) { shot("notifications-more") }
+        tapClear(settings)
+        let risks = app.switches.matching(NSPredicate(format: "label BEGINSWITH 'Tell me about weather risks'")).firstMatch
+        reveal(risks, times: 8)
+        guard risks.waitForExistence(timeout: 5) else { throw XCTSkip("This build or server doesn't offer notifications from the server") }
+        let notices = app.switches.matching(NSPredicate(format: "label BEGINSWITH 'Tell me about matches from integrations'")).firstMatch
+        XCTAssertTrue(notices.exists, "matches from integrations, as the server offers notices")
+        for toggle in [risks, notices] where toggle.value as? String != "1" {
+            // In the middle of the page, clear of the board at either end, then the switch itself (the
+            // row's own switch, inside it): the words beside it don't turn it.
+            for _ in 0..<6 where !(app.frame.height * 0.3...app.frame.height * 0.65).contains(toggle.frame.midY) {
+                let from = app.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5))
+                from.press(forDuration: 0.05, thenDragTo: from.withOffset(CGVector(dx: 0, dy: app.frame.height * 0.45 - toggle.frame.midY)), withVelocity: .slow, thenHoldForDuration: 0.3)
+            }
+            toggle.switches.firstMatch.tap()
+            // iOS asks the first time, from SpringBoard or over the app.
+            for asker in [XCUIApplication(bundleIdentifier: "com.apple.springboard"), app] {
+                let allow = asker.buttons["Allow"]
+                if allow.waitForExistence(timeout: 3) {
+                    allow.tap()
+                    break
+                }
+            }
+            let on = expectation(for: NSPredicate(format: "value == '1'"), evaluatedWith: toggle)
+            wait(for: [on], timeout: 10)
+        }
+        shot("notifications-on")
+    }
+
     /// UI-27: Settings' Match screen, and its setup a step at a time, with a moment chosen.
     /// A tile or chip whose label starts with its name (a tile's hint follows it).
     private func choose(_ name: String) {

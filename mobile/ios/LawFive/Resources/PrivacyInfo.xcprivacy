@@ -2,7 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <!-- IOS-11: what this target collects and the required-reason APIs it uses. Keep it the same as
-     site/public/privacy.html and the App Store's App Privacy answers. -->
+     site/public/privacy.html and the App Store's App Privacy answers. UserDefaults: the app's own
+     (CA92.1), and the App Group's it shares with the notification service extension (1C8F.1). -->
 <dict>
 	<key>NSPrivacyTracking</key><false/>
 	<key>NSPrivacyTrackingDomains</key><array/>
@@ -83,7 +84,7 @@
 	<array>
 		<dict>
 			<key>NSPrivacyAccessedAPIType</key><string>NSPrivacyAccessedAPICategoryUserDefaults</string>
-			<key>NSPrivacyAccessedAPITypeReasons</key><array><string>CA92.1</string></array>
+			<key>NSPrivacyAccessedAPITypeReasons</key><array><string>CA92.1</string><string>1C8F.1</string></array>
 		</dict>
 	</array>
 </dict>

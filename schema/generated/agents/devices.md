@@ -249,6 +249,7 @@ How much of each limit the account is using; per-minute and per-file limits aren
 |---|---|---|
 | `handle` | string \| null | What the push relay gave this phone, which only it can read; null to stop notifications. |
 | `notices` (optional) | boolean | Whether this phone has Tell me about matches from integrations on. False, it isn't sent them and doesn't count as a phone that hears them. Left out, as by apps from before it, it's taken as on. |
+| `risks` (optional) | boolean | Whether this phone has Tell me about weather risks on. False, it isn't sent them. Left out, as by apps from before it, it's taken as on. |
 
 ### SignOutOthers
 

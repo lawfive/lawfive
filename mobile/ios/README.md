@@ -5,7 +5,8 @@ The iPhone app ([iphone.md](../../docs/requirements/iphone.md)), in Swift and Sw
 ## Requirements
 
 - Xcode 27 or later, on a Mac. The app runs on iOS 17 or later.
-- Xcode downloads Garmin's Connect IQ SDK as a Swift package; using it means accepting [Garmin's license](https://developer.garmin.com/connect-iq/sdk/).
+- Xcode downloads Garmin's Connect IQ SDK as a Swift package; using it means accepting [Garmin's license](https://developer.garmin.com/connect-iq/sdk/). It also downloads Firebase's (`firebase-ios-sdk`, pinned at 13.1.1) for notifications from the server, of which the app uses only Firebase Cloud Messaging.
+- Optional, for notifications from the server (weather risks, PUSH-5; matches from integrations, NOTE-4; IOS-14) through the [push relay](../../relay/): the `GoogleService-Info.plist` of a Firebase app registered as `app.lawfive`, at `~/.lawfive/apple/GoogleService-Info.plist`, or wherever `LAWFIVE_FIREBASE_PLIST` says (on the `xcodebuild` command line, or in the environment). A build phase (`tools/firebase-settings.sh`) copies it into the app when it's there. It identifies the app rather than being secret, but stays out of the repo (it's in `.gitignore`), as Android's do, so a fork makes its own. Without it the app builds and works, and doesn't offer the setting; the build log says so. A build for another relay sets `LAWFIVE_PUSH_RELAY`.
 - For the Apple Watch app, the watchOS simulator: `xcodebuild -downloadPlatform watchOS`.
 
 ## Build and run
@@ -21,7 +22,7 @@ From this folder, with any installed simulator as the destination.
 
 With sample data: `pnpm demo` in `server/`, run the app in a simulator, choose **Use another server**, enter `http://localhost:3000`, and sign in as `demo@lawfive.dev` / `lawfive-demo`.
 
-On a real iPhone: choose your Apple account's team under Signing & Capabilities and run on the plugged-in phone. A free personal team works, with builds that expire after 7 days; TestFlight and the App Store need a paid account. The bundle IDs are `app.lawfive` and `app.lawfive.watchkitapp`; under your own team, change them to your own bundle IDs in both targets and as `WKCompanionAppBundleIdentifier` in `LawFiveWatch-Info.plist`. TestFlight builds pass the team on the command line (`DEVELOPMENT_TEAM=…`), never in the project.
+On a real iPhone: choose your Apple account's team under Signing & Capabilities and run on the plugged-in phone. A free personal team works, with builds that expire after 7 days; TestFlight and the App Store need a paid account. The bundle IDs are `app.lawfive`, `app.lawfive.notifications` (the notification service extension) and `app.lawfive.watchkitapp`, and the iPhone app and extension share the App Group `group.app.lawfive` (`LawFive.entitlements`, `LawFiveNotifications.entitlements`, and `SharedState.group` in `Shared/SharedState.swift`); under your own team, change them to your own in those places, the targets and as `WKCompanionAppBundleIdentifier` in `LawFiveWatch-Info.plist`. The app has the Push Notifications capability (`aps-environment`), which a free personal team doesn't offer: take it out of `LawFive.entitlements` for one. TestFlight builds pass the team on the command line (`DEVELOPMENT_TEAM=…`), never in the project.
 
 ## Test
 
@@ -37,7 +38,7 @@ On a real iPhone: choose your Apple account's team under Signing & Capabilities 
 
 `tools/snapshots.sh` draws the main screens straight from their views, as unit tests, from the demo account's and a new account's data in `schema/generated/fixtures/`, at the fixtures' clock and time zone. They're for looking at: nothing is compared or committed, and they don't run in CI.
 
-- **Screens:** `matches`, `matches-new`, `match-played`, `settings`, `licenses`, `licenses-full`, `license`, `match-form`, `stats`, `quiz` and `quiz-result`.
+- **Screens:** `matches`, `matches-new`, `match-played`, `settings`, `settings-notifications` (the iPhone's alone so far: Settings where the build and server offer notifications from the server), `licenses`, `licenses-full`, `license`, `match-form`, `stats`, `quiz` and `quiz-result`.
 - **Variants:** iPhone 17 and iPhone SE (375 × 667) sizes, light and dark, default and largest standard text, each the page's whole height.
 - **Where:** `build/snapshots/{screen}__{iphone17|se}-{light|dark}-{1x|large}.png` (gitignored), named as Android's so `tools/snapshot-sheet.mjs` can pair them.
 - **Running:** it builds for testing into `build/DerivedData` (incremental; `--no-build` skips it; `LAWFIVE_DERIVED_DATA` for another), then tests on one simulator (`LAWFIVE_SIMULATOR`, iPhone 17 by default), shut down after unless it was up already or `--keep` is given. Test names run only those screens; a full run starts afresh. In a plain unit test run they skip.
@@ -63,6 +64,8 @@ The API's types are generated into `schema/generated/swift/LawFive.swift` (`pnpm
 | `Data/StarterFormats.swift` | The starter formats (SET-17; `ChoicesTests` checks them against `schema/generated/starter-formats.json`). |
 | `Data/SyncActivity.swift`, `UI/Screens/SyncScreen.swift`, `UI/Screens/FromWatch.swift` | The sync screen (APP-16) and what came in from the watch (APP-26). |
 | `LawFive/Watch/` | The Garmin watch through the phone (IOS-9): `WatchRelay` and `WatchLinker` as Android's, and `WatchBridge` to Garmin's SDK. `AppleWatchLink` links the paired Apple Watch over WatchConnectivity, with `WatchLinker`'s messages as JSON under `lawfive`; the watch's side is `LawFiveWatch/PhoneLink.swift` and `PhoneLinkRules.swift`. |
+| `Data/Push.swift`, `LawFiveNotifications/`, `Shared/` | Notifications from the server (IOS-14, as Android's `Push.kt` and `Notices.kt`): `Push` gets a Firebase token, registers it at the relay and gives the handle to the server with what the phone wants (PUSH-4); the notification service extension (`NotificationService.swift`, its own target, `app.lawfive.notifications`) asks the server for a push's details and writes it. `Shared/` is compiled into both: the words (`PushWords.swift`, tested on Android's cases in `PushTests`), the plain formatting they use (`Words.swift`), and what the app shares with the extension (`SharedState.swift`: the server and device header in the App Group's settings, the session in the keychain in the App Group's access group). |
+| `tools/firebase-settings.sh` | A build phase: copies the Firebase settings into the app when they're there (above). |
 | `tools/stamp-version.sh` | A build phase: the version comes from git (VER-1, `tools/version.sh ios`). Never bump it by hand. |
 | `Info.plist` | Written by hand. Plain `http` works only for a server on the local network (IOS-2); `ITSAppUsesNonExemptEncryption` is false, as the apps use only https (IOS-11). |
 | `*/Resources/PrivacyInfo.xcprivacy` | Each target's privacy manifest (IOS-11), kept the same as `site/public/privacy.html` and the App Store's answers. |
@@ -70,6 +73,16 @@ The API's types are generated into `schema/generated/swift/LawFive.swift` (`pnpm
 The tabs are the board along the bottom (`BoardTabBar`), over the system's tabs with their bar hidden, so each tab keeps its own navigation stack; pages keep its height clear at their foot. UI tests find a tab by `tab.<name>` (`tab.Matches`) and scroll what they tap clear of it (`reveal`).
 
 Fonts are from Google Fonts (OFL, licenses in `LawFive/Resources/Licenses`): Barlow, Barlow Condensed and JetBrains Mono, in the weights the website loads. Icons are Phosphor (MIT, its license there too). Data and licenses' Full license texts (WX-12) list them and the Swift packages the app bundles, by hand in `Data/Licenses.swift`; `LicensesTests` checks every package in `Package.resolved` that isn't only for tests is there.
+
+## Notifications from the server
+
+To try them, the app needs its Firebase settings (above), and a server that sends through the relay: `PUSH_RELAY_URL=https://push.lawfive.app PORT=3010 WEB_URL=http://localhost:3010 node --env-file-if-exists=../.env src/demo.ts` in `server/` runs a second demo that does. On Apple silicon the simulator gets real pushes from APNs' sandbox, so sign in to it, turn the switches on in Settings → Match day (or run `Walkthrough/testNotificationsFromTheServer` with `TEST_RUNNER_LAWFIVE_DEMO=http://localhost:3010`), then:
+
+- **A test:** Settings → Server → Send a test notification on the website, as the demo's admin.
+- **Matches from integrations:** make an API key on the website with **Tell my phones when it adds or changes matches**, and add or change a match kicking off within a day with it (`PUT /v1/matches/{id}`), which goes at once.
+- **Weather risks** come when the demo's forecast has one for a match in the next 3 days after the phone registers.
+
+`xcrun simctl push` doesn't run the notification service extension, so it shows the relay's placeholder words; a real push does.
 
 ## Apple Watch
 
@@ -120,4 +133,5 @@ xcrun simctl launch <watch> app.lawfive.watchkitapp -server http://localhost:300
 - **Watch pictures.** watchOS has no window to host a view, so they use `ImageRenderer`, which skips views the system draws for SwiftUI: screens of lists or the navigation stack may come out incomplete, and stay with `LawFiveWatchUITests`.
 - **WatchConnectivity.** Install the watch app after the iPhone app on a paired simulator, or it isn't seen as installed.
 - **The compass** (WCH-10) can't be tried on a simulator except with `-heading`.
+- **Notifications in UI tests.** On iOS 27 the question about notifications doesn't always come where XCUITest finds it, and a notification tapped in Notification Center under XCUITest doesn't open the app; a banner over the open app does.
 - **Water Lock.** watchOS honors it only for an app in front with a workout running, and only the Digital Crown turns it off.

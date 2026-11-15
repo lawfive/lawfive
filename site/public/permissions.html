@@ -91,9 +91,9 @@
             <article class="perm" data-permission="UNUserNotificationCenter">
                 <h3>Notifications</h3>
                 <dl>
-                    <dt>For</dt><dd>Match reminders before kickoff and on the day.</dd>
-                    <dt>Asked</dt><dd>When you turn on <strong>Remind me of matches</strong>, in Settings under Match day, or from Get ready.</dd>
-                    <dt>If you say no</dt><dd>No reminders; the switch says notifications are off, with <strong>Open Settings</strong> to allow them. Your calendar can still remind you through LawFive's calendar feed.</dd>
+                    <dt>For</dt><dd>Match reminders before kickoff and on the day. Where your server offers them, also weather risks to your matches, and matches added or changed by an app that sends your assignments.</dd>
+                    <dt>Asked</dt><dd>When you turn on <strong>Remind me of matches</strong>, <strong>Tell me about weather risks</strong> or <strong>Tell me about matches from integrations</strong>, in Settings under Match day, or reminders from Get ready.</dd>
+                    <dt>If you say no</dt><dd>No notifications; the switch says notifications are off, with <strong>Open Settings</strong> to allow them. Everything else works, and your calendar can still remind you through LawFive's calendar feed.</dd>
                 </dl>
             </article>
             <article class="perm" data-permission="NSCameraUsageDescription">
@@ -125,6 +125,7 @@
             <ul class="perm-list">
                 <li data-permission="UIBackgroundModes:fetch"><strong>Background App Refresh</strong> <span class="perm-ids"><code>fetch</code></span>: to sync now and then while the app isn't open. Turn it off in Settings, under General, Background App Refresh.</li>
                 <li data-permission="UIBackgroundModes:bluetooth-central"><strong>Bluetooth in the background</strong> <span class="perm-ids"><code>bluetooth-central</code></span>: so your Garmin watch can reach the phone while LawFive isn't open. Only once you've shared a watch and allowed Bluetooth.</li>
+                <li data-permission="aps-environment"><strong>Push notifications</strong> <span class="perm-ids"><code>aps-environment</code></span>: Apple's, through Google's Firebase Cloud Messaging, used only once you turn on a notification that comes from your server, such as weather risks. They show only if you allow notifications.</li>
             </ul>
         </section>
 

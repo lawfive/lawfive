@@ -58,8 +58,10 @@ On Android 12 and later, reminders arrive on the minute when you allow LawFive *
 
 ## Weather risks
 
-On Android, **Tell me about weather risks** in Settings, under Match reminders, sends a notification when the forecast shows a new risk to a match in the next 3 days, with its day and kickoff ("tomorrow, 9:00 AM"). It's off until you turn it on, and the iPhone will follow. Tapping one opens the match, and a match with a place has a **Directions** button. See [Notifications](/run/notifications/) for how this reaches your phone and what passes through the relay on the way.
+**Tell me about weather risks** in Settings, under Match day, sends a notification when the forecast shows a new risk to a match in the next 3 days, with its day and kickoff ("tomorrow, 9:00 AM"). It's off until you turn it on. Tapping one opens the match, and a match with a place has a **Directions** button. See [Notifications](/run/notifications/) for how this reaches your phone and what passes through the relay on the way.
 
 ## Matches from integrations
 
-If an app adds your assignments with an API key, it can tell your phone when it adds a match, or cancels, postpones, moves or removes one. Turn on **Tell me about matches from integrations** beside the weather risks on Android, and **Tell my phones when it adds or changes matches** for that key under **Settings → API keys** on the website. Several changes from one app in the same minute come as one notification. Tapping one opens the match, or the match list when there are several, and a match moved to another venue has a **Directions** button.
+If an app adds your assignments with an API key, it can tell your phone when it adds a match, or cancels, postpones, moves or removes one. Turn on **Tell me about matches from integrations** beside the weather risks, and **Tell my phones when it adds or changes matches** for that key under **Settings → API keys** on the website. Several changes from one app in the same minute come as one notification. Tapping one opens the match, or the match list when there are several, and a match moved to another venue has a **Directions** button.
+
+On the iPhone, these notifications reach the phone with nothing about your matches in them, and the app fills in the details from your server as each arrives. Without signal, or signed out, one says only that there's news, such as "An integration changed your matches. Open LawFive to see what's new."

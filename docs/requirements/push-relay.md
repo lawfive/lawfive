@@ -24,6 +24,7 @@ The push relay at `push.lawfive.app` ([relay/](../../relay/), [ARCHITECTURE.md](
 ## A server's side
 
 - **PUSH-4** A server offers `push` in `GET /v1/meta` unless `PUSH_RELAY_URL=off`; `PUSH_RELAY_URL` points it at another relay. Each phone gives its handle to its own session with `PUT /v1/devices/current/push`, and signing out removes it. A handle the relay says is dead is forgotten.
+  - With the handle, the phone says which notifications it wants: weather risks (PUSH-5) and matches from integrations (NOTE-4), and again whenever that changes. The server sends each kind only to phones that want it, as an iPhone shows every notification it's sent (IOS-14). A phone that doesn't say, from an app before it, gets both.
 - **PUSH-6** **A test for whoever runs the server**: Settings → Server has **Send a test notification**, for admins, when the server offers `push`.
   - It goes to the admin's own phones with notifications on, through the relay, and counts toward the limits.
   - The phone says it's a test, without asking the server anything.
@@ -39,9 +40,11 @@ The push relay at `push.lawfive.app` ([relay/](../../relay/), [ARCHITECTURE.md](
 
 ## Status
 
-The relay is live with its limits, controls and keys (the hosted server sends with its key); the server's sending, new weather risks, the admin's test notification, and Android's settings and notifications, opening their match when tapped, are built.
+The relay is live with its limits, controls and keys (the hosted server sends with its key); the server's sending, new weather risks, the admin's test notification, and the phones' settings and notifications, opening their match when tapped, are built.
+
+The iPhone's settings and notifications (IOS-14) are built and checked on a simulator.
 
 Not built yet:
-- Weather risk notifications on the iPhone (PUSH-5).
+- Android saying which notifications it wants (PUSH-4): it gets both and drops weather risks when they're off, which still counts toward its limits.
 - Telling a server's admin in the website when a limit is reached.
 - Notifications checked on a real phone (R-18).

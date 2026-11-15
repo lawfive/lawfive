@@ -51,8 +51,7 @@ Forecasts for matches, and the weather a match was played in. The server works t
 
 ## Status
 
-Forecasts, risks and past weather on the server, the website, both phones, the watch's start-menu line, Data and licenses with the full license texts on both phones (and the pointer to them on Wear OS and Apple Watch), and risk notifications on Android are built.
+Forecasts, risks and past weather on the server, the website, both phones, the watch's start-menu line, Data and licenses with the full license texts on both phones (and the pointer to them on Wear OS and Apple Watch), and risk notifications on both phones are built.
 
 Not built yet:
-- Risk notifications on the iPhone (WX-11, PUSH-5).
 - The Garmin watch's pointer to the license texts (WX-12).

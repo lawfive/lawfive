@@ -44,20 +44,15 @@ const writesMatches = (scopes: string[]) => scopes.includes("matches:write");
 /** Whether a phone hears matches from integrations, and if not why, as the server's lists say (NOTE-5). */
 export interface NoticesHeard {
     phoneWillHear: boolean;
-    noPhoneReason?: "setting-off" | "iphone-only";
+    noPhoneReason?: "setting-off";
 }
 
-/**
- * NOTE-5: beside an integration set to notify (a key, or an assignor calendar) while no phone hears
- * it: the setting to turn on, or, when every phone is an iPhone, that there's none yet (PUSH-5).
- */
-export function NoPhoneWillHear({ reason }: { reason: NoticesHeard["noPhoneReason"] }) {
+/** NOTE-5: beside an integration set to notify (a key, or an assignor calendar) while no phone hears it: the setting to turn on. */
+export function NoPhoneWillHear() {
     return (
         <p className="key-unheard" role="status">
             <Icon name="bellOff" size={16} />
-            {reason === "iphone-only"
-                ? <span>No phone will be told: notifications for these are on Android only for now.</span>
-                : <span>No phone will be told. Turn on <strong>Tell me about matches from integrations</strong> in the LawFive app on your phone.</span>}
+            <span>No phone will be told. Turn on <strong>Tell me about matches from integrations</strong> in the LawFive app on your phone.</span>
         </p>
     );
 }
@@ -103,7 +98,7 @@ export function ApiKeys({ making, onDone }: { making: boolean; onDone: () => voi
                                     <Toggle label="Tell my phones when it adds or changes matches" checked={k.notify} disabled={notify.isPending}
                                         onChange={(on) => notify.mutate({ id: k.id, on })} />
                                     {/* NOTE-5: on, but no phone has the setting that hears it. */}
-                                    {k.notify && list.data?.phoneWillHear === false && <NoPhoneWillHear reason={list.data.noPhoneReason} />}
+                                    {k.notify && list.data?.phoneWillHear === false && <NoPhoneWillHear />}
                                 </div>
                             )}
                         </div>

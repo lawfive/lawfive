@@ -8,7 +8,7 @@ import XCTest
 
 @MainActor
 final class ScreenSnapshots: XCTestCase {
-    private static var graphs: [Fixtures.Account: AppGraph] = [:]
+    private static var graphs: [String: AppGraph] = [:]
     private var zoneBefore: TimeZone?
 
     override func setUp() async throws {
@@ -26,22 +26,24 @@ final class ScreenSnapshots: XCTestCase {
     }
 
     /// An account on the phone as after its first sync, signed out of nothing real: its own settings,
-    /// database and folder, and the fixtures as its server.
-    private func graph(_ account: Fixtures.Account) async throws -> AppGraph {
-        if let graph = ScreenSnapshots.graphs[account] { return graph }
-        let suite = "LawFiveSnapshots-\(account.rawValue)"
+    /// database and folder, and the fixtures as its server; with `push`, a build and server that offer
+    /// notifications from the server (PUSH-5, NOTE-4).
+    private func graph(_ account: Fixtures.Account, push: Bool = false) async throws -> AppGraph {
+        let key = account.rawValue + (push ? "-push" : "")
+        if let graph = ScreenSnapshots.graphs[key] { return graph }
+        let suite = "LawFiveSnapshots-\(key)"
         UserDefaults.standard.removePersistentDomain(forName: suite)
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
-        let folder = FileManager.default.temporaryDirectory.appending(path: "lawfive-snapshots/\(account.rawValue)")
+        let folder = FileManager.default.temporaryDirectory.appending(path: "lawfive-snapshots/\(key)")
         try? FileManager.default.removeItem(at: folder)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         // A session that's new to this phone forgets the keychain's token (SessionStore), so this one
         // has none and never syncs; the app's own sign-in on this simulator is put back straight after.
         let token = Keychain.read()
-        let graph = AppGraph(defaults: defaults, dbFile: nil, folder: folder, protocols: [FixtureServer.self])
+        let graph = AppGraph(defaults: defaults, dbFile: nil, folder: folder, protocols: [FixtureServer.self], pushAvailable: push)
         Keychain.write(token)
         let person = Fixtures.index.person(account)
-        graph.session.setServer(FixtureServer.address(account))
+        graph.session.setServer(FixtureServer.address(account, push: push))
         graph.session.setStatus("active", name: person.name, email: person.email)
         // Did you know comes up at random (TIP-2): none, so the pictures are the same every run.
         for tip in tips { graph.session.tipDone(tip.id) }
@@ -49,7 +51,7 @@ final class ScreenSnapshots: XCTestCase {
         await graph.weather.refresh()
         await graph.weather.refresh(past: true)
         await graph.onWatch.refresh()
-        ScreenSnapshots.graphs[account] = graph
+        ScreenSnapshots.graphs[key] = graph
         return graph
     }
 
@@ -88,6 +90,15 @@ final class ScreenSnapshots: XCTestCase {
         graph.reminders.update(ReminderSettings(enabled: true), matches: [], venues: [])
         defer { graph.reminders.update(ReminderSettings(), matches: [], venues: []) }
         try await Snapshots.take("settings") { self.app(graph, tab: .more, [.settings]) }
+    }
+
+    /// PUSH-5, NOTE-4: where the build and the server offer notifications from the server, their two
+    /// switches over the reminders', one on. The iPhone's alone so far: Android's snapshots have no Firebase.
+    func testNotificationSettings() async throws {
+        let graph = try await graph(.demo, push: true)
+        graph.reminders.update(ReminderSettings(weatherRisks: true), matches: [], venues: [])
+        defer { graph.reminders.update(ReminderSettings(), matches: [], venues: []) }
+        try await Snapshots.take("settings-notifications") { self.app(graph, tab: .more, [.settings]) }
     }
 
     /// WX-8, WX-12: Data and licenses, its full license texts, and one of them (a font's).

@@ -1,5 +1,5 @@
 import type { WeatherRisk } from "@lawfive/schema";
-import { and, eq, gt, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
+import { and, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
 import { type Db, tables } from "./db/index.ts";
 import { plansOf } from "./plans.ts";
 import type { Weather } from "./weather/service.ts";
@@ -11,39 +11,35 @@ export type PushEvent = "weather-risk" | "match-changed" | "test";
 
 type Fetch = typeof fetch;
 
+/** NOTE-5, PUSH-5: phones that haven't said they have this kind off; one that didn't say, from an app before it, counts. */
+const wants = (type?: PushEvent) => {
+    const { device } = tables;
+    return type === "match-changed" ? or(isNull(device.pushNotices), eq(device.pushNotices, true))
+        : type === "weather-risk" ? or(isNull(device.pushRisks), eq(device.pushRisks, true))
+        : undefined;
+};
+
 /**
- * A person's phones that a push of this kind would go to: a current session with a handle. For
- * matches from integrations, not one that said it has them off (NOTE-5); one that didn't say, from
- * an app before it, counts, so "no phone will be told" is only said when it's so.
+ * A person's phones that a push of this kind would go to: a current session with a handle, and not
+ * one that said it has the kind off (NOTE-5, PUSH-5), so "no phone will be told" is only said when
+ * it's so, and an iPhone, which can't drop a notification it's sent, isn't sent one it doesn't want.
  */
 function phonesFor(db: Db, userId: string, now: number, type?: PushEvent) {
     const { device, session } = tables;
     return db.select({ sessionId: device.sessionId, handle: device.pushHandle }).from(device)
         .innerJoin(session, eq(session.id, device.sessionId))
-        .where(and(
-            eq(session.userId, userId), gt(session.expiresAt, new Date(now)), isNotNull(device.pushHandle),
-            type === "match-changed" ? or(isNull(device.pushNotices), eq(device.pushNotices, true)) : undefined,
-        ));
+        .where(and(eq(session.userId, userId), gt(session.expiresAt, new Date(now)), isNotNull(device.pushHandle), wants(type)));
 }
 
-/** Why no phone hears matches from integrations (NOTE-5): none has the setting on, or every phone is an iPhone. */
-export type NoPhoneReason = "setting-off" | "iphone-only";
+/** Why no phone hears matches from integrations (NOTE-5): none has the setting on. */
+export type NoPhoneReason = "setting-off";
 
-/**
- * NOTE-5: whether any of a person's phones hears matches from integrations, and if none does, why,
- * for the website to say. "iphone-only" while every phone signed in is an iPhone, which has no
- * notifications yet (PUSH-5), so there's no setting to point to; it goes when the iPhone has them.
- */
+/** NOTE-5: whether any of a person's phones hears matches from integrations, and if none does, why, for the website to say. */
 export async function noticesHeard(db: Db, userId: string, now = Date.now()): Promise<{ phoneWillHear: boolean; noPhoneReason?: NoPhoneReason }> {
     if ((await phonesFor(db, userId, now, "match-changed").limit(1)).length > 0) {
         return { phoneWillHear: true };
     }
-    const { device, session } = tables;
-    const phones = await db.select({ kind: device.kind }).from(device)
-        .innerJoin(session, eq(session.id, device.sessionId))
-        .where(and(eq(session.userId, userId), gt(session.expiresAt, new Date(now)), inArray(device.kind, ["android", "ios"])));
-    const iphoneOnly = phones.length > 0 && phones.every((p) => p.kind === "ios");
-    return { phoneWillHear: false, noPhoneReason: iphoneOnly ? "iphone-only" : "setting-off" };
+    return { phoneWillHear: false, noPhoneReason: "setting-off" };
 }
 
 export class Push {
@@ -167,7 +163,7 @@ export async function tellNewRisks(db: Db, weather: Weather, push: Push, now = n
     const { device, riskAlert, session } = tables;
     const people = await db.selectDistinct({ userId: session.userId }).from(device)
         .innerJoin(session, eq(session.id, device.sessionId))
-        .where(and(isNotNull(device.pushHandle), gt(session.expiresAt, now)));
+        .where(and(isNotNull(device.pushHandle), gt(session.expiresAt, now), wants("weather-risk")));
     for (const { userId } of people) {
         const upcoming = await weather.upcoming(userId, new Date(now.getTime() + RISK_AHEAD_MS), now);
         const earlier = new Map((await db.select().from(riskAlert).where(eq(riskAlert.userId, userId))).map((r) => [r.matchId, r]));

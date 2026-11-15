@@ -127,8 +127,8 @@ export function devicesApi(db: Db) {
     });
 
     // PUSH-4: with the session, so signing out takes it away too. The device's row may not be
-    // written yet, as that happens at most every five minutes. NOTE-5: and whether the phone wants
-    // matches from integrations, unknown when it doesn't say.
+    // written yet, as that happens at most every five minutes. NOTE-5, PUSH-5: and whether the phone
+    // wants matches from integrations and weather risks, unknown when it doesn't say.
     api.put("/devices/current/push", async (c) => {
         const body = PushHandle.safeParse(await c.req.json().catch(() => undefined));
         const named = readDeviceHeader(c.req.header(deviceHeader));
@@ -138,9 +138,10 @@ export function devicesApi(db: Db) {
         }
         const { handle: pushHandle } = body.data;
         const pushNotices = pushHandle === null ? null : body.data.notices ?? null;
+        const pushRisks = pushHandle === null ? null : body.data.risks ?? null;
         await db.insert(device)
-            .values({ sessionId, kind: named.kind, name: named.name, model: named.model ?? null, firmware: named.firmware ?? null, appVersion: named.app ?? null, lastSeenAt: new Date(), pushHandle, pushNotices })
-            .onConflictDoUpdate({ target: device.sessionId, set: { pushHandle, pushNotices } });
+            .values({ sessionId, kind: named.kind, name: named.name, model: named.model ?? null, firmware: named.firmware ?? null, appVersion: named.app ?? null, lastSeenAt: new Date(), pushHandle, pushNotices, pushRisks })
+            .onConflictDoUpdate({ target: device.sessionId, set: { pushHandle, pushNotices, pushRisks } });
         return c.json({ ok: true as const });
     });
 

@@ -209,16 +209,18 @@ describe("notices", () => {
         assert.equal((await call("GET", "/v1/api-keys", session)).body.noPhoneReason, "setting-off");
     });
 
-    test("when every phone is an iPhone, the reason says so: it has no setting yet (NOTE-5)", async () => {
+    test("an iPhone hears them as an Android phone does, once its setting is on (NOTE-5)", async () => {
         const res = await app.request("/v1/auth/sign-up/email", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ name: "Pat Lee", email: "pat@example.com", password: "correct-horse-battery" }),
         });
         const pat = res.headers.get("set-auth-token")!;
+        const iphone = "ios; model=iPhone17,1; os=26.1; app=2026.11.15";
         assert.deepEqual((await call("GET", "/v1/api-keys", pat)).body, { keys: [], phoneWillHear: false, noPhoneReason: "setting-off" }, "no phone at all");
-        const answer = (await call("GET", "/v1/api-keys", pat, undefined, "ios; model=iPhone17,1; os=26.1; app=2026.11.2")).body;
-        assert.equal(answer.phoneWillHear, false);
-        assert.equal(answer.noPhoneReason, "iphone-only");
+        const signedIn = (await call("GET", "/v1/api-keys", pat, undefined, iphone)).body;
+        assert.deepEqual([signedIn.phoneWillHear, signedIn.noPhoneReason], [false, "setting-off"], "an iPhone with the setting off says the same as any phone");
+        await call("PUT", "/v1/devices/current/push", pat, { handle: "v1.iphone", notices: true, risks: false }, iphone);
+        assert.deepEqual((await call("GET", "/v1/api-keys", pat)).body, { keys: [], phoneWillHear: true });
     });
 });

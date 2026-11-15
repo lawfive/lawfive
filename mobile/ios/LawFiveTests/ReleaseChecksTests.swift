@@ -19,6 +19,19 @@ final class ReleaseChecksTests: XCTestCase {
         XCTAssertTrue(apis.contains { $0["NSPrivacyAccessedAPIType"] as? String == "NSPrivacyAccessedAPICategoryUserDefaults" })
     }
 
+    /// PUSH-5, NOTE-3: the notification service extension is in the app, with its own privacy manifest and the app's version, as App Store Connect wants.
+    func testTheNotificationServiceExtensionIsBuiltIn() throws {
+        let ext = try XCTUnwrap(app.builtInPlugInsURL.flatMap { Bundle(url: $0.appending(path: "LawFiveNotifications.appex")) })
+        let point = (ext.object(forInfoDictionaryKey: "NSExtension") as? [String: Any])?["NSExtensionPointIdentifier"] as? String
+        XCTAssertEqual(point, "com.apple.usernotifications.service")
+        for key in ["CFBundleShortVersionString", "CFBundleVersion"] {
+            XCTAssertEqual(ext.object(forInfoDictionaryKey: key) as? String, app.object(forInfoDictionaryKey: key) as? String, key)
+        }
+        let url = try XCTUnwrap(ext.url(forResource: "PrivacyInfo", withExtension: "xcprivacy"))
+        let manifest = try XCTUnwrap(PropertyListSerialization.propertyList(from: Data(contentsOf: url), format: nil) as? [String: Any])
+        XCTAssertEqual(manifest["NSPrivacyTracking"] as? Bool, false)
+    }
+
     func testOnlyExemptEncryptionIsDeclared() {
         XCTAssertEqual(app.object(forInfoDictionaryKey: "ITSAppUsesNonExemptEncryption") as? Bool, false)
     }

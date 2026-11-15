@@ -17,19 +17,17 @@ A phone notification when an app with an API key, such as an assignor's, adds a 
   - Tapping it opens the match, or the match list for several or a removed one. A match moved to another venue that's still on has **Directions** (APP-6).
   - Before writing it, the phone syncs, so its reminders move or go with the match (APP-6).
   - Notices are kept 30 days.
-- **NOTE-4** **On the phone:** **Tell me about matches from integrations** beside **Tell me about weather risks**, off until turned on, where the server offers `notices` (`GET /v1/meta`). The phone registers with the relay while either is on, and tells the server, as it registers and whenever it changes, whether matches from integrations are on, so the server sends them only to phones that want them.
+- **NOTE-4** **On the phone:** **Tell me about matches from integrations** beside **Tell me about weather risks**, off until turned on, where the server offers `notices` (`GET /v1/meta`). The phone registers with the relay while either is on, and tells the server, as it registers and whenever it changes, whether matches from integrations are on, so the server sends them only to phones that want them (PUSH-4). The iPhone's differences are IOS-14.
 - **NOTE-5** **Saying when no phone will hear.** A key set to notify does nothing while none of the account's phones has **Tell me about matches from integrations** on (after a fresh install, for one).
   - On the website's API keys, beside a key with the option on: "No phone will be told. Turn on Tell me about matches from integrations in the LawFive app on your phone." It goes once a phone has the setting on.
   - The same beside an assignor calendar set to notify (FEED-8), on the website's Assignor calendars.
-  - When every phone on the account is an iPhone, which doesn't have these notifications yet (PUSH-5), it says "No phone will be told: notifications for these are on Android only for now." instead.
   - A notice made while no phone has the setting on is kept as reaching no phone, not as sent, so it's clear afterward that nothing went; it isn't sent later. A phone that hasn't said which it wants counts as having the setting on, so the website only says no phone will be told when that's so.
   - The phones say nothing about it: a phone with the setting off is one where the person chose not to be told.
 
 ## Status
 
-The server's notices, the website's option on API keys and its warning when no phone will hear (NOTE-5), and Android's setting and wording are built, and a key's changes have reached an Android emulator through the live relay as one notification.
+The server's notices, the website's option on API keys and its warning when no phone will hear (NOTE-5), and the phones' setting and wording are built (the iPhone's as IOS-14), and a key's changes have reached an Android emulator through the live relay as one notification.
 
 Not built yet:
-- The iPhone, with the other server notifications (PUSH-5).
-- A notification on a real phone, asleep (R-18).
+- A notification on a real phone, asleep (R-18), the iPhone's through TestFlight.
 - The watch, for a match canceled while it's on the watch's list.

@@ -6,8 +6,9 @@ import Foundation
 // stores, with no network. Writes, and anything the fixtures don't hold, get the server's 404.
 
 final class FixtureServer: URLProtocol {
-    /// The server's address for an account; its answers are that account's.
-    static func address(_ account: Fixtures.Account) -> String { "https://\(account.rawValue).fixtures.invalid" }
+    /// The server's address for an account; its answers are that account's. With `push`, it offers
+    /// notifications from the server as the hosted one does (PUSH-5, NOTE-4), under /push.
+    static func address(_ account: Fixtures.Account, push: Bool = false) -> String { "https://\(account.rawValue).fixtures.invalid" + (push ? "/push" : "") }
 
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
@@ -15,7 +16,8 @@ final class FixtureServer: URLProtocol {
     override func startLoading() {
         let url = request.url!
         let account = Fixtures.Account.allCases.first { url.host == "\($0.rawValue).fixtures.invalid" } ?? .demo
-        let (status, body) = FixtureServer.answer(request.httpMethod ?? "GET", url.path, account: account)
+        let push = url.path.hasPrefix("/push/")
+        let (status, body) = FixtureServer.answer(request.httpMethod ?? "GET", push ? String(url.path.dropFirst(5)) : url.path, account: account, push: push)
         let response = HTTPURLResponse(url: url, statusCode: status, httpVersion: "HTTP/1.1",
                                        headerFields: ["Content-Type": "application/json", "LawFive-Version": "fixtures"])!
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
@@ -28,16 +30,19 @@ final class FixtureServer: URLProtocol {
     private static func json(_ value: Any) -> Data { try! JSONSerialization.data(withJSONObject: value) }
     private static let missing = (404, json(["error": "Not in the fixtures"]))
 
-    static func answer(_ method: String, _ path: String, account: Fixtures.Account) -> (Int, Data) {
+    static func answer(_ method: String, _ path: String, account: Fixtures.Account, push: Bool = false) -> (Int, Data) {
         guard method == "GET" else { return missing }
         let file = { (name: String) in (try? Fixtures.data(account, name)).map { (200, $0) } ?? missing }
         switch path {
         case "/v1/meta":
             // As the demo server's (server/src/app.ts), with its weather.
-            return (200, json(["product": "LawFive", "apiVersion": 1, "capabilities": [
+            var meta: [String: Any] = ["product": "LawFive", "apiVersion": 1, "capabilities": [
                 "accounts", "records", "quiz", "changes", "tracks", "stats", "devices", "link", "watch", "people", "invites",
                 "calendar", "import", "merging", "plans", "assignor-calendars", "weather",
-            ]]))
+            ] + (push ? ["push", "notices"] : [])]
+            // Whole, maps too, so the app reads what it offers (GET /v1/meta as ServerMeta) for notifications' switches.
+            if push { meta["maps"] = ["tileUrl": "https://tile.openstreetmap.org/{z}/{x}/{y}.png", "attribution": "OpenStreetMap"] }
+            return (200, json(meta))
         case "/v1/changes": return file("changes.json")
         case "/v1/stats": return file("stats.json")
         case "/v1/weather": return file("weather.json")

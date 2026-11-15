@@ -34,6 +34,11 @@ function asksToNotify(dir) {
     return swift.some((f) => /\.requestAuthorization\(options:/.test(read(join(dir, String(f))))) ? ["UNUserNotificationCenter"] : [];
 }
 
+/** iPhone: push notifications (aps-environment), granted without asking, from the app's entitlements. */
+function entitlements(file) {
+    return /<key>aps-environment<\/key>/.test(read(file)) ? ["aps-environment"] : [];
+}
+
 /** Garmin: every <iq:uses-permission id="…">. */
 function garminManifest(file) {
     return [...read(file).matchAll(/<iq:uses-permission\s+id="([^"]+)"/g)].map((m) => m[1]);
@@ -42,7 +47,7 @@ function garminManifest(file) {
 // The project sets which Info.plist each target uses (INFOPLIST_FILE in mobile/ios/LawFive.xcodeproj).
 const declared = {
     android: androidManifest("mobile/android/app/src/main/AndroidManifest.xml"),
-    iphone: [...infoPlist("mobile/ios/Info.plist"), ...asksToNotify("mobile/ios/LawFive")],
+    iphone: [...infoPlist("mobile/ios/Info.plist"), ...asksToNotify("mobile/ios/LawFive"), ...entitlements("mobile/ios/LawFive.entitlements")],
     garmin: garminManifest("watch-garmin/manifest.xml"),
     "wear-os": androidManifest("mobile/android/wear/src/main/AndroidManifest.xml"),
     "apple-watch": [...infoPlist("mobile/ios/LawFiveWatch-Info.plist"), ...asksToNotify("mobile/ios/LawFiveWatch")],

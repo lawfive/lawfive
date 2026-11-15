@@ -183,6 +183,13 @@
       "when": 1794700213029,
       "tag": "0025_notices_that_reach_no_phone",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794714501675,
+      "tag": "0026_phones_say_if_they_want_weather_risks",
+      "breakpoints": true
     }
   ]
 }

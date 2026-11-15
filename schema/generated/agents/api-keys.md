@@ -12,7 +12,7 @@ Keys for scripts and integrations, made in the web app's Settings. A key is sent
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { keys: [ApiKey](#apikey)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The keys. |
+| 200 | { keys: [ApiKey](#apikey)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" } | The keys. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval. |
 | 413 | [ApiError](#apierror) | The request is too big. |

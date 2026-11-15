@@ -35,4 +35,4 @@ PUSH_RELAY_URL=https://your-relay.example.com pnpm demo
 
 ## Running your own
 
-You'd need your own Firebase project, your own builds of the apps, and a Cloudflare account. `relay/README.md` lists the settings and secrets, and `wrangler.toml` holds the address to change. Point your builds at it with `lawfive.push.relay`, and your server with `PUSH_RELAY_URL`.
+You'd need your own Firebase project, your own builds of the apps, and a Cloudflare account. `relay/README.md` lists the settings and secrets, and `wrangler.toml` holds the address to change. Point your builds at it with `lawfive.push.relay` on Android and `LAWFIVE_PUSH_RELAY` on the iPhone, and your server with `PUSH_RELAY_URL`.

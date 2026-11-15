@@ -9831,10 +9831,9 @@
                     "noPhoneReason": {
                       "type": "string",
                       "enum": [
-                        "setting-off",
-                        "iphone-only"
+                        "setting-off"
                       ],
-                      "description": "Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on; iphone-only, every phone signed in is an iPhone, which has no notifications yet."
+                      "description": "Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on. Other reasons may come later: treat one you don't know as setting-off."
                     }
                   },
                   "required": [
@@ -11333,10 +11332,9 @@
                     "noPhoneReason": {
                       "type": "string",
                       "enum": [
-                        "setting-off",
-                        "iphone-only"
+                        "setting-off"
                       ],
-                      "description": "Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on; iphone-only, every phone signed in is an iPhone, which has no notifications yet."
+                      "description": "Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on. Other reasons may come later: treat one you don't know as setting-off."
                     }
                   },
                   "required": [
@@ -23039,6 +23037,10 @@
           },
           "notices": {
             "description": "Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on.",
+            "type": "boolean"
+          },
+          "risks": {
+            "description": "Whether this phone has Tell me about weather risks on (PUSH-5). False, it isn't sent them. Left out, as by apps from before it, it's taken as on.",
             "type": "boolean"
           }
         },

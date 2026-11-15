@@ -22,13 +22,7 @@ func conditionName(_ condition: String, day: Bool = true) -> String {
     return ["clear": "Sunny", "partlyCloudy": "Partly cloudy", "cloudy": "Cloudy", "fog": "Fog", "drizzle": "Drizzle", "rain": "Rain", "snow": "Snow", "storm": "Thunderstorms"][condition] ?? condition
 }
 
-private let riskNames = ["wetField": "Wet field", "rain": "Rain", "storm": "Storms", "snow": "Snow", "heat": "Heat"]
 private let riskIcons = ["wetField": "rain", "rain": "rain", "storm": "storm", "snow": "snow", "heat": "clear"]
-
-func riskName(_ kind: String) -> String { riskNames[kind] ?? kind }
-
-/// "Rain likely", "Heat possible".
-func riskTitle(_ r: WeatherRisk) -> String { "\(riskName(r.kind)) \(r.level)" }
 
 /// Why the badge is there, in a sentence or two, in the account's units.
 func explainRisk(_ r: WeatherRisk, units: Units, final: Bool) -> String {

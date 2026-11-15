@@ -104,7 +104,7 @@ function CalendarRow({ calendar: c, notices, unheard, onChange }: { calendar: As
                     <div className="key-notify">
                         <Toggle label="Tell my phones when it adds, moves or cancels a match" checked={c.notify} disabled={busy} onChange={(notify) => change.mutate({ notify })} />
                         {/* NOTE-5: on, but no phone has the setting that hears it. */}
-                        {c.notify && unheard && <NoPhoneWillHear reason={unheard.noPhoneReason} />}
+                        {c.notify && unheard && <NoPhoneWillHear />}
                     </div>
                 )}
                 {linking ? (

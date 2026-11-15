@@ -204,18 +204,31 @@ struct SignedIn: View {
             }
         }
         .environment(nav)
-        // A notification tapped (APP-6): its match, unless a form is open, which comes first.
+        // A notification tapped (APP-6): its match, unless a form is open, which comes first; NOTE-3:
+        // the match list for several matches or a removed one.
         .onChange(of: graph.pendingMatch, initial: true) { _, id in
             guard let id, nav.sheet == nil else { return }
             graph.pendingMatch = nil
             nav.tab = .matches
             nav.paths[.matches, default: []].append(.match(id))
         }
-        .onChange(of: nav.sheet) { _, sheet in
-            guard sheet == nil, let id = graph.pendingMatch else { return }
-            graph.pendingMatch = nil
+        .onChange(of: graph.pendingMatchList, initial: true) { _, list in
+            guard list, nav.sheet == nil else { return }
+            graph.pendingMatchList = false
             nav.tab = .matches
-            nav.paths[.matches, default: []].append(.match(id))
+            nav.paths[.matches] = []
+        }
+        .onChange(of: nav.sheet) { _, sheet in
+            guard sheet == nil else { return }
+            if let id = graph.pendingMatch {
+                graph.pendingMatch = nil
+                nav.tab = .matches
+                nav.paths[.matches, default: []].append(.match(id))
+            } else if graph.pendingMatchList {
+                graph.pendingMatchList = false
+                nav.tab = .matches
+                nav.paths[.matches] = []
+            }
         }
         .sheet(item: $nav.sheet) { sheet in
             NavigationStack { form(sheet) }

@@ -116,6 +116,11 @@ export const device = pgTable("device", {
      * when it didn't say (apps from before it), taken as on; false, it isn't sent them.
      */
     pushNotices: boolean("push_notices"),
+    /**
+     * PUSH-5: whether the phone has weather risks on, as it said with its handle. Null when it didn't
+     * say (apps from before it), taken as on; false, it isn't sent them, as an iPhone can't drop one.
+     */
+    pushRisks: boolean("push_risks"),
 });
 
 // SYNC-14: the matches in each watch's latest download of its next matches (GET /v1/watch/matches),

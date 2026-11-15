@@ -1210,7 +1210,7 @@ An assignor system's private calendar link (ArbiterSports, Assignr, HorizonWebRe
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The calendars. |
+| 200 | { calendars: [AssignorCalendar](#assignorcalendar)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" } | The calendars. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval (USR-4). |
 | 413 | [ApiError](#apierror) | The request is too big. |
@@ -1894,7 +1894,7 @@ Keys for scripts and integrations (KEY-1 to KEY-4), made in the web app's Settin
 
 | Answer | Body | When |
 |---|---|---|
-| 200 | { keys: [ApiKey](#apikey)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" \| "iphone-only" } | The keys. |
+| 200 | { keys: [ApiKey](#apikey)[], phoneWillHear: boolean, noPhoneReason?: "setting-off" } | The keys. |
 | 401 | [ApiError](#apierror) | Not signed in, the session has ended, or the API key is unknown or has expired. |
 | 403 | [ApiError](#apierror) | An API key: this needs signing in; or the account is waiting for approval (USR-4). |
 | 413 | [ApiError](#apierror) | The request is too big. |
@@ -2921,6 +2921,7 @@ How much of each limit the account is using; per-minute and per-file limits aren
 |---|---|---|
 | `handle` | string \| null | What the push relay gave this phone (PUSH-2), which only it can read; null to stop notifications. |
 | `notices` (optional) | boolean | Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on. |
+| `risks` (optional) | boolean | Whether this phone has Tell me about weather risks on (PUSH-5). False, it isn't sent them. Left out, as by apps from before it, it's taken as on. |
 
 ### RefereeMerge
 

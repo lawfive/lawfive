@@ -221,7 +221,7 @@ function TestPush() {
     return (
         <div className="card form-section">
             <h2>Notifications</h2>
-            <p className="muted" style={{ marginTop: -6 }}>Phones get notifications through LawFive's push relay, which sees no match details. To try it, turn on Tell me about weather risks in the Android app, then send one to your own phones.</p>
+            <p className="muted" style={{ marginTop: -6 }}>Phones get notifications through LawFive's push relay, which sees no match details. To try it, turn on Tell me about weather risks in the LawFive app on your phone, then send one to your own phones.</p>
             <div className="row">
                 <button type="button" className="btn" disabled={send.isPending} onClick={() => send.mutate()}><Icon name="bell" />{send.isPending ? "Sending…" : "Send a test notification"}</button>
                 {send.data && <span className="muted">Sent to {send.data.sent === 1 ? "your phone" : `${send.data.sent} phones`}</span>}

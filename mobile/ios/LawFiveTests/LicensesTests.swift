@@ -4,8 +4,12 @@ import XCTest
 // WX-12: the full license texts, kept by hand on the iPhone: every Swift package the app bundles is
 // listed, and every text is there with its own copyright line.
 final class LicensesTests: XCTestCase {
-    /// Packages that only build or test the app, never in it: swift-snapshot-testing and what it brings.
-    private let testOnly: Set<String> = ["swift-snapshot-testing", "swift-custom-dump", "swift-issue-reporting", "swift-syntax"]
+    /// Packages that only build or test the app, never in it: swift-snapshot-testing and what it brings;
+    /// and those Firebase's package names for products the app doesn't use (Analytics, Firestore, App Check
+    /// and the rest), whose code isn't in the app.
+    private let testOnly: Set<String> = ["swift-snapshot-testing", "swift-custom-dump", "swift-issue-reporting", "swift-syntax",
+                                         "abseil-cpp-binary", "app-check", "google-ads-on-device-conversion-ios-sdk", "googleappmeasurement",
+                                         "grpc-binary", "gtm-session-fetcher", "interop-ios-for-google-sdks", "leveldb"]
 
     func testEveryBundledPackageIsListed() throws {
         let resolved = URL(fileURLWithPath: #filePath).deletingLastPathComponent()

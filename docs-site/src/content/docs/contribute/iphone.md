@@ -7,7 +7,7 @@ sidebar:
 
 ## Setting up
 
-You'll need a Mac with Xcode 27 or later. The app runs on iOS 17 and later. Xcode downloads Garmin's Connect IQ SDK as a Swift package, the project's one third-party package, and using it means accepting [Garmin's license](https://developer.garmin.com/connect-iq/sdk/).
+You'll need a Mac with Xcode 27 or later. The app runs on iOS 17 and later. Xcode downloads Garmin's Connect IQ SDK as a Swift package, and using it means accepting [Garmin's license](https://developer.garmin.com/connect-iq/sdk/). It also downloads Firebase's, for Firebase Cloud Messaging, the only part of it the app uses.
 
 ## Commands
 
@@ -29,6 +29,12 @@ Run the [demo server](/contribute/server-web/#the-demo-server), run the app in a
 ## On a real iPhone
 
 Choose your Apple account's team under Signing & Capabilities in Xcode, then run it on the plugged-in phone. A free account's builds expire after 7 days, and TestFlight and the App Store need a paid one. The bundle ID is `app.lawfive`, which belongs to the project's own Apple team, so to run it under yours, change it to one of your own, such as `dev.yourname.lawfive`, in both targets and as `WKCompanionAppBundleIdentifier` in `LawFiveWatch-Info.plist`.
+
+## Notifications
+
+Notifications from the server (weather risks and matches from integrations) need a Firebase app registered as `app.lawfive`, with its `GoogleService-Info.plist` at `~/.lawfive/apple/GoogleService-Info.plist`, or wherever `LAWFIVE_FIREBASE_PLIST` says. A build phase copies it into the app. Without it the app builds and runs as usual, and doesn't offer the setting. Keep it out of the repo, so a fork makes its own.
+
+The iPhone writes each notification in a notification service extension (`LawFiveNotifications/`, bundle ID `app.lawfive.notifications`), which shares the App Group `group.app.lawfive` with the app. Under your own Apple team, change both to your own, and the app's bundle ID too. A build with your own Firebase project also needs [your own relay](/contribute/relay/#running-your-own), set with `LAWFIVE_PUSH_RELAY`.
 
 ## Apple Watch
 

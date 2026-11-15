@@ -305,16 +305,46 @@ func remindersOnText(_ t: ReminderTimes) -> String {
     return days.isEmpty ? "On, with no times chosen yet" : "On: \(days.joined(separator: " and "))"
 }
 
-/// The phone's match reminders (IOS-6) in Settings → Match day: this phone's switch, and the account's times (CAL-3).
+/// The phone's match reminders (IOS-6) in Settings → Match day: this phone's switch, and the account's times (CAL-3);
+/// above them, where this build and the server can do it, notifications from the server (PUSH-5, NOTE-4).
 struct RemindersSettings: View {
     @Environment(AppGraph.self) private var graph
     @Environment(\.openURL) private var openURL
-    @State private var denied = false
+    /// The card whose switch the phone said no to: reminders, or notifications from the server.
+    @State private var denied: Card?
+    @State private var pushOffered = false
+    @State private var noticesOffered = false
+
+    private enum Card { case reminders, server }
 
     private func update(_ change: (inout ReminderSettings) -> Void) {
         var next = graph.reminders.settings
         change(&next)
-        graph.reminders.update(next, matches: graph.records.matches ?? [], venues: graph.records.venues ?? [])
+        graph.updateNotifications(next)
+    }
+
+    /// Off at once; on once the phone allows notifications, or the note saying they're off.
+    private func toggle(_ card: Card, _ on: Bool, _ change: @escaping (inout ReminderSettings, Bool) -> Void) {
+        guard on else {
+            withAnimation { update { change(&$0, false) } }
+            return
+        }
+        Task {
+            if await graph.reminders.askToNotify() {
+                denied = nil
+                withAnimation { update { change(&$0, true) } }
+            } else {
+                denied = card
+            }
+        }
+    }
+
+    private var deniedNote: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Notifications are off for LawFive in the phone's settings.").font(.lfBodySmall).foregroundStyle(LF.muted)
+            SecondaryButton("Open Settings") { if let url = URL(string: UIApplication.openNotificationSettingsURLString) { openURL(url) } }
+        }
+        .padding(.horizontal, 16).padding(.bottom, 14)
     }
 
     private func updateTimes(_ change: (inout ReminderTimes) -> Void) {
@@ -326,56 +356,57 @@ struct RemindersSettings: View {
     var body: some View {
         let s = graph.reminders.settings
         let t = ReminderTimes(graph.records.effectiveSettings)
-        LfCard {
-            ToggleRow("Remind me of matches", sub: "Notifications on this phone, as well as or instead of your calendar's", divider: false, isOn: Binding(get: { s.enabled }, set: { on in
-                guard on else {
-                    withAnimation { update { $0.enabled = false } }
-                    return
-                }
-                Task {
-                    if await graph.reminders.askToNotify() {
-                        denied = false
-                        withAnimation { update { $0.enabled = true } }
-                    } else {
-                        denied = true
+        VStack(spacing: 12) {
+            // PUSH-5: only where this build and this server can do it.
+            if pushOffered {
+                LfCard {
+                    ToggleRow("Tell me about weather risks", sub: "A notification when the forecast shows a new risk to a match in the next 3 days", divider: false,
+                              isOn: Binding(get: { s.weatherRisks }, set: { on in toggle(.server, on) { $0.weatherRisks = $1 } }))
+                    // NOTE-4: only for API keys set to notify, on the website.
+                    if noticesOffered {
+                        ToggleRow("Tell me about matches from integrations", sub: "When the app that sends your assignments adds, cancels or moves a match",
+                                  isOn: Binding(get: { s.integrations }, set: { on in toggle(.server, on) { $0.integrations = $1 } }))
                     }
+                    if denied == .server { deniedNote }
                 }
-            }))
-            if denied {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Notifications are off for LawFive in the phone's settings.").font(.lfBodySmall).foregroundStyle(LF.muted)
-                    SecondaryButton("Open Settings") { if let url = URL(string: UIApplication.openNotificationSettingsURLString) { openURL(url) } }
-                }
-                .padding(.horizontal, 16).padding(.bottom, 14)
             }
-            if s.enabled {
-                VStack(alignment: .leading, spacing: 10) {
-                    FieldLabel(text: "Before kickoff")
-                    Flow {
-                        ForEach(t.minutesBefore.sorted(), id: \.self) { m in
-                            // A brand chip with Phosphor's close: tapping it removes the reminder.
-                            Button { updateTimes { $0.minutesBefore.removeAll { $0 == m } } } label: {
-                                HStack(spacing: 4) {
-                                    Text(beforeText(m)).font(.lfLabelMedium).foregroundStyle(LF.brandStrong)
-                                    PhIcon(.close, size: 12, tint: LF.brandStrong, label: "Remove")
+            LfCard {
+                ToggleRow("Remind me of matches", sub: "Notifications on this phone, as well as or instead of your calendar's", divider: false,
+                          isOn: Binding(get: { s.enabled }, set: { on in toggle(.reminders, on) { $0.enabled = $1 } }))
+                if denied == .reminders { deniedNote }
+                if s.enabled {
+                    VStack(alignment: .leading, spacing: 10) {
+                        FieldLabel(text: "Before kickoff")
+                        Flow {
+                            ForEach(t.minutesBefore.sorted(), id: \.self) { m in
+                                // A brand chip with Phosphor's close: tapping it removes the reminder.
+                                Button { updateTimes { $0.minutesBefore.removeAll { $0 == m } } } label: {
+                                    HStack(spacing: 4) {
+                                        Text(beforeText(m)).font(.lfLabelMedium).foregroundStyle(LF.brandStrong)
+                                        PhIcon(.close, size: 12, tint: LF.brandStrong, label: "Remove")
+                                    }
+                                    .padding(.horizontal, 12).padding(.vertical, 6)
+                                    .background(LF.brandSoft, in: Capsule())
                                 }
-                                .padding(.horizontal, 12).padding(.vertical, 6)
-                                .background(LF.brandSoft, in: Capsule())
+                                .buttonStyle(PressStyle())
                             }
-                            .buttonStyle(PressStyle())
                         }
+                        Choice("Add a reminder", value: Int?.none, options: ReminderTimes.steps.filter { !t.minutesBefore.contains($0) }, text: { $0.map(beforeText) ?? "Choose" }) { m in
+                            if let m, t.minutesBefore.count < 12 { updateTimes { $0.minutesBefore.append(m) } }
+                        }
+                        Choice("The day before, at", value: t.dayBefore, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in updateTimes { $0.dayBefore = v } }
+                        Choice("The day of, at", value: t.dayOf, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in updateTimes { $0.dayOf = v } }
+                        // CAL-3: one set of times for the account.
+                        Text("These times are your account's: your calendar feed and LawFive on your other phones use them too.")
+                            .font(.lfBodySmall).foregroundStyle(LF.muted).fixedSize(horizontal: false, vertical: true)
                     }
-                    Choice("Add a reminder", value: Int?.none, options: ReminderTimes.steps.filter { !t.minutesBefore.contains($0) }, text: { $0.map(beforeText) ?? "Choose" }) { m in
-                        if let m, t.minutesBefore.count < 12 { updateTimes { $0.minutesBefore.append(m) } }
-                    }
-                    Choice("The day before, at", value: t.dayBefore, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in updateTimes { $0.dayBefore = v } }
-                    Choice("The day of, at", value: t.dayOf, options: reminderTimes, allowNone: "None", text: { $0 ?? "None" }) { v in updateTimes { $0.dayOf = v } }
-                    // CAL-3: one set of times for the account.
-                    Text("These times are your account's: your calendar feed and LawFive on your other phones use them too.")
-                        .font(.lfBodySmall).foregroundStyle(LF.muted).fixedSize(horizontal: false, vertical: true)
+                    .padding(16)
                 }
-                .padding(16)
             }
+        }
+        .task {
+            pushOffered = await graph.push.offered()
+            noticesOffered = await graph.push.noticesOffered()
         }
     }
 }

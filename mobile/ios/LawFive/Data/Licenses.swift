@@ -1,9 +1,11 @@
 import Foundation
 
 // WX-12: what the app is built with, each with its copyright and license in full, as the licenses ask
-// (MIT and the OFL want the copyright notice and license text with each copy). Kept by hand: the one
-// Swift package the app bundles (Garmin's Connect IQ SDK, under Garmin's own terms on the web), and
-// the fonts and icons, whose license files, with their copyright lines, are in Resources/Licenses.
+// (MIT, zlib, Apache 2.0 and the OFL want the copyright notice and license text with each copy). Kept
+// by hand: the Swift packages the app bundles (Garmin's Connect IQ SDK, under Garmin's own terms on
+// the web, and Firebase Cloud Messaging with what it brings, PUSH-5), and the fonts and icons, whose
+// license files are in Resources/Licenses. An Apache 2.0 text is the license's own, after the
+// copyright line the library's files carry; none of these has a NOTICE file of its own.
 // LicensesTests checks every package in Package.resolved the app bundles is here. Android's list is
 // made by Gradle instead (data/Licenses.kt), with the same way of setting a text.
 
@@ -40,6 +42,12 @@ enum Licenses {
 
     private static let ofl = "SIL Open Font License 1.1"
 
+    /// Apache 2.0's text, after the copyright line the library's own files carry.
+    private static func apache(_ copyright: String, file name: String = "apache-2.0") -> LicenseText {
+        LicenseText(name: "Apache License 2.0", short: "Apache 2.0", url: "https://www.apache.org/licenses/LICENSE-2.0",
+                    text: file(name).map { name == "apache-2.0" ? "\(copyright)\n\n\($0)" : $0 })
+    }
+
     /// The fonts and icons, in name order.
     static let works: [Credited] = [
         Credited(id: "font:barlow", name: "Barlow and Barlow Condensed", by: "The Barlow Project Authors", website: "https://github.com/jpt/barlow",
@@ -55,6 +63,17 @@ enum Licenses {
         Credited(id: "com.garmin.connectiq", name: "Garmin Connect IQ Mobile SDK", by: "Garmin", website: "https://developer.garmin.com/connect-iq/",
                  package: "connectiq-companion-app-sdk-ios",
                  license: LicenseText(name: "Garmin Connect IQ SDK License Agreement", short: "Terms", url: "https://developer.garmin.com/connect-iq/sdk/", text: nil)),
+        // PUSH-5: Firebase Cloud Messaging, and the packages it brings into the app.
+        Credited(id: "com.google.firebase.messaging", name: "Firebase Cloud Messaging", by: "Google LLC", website: "https://firebase.google.com/docs/cloud-messaging",
+                 package: "firebase-ios-sdk", license: apache("Copyright 2017 Google LLC")),
+        Credited(id: "com.google.datatransport", name: "GoogleDataTransport", by: "Google LLC", website: "https://github.com/google/GoogleDataTransport",
+                 package: "googledatatransport", license: apache("Copyright 2018 Google LLC")),
+        Credited(id: "com.google.utilities", name: "GoogleUtilities", by: "Google LLC, and Landon J. Fuller", website: "https://github.com/google/GoogleUtilities",
+                 package: "googleutilities", license: apache("Copyright 2018 Google LLC", file: "googleutilities-Apache")),
+        Credited(id: "com.google.promises", name: "Promises", by: "Google Inc.", website: "https://github.com/google/promises",
+                 package: "promises", license: apache("Copyright 2018 Google Inc.")),
+        Credited(id: "nanopb", name: "nanopb", by: "Petteri Aimonen", website: "https://jpa.kapsi.fi/nanopb/",
+                 package: "nanopb", license: LicenseText(name: "zlib License", short: "zlib", url: "https://opensource.org/license/zlib", text: file("nanopb-zlib"))),
     ]
 
     static func find(_ id: String) -> Credited? { (works + libraries).first { $0.id == id } }

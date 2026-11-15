@@ -25,20 +25,6 @@ private enum AccountEdit: String, Identifiable {
     var id: String { rawValue }
 }
 
-/// A time as the website's formatWhen: "8:12 PM", "yesterday, 8:12 PM", "tomorrow, 8:12 PM" or "Sat, Nov 7, 8:12 PM".
-func whenText(_ t: Date, zone: TimeZone = .current, now: Date = AppClock.now) -> String {
-    var c = Calendar(identifier: .gregorian)
-    c.timeZone = zone
-    let days = c.dateComponents([.day], from: c.startOfDay(for: now), to: c.startOfDay(for: t)).day ?? 0
-    let time = formatTime(t, zone: zone)
-    switch days {
-    case 0: return time
-    case -1: return "yesterday, \(time)"
-    case 1: return "tomorrow, \(time)"
-    default: return "\(formatShortDay(t, zone: zone)), \(time)"
-    }
-}
-
 struct SettingsScreen: View {
     /// A group to open the page at (Get ready's Change for the units, WEB-32).
     var at: String?

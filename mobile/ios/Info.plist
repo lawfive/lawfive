@@ -14,6 +14,10 @@
 	<key>LFCommit</key><string>unknown</string>
 	<key>LFVersion</key><string>dev</string>
 	<key>LFServer</key><string>$(LAWFIVE_SERVER)</string>
+	<!-- PUSH-2: the push relay the app registers with, push.lawfive.app unless the build says another. -->
+	<key>LFPushRelay</key><string>$(LAWFIVE_PUSH_RELAY)</string>
+	<!-- PUSH-5: the app hands Firebase the APNs token itself (Push.swift), so Firebase leaves the app delegate alone. -->
+	<key>FirebaseAppDelegateProxyEnabled</key><false/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

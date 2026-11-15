@@ -831,7 +831,7 @@ export function accessApi(db: Db, settings: AccessSettings, auth: Auth, storageL
         }
         const result = await push.test(c.var.userId);
         if (result.phones === 0) {
-            return c.json({ error: "None of your phones has notifications on. In the Android app, turn on Tell me about weather risks in Settings, then try again." }, 409);
+            return c.json({ error: "None of your phones has notifications on. In the LawFive app on your phone, turn on Tell me about weather risks in Settings, then try again." }, 409);
         }
         if (result.sent === 0) {
             return c.json({ error: result.problem ?? "The push relay didn't take it. Try again in a moment." }, 502);

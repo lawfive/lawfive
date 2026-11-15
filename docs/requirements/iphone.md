@@ -4,7 +4,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 
 ## The app
 
-- **IOS-1** An iPhone app (iOS 17 and later) in Swift with SwiftUI, in LawFive's look ([DESIGN.md](../../DESIGN.md), IOS-13) on native navigation and controls, light and dark. Its types are generated from `schema/`, so it can't drift from the server. iPhone only, in portrait, for now. The app uses no third-party packages except Garmin's SDK (IOS-9); its tests also use swift-snapshot-testing.
+- **IOS-1** An iPhone app (iOS 17 and later) in Swift with SwiftUI, in LawFive's look ([DESIGN.md](../../DESIGN.md), IOS-13) on native navigation and controls, light and dark. Its types are generated from `schema/`, so it can't drift from the server. iPhone only, in portrait, for now. The app uses no third-party packages except Garmin's SDK (IOS-9) and Firebase Cloud Messaging with what it brings (IOS-14); its tests also use swift-snapshot-testing.
 - **IOS-13** **Pitch & Scoreboard** (WEB-24, WEB-25), as the Android app (APP-27), page for page: the grass and pitch frame, the board along the bottom as the tab bar and behind the status bar, the titles, chalk panels and boards, the website's chips, buttons, fields and segmented control, the folding next match (WEB-27), Recent (WEB-26), Stats (STAT-14, STAT-15), the slabs (WEB-28) and the painted heatmap (TRK-9). The iPhone way where it differs:
   - The tab bar is LawFive's own board over the system's tabs. Each tab keeps its native navigation stack and state, and only the tab in front is in VoiceOver's reach. Tabs switch without Android's crossfade.
   - Pages after a tab's first keep the system's navigation bar, as a strip of the board, with Back (its swipe and long-press menu) and the page's actions, so Edit, and Add on Competitions and Templates, stay in that bar.
@@ -30,6 +30,13 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 ## Reminders, erasing and deleting
 
 - **IOS-6** **Match reminders** as APP-6, at the account's times, with a day's matches in one notification, without the live countdown. iOS keeps at most 64 waiting, so the soonest 60 are scheduled, again after each sync. iOS shows each at the moment it's set for, so the iPhone needs nothing like APP-28.
+- **IOS-14** **Notifications from the server**, weather risks (PUSH-5) and matches from integrations (NOTE-3, NOTE-4), as on Android: the same two switches above **Remind me of matches**, off until turned on and offered only where the build has its Firebase settings and the server offers them, the same words, and a tap opening the match (or the match list for several, or a removed one) with **Directions** where Android has it. The iPhone way where it differs:
+  - iOS shows whatever a push says, so the relay's says nothing about a match. Part of the app that iOS runs as each one arrives asks the person's own server for the details, with their session, and writes them. The server's address and the session are shared with that part of the app on this phone only, the session in the keychain.
+  - Without signal, signed out, or once the server doesn't have the details any more, a notification keeps neutral words: "The forecast for one of your matches has changed. Open LawFive to see it." or "An integration changed your matches. Open LawFive to see what's new."
+  - The phone tells the server which of the two it wants (PUSH-4), as it can't drop one it's sent; a risk that has cleared by the time it arrives still shows, with the neutral words.
+  - Several matches come as a line each, up to six, as the day's reminders do (IOS-6), and one match has the integration's name under its title.
+  - It doesn't sync first: a canceled, postponed, removed or moved match's own reminders go at once, and the rest follows at the next sync, as on opening the app or tapping the notification. One that arrives while the app is open syncs straight away.
+  - Firebase starts only once either switch is on, so a phone that never turns them on never talks to Google.
 - **IOS-5** **Erase this phone's LawFive data** as APP-11, except that the app returns to signing in rather than closing, as iPhone apps don't close themselves.
 - **IOS-10** **Deleting the account in the app** as APP-21.
 
@@ -44,8 +51,9 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 ## The App Store
 
 - **IOS-11** **What the App Store checks**, on the iPhone and Apple Watch apps:
-  - A privacy manifest in each (`PrivacyInfo.xcprivacy`): no tracking, what's collected and why, and UserDefaults with reason CA92.1, the only required-reason API in use. It's kept the same as the privacy policy (SITE-5). The Apple Watch's lists precise location, health and fitness, as the iPhone's does.
+  - A privacy manifest in each (`PrivacyInfo.xcprivacy`): no tracking, what's collected and why, and UserDefaults, the only required-reason API in use, with reason CA92.1 (and 1C8F.1 on the iPhone, for the App Group it shares with IOS-14). It's kept the same as the privacy policy (SITE-5). The Apple Watch's lists precise location, health and fitness, as the iPhone's does.
   - A reason for each permission asked for: the camera, the local network and Bluetooth (IOS-9); on the Apple Watch, Apple Health (reading the heart rate and distance, saving the workout) and the location while in use (WCH-7). Notifications ask in the system's own words, the photo picker needs no permission, and the Apple Watch's compass reads magnetic north, which needs no location permission (to confirm on a real watch, WCH-10).
+  - The notification service extension (IOS-14) has its own privacy manifest: it collects nothing beyond the app's, and reads the App Group's settings (UserDefaults, reason 1C8F.1, which the app's lists too).
   - Background modes are only what's used: `fetch` for the iPhone's background sync, `bluetooth-central` for the Garmin bridge (IOS-9, R-17), and `workout-processing` for the Apple Watch's workout session (WCH-5, WCH-7, R-16).
   - Both apps declare they use only the system's own encryption (`ITSAppUsesNonExemptEncryption` false), so App Store Connect doesn't ask about export compliance for each build.
   - A test checks all of this as built.
@@ -53,7 +61,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 
 ## Status
 
-Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds up for internal TestFlight testing. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair.
+Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds up for internal TestFlight testing. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair. What of IOS-14 a simulator has shown is in R-18.
 
 Not built yet:
 
@@ -62,4 +70,4 @@ Not built yet:
 - Proving IOS-9 on hardware.
 - Linking the Apple Watch (WCH-12) on hardware (R-6, R-13).
 - The App Store listing (IOS-10, IOS-11).
-- Notifications from the server: weather risks and matches from integrations (PUSH-5, NOTE-4), with their settings.
+- Notifications from the server (IOS-14) on a real iPhone, through TestFlight: arriving while it's locked or asleep, the words written in time, Directions, and a canceled match's reminders going (R-18).

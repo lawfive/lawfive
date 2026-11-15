@@ -1,9 +1,8 @@
 import Foundation
 import Observation
-import Security
 
 // Who's signed in, to which server (IOS-2), and where sync got to (IOS-3). The token is kept in the
-// keychain; the rest in the app's own settings.
+// keychain (Keychain, in Shared/SharedState.swift); the rest in the app's own settings.
 
 @MainActor
 @Observable
@@ -54,6 +53,8 @@ final class SessionStore {
             Keychain.write(nil)
             defaults.set(true, forKey: "installed")
         }
+        // PUSH-5: a token from before the App Group moves where the notification service extension can read it.
+        if let token, !Keychain.shared { Keychain.write(token) }
     }
 
     func signedIn(server: String, token: String, userId: String, name: String, email: String, status: String) {
@@ -162,27 +163,5 @@ final class SessionStore {
         defaults.set(fromWatch, forKey: "fromWatch")
         defaults.set(pendingEmail, forKey: "pendingEmail")
         defaults.set(pendingEmailUntil, forKey: "pendingEmailUntil")
-    }
-}
-
-/// The session's token in the keychain, readable once the phone has been unlocked (so a background sync can use it).
-enum Keychain {
-    private static let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: "app.lawfive", kSecAttrAccount as String: "session"]
-
-    static func read() -> String? {
-        var found: AnyObject?
-        var ask = query
-        ask[kSecReturnData as String] = true
-        guard SecItemCopyMatching(ask as CFDictionary, &found) == errSecSuccess, let data = found as? Data else { return nil }
-        return String(data: data, encoding: .utf8)
-    }
-
-    static func write(_ token: String?) {
-        SecItemDelete(query as CFDictionary)
-        guard let token else { return }
-        var add = query
-        add[kSecValueData as String] = Data(token.utf8)
-        add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-        SecItemAdd(add as CFDictionary, nil)
     }
 }

@@ -108,7 +108,7 @@ export function responsesOf(e: Endpoint): Record<number, EndpointResponse> {
 }
 
 /** NOTE-5: why no phone hears matches from integrations, for the website to say. */
-const NoPhoneReason = z.enum(["setting-off", "iphone-only"]).describe("Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on; iphone-only, every phone signed in is an iPhone, which has no notifications yet.");
+const NoPhoneReason = z.enum(["setting-off"]).describe("Why no phone will be told, on a server with notices (NOTE-5): setting-off, none of the account's phones has Tell me about matches from integrations on. Other reasons may come later: treat one you don't know as setting-off.");
 
 const patterns = () => endpoints.map((e) => ({ e, pattern: new RegExp(`^${e.path.replace(/\{\w+\}/g, "[^/]+")}$`) }));
 let compiled: ReturnType<typeof patterns> | undefined;

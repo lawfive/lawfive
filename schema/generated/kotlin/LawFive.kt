@@ -1898,6 +1898,8 @@ data class PushHandle(
     val handle: String? = null,
     /** Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on. */
     val notices: Boolean? = null,
+    /** Whether this phone has Tell me about weather risks on (PUSH-5). False, it isn't sent them. Left out, as by apps from before it, it's taken as on. */
+    val risks: Boolean? = null,
 )
 
 @Serializable

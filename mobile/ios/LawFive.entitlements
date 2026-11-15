@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- PUSH-5, NOTE-4: notifications from the server through the push relay; the App Group shares the
+     server's address and the session with the notification service extension, which writes them. -->
+<dict>
+	<key>aps-environment</key><string>development</string>
+	<key>com.apple.security.application-groups</key><array><string>group.app.lawfive</string></array>
+</dict>
+</plist>

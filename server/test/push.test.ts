@@ -125,6 +125,22 @@ describe("sending (PUSH-1, PUSH-2)", () => {
         assert.deepEqual(r.sent, [{ url: "https://relay.test/v1/send", body: { handle: "v1.one", type: "weather-risk", id: MATCH } }]);
     });
 
+    test("sends weather risks only to phones that haven't turned them off (PUSH-5)", async () => {
+        const s = await server();
+        const { token, userId } = await s.account("risks@example.com");
+        const iphone = "ios; model=iPhone17,1; os=26.1; app=2026.11.15";
+        await s.call("PUT", "/v1/devices/current/push", token, { handle: "v1.iphone", notices: true, risks: false }, iphone);
+        const r = relay();
+        const push = new Push(s.db, "https://relay.test", r.fetcher);
+        assert.equal(await push.notify(userId, "weather-risk", MATCH), 0, "an iPhone can't drop one it's sent, so it isn't sent one");
+        assert.equal(await push.notify(userId, "match-changed", MATCH), 1);
+        await s.call("PUT", "/v1/devices/current/push", token, { handle: "v1.iphone", notices: false, risks: true }, iphone);
+        assert.equal(await push.notify(userId, "weather-risk", MATCH), 1);
+        assert.equal((await s.db.select().from(tables.device))[0].pushRisks, true);
+        await s.call("PUT", "/v1/devices/current/push", token, { handle: null }, iphone);
+        assert.equal((await s.db.select().from(tables.device))[0].pushRisks, null);
+    });
+
     test("forgets a handle the relay says is dead", async () => {
         const s = await server();
         const { token, userId } = await s.account("e@example.com");
@@ -287,10 +303,14 @@ describe("new weather risks (PUSH-5)", () => {
 
     test("leaves out matches too far ahead, and people without a phone taking them", async () => {
         const s = await server();
-        const { userId } = await s.account("j@example.com");
+        const { token, userId } = await s.account("j@example.com");
         await plan(s, userId);
         await s.weather.run(NOW);
         const r = relay();
+        await tellNewRisks(s.db, s.weather, new Push(s.db, "https://relay.test", r.fetcher), NOW);
+        assert.equal(r.sent.length, 0);
+        // A phone with weather risks off, there for matches from integrations only.
+        await s.call("PUT", "/v1/devices/current/push", token, { handle: "v1.one", notices: true, risks: false }, phone);
         await tellNewRisks(s.db, s.weather, new Push(s.db, "https://relay.test", r.fetcher), NOW);
         assert.equal(r.sent.length, 0);
 

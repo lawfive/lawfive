@@ -1937,6 +1937,8 @@ struct PushHandle: Codable, Hashable, Sendable {
     var handle: String? = nil
     /// Whether this phone has Tell me about matches from integrations on (NOTE-4). False, it isn't sent them and doesn't count as a phone that hears them (NOTE-5). Left out, as by apps from before it, it's taken as on.
     var notices: Bool? = nil
+    /// Whether this phone has Tell me about weather risks on (PUSH-5). False, it isn't sent them. Left out, as by apps from before it, it's taken as on.
+    var risks: Bool? = nil
 }
 
 struct QuizBankSource: Codable, Hashable, Sendable {

@@ -25,11 +25,17 @@ final class AppGraph {
     @ObservationIgnored private(set) var onWatch: OnWatchStore!
     /// Decision 4c: the paired Apple Watch, linked from this phone over WatchConnectivity.
     @ObservationIgnored private(set) var appleWatch: AppleWatchLink!
+    /// PUSH-5, NOTE-4: notifications from the server, through the push relay.
+    @ObservationIgnored private(set) var push: Push!
+    /// What the notification service extension needs to ask the server (the App Group's settings); nil but in the app itself.
+    @ObservationIgnored private let shared: UserDefaults?
 
     /// A QR code or lawfive:// link waiting for the sign-in screen (APP-13, APP-14).
     var pendingLink: AppLink?
     /// A notification tapped: the match to open once the app is showing (APP-6).
     var pendingMatch: String?
+    /// NOTE-3: a notification about several matches, or a removed one, tapped: the match list.
+    var pendingMatchList = false
     /// Directions iOS wouldn't open (WEB-14): the maps app and the place, for RootView to say so.
     var directionsRefused: (app: String, place: String)?
     /// Each referee's picture (their first photo), fetched when signal allows and kept for the session.
@@ -42,10 +48,13 @@ final class AppGraph {
     static let backgroundTask = "app.lawfive.sync"
 
     /// The app's own: its settings, its database and Application Support for what's kept (the weather,
-    /// stats and watches). The snapshot tests give it their own, and `protocols` that answer as a server.
-    init(defaults: UserDefaults = .standard, dbFile: URL? = Db.defaultFile, folder: URL = .applicationSupportDirectory, protocols: [AnyClass] = []) {
+    /// stats and watches), and `shared`, the App Group's settings. The snapshot tests give it their own,
+    /// `protocols` that answer as a server, and whether this build can get push tokens (`pushAvailable`).
+    init(defaults: UserDefaults = .standard, dbFile: URL? = Db.defaultFile, folder: URL = .applicationSupportDirectory, protocols: [AnyClass] = [],
+         shared: UserDefaults? = nil, pushAvailable: Bool? = nil) {
         let session = SessionStore(defaults: defaults)
         self.session = session
+        self.shared = shared
         api = Api(session: session, protocols: protocols)
         db = Db(file: dbFile)
         records = Records(db: db)
@@ -68,6 +77,8 @@ final class AppGraph {
             return (session.server, session.name ?? session.email ?? "")
         }
         appleWatch.start()
+        push = Push(graph: self, defaults: defaults, available: pushAvailable)
+        shareSession()
         records.changed = { [weak self] in self?.requestSync() }
         // APP-26: a match the Garmin watch handed over comes back down soon, for the summary.
         sync.activity.watchSent = { [weak self] in self?.requestSync() }
@@ -121,8 +132,20 @@ final class AppGraph {
             await weather.refresh()
             await watch.relay.refresh()
             await onWatch.refresh()
+            try? await push.refresh()
         }
         return worked
+    }
+
+    /// PUSH-5, NOTE-4: this phone's notification switches, and the server told which it wants.
+    func updateNotifications(_ next: ReminderSettings) {
+        reminders.update(next, matches: records.matches ?? [], venues: records.venues ?? [])
+        Task { try? await push.refresh() }
+    }
+
+    /// PUSH-5, NOTE-3: the server and this phone's name, for the notification service extension (the token is in the keychain).
+    private func shareSession() {
+        SharedState.write(server: session.signedIn ? session.server : nil, device: AppInfo.deviceHeader, to: shared)
     }
 
     /// APP-6: before the reminders' times were the account's, each phone kept its own. The first sync after
@@ -171,6 +194,11 @@ final class AppGraph {
         if let serverMeta { return serverMeta }
         serverMeta = try? await api.call("GET", "/v1/meta")?.decoded(as: ServerMeta.self)
         return serverMeta
+    }
+
+    /// Whether the signed-in server offers something (GET /v1/meta's capabilities); false offline.
+    func offers(_ capability: String) async -> Bool {
+        await meta()?.capabilities.contains(capability) == true
     }
 
     /// Whether the server finds duplicates and previews merges (DUP-11); servers from before it don't.
@@ -245,6 +273,7 @@ final class AppGraph {
         records.forgetDefaults()
         await db.clear()
         session.signedIn(server: server, token: token, userId: user?["id"]?.string ?? "", name: user?["name"]?.string ?? "", email: user?["email"]?.string ?? email, status: user?["status"]?.string ?? "active")
+        shareSession()
         await refreshAccount()
         await records.reload()
         requestSync(delay: 0)
@@ -313,8 +342,12 @@ final class AppGraph {
     /// The account's copy and the session go (signed out, or the session ended elsewhere).
     func forgetAccount() async {
         pendingMatch = nil
+        pendingMatchList = false
         pendingSync?.cancel()
         session.signedOut()
+        // PUSH-4: the session and its handle have gone from the server.
+        push.forget()
+        shareSession()
         weather.clear()
         stats.clear()
         onWatch.clear()

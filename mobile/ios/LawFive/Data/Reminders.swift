@@ -9,13 +9,37 @@ import UserNotifications
 // it's about. Scheduled for the next fortnight's matches, again after every sync, each at its exact
 // moment. iOS keeps at most 64 waiting, so the soonest go first.
 
-/// What's this phone's own: whether it reminds.
+/// What's this phone's own: whether it reminds, and which notifications from the server it wants (PUSH-5, NOTE-4).
 struct ReminderSettings: Codable, Equatable {
     var enabled = false
     /// The phone's own times from before they were the account's, until the first sync uploads or forgets them.
     var minutesBefore: [Int]?
     var dayBefore: String?
     var dayOf: String?
+    /// PUSH-5: Tell me about weather risks.
+    var weatherRisks = false
+    /// NOTE-4: Tell me about matches from integrations.
+    var integrations = false
+
+    init(enabled: Bool = false, minutesBefore: [Int]? = nil, dayBefore: String? = nil, dayOf: String? = nil, weatherRisks: Bool = false, integrations: Bool = false) {
+        self.enabled = enabled
+        self.minutesBefore = minutesBefore
+        self.dayBefore = dayBefore
+        self.dayOf = dayOf
+        self.weatherRisks = weatherRisks
+        self.integrations = integrations
+    }
+
+    /// What an app from before a setting kept has it off.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        enabled = try c.decodeIfPresent(Bool.self, forKey: .enabled) ?? false
+        minutesBefore = try c.decodeIfPresent([Int].self, forKey: .minutesBefore)
+        dayBefore = try c.decodeIfPresent(String.self, forKey: .dayBefore)
+        dayOf = try c.decodeIfPresent(String.self, forKey: .dayOf)
+        weatherRisks = try c.decodeIfPresent(Bool.self, forKey: .weatherRisks) ?? false
+        integrations = try c.decodeIfPresent(Bool.self, forKey: .integrations) ?? false
+    }
 }
 
 /// APP-6, CAL-3: when reminders go, as the account has them.
@@ -75,26 +99,36 @@ struct PlannedReminder: Equatable {
     var lon: Double?
 }
 
-/// APP-6: a tapped reminder opens its match, and Directions opens the map. iOS hands these over here, even
+/// APP-6: a tapped reminder opens its match, and Directions opens the map; PUSH-5, NOTE-3: so does a
+/// notification from the server, or the match list for several matches. iOS hands these over here, even
 /// when the tap is what started the app, so it's set up before the app has finished launching.
 final class NotificationRouter: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
     static let category = "match-with-place"
     static let directions = "directions"
-    /// A tap that started the app can arrive before the app is ready, so it waits here.
+    /// A tap that started the app can arrive before the app is ready, so it waits here: a match's id, or "" for the match list.
     private var waiting: String?
-    @MainActor var openMatch: (@MainActor (String) -> Void)? {
+    /// A match, or nil for the match list.
+    @MainActor var openMatch: (@MainActor (String?) -> Void)? {
         didSet {
             if let id = waiting, let openMatch {
                 waiting = nil
-                openMatch(id)
+                openMatch(id.isEmpty ? nil : id)
             }
         }
     }
     /// Directions in the maps app chosen in Settings (WEB-14).
     var openDirections: (@MainActor (Double, Double) -> Void)?
+    /// A notification from the server while the app is open: what it's about may have changed, so sync.
+    var serverNotified: (@MainActor () -> Void)?
+
+    /// Where a tap goes: a match's id, or "" for the match list (from the server, several matches or a removed one), or nowhere in particular.
+    static func target(_ info: [AnyHashable: Any]) -> String? {
+        (info["match"] as? String) ?? (info["matches"] as? Bool == true ? "" : nil)
+    }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-        [.banner, .sound]
+        if notification.request.content.userInfo["type"] != nil { await serverNotified?() }
+        return [.banner, .sound]
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
@@ -103,9 +137,10 @@ final class NotificationRouter: NSObject, UNUserNotificationCenterDelegate, @unc
             if let lat = info["lat"] as? Double, let lon = info["lon"] as? Double {
                 await openDirections?(lat, lon)
             }
-        } else if response.actionIdentifier == UNNotificationDefaultActionIdentifier, let match = info["match"] as? String {
+        } else if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            guard let target = NotificationRouter.target(info) else { return }
             await MainActor.run {
-                if let openMatch { openMatch(match) } else { waiting = match }
+                if let openMatch { openMatch(target.isEmpty ? nil : target) } else { waiting = target }
             }
         }
     }

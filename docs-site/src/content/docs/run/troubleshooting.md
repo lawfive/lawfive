@@ -76,7 +76,7 @@ Something keeps sending it back to where it started. LawFive itself never redire
 
 Start with **Send a test notification** under **Settings → Server**, which says what's wrong if it can't send.
 
-- **Is it turned on?** Each person turns on **Tell me about weather risks** or **Tell me about matches from integrations** in the app's Settings, under Match reminders, and the phone has to allow the app's notifications. It's on Android for now.
+- **Is it turned on?** Each person turns on **Tell me about weather risks** or **Tell me about matches from integrations** in the app's Settings, under Match day, on Android or the iPhone, and the phone has to allow the app's notifications. Each phone tells the server which it wants, so a phone with only one on isn't sent the other.
 - **Doesn't the setting show?** The app has to be a build with Firebase settings, and the server has to offer notifications, so check `push` (and `notices`, for matches from integrations) is in `capabilities` from `/v1/meta` and that `PUSH_RELAY_URL` isn't `off`.
 - **Is there a match to warn about?** It only covers scheduled matches with a venue on the map, kicking off in the next 3 days, when weather is on. Each risk notifies once, plus once more if it becomes likely.
 - **Matches from integrations?** Only saves made with an API key or assignor calendar set to notify count, and only for matches that haven't kicked off. **Settings** on the website says beside such a key or calendar when none of the person's phones has the setting on. A change made then reaches no phone, and isn't sent later.

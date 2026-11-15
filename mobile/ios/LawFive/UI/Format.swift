@@ -89,10 +89,6 @@ func surname(_ name: String) -> String {
     return found.isEmpty ? name.trimmingCharacters(in: .whitespaces) : found
 }
 
-func teamName(_ team: Team, home: Bool) -> String { team.name ?? (home ? "Home" : "Away") }
-
-func matchTitle(_ m: Match) -> String { "\(teamName(m.home, home: true)) v \(teamName(m.away, home: false))" }
-
 /// RES-8: what Delete match? says goes with it: its report, and its track when it has one (`track`
 /// nil: not known yet, or no signal). The website's words (format.ts, deleteMatchMessage).
 func deleteMatchMessage(report: Bool, track: Bool?) -> String {
@@ -191,20 +187,6 @@ func initials(_ name: String) -> String {
     return letters.isEmpty ? "?" : String(letters).uppercased()
 }
 
-func zoneOf(_ m: Match) -> TimeZone { m.timeZone.flatMap { TimeZone(identifier: $0) } ?? .current }
-
-private let isoFractional: ISO8601DateFormatter = {
-    let f = ISO8601DateFormatter()
-    f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    return f
-}()
-private let isoPlain = ISO8601DateFormatter()
-
-func instantOf(_ iso: String?) -> Date? {
-    guard let iso else { return nil }
-    return isoPlain.date(from: iso) ?? isoFractional.date(from: iso)
-}
-
 /// An ISO timestamp with its zone's offset, as the server stores a kickoff.
 func isoString(_ date: Date, zone: TimeZone) -> String {
     let f = ISO8601DateFormatter()
@@ -215,47 +197,10 @@ func isoString(_ date: Date, zone: TimeZone) -> String {
 
 func nowString() -> String { isoFractional.string(from: Date()) }
 
-/// The time the screens show things against ("Tomorrow", "in 2 days", the countdown): the real clock,
-/// or the fixtures' fixed one in the snapshot tests (mobile/ios/README.md#snapshot-pictures).
-enum AppClock {
-    nonisolated(unsafe) static var fixed: Date?
-    static var now: Date { fixed ?? Date() }
-}
-
-private var formatters: [String: DateFormatter] = [:]
-
-private func formatter(_ pattern: String, _ zone: TimeZone) -> DateFormatter {
-    let key = "\(pattern)|\(zone.identifier)"
-    if let f = formatters[key] { return f }
-    let f = DateFormatter()
-    f.locale = .current
-    f.timeZone = zone
-    f.dateFormat = pattern
-    formatters[key] = f
-    return f
-}
-
-func uses24Hours() -> Bool { !(DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: .current) ?? "").contains("a") }
-
-/// "9:00 AM" or "09:00", as the phone is set.
-func formatTime(_ t: Date, zone: TimeZone) -> String { formatter(uses24Hours() ? "HH:mm" : "h:mm a", zone).string(from: t) }
-
 /// The time in two parts for a fixture board: "9:00" and "AM" (none on a 24-hour clock).
 func timeParts(_ t: Date, zone: TimeZone) -> (time: String, ampm: String?) {
-    uses24Hours() ? (formatter("HH:mm", zone).string(from: t), nil)
-        : (formatter("h:mm", zone).string(from: t), formatter("a", zone).string(from: t).uppercased())
-}
-
-private func dayDifference(_ t: Date, zone: TimeZone) -> Int {
-    var c = Calendar(identifier: .gregorian)
-    c.timeZone = zone
-    return c.dateComponents([.day], from: c.startOfDay(for: AppClock.now), to: c.startOfDay(for: t)).day ?? 0
-}
-
-private func sameYear(_ t: Date, zone: TimeZone) -> Bool {
-    var c = Calendar(identifier: .gregorian)
-    c.timeZone = zone
-    return c.component(.year, from: t) == c.component(.year, from: AppClock.now)
+    uses24Hours() ? (cachedFormatter("HH:mm", zone).string(from: t), nil)
+        : (cachedFormatter("h:mm", zone).string(from: t), cachedFormatter("a", zone).string(from: t).uppercased())
 }
 
 /// "Today", "Tomorrow", "Yesterday", else "Saturday 7 November".
@@ -264,25 +209,19 @@ func formatDay(_ t: Date, zone: TimeZone) -> String {
     case 0: return "Today"
     case 1: return "Tomorrow"
     case -1: return "Yesterday"
-    default: return formatter(sameYear(t, zone: zone) ? "EEEE, MMMM d" : "EEEE, MMMM d, yyyy", zone).string(from: t)
+    default: return cachedFormatter(sameYear(t, zone: zone) ? "EEEE, MMMM d" : "EEEE, MMMM d, yyyy", zone).string(from: t)
     }
 }
 
 /// The day over the date in capitals ("TUE" over "NOV 10"), or "TODAY" alone, as on the boards (WEB-24).
 func dayOverDate(_ t: Date, zone: TimeZone) -> [String] {
     if dayDifference(t, zone: zone) == 0 { return ["TODAY"] }
-    return [formatter("EEE", zone).string(from: t).uppercased(), formatter(sameYear(t, zone: zone) ? "MMM d" : "MMM d yyyy", zone).string(from: t).uppercased()]
+    return [cachedFormatter("EEE", zone).string(from: t).uppercased(), cachedFormatter(sameYear(t, zone: zone) ? "MMM d" : "MMM d yyyy", zone).string(from: t).uppercased()]
 }
 
 /// A played match's date on its row: the day ("SUN", with the year when it isn't this one) and "NOV 3".
 func playedDay(_ t: Date, zone: TimeZone) -> (String, String) {
-    (formatter(sameYear(t, zone: zone) ? "EEE" : "EEE yyyy", zone).string(from: t).uppercased(), formatter("MMM d", zone).string(from: t).uppercased())
-}
-
-/// "Sat, Nov 7" (with the year when it isn't this one).
-func formatShortDay(_ t: Date, zone: TimeZone) -> String {
-    if dayDifference(t, zone: zone) == 0 { return "Today" }
-    return formatter(sameYear(t, zone: zone) ? "EEE, MMM d" : "EEE, MMM d, yyyy", zone).string(from: t)
+    (cachedFormatter(sameYear(t, zone: zone) ? "EEE" : "EEE yyyy", zone).string(from: t).uppercased(), cachedFormatter("MMM d", zone).string(from: t).uppercased())
 }
 
 func formatFullDate(_ t: Date, zone: TimeZone) -> String {
@@ -300,7 +239,7 @@ func timeAgo(_ at: Date, now: Date = AppClock.now) -> String {
     if minutes < 60 { return "\(minutes) min ago" }
     if minutes < 48 * 60 { return "\(minutes / 60) h ago" }
     if minutes < 14 * 24 * 60 { return "\(minutes / (24 * 60)) days ago" }
-    return formatter("MMM d", .current).string(from: at)
+    return cachedFormatter("MMM d", .current).string(from: at)
 }
 
 func money(_ amount: Double, _ currency: String) -> String {
