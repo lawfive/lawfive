@@ -116,7 +116,7 @@
                 <h3>Bluetooth <span class="perm-ids"><code>NSBluetoothAlwaysUsageDescription</code> <code>NSBluetoothPeripheralUsageDescription</code></span></h3>
                 <dl>
                     <dt>For</dt><dd>Talking to your Garmin watch, so it gets its matches and sends the ones you referee through this phone, even without signal at the ground.</dd>
-                    <dt>Asked</dt><dd>Only once you share a Garmin watch with LawFive through Garmin Connect, from <strong>More → Link a watch</strong>. Never when the app opens, so people without a Garmin aren't asked.</dd>
+                    <dt>Asked</dt><dd>Only once you share a Garmin watch with LawFive through Garmin Connect, from <strong>More → Link a watch</strong>. Never when the app opens, so people without a Garmin aren't asked. The App Store version doesn't link a Garmin this way yet, so it never asks.</dd>
                     <dt>If you say no</dt><dd>Your Garmin syncs straight with your server through Garmin Connect instead, which needs signal when it syncs. You can still link it with the code it shows.</dd>
                 </dl>
             </article>
@@ -124,7 +124,7 @@
             <h3 class="perm-group">Also, without asking</h3>
             <ul class="perm-list">
                 <li data-permission="UIBackgroundModes:fetch"><strong>Background App Refresh</strong> <span class="perm-ids"><code>fetch</code></span>: to sync now and then while the app isn't open. Turn it off in Settings, under General, Background App Refresh.</li>
-                <li data-permission="UIBackgroundModes:bluetooth-central"><strong>Bluetooth in the background</strong> <span class="perm-ids"><code>bluetooth-central</code></span>: so your Garmin watch can reach the phone while LawFive isn't open. Only once you've shared a watch and allowed Bluetooth.</li>
+                <li data-permission="UIBackgroundModes:bluetooth-central"><strong>Bluetooth in the background</strong> <span class="perm-ids"><code>bluetooth-central</code></span>: so your Garmin watch can reach the phone while LawFive isn't open. Only once you've shared a watch and allowed Bluetooth. Not in the App Store version yet.</li>
                 <li data-permission="aps-environment"><strong>Push notifications</strong> <span class="perm-ids"><code>aps-environment</code></span>: Apple's, through Google's Firebase Cloud Messaging, used only once you turn on a notification that comes from your server, such as weather risks. They show only if you allow notifications.</li>
             </ul>
         </section>

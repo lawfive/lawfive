@@ -19,8 +19,8 @@ final class AppGraph {
     @ObservationIgnored private(set) var stats: StatsStore!
     /// Finding duplicates and merging, worked out by the server (DUP-11).
     @ObservationIgnored private(set) var merging: Merging!
-    /// IOS-9: the Garmin watch through this phone.
-    @ObservationIgnored private(set) var watch: WatchBridge!
+    /// IOS-9: the Garmin watch through this phone, when this build includes it.
+    @ObservationIgnored private(set) var watch: WatchBridge?
     /// Which matches are on which watch (SYNC-14), kept for when there's no signal.
     @ObservationIgnored private(set) var onWatch: OnWatchStore!
     /// Decision 4c: the paired Apple Watch, linked from this phone over WatchConnectivity.
@@ -62,12 +62,15 @@ final class AppGraph {
         // CAL-3: the reminders' times are the account's.
         reminders.account = { [records] in records.effectiveSettings }
         sync = SyncEngine(api: api, db: db, session: session) { [weak self] in await self?.forgetAccount() }
-        watch = WatchBridge(api: api) { [weak session] in
-            guard let session, session.signedIn else { return nil }
-            return (session.server, session.name ?? session.email ?? "")
+        if WatchBridge.included {
+            let watch = WatchBridge(api: api) { [weak session] in
+                guard let session, session.signedIn else { return nil }
+                return (session.server, session.name ?? session.email ?? "")
+            }
+            watch.relay.activity = sync.activity
+            watch.start()
+            self.watch = watch
         }
-        watch.relay.activity = sync.activity
-        watch.start()
         weather = WeatherStore(api: api, file: folder.appending(path: "weather.json")) { [weak self] in await self?.meta()?.capabilities.contains("weather") == true }
         stats = StatsStore(api: api, file: folder.appending(path: "stats.json"))
         merging = Merging(api: api)
@@ -130,7 +133,7 @@ final class AppGraph {
             await adoptPhoneTimes()
             reminders.reschedule(matches: records.matches ?? [], venues: records.venues ?? [])
             await weather.refresh()
-            await watch.relay.refresh()
+            await watch?.relay.refresh()
             await onWatch.refresh()
             try? await push.refresh()
         }
@@ -335,7 +338,7 @@ final class AppGraph {
     /// too. Throws what the server said (a wrong password, or the server's only admin) with nothing changed.
     func deleteAccount(password: String) async throws {
         try await api.call("POST", "/v1/account/delete", body: .object(["password": .string(password)]))
-        watch.relay.forgetEverything()
+        watch?.relay.forgetEverything()
         await forgetAccount()
     }
 

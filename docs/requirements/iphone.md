@@ -46,7 +46,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
   - The app learns of watches when Garmin Connect is opened once to share them (Choose watches in Garmin Connect), and remembers them. Garmin Connect returns to the app by a URL scheme, so self-hosters need no domain setup.
   - The app talks to the watch over Bluetooth itself. Garmin's SDK starts only once someone has shared a watch or chooses to, so any Bluetooth permission prompt comes then, not at launch for people without a Garmin.
   - iOS, not the watch's message, decides when the app wakes (`bluetooth-central` and state restoration), so a watch that gets no answer goes straight to the server, as it always can.
-  - It has to be proven on a real iPhone and watch before the app is submitted, or its Bluetooth settings and its part of Link a watch come out. The bridge's rules are tested with Android's cases; nothing over Bluetooth is tested yet (R-12). The SDK's license and App Store questions are R-17.
+  - Until it's proven on a real iPhone and watch, only development builds have it. App Store and TestFlight builds never start Garmin's SDK, don't declare `bluetooth-central`, and leave Garmin out of Link a watch, where a Garmin links with its code as on any watch. People with a Garmin sync through Garmin Connect, as without the app. The bridge's rules are tested with Android's cases; nothing over Bluetooth is tested yet (R-12). The SDK's license and App Store questions are R-17.
 
 ## The App Store
 
@@ -54,7 +54,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
   - A privacy manifest in each (`PrivacyInfo.xcprivacy`): no tracking, what's collected and why, and UserDefaults, the only required-reason API in use, with reason CA92.1 (and 1C8F.1 on the iPhone, for the App Group it shares with IOS-14). It's kept the same as the privacy policy (SITE-5). The Apple Watch's lists precise location, health and fitness, as the iPhone's does.
   - A reason for each permission asked for: the camera, the local network and Bluetooth (IOS-9); on the Apple Watch, Apple Health (reading the heart rate and distance, saving the workout) and the location while in use (WCH-7). Notifications ask in the system's own words, the photo picker needs no permission, and the Apple Watch's compass reads magnetic north, which needs no location permission (to confirm on a real watch, WCH-10).
   - The notification service extension (IOS-14) has its own privacy manifest: it collects nothing beyond the app's, and reads the App Group's settings (UserDefaults, reason 1C8F.1, which the app's lists too).
-  - Background modes are only what's used: `fetch` for the iPhone's background sync, `bluetooth-central` for the Garmin bridge (IOS-9, R-17), and `workout-processing` for the Apple Watch's workout session (WCH-5, WCH-7, R-16).
+  - Background modes are only what's used: `fetch` for the iPhone's background sync, `bluetooth-central` for the Garmin bridge, only in the builds that have it (IOS-9, R-17), and `workout-processing` for the Apple Watch's workout session (WCH-5, WCH-7, R-16).
   - Both apps declare they use only the system's own encryption (`ITSAppUsesNonExemptEncryption` false), so App Store Connect doesn't ask about export compliance for each build.
   - A test checks all of this as built.
   - The App Store listing is named LawFive Referee, as LawFive was taken; the name under the icon stays LawFive. The listing says Garmin watches sync directly on iPhone (IOS-9).
@@ -67,7 +67,7 @@ Not built yet:
 
 - Testing on a real iPhone (R-6, R-12): the icon on the home screen in light, dark and tinted, the launch screen opening from it, the stripes, boards, slabs (WEB-28), Stats' lamps and greens and the painted heatmap (TRK-9) in sunlight, the 44 pt buttons with gloves, Recent (WEB-26), In detail's links scrolling, and what came in from the watch (APP-26).
 - The pull to refresh's check and haptic (IOS-3) are built but not yet seen, as the simulator's scripted drags don't pull.
-- Proving IOS-9 on hardware.
+- Proving IOS-9 on hardware, and then turning it on in App Store builds.
 - Linking the Apple Watch (WCH-12) on hardware (R-6, R-13).
 - The App Store listing (IOS-10, IOS-11).
 - Notifications from the server (IOS-14) on a real iPhone, through TestFlight: arriving while it's locked or asleep, the words written in time, Directions, and a canceled match's reminders going (R-18).

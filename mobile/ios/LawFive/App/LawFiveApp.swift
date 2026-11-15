@@ -41,7 +41,7 @@ struct LawFiveApp: App {
                 }
                 .onOpenURL { url in
                     // IOS-9: Garmin Connect coming back with the watches chosen.
-                    if graph.watch.handle(url: url) { return }
+                    if graph.watch?.handle(url: url) == true { return }
                     // APP-13, APP-14: the web app's Open in the app buttons.
                     if let link = AppLink.parse(url.absoluteString, allowHttp: AppInfo.isDebug) { graph.pendingLink = link }
                 }

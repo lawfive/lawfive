@@ -412,8 +412,10 @@ struct RemindersSettings: View {
 }
 
 /// SYNC-15: Garmin Connect can be opened here, which is how Garmin's SDK shares the watches (by its `gcm-ciq`
-/// scheme, listed in Info.plist's LSApplicationQueriesSchemes).
-@MainActor private func garminConnectOpens() -> Bool { URL(string: "gcm-ciq://").map { UIApplication.shared.canOpenURL($0) } ?? false }
+/// scheme, listed in Info.plist's LSApplicationQueriesSchemes). Never, in a build without the bridge (IOS-9).
+@MainActor private func garminConnectOpens() -> Bool {
+    WatchBridge.included && (URL(string: "gcm-ciq://").map { UIApplication.shared.canOpenURL($0) } ?? false)
+}
 
 /// SYNC-15: Link a watch's row in More and Settings offers "from this phone" only where Garmin Connect is.
 @MainActor func linkWatchSub() -> String { garminConnectOpens() ? "From this phone, or with a code" : "With the code on your watch" }
@@ -492,7 +494,7 @@ struct LinkWatchScreen: View {
                 if garminConnect { GarminWatches() }
                 SectionTitle("With a code")
                 codeCard
-                if !garminConnect {
+                if !garminConnect && WatchBridge.included {
                     // SYNC-15: where a Garmin would link from, once Garmin Connect is on this phone.
                     Text("Have a Garmin? [Install Garmin Connect](https://apps.apple.com/app/garmin-connect/id583446403) and it links from here.")
                         .font(.lfBodyMedium).foregroundStyle(LF.muted).tint(LF.brand)

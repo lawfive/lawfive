@@ -44,7 +44,8 @@ final class ReleaseChecksTests: XCTestCase {
 
     func testBackgroundFetchIsDeclaredForTheTaskItRuns() throws {
         let modes = try XCTUnwrap(app.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String])
-        XCTAssertEqual(modes, ["fetch", "bluetooth-central"])
+        // IOS-9: Bluetooth only in a build with the Garmin bridge (tools/garmin-bridge.sh).
+        XCTAssertEqual(modes, WatchBridge.included ? ["fetch", "bluetooth-central"] : ["fetch"])
         let tasks = try XCTUnwrap(app.object(forInfoDictionaryKey: "BGTaskSchedulerPermittedIdentifiers") as? [String])
         XCTAssertEqual(tasks, [AppGraph.backgroundTask])
     }

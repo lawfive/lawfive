@@ -53,6 +53,15 @@ private struct HttpTransport: WatchTransport {
 @MainActor
 @Observable
 final class WatchBridge: NSObject {
+    /// IOS-9: on in Debug builds only (GARMIN_BRIDGE), until it's proven on a real iPhone and watch. Off, the
+    /// app never starts it and Link a watch doesn't offer it, and App Store builds leave out its background
+    /// mode (tools/garmin-bridge.sh). The code is built either way, so turning it on is this switch alone.
+    #if GARMIN_BRIDGE
+    nonisolated static let included = true
+    #else
+    nonisolated static let included = false
+    #endif
+
     let relay: WatchRelay
     let linker: WatchLinker
     private(set) var watches: [PhoneWatch] = []
