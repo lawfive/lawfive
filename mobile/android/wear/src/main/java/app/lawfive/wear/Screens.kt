@@ -156,7 +156,8 @@ private fun HomePage(push: (Page) -> Unit) {
     val s = AppState.saved
     WatchList("LawFive") {
         item {
-            val next = s.matches.firstOrNull()
+            // SYNC-16: the next scheduled match; a canceled or postponed one isn't coming up.
+            val next = coming(s.matches).firstOrNull()
             MenuRow("Matches", if (!AppState.linked) "Link to sync" else next?.let(::plannedTitle) ?: "None coming up", R.drawable.ph_matches) {
                 push(if (AppState.linked) Page.Matches else Page.Link)
             }
@@ -178,13 +179,15 @@ private fun sinBinLength(sec: Int) = if (sec % 60 == 0) "${sec / 60}'" else form
 /** UI-16. */
 @Composable
 private fun MatchesPage(push: (Page) -> Unit) {
-    val s = AppState.saved
+    // SYNC-16: a canceled or postponed match until its kickoff has passed, marked in red in place of its time.
+    val matches = listed(AppState.saved.matches, System.currentTimeMillis() / 1000)
     WatchList("Matches") {
         item { MenuRow("Sync now", syncLine(), R.drawable.ph_sync) { AppState.sync() } }
-        if (s.matches.isEmpty()) item { T("No matches coming up", 13.sp, C.dim, modifier = Modifier.padding(top = 10.dp)) }
-        items(s.matches) { m ->
-            val at = m.int("kickoff")?.let { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(it * 1000L)) }
-            MenuRow(plannedTitle(m), at) { push(Page.Planned(m.str("id") ?: "")) }
+        if (matches.isEmpty()) item { T("No matches coming up", 13.sp, C.dim, modifier = Modifier.padding(top = 10.dp)) }
+        items(matches) { m ->
+            val off = offLabel(m)
+            val at = off ?: m.int("kickoff")?.let { DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(it * 1000L)) }
+            MenuRow(plannedTitle(m), at, subColor = if (off != null) C.offRed else null) { push(Page.Planned(m.str("id") ?: "")) }
         }
     }
 }
@@ -212,8 +215,18 @@ internal fun setupOf(m: JsonObject) = MatchSetup(
 @Composable
 private fun PlannedPage(id: String, push: (Page) -> Unit) {
     val m = AppState.saved.matches.firstOrNull { it.str("id") == id } ?: return
+    // SYNC-16: a canceled or postponed match asks first (UI-7), with the green Yes, as it's started like any other.
+    var confirming by remember { mutableStateOf(false) }
+    val off = offDetail(m)
+    if (confirming && off != null) {
+        BackHandler { confirming = false }
+        ConfirmScreen("Start anyway?", off, onYes = { confirming = false; AppState.beginMatch(setupOf(m)) }, onNo = { confirming = false })
+        return
+    }
     WatchList(plannedTitle(m)) {
-        item { MenuRow("Start match", formatSummary(setupOf(m)), R.drawable.ph_play) { AppState.beginMatch(setupOf(m)) } }
+        // SYNC-16: what happened to it, in red under its title, as this page shows no day or time.
+        offLabel(m)?.let { item { T(it, 13.sp, C.offRed, FontWeight.SemiBold, Modifier.padding(bottom = 2.dp)) } }
+        item { MenuRow("Start match", formatSummary(setupOf(m)), R.drawable.ph_play) { if (off != null) confirming = true else AppState.beginMatch(setupOf(m)) } }
         // TRK-13: walking the pitch before the match.
         item { MenuRow("Mark pitch", "Walk its corners", R.drawable.ph_flag) { push(Page.Pitch(id, null)) } }
         (m["fee"] as? JsonObject)?.let { fee ->

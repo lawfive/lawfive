@@ -54,6 +54,11 @@ Linking a watch to a LawFive account and syncing with it ([ARCHITECTURE.md](../A
   - They're refreshed when the app starts (unless a match is in progress), after linking, after full time, and with Sync now.
   - They head the start menu, soonest first, as "STR v ROV" with the day, time (in the watch's 12- or 24-hour format) and place.
   - Starting one uses its teams, short names, colors and format, with this watch's alert and timer-name settings, and keeps the match's id so the result is linked to it.
+- **SYNC-16** **Canceled and postponed matches** still to kick off are in the watch's list too, among its 10, so one canceled after the watch last synced doesn't vanish without a word.
+  - Each says "Canceled" or "Postponed" in place of its time and place in the list, and on its own page, until its kickoff has passed. On Wear OS and Apple Watch the word is red; the Garmin's system menus can't color a sub-label, so there the row has a red mark (a crossed-out calendar) beside it.
+  - Starting one asks first, "Start anyway?" with the detail "This match was canceled" (or "postponed"), Yes and No (UI-7), for a referee still asked to run it. Started, it's a match like any other.
+  - It isn't counted or offered as a coming match: not in the start menu's count of matches coming up, not the next match's line, and not the planned match New match offers.
+  - Garmin, Wear OS and Apple Watch alike, and through the phone app without signal (APP-7, IOS-9). The server sends them only to a watch build that asks (`canceled=true`), so older builds keep listing scheduled matches only, and the phone app passes them on only to a watch that asked.
 - **SYNC-4** At full time a finished match is queued, and uploaded straight away if it can be, otherwise at the next sync.
   - The queue survives restarts and holds up to 10 matches. A match is sent again when cards are given after full time, replacing the earlier copy.
   - The full-time screen says "Sent to LawFive" or "Uploads when phone is near" on a Garmin. On Wear OS and Apple Watch it says "Sent to LawFive", "Waiting to send", or, not linked, "On this watch only" and "Link to send it", as the Garmin's History does.
@@ -77,6 +82,7 @@ Linking a watch to a LawFive account and syncing with it ([ARCHITECTURE.md](../A
 Linking with a code and by the phone app, the next matches, uploads with an outbox, the Account menu, unlinking, the distance, the server built in or chosen on the watch, the watch's model, the fee and pitch corners from the watch, and what next after linking are built, through the Android app too where it's there (APP-7).
 
 Not built yet:
+- SYNC-16 is built on the server, all three watches and both phones' Garmin relay, and checked in unit tests and the simulators; not yet on a real watch.
 - Background sync while the app is closed.
 - SYNC-14 is on the server only: the match pages, and the phones' fetching ahead and offline copy, are still to come.
 - SYNC-15 on the phones has been checked only in their unit tests, not on a real phone.

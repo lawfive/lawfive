@@ -9,7 +9,7 @@ A phone notification when an app with an API key, such as an assignor's, adds a 
 - **NOTE-2** **What's news:** a new scheduled match; and for a match that hasn't kicked off, canceled, postponed, back on (scheduled again after either), a new kickoff, another venue or pitch, or removed (deleted).
   - Notes, fees and anything else stay quiet, as does a save that changes nothing (a retry).
   - A key's changes are collected for about a minute and sent as one notification. Several changes to one match say how it went from the first to the last (added then removed says nothing).
-  - A change to a match kicking off within 24 hours goes at once.
+  - Changes to matches kicking off within 24 hours are collected for 30 seconds instead, apart from the rest, so they arrive soon and a burst of them is still one notification.
   - One notification counts once against the relay's limits (PUSH-1).
 - **NOTE-3** **What it says**, written by the phone from `GET /v1/notices/{id}`; the push carries only that id (PUSH-2).
   - For one match: "New match", "Canceled", "Postponed", "Back on", "Kickoff moved", "Venue changed" or "Removed" with its name, then when and where it is now and what changed ("Now Sat, Nov 7, 11:30 AM · was 9:00 AM"), with the key's name beside it.

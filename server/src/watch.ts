@@ -1,5 +1,5 @@
 import { type ClockStyle, type Competition, Match, MatchFormat, type MatchWeather, MatchRecord, type Referee, type UserSettings, Venue, WatchFeeChange, type WatchMatch, WatchScreenChange, WatchPitchMarking, WatchTrackChunk, WatchUpload, misconductSchemes, nearestLayout, savedScreen, screenSetup, shortName } from "@lawfive/schema";
-import { and, asc, eq, gt, inArray, isNull, sql } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, isNull, or, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { createHash } from "node:crypto";
 import { z } from "zod";
@@ -13,7 +13,8 @@ import type { Weather } from "./weather/service.ts";
 // so they download a few matches already in the form they start a match from, and upload a match
 // as they saved it; the server does the converting. WatchMatch and WatchUpload in schema/ describe both.
 //
-//   GET  /v1/watch/matches?limit=10   the next scheduled matches (at most 10), soonest first
+//   GET  /v1/watch/matches?limit=10   the next scheduled matches (at most 10), soonest first; with
+//                                     canceled=true, canceled and postponed ones still to come too (SYNC-16)
 //   POST /v1/watch/records            a finished match from the watch; stored as a match record,
 //                                     linked to its planned match or, for a quick match, to a new one
 //   POST /v1/watch/tracks             a chunk of the track the watch recorded during it (TRK-7)
@@ -408,9 +409,13 @@ export function watchApi(db: Db, weather?: Weather, version?: string) {
         const since = new Date(Date.now() - 3 * 60 * 60 * 1000);
         // Compared as times, not text: kickoffs carry their own UTC offsets.
         const kickoff = sql`(${records.data}->>'kickoff')::timestamptz`;
+        const scheduled = and(sql`${records.data}->>'status' = 'scheduled'`, sql`${kickoff} >= ${since.toISOString()}::timestamptz`);
+        // SYNC-16: a build that shows them also gets the canceled and postponed matches still to kick off.
+        const wanted = c.req.query("canceled") === "true"
+            ? or(scheduled, and(sql`${records.data}->>'status' in ('cancelled', 'postponed')`, sql`${kickoff} > ${new Date().toISOString()}::timestamptz`))
+            : scheduled;
         const rows = await db.select().from(records)
-            .where(and(eq(records.userId, userId), eq(records.type, "match"), sql`${records.deletedAt} is null`,
-                sql`${records.data}->>'status' = 'scheduled'`, sql`${kickoff} >= ${since.toISOString()}::timestamptz`))
+            .where(and(eq(records.userId, userId), eq(records.type, "match"), sql`${records.deletedAt} is null`, wanted))
             .orderBy(asc(kickoff))
             .limit(limit);
         const matches = rows.map((r) => toRecord(r) as Match);
@@ -428,7 +433,10 @@ export function watchApi(db: Db, weather?: Weather, version?: string) {
         const screen = saved && screenSetup(saved);
         // EVT-14: the account's codes, for a card's reason; a planned match carries its competition's.
         const scheme = (settings?.data.misconductScheme as string | undefined) ?? "ifab";
-        const sent = matches.map((m) => watchForm(m, forecasts.get(m.id), screen?.mainClock, scheme));
+        const sent = matches.map((m) => {
+            const form = watchForm(m, forecasts.get(m.id), screen?.mainClock, scheme);
+            return m.status === "cancelled" || m.status === "postponed" ? { ...form, status: m.status } : form;
+        });
         // SYNC-14: a watch's link asking, itself or through the phone app; not the phone fetching ahead.
         if (c.var.watchLink && c.var.sessionId && c.req.query("prefetch") !== "true") {
             await noteDownload(db, userId, c.var.sessionId, sent);

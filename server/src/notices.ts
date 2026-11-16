@@ -12,8 +12,8 @@ import { onRecordWrite, type RecordWrite } from "./records.ts";
 // Notices (NOTE-1 to NOTE-4): when an API key whose owner asked to hear of it adds a match, or
 // cancels, postpones, moves or removes one that hasn't kicked off, their phones are told. A key's
 // changes are collected for about a minute and sent as one notification (so 30 matches added use
-// one of the day's 25, PUSH-1), except a change to a match kicking off within a day, which goes at
-// once. The push is the relay's match-changed event with the notice's id; the phone fetches the
+// one of the day's 25, PUSH-1); changes to matches kicking off within a day are collected for 30
+// seconds instead, apart from the rest. The push is the relay's match-changed event with the notice's id; the phone fetches the
 // notice and writes the words (PUSH-2). Saves made by the person themselves never notify. A notice
 // that reached no phone, as when none has matches from integrations on, is kept as that, with
 // reached 0 and no sent_at (NOTE-5).
@@ -44,6 +44,8 @@ export function quietly<T>(run: () => Promise<T>): Promise<T> {
 }
 
 const COLLECT_MS = 60_000;
+/** A burst of changes to matches within a day (URGENT_MS) still makes one notification, soon. */
+const URGENT_COLLECT_MS = 30_000;
 const URGENT_MS = 24 * 3_600_000;
 const KEEP_MS = 30 * 86_400_000;
 
@@ -138,21 +140,15 @@ export class Notices {
         const { matchNotice } = tables;
         const matchId = write.row.id;
         const soonest = Math.min(...[before, after].flatMap((s) => (s?.kickoff ? [Date.parse(s.kickoff)] : [])));
-        if (soonest - now < URGENT_MS) {
-            await this.db.insert(matchNotice).values({
-                id: randomUUID(), userId: write.userId, keyId: actor.keyId, source: actor.keyName,
-                matches: { [matchId]: { ...(before ? { before } : {}), ...(after ? { after } : {}) } }, urgent: true, sendAt: new Date(now),
-            });
-            await this.flush(now);
-            return;
-        }
+        const urgent = soonest - now < URGENT_MS;
         const [open] = await this.db.select().from(matchNotice)
-            .where(and(eq(matchNotice.userId, write.userId), eq(matchNotice.keyId, actor.keyId), eq(matchNotice.urgent, false), isNull(matchNotice.sentAt), isNull(matchNotice.reached)))
+            .where(and(eq(matchNotice.userId, write.userId), eq(matchNotice.keyId, actor.keyId), eq(matchNotice.urgent, urgent), isNull(matchNotice.sentAt), isNull(matchNotice.reached)))
             .orderBy(desc(matchNotice.createdAt)).limit(1);
         if (!open) {
             await this.db.insert(matchNotice).values({
                 id: randomUUID(), userId: write.userId, keyId: actor.keyId, source: actor.keyName,
-                matches: { [matchId]: { ...(before ? { before } : {}), ...(after ? { after } : {}) } }, urgent: false, sendAt: new Date(now + COLLECT_MS),
+                matches: { [matchId]: { ...(before ? { before } : {}), ...(after ? { after } : {}) } }, urgent,
+                sendAt: new Date(now + (urgent ? URGENT_COLLECT_MS : COLLECT_MS)),
             });
             return;
         }

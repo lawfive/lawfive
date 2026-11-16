@@ -55,6 +55,7 @@ In `src/main/java/app/lawfive/wear/`:
 | `MatchEngine.kt` | The match's rules, with no Android in them; tested by the shared match cases (`MatchCasesTest.kt`, WCH-2) and `MatchEngineTest.kt`. |
 | `AppState.kt` | The state the screens and service share; saving and syncing. |
 | `Server.kt`, `Store.kt` | The API, and the file everything's kept in. |
+| `Coming.kt` | Which downloaded matches Matches lists and which count as coming up: canceled and postponed ones until their kickoff, never as coming up (SYNC-16); tested by `ComingTest.kt`. |
 | `Compass.kt` | The kickoff direction's compass (WCH-10). |
 | `Recording.kt`, `TrackPacking.kt` | Recording a match (WCH-7), and packing the track as the Garmin watch does (TRK-7). |
 | `PitchScreen.kt` | Marking the pitch's corners (TRK-13). |

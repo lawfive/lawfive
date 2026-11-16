@@ -99,6 +99,16 @@ struct PlannedMatch: Codable, Identifiable {
     var stopForGoalsCards: Bool?
     /// EVT-14: the card reasons' scheme, the competition's or else the account's; servers from before it don't send it.
     var misconductScheme: String?
+    /// SYNC-16: "cancelled" or "postponed" (the data model's spelling) for a match that won't be played as planned,
+    /// sent because the watch asks with canceled=true; nil for a scheduled match.
+    var status: String?
+
+    /// SYNC-16: canceled or postponed, so listed until its kickoff but never counted or offered as coming up.
+    var calledOff: Bool { status != nil }
+    /// SYNC-16: what the list shows in place of its day, time and place.
+    var statusWord: String? { status.map { $0 == "postponed" ? "Postponed" : "Canceled" } }
+    /// SYNC-16: the detail under "Start anyway?".
+    var statusDetail: String? { status.map { $0 == "postponed" ? "This match was postponed" : "This match was canceled" } }
 
     var setup: MatchSetup {
         MatchSetup(
@@ -109,6 +119,17 @@ struct PlannedMatch: Codable, Identifiable {
             sinBins: sinBins, sinBinSec: sinBinSec, stoppingClock: stoppingClock, stopForGoalsCards: stopForGoalsCards
         )
     }
+}
+
+extension [PlannedMatch] {
+    /// UI-16, SYNC-16: what Matches lists, soonest first as the server sends them: every scheduled match, as before,
+    /// and a canceled or postponed one only until its kickoff has passed, as the watch may not sync again before then.
+    func listed(now: Int64) -> [PlannedMatch] {
+        filter { !$0.calledOff || ($0.kickoff ?? Int64.max) > now }
+    }
+
+    /// UI-15, SYNC-16: the matches coming up, for the start menu: scheduled ones only.
+    var comingUp: [PlannedMatch] { filter { !$0.calledOff } }
 }
 
 /// SYNC-6: an unlinked watch's old link, kept until the server it came from has signed it out.
@@ -811,6 +832,9 @@ final class AppState {
         }
     }
 
+    /// SYNC-3; SYNC-16: canceled and postponed matches still to kick off come too, marked with their status.
+    static let matchesRequest = "/v1/watch/matches?limit=10&canceled=true"
+
     func sync() {
         sendSignOuts()
         guard let token = saved.token, !syncing else { return }
@@ -891,7 +915,7 @@ final class AppState {
                     /// EVT-14: the account's scheme; servers from before it don't send it.
                     var misconductScheme: String?
                 }
-                let answer = try JSONDecoder().decode(Answer.self, from: try await server.get("/v1/watch/matches?limit=10", token: token))
+                let answer = try JSONDecoder().decode(Answer.self, from: try await server.get(AppState.matchesRequest, token: token))
                 update { s in
                     s.matches = answer.matches
                     s.lastSync = nowSeconds()

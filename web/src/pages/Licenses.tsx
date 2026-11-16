@@ -32,11 +32,15 @@ const software: Credit[] = [
     { name: "JetBrains Mono", url: "https://www.jetbrains.com/lp/mono/", what: "The typeface for codes and addresses", licence: ofl },
     { name: "Fontsource", url: "https://fontsource.org", what: "Packaging the fonts so they're served with the app", licence: mit },
     { name: "read-excel-file", url: "https://gitlab.com/catamphetamine/read-excel-file", what: "Reading Excel files to import matches", licence: mit },
+    { name: "write-excel-file", url: "https://gitlab.com/catamphetamine/write-excel-file", what: "Matches as a spreadsheet", licence: mit },
+    { name: "fit-file-parser", url: "https://github.com/jimmykane/fit-parser", what: "Reading a watch's FIT file for a match's track", licence: mit },
+    { name: "uqr", url: "https://github.com/unjs/uqr", what: "QR codes for signing in on a phone and for invitations", licence: mit },
     { name: "Zod", url: "https://zod.dev", what: "Checking data against LawFive's data model", licence: mit },
     { name: "Hono", url: "https://hono.dev", what: "The server", licence: mit },
     { name: "Better Auth", url: "https://better-auth.com", what: "Accounts, sign-in and linking watches", licence: mit },
     { name: "Drizzle ORM", url: "https://orm.drizzle.team", what: "The database", licence: apache },
     { name: "Nodemailer", url: "https://nodemailer.com", what: "Sending email (invitations and approvals)", licence: { name: "MIT-0", url: "https://github.com/nodemailer/nodemailer/blob/master/LICENSE" } },
+    { name: "fflate", url: "https://101arrowz.github.io/fflate", what: "Zip files for imports and backups", licence: mit },
     { name: "Postgres.js", url: "https://github.com/porsager/postgres", what: "Connecting to PostgreSQL", licence: { name: "Unlicense", url: "https://unlicense.org" } },
 ];
 

@@ -152,6 +152,16 @@ class ConfirmDelegate extends TapAwareDelegate {
             PhoneLink.answer(choice == CHOICE_CONFIRM);
             return;
         }
+        if (_action == :startAnyway) {
+            // SYNC-16: Yes starts the canceled or postponed match as any other, in its screen's place.
+            WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+            var synced = pendingStart;
+            pendingStart = null;
+            if (choice == CHOICE_CONFIRM && synced != null) {
+                beginMatch(Sync.setupFor(synced));
+            }
+            return;
+        }
         if (choice == CHOICE_CONFIRM) {
             performConfirmedAction(_action);
         }

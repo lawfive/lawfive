@@ -46,12 +46,10 @@ Forecasts for matches, and the weather a match was played in. The server works t
 - **WX-12** Data and licenses carries the notices the libraries' licenses ask for, beyond WX-8's list of names and license links (MIT, BSD, Apache 2.0 and the OFL want the copyright notice and license text with each copy, and Apache 2.0 a library's own `NOTICE`).
   - On both phones, a **Full license texts** row at the end opens a list of the fonts and icons, then the libraries, each with who made it and its license. Each opens its own page: its website, its `NOTICE` where it has one, and its license in full with its copyright line, set in paragraphs for the phone. Terms kept on the web rather than a license text (Garmin's, Google's) are a link to them.
   - On Android the list is what Gradle bundles in the phone app and the Wear OS app, made with each build, so it stays current. A library whose license names its own copyright holder (MIT, BSD) shows its own copy of it. On the iPhone it's a short list kept by hand: Garmin's SDK, Phosphor and the fonts.
-  - The Wear OS and Apple Watch apps' About say where to find them: "Licenses: see Data and licenses in the LawFive phone app".
+  - The Wear OS and Apple Watch apps' About say where to find them: "Licenses: see Data and licenses in the LawFive phone app". The Garmin's About has a **Licenses** row, "LawFive app or website", as a Garmin may sync without the phone app.
   - Needed before the first public store release.
 
 ## Status
 
-Forecasts, risks and past weather on the server, the website, both phones, the watch's start-menu line, Data and licenses with the full license texts on both phones (and the pointer to them on Wear OS and Apple Watch), and risk notifications on both phones are built.
+Forecasts, risks and past weather on the server, the website, both phones, the watch's start-menu line, Data and licenses with the full license texts on both phones (and the pointer to them on Wear OS, Apple Watch and Garmin), and risk notifications on both phones are built.
 
-Not built yet:
-- The Garmin watch's pointer to the license texts (WX-12).

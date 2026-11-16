@@ -15,6 +15,8 @@ enum C {
     static let ringTrack = Color(white: 0.165)
     static let yellow = Color(red: 0xF5 / 255, green: 0xC4 / 255, blue: 0)
     static let red = Color(red: 0xE5 / 255, green: 0x48 / 255, blue: 0x4D / 255)
+    /// SYNC-16: a match that won't be played, as words: the boards' `--board-red`, which reads on a row's dark pill.
+    static let calledOff = Color(red: 1, green: 0x85 / 255, blue: 0x89 / 255)
     static let coin = Color(red: 0xD9 / 255, green: 0xA9 / 255, blue: 0x2C / 255)
     static let coinEdge = Color(red: 0x8A / 255, green: 0x65 / 255, blue: 0x08 / 255)
     static let coinInk = Color(red: 0x5F / 255, green: 0x45 / 255, blue: 0x03 / 255)

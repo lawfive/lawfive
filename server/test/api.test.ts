@@ -211,6 +211,25 @@ describe("server", () => {
         assert.equal(next.notes, match.notes);
     });
 
+    test("a watch that asks also gets canceled and postponed matches still to come (SYNC-16)", async () => {
+        const at = (hours: number) => new Date(Date.now() + hours * 3_600_000).toISOString();
+        const canceled = { ...match, id: crypto.randomUUID(), kickoff: at(30), status: "cancelled", external: undefined };
+        const postponed = { ...match, id: crypto.randomUUID(), kickoff: at(31), status: "postponed", external: undefined };
+        const gone = { ...match, id: crypto.randomUUID(), kickoff: at(-1), status: "cancelled", external: undefined };
+        for (const m of [canceled, postponed, gone]) assert.equal((await call("PUT", `/v1/matches/${m.id}`, bob, m)).status, 201);
+        const ids = (body: { matches: { id: string }[] }) => body.matches.map((m) => m.id);
+        const old = (await call("GET", "/v1/watch/matches", bob)).body;
+        assert.ok(!ids(old).includes(canceled.id) && !ids(old).includes(postponed.id), "an older build gets scheduled matches only");
+        const res = await call("GET", "/v1/watch/matches?canceled=true", bob);
+        assert.equal(res.status, 200);
+        const listed = res.body.matches as { id: string; status?: string }[];
+        assert.equal(listed.find((m) => m.id === canceled.id)?.status, "cancelled");
+        assert.equal(listed.find((m) => m.id === postponed.id)?.status, "postponed");
+        assert.ok(!ids(res.body).includes(gone.id), "not once its kickoff has passed");
+        assert.ok(listed.filter((m) => m.status === undefined).length > 0, "a scheduled match has no status");
+        for (const m of [canceled, postponed, gone]) await call("DELETE", `/v1/matches/${m.id}`, bob);
+    });
+
     test("the watch's Paid toggle marks the fee paid, unless the match changed since (SYNC-11)", async () => {
         const soonId = "3f2a1b4c-5d6e-4f70-8a9b-0c1d2e3f4a5b";
         const now = Math.floor(Date.now() / 1000) + 5;

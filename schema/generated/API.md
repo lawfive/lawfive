@@ -1958,12 +1958,13 @@ What a Garmin watch uses, shaped for its little memory: matches in the form it s
 
 ### GET /v1/watch/matches
 
-**The next matches, for the watch.** Scheduled matches from three hours ago on, soonest first, so one that's about to start or running late is still there. A watch's link asking is noted as the watch now having these matches (SYNC-14, GET /v1/devices/matches), unless it's the phone app fetching them ahead for the watch (prefetch). Not with API keys.
+**The next matches, for the watch.** Scheduled matches from three hours ago on, soonest first, so one that's about to start or running late is still there; with canceled=true, canceled and postponed ones still to kick off too, marked with their status (SYNC-16). A watch's link asking is noted as the watch now having these matches (SYNC-14, GET /v1/devices/matches), unless it's the phone app fetching them ahead for the watch (prefetch). Not with API keys.
 
 | Parameter | In | Type | Description |
 |---|---|---|---|
 | `limit` (optional) | query | integer | At most 10 (the default). |
 | `prefetch` (optional) | query | "true" | The phone app fetching the watch's next matches ahead (APP-7), for when the watch asks without signal: not noted as on the watch. |
+| `canceled` (optional) | query | "true" | A watch build that shows canceled and postponed matches (SYNC-16): they come too, among the limit. Older builds leave it out and get scheduled matches only. |
 
 | Answer | Body | When |
 |---|---|---|
@@ -2662,7 +2663,7 @@ MatchImportResult, for a file (IMP-2).
 
 ### MatchNotice
 
-What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification (NOTE-3).
+What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute (30 seconds for matches within a day), for a phone to write as a notification (NOTE-3).
 
 | Field | Type | Description |
 |---|---|---|
@@ -3240,6 +3241,7 @@ A match in the form the Garmin watch starts one from (its setup keys), plus what
 | `sinBins` | boolean | Sin bin in the team menu (EVT-12). |
 | `sinBinSec` | integer | A sin bin's length, 10 minutes unless the format says. |
 | `misconductScheme` (optional) | [SchemeId](json-schema/SchemeId.json) | The codes for a card's reason on the watch (EVT-14): the competition's, else the account's. |
+| `status` (optional) | "cancelled" \| "postponed" | A match canceled or postponed that's still to kick off, sent only when the watch asks with canceled=true (SYNC-16); absent for a scheduled match. |
 
 ### WatchPitchMarking
 

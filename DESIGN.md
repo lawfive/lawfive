@@ -549,9 +549,10 @@ The Garmin watch's look (black, the match's colors, slots at the same fractions 
 ### Menus and icons
 
 - Menu rows are pills on `#1D2321`, with a Phosphor icon in black on a LawFive green circle where they lead somewhere.
-- Icons are Phosphor's bold weight, written into the watch apps by the phones' icon tools, one per meaning on all three watches: Matches CalendarBlank, New match Plus, History ClockCounterClockwise, Settings GearSix, Quick match Lightning, Same as last ArrowCounterClockwise, Custom SlidersHorizontal, Account UserCircle, Alerts Vibrate, Match screen Watch, Timer names TextAa, About Info, Start match Play, Sync now ArrowsClockwise, Link account Link, Controls Hand, and Flag for Mark pitch only. Wear OS's Permissions row is ShieldCheck; the Apple Watch's first-launch permissions use MapPin and Heartbeat.
+- Icons are Phosphor's bold weight, written into the watch apps by the phones' icon tools, one per meaning on all three watches: Matches CalendarBlank, New match Plus, History ClockCounterClockwise, Settings GearSix, Quick match Lightning, Same as last ArrowCounterClockwise, Custom SlidersHorizontal, Account UserCircle, Alerts Vibrate, Match screen Watch, Timer names TextAa, About Info, Start match Play, Sync now ArrowsClockwise, Link account Link, Controls Hand, Flag for Mark pitch only, and on the Garmin CalendarX on a `#FF8589` circle for a canceled or postponed match (SYNC-16). Wear OS's Permissions row is ShieldCheck; the Apple Watch's first-launch permissions use MapPin and Heartbeat.
 - **App icons**: the L5 mark on a round board (Wear OS) or on the board watchOS cuts round, across 0.62 of it.
 - On the Apple Watch the link question from the iPhone uses the confirmation layout, scrolling, so a long server name wraps.
+- A canceled or postponed match (SYNC-16) says so in `--board-red` `#FF8589`, "Canceled" or "Postponed" in place of its time in the list, and on its page (in place of its time, or under the title where the page has none), on all three watches (the Garmin's menus can't color words, so there it's the CalendarX mark): it reads at about 7:1 on the rows' `#1D2321`, where the cards' red doesn't.
 
 ### The teams are kits
 

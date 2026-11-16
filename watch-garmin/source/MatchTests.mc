@@ -3,6 +3,7 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
 import Toybox.Test;
+import Toybox.Time;
 import Toybox.WatchUi;
 
 // Unit tests, compiled only with `monkeyc -t` and run with `monkeydo <prg> <device> -t`.
@@ -1583,6 +1584,70 @@ function testSyncedMatchSetup(logger as Logger) as Boolean {
     Test.assertMessage(text[1].find("Twin Creeks, Field 3") != null, "menu line has the place: " + text[1]);
     Test.assertMessage(text[1].find("54° rain · Twin") != null, "and the forecast before it (WX-7): " + text[1]);
     cleanUp();
+    return true;
+}
+
+//! SYNC-16: a canceled or postponed match still to kick off is listed, marked, but not counted or
+//! highlighted as coming up; one whose kickoff has passed is dropped; the watch asks for them.
+(:test)
+function testCanceledMatchesListed(logger as Logger) as Boolean {
+    var savedMatches = Application.Storage.getValue(Sync.STORAGE_MATCHES);
+    var now = Time.now().value();
+    var gone = syncedMatch();
+    gone["id"] = "gone";
+    gone["kickoff"] = now - 60;
+    gone["status"] = "cancelled";
+    var canceled = syncedMatch();
+    canceled["id"] = "canceled";
+    canceled["kickoff"] = now + 3600;
+    canceled["status"] = "cancelled";
+    var postponed = syncedMatch();
+    postponed["id"] = "postponed";
+    postponed["kickoff"] = now + 7200;
+    postponed["status"] = "postponed";
+    // A scheduled match keeps SYNC-3's rules, its kickoff passed or not.
+    var started = syncedMatch();
+    started["id"] = "started";
+    started["kickoff"] = now - 600;
+    var scheduled = syncedMatch();
+    scheduled["kickoff"] = now + 10800;
+    Application.Storage.setValue(Sync.STORAGE_MATCHES, [started, gone, canceled, postponed, scheduled] as Array<Application.Storage.ValueType>);
+
+    var listed = Sync.listed();
+    Test.assertEqualMessage(listed.size(), 4, "all but the canceled match whose kickoff has passed");
+    Test.assertEqualMessage(listed[1]["id"] as String, "canceled", "canceled, still to kick off, in its place");
+    Test.assertEqualMessage(listed[2]["id"] as String, "postponed", "postponed too");
+    var upcoming = Sync.upcoming();
+    Test.assertEqualMessage(upcoming.size(), 2, "only scheduled matches are coming up");
+    Test.assertEqualMessage(upcoming[0]["id"] as String, "started", "a scheduled match as before");
+    var linked = Application.Storage.getValue(Sync.STORAGE_TOKEN);
+    Application.Storage.setValue(Sync.STORAGE_TOKEN, "test-token");
+    var problem = Sync.lastProblem;
+    Sync.lastProblem = null;
+    Test.assertEqualMessage(matchesSummary(), "2 coming up", "the start menu counts the scheduled ones");
+    Sync.lastProblem = problem;
+    if (linked != null) {
+        Application.Storage.setValue(Sync.STORAGE_TOKEN, linked as Application.Storage.ValueType);
+    } else {
+        Application.Storage.deleteValue(Sync.STORAGE_TOKEN);
+    }
+
+    var text = Sync.describe(canceled);
+    Test.assertEqualMessage(text[0], "STR v ROV", "its title as usual");
+    Test.assertEqualMessage(text[1], "Canceled", "Canceled in place of its day, time and place");
+    Test.assertEqualMessage(Sync.describe(postponed)[1], "Postponed", "or Postponed");
+    Test.assertMessage(Sync.statusOf(scheduled) == null, "a scheduled match has no status");
+    Test.assertEqualMessage(Sync.setupFor(canceled)["home"] as String, "STR", "started anyway, it starts as any other");
+
+    var query = Sync.matchesQuery();
+    Test.assertEqualMessage(query["canceled"] as String, "true", "the watch asks for canceled matches");
+    Test.assertEqualMessage(query["limit"] as Number, Sync.MAX_MATCHES, "among its 10");
+
+    if (savedMatches != null) {
+        Application.Storage.setValue(Sync.STORAGE_MATCHES, savedMatches as Application.Storage.ValueType);
+    } else {
+        Application.Storage.deleteValue(Sync.STORAGE_MATCHES);
+    }
     return true;
 }
 

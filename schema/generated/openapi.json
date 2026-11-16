@@ -13799,7 +13799,7 @@
           "Watch"
         ],
         "summary": "The next matches, for the watch",
-        "description": "Scheduled matches from three hours ago on, soonest first, so one that's about to start or running late is still there. A watch's link asking is noted as the watch now having these matches (SYNC-14, GET /v1/devices/matches), unless it's the phone app fetching them ahead for the watch (prefetch). Not with API keys.",
+        "description": "Scheduled matches from three hours ago on, soonest first, so one that's about to start or running late is still there; with canceled=true, canceled and postponed ones still to kick off too, marked with their status (SYNC-16). A watch's link asking is noted as the watch now having these matches (SYNC-14, GET /v1/devices/matches), unless it's the phone app fetching them ahead for the watch (prefetch). Not with API keys.",
         "parameters": [
           {
             "name": "limit",
@@ -13820,6 +13820,19 @@
             "description": "The phone app fetching the watch's next matches ahead (APP-7), for when the watch asks without signal: not noted as on the watch.",
             "schema": {
               "description": "The phone app fetching the watch's next matches ahead (APP-7), for when the watch asks without signal: not noted as on the watch.",
+              "type": "string",
+              "enum": [
+                "true"
+              ]
+            }
+          },
+          {
+            "name": "canceled",
+            "in": "query",
+            "required": false,
+            "description": "A watch build that shows canceled and postponed matches (SYNC-16): they come too, among the limit. Older builds leave it out and get scheduled matches only.",
+            "schema": {
+              "description": "A watch build that shows canceled and postponed matches (SYNC-16): they come too, among the limit. Older builds leave it out and get scheduled matches only.",
               "type": "string",
               "enum": [
                 "true"
@@ -19893,7 +19906,7 @@
           "matches"
         ],
         "additionalProperties": false,
-        "description": "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification (NOTE-3)."
+        "description": "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute (30 seconds for matches within a day), for a phone to write as a notification (NOTE-3)."
       },
       "AssignorSystem": {
         "$id": "#/components/schemas/AssignorSystem",
@@ -21490,6 +21503,14 @@
           "misconductScheme": {
             "description": "The codes for a card's reason on the watch (EVT-14): the competition's, else the account's.",
             "$ref": "#/components/schemas/SchemeId"
+          },
+          "status": {
+            "description": "A match canceled or postponed that's still to kick off, sent only when the watch asks with canceled=true (SYNC-16); absent for a scheduled match.",
+            "type": "string",
+            "enum": [
+              "cancelled",
+              "postponed"
+            ]
           }
         },
         "required": [

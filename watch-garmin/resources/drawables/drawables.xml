@@ -15,4 +15,6 @@
     <bitmap id="IconSame" filename="icons/icon_same.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
     <bitmap id="IconStart" filename="icons/icon_start.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
     <bitmap id="IconCustom" filename="icons/icon_custom.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
+    <!-- SYNC-16: a canceled or postponed match (CalendarX), on red. -->
+    <bitmap id="IconCanceled" filename="icons/icon_canceled.svg" scaleX="6%" scaleY="6%" scaleRelativeTo="screen" dithering="none"/>
 </drawables>

@@ -1184,10 +1184,11 @@ export const endpoints: Endpoint[] = [
 
     {
         method: "get", path: "/v1/watch/matches", group: "Watch", summary: "The next matches, for the watch",
-        description: "Scheduled matches from three hours ago on, soonest first, so one that's about to start or running late is still there. A watch's link asking is noted as the watch now having these matches (SYNC-14, GET /v1/devices/matches), unless it's the phone app fetching them ahead for the watch (prefetch).",
+        description: "Scheduled matches from three hours ago on, soonest first, so one that's about to start or running late is still there; with canceled=true, canceled and postponed ones still to kick off too, marked with their status (SYNC-16). A watch's link asking is noted as the watch now having these matches (SYNC-14, GET /v1/devices/matches), unless it's the phone app fetching them ahead for the watch (prefetch).",
         query: z.object({
             limit: z.int().optional().describe("At most 10 (the default)."),
             prefetch: z.enum(["true"]).optional().describe("The phone app fetching the watch's next matches ahead (APP-7), for when the watch asks without signal: not noted as on the watch."),
+            canceled: z.enum(["true"]).optional().describe("A watch build that shows canceled and postponed matches (SYNC-16): they come too, among the limit. Older builds leave it out and get scheduled matches only."),
         }),
         responses: {
             200: {

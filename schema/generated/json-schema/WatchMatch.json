@@ -229,6 +229,14 @@
     "misconductScheme": {
       "description": "The codes for a card's reason on the watch (EVT-14): the competition's, else the account's.",
       "$ref": "SchemeId.json"
+    },
+    "status": {
+      "description": "A match canceled or postponed that's still to kick off, sent only when the watch asks with canceled=true (SYNC-16); absent for a scheduled match.",
+      "type": "string",
+      "enum": [
+        "cancelled",
+        "postponed"
+      ]
     }
   },
   "required": [

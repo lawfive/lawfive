@@ -498,7 +498,8 @@ object AppState {
                         .onFailure { if (it !is ServerRefused) throw it }
                     update { it.copy(screenChange = null) }
                 }
-                val answer = server.get("/v1/watch/matches?limit=10", token)
+                // SYNC-16: canceled and postponed matches still to kick off come too, marked with their status.
+                val answer = server.get(MATCHES_PATH, token)
                 update { s ->
                     s.copy(
                         matches = (answer["matches"] as? JsonArray)?.map { it as JsonObject } ?: emptyList(),

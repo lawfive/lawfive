@@ -154,7 +154,8 @@ class LinkView extends WatchUi.View {
     }
 
     function onSynced(ok as Boolean) as Void {
-        var count = Sync.matches().size();
+        // SYNC-16: the matches coming up, not those canceled or postponed.
+        var count = Sync.upcoming().size();
         message = ok ? (count == 1 ? "1 match on the watch" : count + " matches on the watch") : Sync.status();
         WatchUi.requestUpdate();
     }

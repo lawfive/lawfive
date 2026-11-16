@@ -61,6 +61,60 @@ final class WatchRelayTests: XCTestCase {
         XCTAssertEqual(fake.bodies[1]?["prefetch"]?.string, "true")
     }
 
+    private func ids(_ answer: JSONValue?) -> [String] {
+        guard case .array(let list)? = answer?["data"]?["matches"] else { return [] }
+        return list.compactMap { $0["id"]?.string }
+    }
+
+    /// SYNC-16: a scheduled match and a canceled one, as the server answers canceled=true.
+    private func withACanceledMatch(_ fake: FakeServer) {
+        fake.matches = .object(["matches": .array([
+            .object(["id": .string("m1"), "kickoff": .int(1_790_000_000)]),
+            .object(["id": .string("m2"), "kickoff": .int(1_790_003_600), "status": .string("cancelled")]),
+            .object(["id": .string("m3"), "kickoff": .int(1_790_007_200), "status": .string("postponed")]),
+        ])])
+    }
+
+    func testThePhonesFetchAheadAsksForCanceledMatches() async {
+        let fake = FakeServer()
+        let relay = WatchRelay(file: nil, transport: fake, phoneServer: { [server] in server })
+        _ = await relay.handle(message(1, "request", "/v1/watch/matches", method: "GET", body: .object(["limit": .int(10)])))
+        await relay.refresh()
+        // SYNC-16: so the copy kept for no signal has them, for a watch that asks for them.
+        XCTAssertNil(fake.bodies[0]?["canceled"], "the watch's own request goes as it asked")
+        XCTAssertEqual(fake.bodies[1]?["canceled"]?.string, "true")
+    }
+
+    func testWithoutSignalCanceledMatchesGoOnlyToAWatchThatAskedForThem() async {
+        let fake = FakeServer()
+        withACanceledMatch(fake)
+        let relay = WatchRelay(file: nil, transport: fake, phoneServer: { [server] in server })
+        _ = await relay.handle(message(1, "request", "/v1/watch/matches", method: "GET", body: .object(["limit": .int(10), "canceled": .string("true")])))
+        await relay.refresh()
+        fake.online = false
+        // SYNC-16: an older watch build, which doesn't ask, gets the scheduled matches only, as the server would give it.
+        let older = await relay.handle(message(2, "request", "/v1/watch/matches", method: "GET", body: .object(["limit": .int(10)])))
+        XCTAssertEqual(code(older), 200)
+        XCTAssertEqual(ids(older), ["m1"])
+        let none = await relay.handle(message(3, "request", "/v1/watch/matches", method: "GET"))
+        XCTAssertEqual(ids(none), ["m1"], "no query is not asking")
+        let newer = await relay.handle(message(4, "request", "/v1/watch/matches", method: "GET", body: .object(["limit": .int(10), "canceled": .string("true")])))
+        XCTAssertEqual(ids(newer), ["m1", "m2", "m3"])
+        XCTAssertEqual(newer?["data"]?["matches"]?.array?[1]["status"]?.string, "cancelled")
+        let asBool = await relay.handle(message(5, "request", "/v1/watch/matches", method: "GET", body: .object(["canceled": .bool(true)])))
+        XCTAssertEqual(ids(asBool), ["m1", "m2", "m3"], "true asks too, as on Android")
+    }
+
+    func testWithSignalTheServersAnswerIsPassedOnAsItIs() async {
+        let fake = FakeServer()
+        withACanceledMatch(fake)
+        let relay = WatchRelay(file: nil, transport: fake, phoneServer: { [server] in server })
+        // SYNC-16: the server leaves them out itself for a watch that didn't ask; the relay doesn't second-guess it.
+        let answer = await relay.handle(message(1, "request", "/v1/watch/matches", method: "GET", body: .object(["limit": .int(10)])))
+        XCTAssertEqual(ids(answer), ["m1", "m2", "m3"])
+        XCTAssertNil(fake.bodies[0]?["canceled"])
+    }
+
     func testWithSignalRequestsGoToTheServer() async {
         let fake = FakeServer()
         let relay = WatchRelay(file: nil, transport: fake, phoneServer: { [server] in server })

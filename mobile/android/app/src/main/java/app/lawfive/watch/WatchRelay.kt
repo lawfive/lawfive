@@ -112,7 +112,8 @@ class WatchRelay(
             answer(id, KEPT)
         } else {
             val cached = _state.value.watches.firstOrNull { it.token == token }?.matches
-            if (path == MATCHES && cached != null) answer(id, 200, withQueuedFees(token, cached)) else answer(id, NO_SIGNAL)
+            // SYNC-16: the copy has canceled and postponed matches; a watch build that didn't ask for them gets scheduled ones only.
+            if (path == MATCHES && cached != null) answer(id, 200, withQueuedFees(token, if (asksCanceled(body)) cached else scheduledOnly(cached))) else answer(id, NO_SIGNAL)
         }
     }
 
@@ -168,13 +169,24 @@ class WatchRelay(
         sendWaiting()
         val phone = phoneServer() ?: return@withLock
         for (w in _state.value.watches.filter { same(it.server, phone) }) {
-            val query = JsonObject(mapOf("limit" to JsonPrimitive(MAX_MATCHES), "prefetch" to JsonPrimitive("true")))
+            // SYNC-16: with canceled and postponed matches, for a watch build that shows them; left out for one that doesn't.
+            val query = JsonObject(mapOf("limit" to JsonPrimitive(MAX_MATCHES), "prefetch" to JsonPrimitive("true"), "canceled" to JsonPrimitive("true")))
             val result = transport.send(w.server, "GET", MATCHES, query, w.token, w.device) ?: return@withLock
             when (result.first) {
                 200 -> cache(w.token, result.second)
                 401 -> forget(w.token)
             }
         }
+    }
+
+    /** SYNC-16: the watch's request asked for canceled and postponed matches too (canceled=true). */
+    private fun asksCanceled(query: JsonElement?) = ((query as? JsonObject)?.get("canceled") as? JsonPrimitive)?.contentOrNull == "true"
+
+    /** SYNC-16: the matches answered from the last fetch without those with a status, as the server sends an older watch build. */
+    private fun scheduledOnly(matches: JsonElement): JsonElement {
+        val root = matches as? JsonObject ?: return matches
+        val list = root["matches"] as? JsonArray ?: return matches
+        return JsonObject(root + ("matches" to JsonArray(list.filter { m -> ((m as? JsonObject)?.get("status") ?: JsonNull) is JsonNull })))
     }
 
     /** Fee changes still waiting, on the matches answered from the last fetch (SYNC-11). */

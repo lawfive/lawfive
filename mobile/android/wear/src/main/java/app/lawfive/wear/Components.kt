@@ -94,6 +94,8 @@ object C {
     val ringTrack = Color(0xFF2A2A2A)
     val yellow = Color(0xFFF5C400)
     val red = Color(0xFFE5484D)
+    /** SYNC-16: words for a match that won't be played, the boards' red (DESIGN.md's `--board-red`), reading on the black and the rows. */
+    val offRed = Color(0xFFFF8589)
     val coin = Color(0xFFD9A92C)
     val coinEdge = Color(0xFF8A6508)
     val coinInk = Color(0xFF5F4503)
@@ -211,9 +213,12 @@ fun WatchList(title: String? = null, titleTeam: Int = -1, titleColor: Int = -1, 
     }
 }
 
-/** A menu row: an optional icon on a green circle (UI-18) or a team color's swatch (SET-14), a label and a muted line (`subLines` for a sentence that wraps). */
+/**
+ * A menu row: an optional icon on a green circle (UI-18) or a team color's swatch (SET-14), a label and a muted line (`subLines` for a
+ * sentence that wraps), or one in [subColor] (a canceled match's, SYNC-16).
+ */
 @Composable
-fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? = null, textColor: Color = C.text, swatch: Int? = null, subLines: Int = 1, onClick: () -> Unit) {
+fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? = null, textColor: Color = C.text, swatch: Int? = null, subLines: Int = 1, subColor: Color? = null, onClick: () -> Unit) {
     Row(
         Modifier.fillMaxWidth().then(if (subLines > 1) Modifier.heightIn(min = 54.dp) else Modifier.height(if (sub != null) 54.dp else 48.dp))
             .background(fill ?: C.row, RoundedCornerShape(24.dp))
@@ -233,7 +238,7 @@ fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? 
         }
         Column(Modifier.weight(1f)) {
             T(label, 14.5.sp, textColor, FontWeight.SemiBold, center = false, lines = 1)
-            if (sub != null) T(sub, 12.sp, if (fill != null) textColor else C.dim, FontWeight.Normal, center = false, lines = subLines)
+            if (sub != null) T(sub, 12.sp, subColor ?: if (fill != null) textColor else C.dim, if (subColor != null) FontWeight.Medium else FontWeight.Normal, center = false, lines = subLines)
         }
     }
 }

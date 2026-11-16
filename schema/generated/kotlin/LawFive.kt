@@ -1274,7 +1274,7 @@ data class MatchNoticeMatchesItem(
     val previousVenue: String? = null,
 )
 
-/** What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification (NOTE-3). */
+/** What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute (30 seconds for matches within a day), for a phone to write as a notification (NOTE-3). */
 @Serializable
 data class MatchNotice(
     val id: Id,
@@ -3338,6 +3338,8 @@ data class WatchMatch(
     val sinBinSec: Long,
     /** The codes for a card's reason on the watch (EVT-14): the competition's, else the account's. */
     val misconductScheme: SchemeId? = null,
+    /** A match canceled or postponed that's still to kick off, sent only when the watch asks with canceled=true (SYNC-16); absent for a scheduled match. */
+    val status: String? = null,
 )
 
 /** A pitch's corners walked on the watch (TRK-13, SYNC-12). */

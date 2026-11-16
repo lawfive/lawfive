@@ -138,7 +138,8 @@ struct HomePage: View {
     var body: some View {
         let s = state.saved
         WatchList(title: "LawFive") {
-            NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: !state.linked ? "Link to sync" : s.matches.first?.title ?? "None coming up", icon: "matches") }.buttonStyle(.plain)
+            // SYNC-16: the next match's line is the next scheduled one, never one canceled or postponed.
+            NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: !state.linked ? "Link to sync" : s.matches.comingUp.first?.title ?? "None coming up", icon: "matches") }.buttonStyle(.plain)
             NavigationLink { NewMatchPage() } label: { RowLabel(label: "New match", sub: "Quick · \(s.quick.summary)", icon: "plus") }.buttonStyle(.plain)
             NavigationLink { HistoryPage() } label: { RowLabel(label: "History", sub: s.history.isEmpty ? "None yet" : "\(s.history.count) kept", icon: "history") }.buttonStyle(.plain)
             NavigationLink { SettingsPage() } label: { RowLabel(label: "Settings", sub: state.linked ? "Linked" : "Not linked", icon: "settings") }.buttonStyle(.plain)
@@ -153,6 +154,7 @@ struct RowLabel: View {
     var icon: String?
     var swatch: Int?
     var subLines = 1
+    var subColor = C.dim
 
     var body: some View {
         HStack(spacing: 8) {
@@ -166,7 +168,7 @@ struct RowLabel: View {
             if let swatch { Swatch(color: swatch).padding(.trailing, 2) }
             VStack(alignment: .leading, spacing: 0) {
                 Text(label).font(.barlow(15, .semibold)).foregroundStyle(C.text).lineLimit(1)
-                if let sub { Text(sub).font(.barlow(12, .regular)).foregroundStyle(C.dim).lineLimit(subLines).fixedSize(horizontal: false, vertical: subLines > 1) }
+                if let sub { Text(sub).font(.barlow(12, .regular)).foregroundStyle(subColor).lineLimit(subLines).fixedSize(horizontal: false, vertical: subLines > 1) }
             }
             Spacer(minLength: 0)
         }
@@ -184,15 +186,27 @@ struct MatchesPage: View {
     var body: some View {
         WatchList(title: "Matches") {
             MenuRow(label: "Sync now", sub: state.syncLine, icon: "sync") { state.sync() }
-            if state.saved.matches.isEmpty {
+            // SYNC-16: a canceled or postponed match is listed until its kickoff, saying so in red in place of its time.
+            let listed = state.saved.matches.listed(now: nowSeconds())
+            if listed.isEmpty {
                 Text("No matches coming up").font(.barlow(13)).foregroundStyle(C.dim).padding(.top, 8)
             }
-            ForEach(state.saved.matches) { m in
-                NavigationLink { PlannedPage(id: m.id) } label: {
-                    RowLabel(label: m.title, sub: m.kickoff.map { Date(timeIntervalSince1970: TimeInterval($0)).formatted(date: .abbreviated, time: .shortened) })
-                }
-                .buttonStyle(.plain)
+            ForEach(listed) { m in
+                NavigationLink { PlannedPage(id: m.id) } label: { PlannedRow(m: m) }.buttonStyle(.plain)
             }
+        }
+    }
+}
+
+/// UI-16: a downloaded match in Matches: its title, then its day and time, or SYNC-16's "Canceled" or "Postponed" in red.
+struct PlannedRow: View {
+    let m: PlannedMatch
+
+    var body: some View {
+        if let word = m.statusWord {
+            RowLabel(label: m.title, sub: word, subColor: C.calledOff)
+        } else {
+            RowLabel(label: m.title, sub: m.kickoff.map { Date(timeIntervalSince1970: TimeInterval($0)).formatted(date: .abbreviated, time: .shortened) })
         }
     }
 }
@@ -201,20 +215,50 @@ struct MatchesPage: View {
 struct PlannedPage: View {
     @Environment(AppState.self) private var state
     let id: String
+    @State private var confirming = false
 
     var body: some View {
         if let m = state.saved.matches.first(where: { $0.id == id }) {
-            WatchList(title: m.title) {
-                MenuRow(label: "Start match", sub: m.setup.summary, icon: "play") { state.beginMatch(m.setup) }
-                // TRK-13: walking the pitch before the match.
-                NavigationLink { PitchView(matchId: m.id, created: nil) } label: { RowLabel(label: "Mark pitch", sub: "Walk its corners", icon: "flag") }.buttonStyle(.plain)
-                if let fee = m.fee {
-                    ToggleRow(label: "Fee \(fee.text)", sub: fee.paid ? "Paid" : "Not paid yet", on: fee.paid) { state.markPaid(id, paid: $0) }
-                }
-                ForEach([m.where, m.name, m.role, m.weather, m.notes].compactMap { $0 }, id: \.self) { line in
-                    Text(line).font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center)
-                }
+            if confirming, let detail = m.statusDetail {
+                // SYNC-16: one canceled or postponed asks first, with a green Yes, for a referee still asked to run it.
+                ConfirmScreen(question: "Start anyway?", detail: detail, onYes: {
+                    confirming = false
+                    state.beginMatch(m.setup)
+                }, onNo: { confirming = false })
+            } else {
+                page(m)
             }
+        }
+    }
+
+    private func page(_ m: PlannedMatch) -> some View {
+        WatchList(title: m.title) {
+            PlannedDetails(m: m) {
+                if m.calledOff { confirming = true } else { state.beginMatch(m.setup) }
+            }
+        }
+    }
+}
+
+/// UI-19: a downloaded match's rows, in PlannedPage's list.
+struct PlannedDetails: View {
+    @Environment(AppState.self) private var state
+    let m: PlannedMatch
+    let start: () -> Void
+
+    var body: some View {
+        // SYNC-16: one canceled or postponed says so first, in red, as in Matches.
+        if let word = m.statusWord {
+            Text(word).font(.barlow(15, .semibold)).foregroundStyle(C.calledOff).padding(.vertical, 2)
+        }
+        MenuRow(label: "Start match", sub: m.setup.summary, icon: "play", action: start)
+        // TRK-13: walking the pitch before the match.
+        NavigationLink { PitchView(matchId: m.id, created: nil) } label: { RowLabel(label: "Mark pitch", sub: "Walk its corners", icon: "flag") }.buttonStyle(.plain)
+        if let fee = m.fee {
+            ToggleRow(label: "Fee \(fee.text)", sub: fee.paid ? "Paid" : "Not paid yet", on: fee.paid) { state.markPaid(m.id, paid: $0) }
+        }
+        ForEach([m.where, m.name, m.role, m.weather, m.notes].compactMap { $0 }, id: \.self) { line in
+            Text(line).font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center)
         }
     }
 }

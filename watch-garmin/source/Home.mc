@@ -19,29 +19,33 @@ const HOME_SETTINGS = 3;
 
 //! The menu icons' circle: LawFive's green (the web's dark-mode brand green).
 const COLOR_ICON_CIRCLE = 0x2FAE7A;
+//! SYNC-16: a match that won't be played as planned, the boards' red (DESIGN.md `--board-red`), which reads on black.
+const COLOR_WONT_PLAY = 0xFF8589;
 
 //! A menu row with a Phosphor icon on its left (UI-18).
 function iconItem(label as String, sub as String?, id as Object, icon as ResourceId) as WatchUi.IconMenuItem {
-    return new WatchUi.IconMenuItem(label, sub, id, new MenuIcon(icon), {:alignment => WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT});
+    return new WatchUi.IconMenuItem(label, sub, id, new MenuIcon(icon, COLOR_ICON_CIRCLE), {:alignment => WatchUi.MenuItem.MENU_ITEM_LABEL_ALIGN_LEFT});
 }
 
 //! An icon for a menu row (UI-18): the black icon on a LawFive green circle, which reads on the
 //! black menus of button watches and the white ones of the Venu. The menu draws it in an area of its
 //! own from (0, 0), and doesn't take a bitmap there directly (the app crashes), so it's a drawable
-//! that centres itself in that area.
+//! that centres itself in that area. SYNC-16: a canceled or postponed match's is on red.
 class MenuIcon extends WatchUi.Drawable {
     private var _bitmap as Graphics.BitmapType;
+    private var _circle as Number;
 
-    function initialize(icon as ResourceId) {
+    function initialize(icon as ResourceId, circle as Number) {
         Drawable.initialize({});
         _bitmap = WatchUi.loadResource(icon) as Graphics.BitmapType;
+        _circle = circle;
     }
 
     function draw(dc as Graphics.Dc) as Void {
         var cx = dc.getWidth() / 2;
         var cy = dc.getHeight() / 2;
         dc.setAntiAlias(true);
-        dc.setColor(COLOR_ICON_CIRCLE, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_circle, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, cy, (_bitmap.getWidth() * 0.85).toNumber());
         dc.drawBitmap(cx - _bitmap.getWidth() / 2, cy - _bitmap.getHeight() / 2, _bitmap);
     }
@@ -93,6 +97,7 @@ class StartMenu extends WatchUi.Menu2 {
 }
 
 //! "3 coming up", the last sync's problem in its place, or how to get matches when not linked.
+//! SYNC-16: canceled and postponed matches aren't coming up.
 function matchesSummary() as String {
     if (!Sync.isLinked()) {
         return "Link to sync";
@@ -101,7 +106,7 @@ function matchesSummary() as String {
     if (problem != null) {
         return problem;
     }
-    var count = Sync.matches().size();
+    var count = Sync.upcoming().size();
     return count == 0 ? "None yet" : count + " coming up";
 }
 
@@ -160,31 +165,50 @@ class StartMenuDelegate extends WatchUi.Menu2InputDelegate {
 //! Sync now, then the downloaded matches, soonest first. A sync updates the rows in place and
 //! never moves the highlight; while it runs, Sync now's sub-label shows each step.
 class MatchesMenu extends WatchUi.Menu2 {
+    //! The matches listed, as the rows' ids number them (SYNC-16: kept, so one whose kickoff passes
+    //! while the list is open doesn't shift the rows under the highlight).
+    var shown as Array<Dictionary> = [] as Array<Dictionary>;
     private var _rows as Number = 0;
     private var _timer as Timer.Timer? = null;
 
     //! `row` is the match to highlight (coming back from its screen), or null for the soonest.
     function initialize(row as Number?) {
-        var count = Sync.matches().size();
-        // The soonest match is highlighted (Sync now above it), except where focusing a lower row would hide those above it.
-        Menu2.initialize({:title => new TimedTitle("Matches"), :focus => listFocus(row != null && row < count ? row + 1 : count > 0 ? 1 : 0)});
+        shown = Sync.listed();
+        var count = shown.size();
+        // The soonest match is highlighted (Sync now above it), except where focusing a lower row would
+        // hide those above it. SYNC-16: the soonest to be played, past any canceled or postponed before it.
+        var soonest = 0;
+        while (soonest < count && Sync.statusOf(shown[soonest]) != null) {
+            soonest++;
+        }
+        Menu2.initialize({:title => new TimedTitle("Matches"), :focus => listFocus(row != null && row < count ? row + 1 : soonest < count ? soonest + 1 : 0)});
         addItem(new WatchUi.MenuItem("Sync now", Sync.status(), :sync, null));
         refreshMatches();
     }
 
     //! The match rows from the downloaded matches, changed in place.
     function refreshMatches() as Void {
-        var synced = Sync.matches();
+        shown = Sync.listed();
+        var synced = shown;
         var rows = synced.size() > 0 ? synced.size() : 1;
         for (var i = 0; i < rows; i++) {
             var text = synced.size() > 0 ? Sync.describe(synced[i]) : ["No matches coming up", "Add them on the website"] as [String, String];
             var id = synced.size() > 0 ? i : :none;
+            // SYNC-16: a canceled or postponed match has the red mark, so its row is an icon row.
+            var marked = synced.size() > 0 && Sync.statusOf(synced[i]) != null;
             var item = i < _rows ? getItem(i + 1) : null;
-            if (item != null) {
+            if (item != null && (item instanceof WatchUi.IconMenuItem) == marked) {
                 item.setLabel(text[0]);
                 item.setSubLabel(text[1]);
             } else {
-                addItem(new WatchUi.MenuItem(text[0], text[1], id, null));
+                var row = marked
+                    ? new WatchUi.IconMenuItem(text[0], text[1], id, new MenuIcon(Rez.Drawables.IconCanceled, COLOR_WONT_PLAY), null)
+                    : new WatchUi.MenuItem(text[0], text[1], id, null);
+                if (item != null) {
+                    updateItem(row, i + 1);
+                } else {
+                    addItem(row);
+                }
             }
         }
         for (var i = _rows; i > rows; i--) {
@@ -245,7 +269,7 @@ class MatchesMenuDelegate extends WatchUi.Menu2InputDelegate {
                 _menu.startSync();
             }
         } else if (id instanceof Number) {
-            var synced = Sync.matches();
+            var synced = _menu.shown;
             if (id < synced.size()) {
                 // UI-19: its own screen, in this menu's place, so the view stack stays flat.
                 var menu = new PlannedMatchMenu(synced[id], id);
@@ -261,6 +285,9 @@ class MatchesMenuDelegate extends WatchUi.Menu2InputDelegate {
 
 // ---- A downloaded match (UI-19, SYNC-11) ----
 
+//! SYNC-16: the canceled or postponed match waiting on "Start anyway?".
+var pendingStart as Dictionary? = null;
+
 //! A downloaded match's own screen: Start match, the fee with a Paid toggle, then its details.
 class PlannedMatchMenu extends WatchUi.Menu2 {
     var synced as Dictionary;
@@ -274,8 +301,14 @@ class PlannedMatchMenu extends WatchUi.Menu2 {
         // ("Sat 9:00 · 2x45' · HT 15'"); the forecast and venue have their own rows.
         var setup = Sync.setupFor(match);
         var format = Format.summary(setup["numPeriods"] as Number, setup["periodSec"] as Number, setup["halftimeSec"] as Number);
-        var kickoff = Sync.kickoffText(match);
-        addItem(iconItem("Start match", kickoff != null ? kickoff + " · " + format : format, :start, Rez.Drawables.IconStart));
+        // SYNC-16: a canceled or postponed match says so in place of its day and time, with the list's red mark.
+        var status = Sync.statusOf(match);
+        var kickoff = status != null ? status : Sync.kickoffText(match);
+        var start = iconItem("Start match", kickoff != null ? kickoff + " · " + format : format, :start, Rez.Drawables.IconStart);
+        if (status != null) {
+            start.setIcon(new MenuIcon(Rez.Drawables.IconCanceled, COLOR_WONT_PLAY));
+        }
+        addItem(start);
         var fee = match["fee"];
         if (fee instanceof Dictionary) {
             addItem(new WatchUi.ToggleMenuItem("Fee " + (fee["text"] as String), {:enabled => "Paid", :disabled => "Not paid"}, :fee, (fee["paid"] as Boolean?) == true, null));
@@ -325,7 +358,16 @@ class PlannedMatchDelegate extends WatchUi.Menu2InputDelegate {
     function onSelect(item as WatchUi.MenuItem) as Void {
         var id = item.getId();
         if (id == :start) {
-            beginMatch(Sync.setupFor(_menu.synced));
+            var status = Sync.statusOf(_menu.synced);
+            if (status != null) {
+                // SYNC-16: a canceled or postponed match asks first, for a referee still asked to run it.
+                // Yes starts it in this screen's place (ConfirmDelegate); No comes back here.
+                pendingStart = _menu.synced;
+                var view = new ConfirmView("Start anyway?", "This match was " + status.toLower(), false);
+                WatchUi.pushView(view, new ConfirmDelegate(view, :startAnyway), WatchUi.SLIDE_IMMEDIATE);
+            } else {
+                beginMatch(Sync.setupFor(_menu.synced));
+            }
         } else if (id == :fee) {
             // The menu has already flipped the toggle.
             Sync.setFeePaid(_menu.synced["id"] as String, (item as WatchUi.ToggleMenuItem).isEnabled());
@@ -530,6 +572,8 @@ class SettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
             }
             menu.addItem(new WatchUi.MenuItem("History", History.all().size() + " of " + History.MAX_MATCHES + " matches kept", :none, null));
             menu.addItem(new WatchUi.MenuItem("Open source", "lawfive.dev", :none, null));
+            // WX-12: the license texts are in the phone app's and the website's Data and licenses.
+            menu.addItem(new WatchUi.MenuItem("Licenses", "LawFive app or website", :none, null));
             menu.addItem(new WatchUi.MenuItem("Reset LawFive", "Erase everything here", :reset, null));
             WatchUi.pushView(menu, new AboutMenuDelegate(), WatchUi.SLIDE_LEFT);
         }

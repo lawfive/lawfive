@@ -168,7 +168,7 @@ Somewhere the account is signed in: a browser or a linked watch.
 
 ### MatchNotice
 
-What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification.
+What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute (30 seconds for matches within a day), for a phone to write as a notification.
 
 | Field | Type | Description |
 |---|---|---|

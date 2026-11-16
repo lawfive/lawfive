@@ -117,7 +117,9 @@ final class WatchRelay {
             return answer(id, WatchRelay.kept)
         }
         if path == WatchRelay.matchesPath, let cached = state.watches.first(where: { $0.token == token })?.matches {
-            return answer(id, 200, withQueuedFees(token, cached))
+            // SYNC-16: canceled and postponed matches only to a watch build that asked for them.
+            let shown = WatchRelay.asksForCanceled(body) ? cached : WatchRelay.scheduledOnly(cached)
+            return answer(id, 200, withQueuedFees(token, shown))
         }
         return answer(id, WatchRelay.noSignal)
     }
@@ -169,17 +171,31 @@ final class WatchRelay {
 
     /// After the phone syncs: what waits goes, and each watch's next matches are fetched for later,
     /// marked as fetched ahead (SYNC-14's prefetch), so the server doesn't take them for being on the
-    /// watch until the watch itself asks.
+    /// watch until the watch itself asks. With the canceled and postponed ones (SYNC-16), so the copy
+    /// has them for a watch that asks for them; one that doesn't gets them left out.
     func refresh() async {
         await oneAtATime { [self] in
             _ = await sendWaiting()
             guard let phone = phoneServer() else { return }
             for w in state.watches where WatchRelay.same(w.server, phone) {
-                guard let result = await transport.send(server: w.server, method: "GET", path: WatchRelay.matchesPath, body: .object(["limit": .int(WatchRelay.maxMatches), "prefetch": .string("true")]), token: w.token, device: w.device) else { return }
+                guard let result = await transport.send(server: w.server, method: "GET", path: WatchRelay.matchesPath, body: .object(["limit": .int(WatchRelay.maxMatches), "prefetch": .string("true"), "canceled": .string("true")]), token: w.token, device: w.device) else { return }
                 if result.0 == 200 { cache(w.token, result.1) }
                 if result.0 == 401 { forget(w.token) }
             }
         }
+    }
+
+    /// SYNC-16: the watch's request asked for canceled and postponed matches too (canceled=true in its query,
+    /// as text or, as Android's relay also takes it, true).
+    nonisolated static func asksForCanceled(_ query: JSONValue?) -> Bool {
+        query?["canceled"]?.string == "true" || query?["canceled"] == .bool(true)
+    }
+
+    /// SYNC-16: the last fetch without the matches that have a status, for a watch build that didn't ask for them.
+    nonisolated static func scheduledOnly(_ matches: JSONValue) -> JSONValue {
+        guard case .object(var root) = matches, case .array(let list)? = root["matches"] else { return matches }
+        root["matches"] = .array(list.filter { m in m["status"] == nil || m["status"] == .null })
+        return .object(root)
     }
 
     /// Fee changes still waiting, on the matches answered from the last fetch (SYNC-11).

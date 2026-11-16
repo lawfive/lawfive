@@ -105,7 +105,7 @@ export const MatchNotice = z
             previousVenue: z.string().optional().describe("With venue: where it was going to be."),
         })).describe("The matches, soonest first."),
     })
-    .meta({ id: "MatchNotice", description: "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification (NOTE-3)." });
+    .meta({ id: "MatchNotice", description: "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute (30 seconds for matches within a day), for a phone to write as a notification (NOTE-3)." });
 
 
 // Assignor calendars (FEED-1 to FEED-10): an assignor system's private calendar link, read by the
@@ -442,6 +442,8 @@ export const WatchMatch = z
         sinBins: z.boolean().describe("Sin bin in the team menu (EVT-12)."),
         sinBinSec: z.int().describe("A sin bin's length, 10 minutes unless the format says."),
         misconductScheme: SchemeId.optional().describe("The codes for a card's reason on the watch (EVT-14): the competition's, else the account's."),
+        status: z.enum(["cancelled", "postponed"]).optional()
+            .describe("A match canceled or postponed that's still to kick off, sent only when the watch asks with canceled=true (SYNC-16); absent for a scheduled match."),
     })
     .meta({ id: "WatchMatch", description: "A match in the form the Garmin watch starts one from (its setup keys), plus what its list shows. Watches have little memory, so the server does the converting." });
 

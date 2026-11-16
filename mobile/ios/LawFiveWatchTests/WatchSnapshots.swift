@@ -53,6 +53,29 @@ final class WatchSnapshots: XCTestCase {
         state.clearMatch()
     }
 
+    /// UI-16, UI-19, SYNC-16: Matches with a scheduled match, a canceled and a postponed one, the canceled one's page, and
+    /// the question starting it asks.
+    func testTheMatchesList() throws {
+        let state = AppState()
+        let now = nowSeconds()
+        let matches = [
+            try PlannedMatchesTests.match("next", kickoff: now + 3600),
+            try PlannedMatchesTests.match("canceled", kickoff: now + 7200, status: "cancelled"),
+            try PlannedMatchesTests.match("postponed", kickoff: now + 86_400, status: "postponed"),
+        ]
+        state.update { s in
+            s.token = "snapshot"
+            s.matches = matches
+        }
+        // ImageRenderer leaves out the list's ScrollView (mobile/ios/README.md#pitfalls), so the rows as the list stacks them.
+        try write("watch-matches__46mm-dark-1x", VStack(spacing: 5) {
+            MenuRow(label: "Sync now", sub: state.syncLine, icon: "sync") {}
+            ForEach(matches.listed(now: now)) { PlannedRow(m: $0) }
+        }.padding(.horizontal, 4))
+        try write("watch-planned-canceled__46mm-dark-1x", VStack(spacing: 5) { PlannedDetails(m: matches[1]) {} }.padding(.horizontal, 4).environment(state))
+        try write("watch-start-anyway__46mm-dark-1x", ConfirmScreen(question: "Start anyway?", detail: matches[1].statusDetail, onYes: {}, onNo: {}))
+    }
+
     /// UI-10, UI-11: the kits at their hardest: the widest aliases and two-figure scores, a white kit against a black one
     /// (its gray edge), and no colors, on the score line, scores only and the kickoff's dot. On the narrowest watch, the
     /// SE's 40 mm (LAWFIVE_WATCH_SIMULATOR for tools/snapshots.sh), they must fit across.

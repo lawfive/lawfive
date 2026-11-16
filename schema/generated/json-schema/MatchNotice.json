@@ -73,5 +73,5 @@
     "matches"
   ],
   "additionalProperties": false,
-  "description": "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute, for a phone to write as a notification (NOTE-3)."
+  "description": "What an integration (an API key, or an assignor calendar) did to the user's matches, collected over about a minute (30 seconds for matches within a day), for a phone to write as a notification (NOTE-3)."
 }

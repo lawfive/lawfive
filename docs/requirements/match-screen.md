@@ -87,7 +87,7 @@ How the watch app looks: the running screen and the choices it's built from, the
   - **Controls**: Tap for stoppage (INP-4), Card reasons (EVT-14), Touch lock on five-button Garmins and Apple Watch (INP-12).
   - **Record track**; on Apple Watch with Save to Health; on Wear OS saying what's missing without permission.
   - **Match screen** (UI-21), **Timer names** and **Quick match** (the Create match list, saved for Quick match).
-  - **About**: the app's version, the server and its version, history kept, and Reset LawFive (DATA-8).
+  - **About**: the app's version, the server and its version, history kept, where the source is, where the license texts are (WX-12), and Reset LawFive (DATA-8).
   - A sideloaded watch, with no phone settings (R-9), can change everything here.
 
   **History** lists the watch's finished matches with "Sent", "Waiting to send" or "Not sent". Each opens its status (when sent, with the track's progress, or press to send; one finished unlinked goes on linking, SYNC-4), **Summary** (score, each period with its added time, cards, distance), **Events**, and **Remove from watch** (confirmed, warning when it hasn't reached LawFive). Wear OS has a Permissions row while anything's refused.

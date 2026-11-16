@@ -295,9 +295,44 @@ module Sync {
         System.exit();
     }
 
+    //! Every downloaded match, as the last sync stored them (SYNC-3, SYNC-16).
     function matches() as Array<Dictionary> {
         var stored = Application.Storage.getValue(STORAGE_MATCHES);
         return stored instanceof Array ? stored as Array<Dictionary> : [] as Array<Dictionary>;
+    }
+
+    //! SYNC-16: the matches Matches lists: the scheduled ones as SYNC-3 keeps them, and a canceled or
+    //! postponed one until its kickoff has passed, as the watch may not sync again before then.
+    function listed() as Array<Dictionary> {
+        return matchesFrom(true);
+    }
+
+    //! SYNC-16: the scheduled matches only, the ones counted and offered as coming up.
+    function upcoming() as Array<Dictionary> {
+        return matchesFrom(false);
+    }
+
+    function matchesFrom(withCanceled as Boolean) as Array<Dictionary> {
+        var all = matches();
+        var now = Time.now().value();
+        var kept = [] as Array<Dictionary>;
+        for (var i = 0; i < all.size(); i++) {
+            var kickoff = all[i]["kickoff"];
+            if (statusOf(all[i]) == null || (withCanceled && !(kickoff instanceof Number && kickoff <= now))) {
+                kept.add(all[i]);
+            }
+        }
+        return kept;
+    }
+
+    //! SYNC-16: "Canceled" or "Postponed" for a match that won't be played as planned, or null for a
+    //! scheduled one. The data model spells it "cancelled".
+    function statusOf(synced as Dictionary) as String? {
+        var status = synced["status"];
+        if (!(status instanceof String)) {
+            return null;
+        }
+        return status.equals("postponed") ? "Postponed" : "Canceled";
     }
 
     function outbox() as Array<Dictionary> {
@@ -602,9 +637,21 @@ module Sync {
         return setup;
     }
 
+    //! The next matches' query: SYNC-16, with canceled and postponed ones still to kick off among them,
+    //! which the server sends only to a watch that asks.
+    function matchesQuery() as Dictionary {
+        return {"limit" => MAX_MATCHES, "canceled" => "true"};
+    }
+
     //! The start-menu line for a downloaded match: "STR v ROV" and "Sat 9:00 · 54° rain · Twin Creeks"
     //! (the forecast, WX-7, when the server has one).
     function describe(synced as Dictionary) as [String, String] {
+        var title = stringOr(synced["title"] as String?, "Match");
+        // SYNC-16: a canceled or postponed match says so in place of its day, time and place.
+        var status = statusOf(synced);
+        if (status != null) {
+            return [title, status];
+        }
         var parts = [] as Array<String>;
         var kickoff = kickoffText(synced);
         if (kickoff != null) {
@@ -622,7 +669,7 @@ module Sync {
         for (var i = 0; i < parts.size(); i++) {
             sub += (i > 0 ? " · " : "") + parts[i];
         }
-        return [stringOr(synced["title"] as String?, "Match"), sub];
+        return [title, sub];
     }
 
     //! A downloaded match's kickoff, "Sat 9:00", or null when it has none.
@@ -947,7 +994,7 @@ class SyncJob {
 
     private function download() as Void {
         Sync.progress = "Getting matches…";
-        Phone.request("GET", "/v1/watch/matches", {"limit" => Sync.MAX_MATCHES}, method(:onMatches));
+        Phone.request("GET", "/v1/watch/matches", Sync.matchesQuery(), method(:onMatches));
     }
 
     function onMatches(code as Number, data as Dictionary or String or Null) as Void {

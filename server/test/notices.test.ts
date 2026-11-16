@@ -14,8 +14,8 @@ import { Push } from "../src/push.ts";
 import { checkAnswer } from "./contract.ts";
 
 // Notices of what integrations did (NOTE-1 to NOTE-4): only an API key whose owner asked, only
-// matches that haven't kicked off, a burst collected into one notification, a change within a day
-// sent at once, the notice read by the phone, and one no phone hears kept as that (NOTE-5). Against
+// matches that haven't kicked off, a burst collected into one notification, changes within a day
+// collected for 30 seconds, the notice read by the phone, and one no phone hears kept as that (NOTE-5). Against
 // PGlite, a made-up relay and a clock.
 
 const migrationsFolder = new URL("../drizzle", import.meta.url).pathname;
@@ -74,6 +74,12 @@ describe("notices", () => {
         await notices.flush();
     }
 
+    async function halfAMinuteLater() {
+        await notices.idle();
+        clock += 31_000;
+        await notices.flush();
+    }
+
     before(async () => {
         await migrate(db, { migrationsFolder });
         const res = await app.request("/v1/auth/sign-up/email", {
@@ -117,16 +123,37 @@ describe("notices", () => {
         assert.deepEqual(notice.matches[0], { matchId: ids[1], changes: ["added"], title: "Strikers v Rovers", kickoff: soonest, timeZone: "America/Los_Angeles", venue: "Twin Creeks, Field 3" });
     });
 
-    test("a change within a day goes at once; canceled, then back on (NOTE-2)", async () => {
+    test("a change within a day goes after 30 seconds; canceled, then back on (NOTE-2)", async () => {
         const id = crypto.randomUUID();
         await call("PUT", `/v1/matches/${id}`, session, match({ kickoff: at(5 * HOUR) }));
         let m = (await call("GET", `/v1/matches/${id}`, session)).body;
         m = (await call("PUT", `/v1/matches/${id}`, refsync, { ...m, status: "cancelled" })).body;
+        await notices.flush();
+        assert.deepEqual(await delivered(), []);
+        await halfAMinuteLater();
         const [canceled] = await delivered();
         assert.deepEqual(canceled.matches[0].changes, ["canceled"]);
         await call("PUT", `/v1/matches/${id}`, refsync, { ...m, status: "scheduled" });
+        await halfAMinuteLater();
         const [backOn] = await delivered();
         assert.deepEqual(backOn.matches[0].changes, ["backOn"]);
+    });
+
+    test("changes within a day in a burst make one notification, apart from later ones (NOTE-2)", async () => {
+        const soon = [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()];
+        for (const id of soon) await call("PUT", `/v1/matches/${id}`, refsync, match({ kickoff: at(6 * HOUR) }));
+        const later = crypto.randomUUID();
+        await call("PUT", `/v1/matches/${later}`, refsync, match({ kickoff: at(5 * DAY) }));
+        const fleeting = crypto.randomUUID();
+        await call("PUT", `/v1/matches/${fleeting}`, refsync, match({ kickoff: at(6 * HOUR) }));
+        await call("DELETE", `/v1/matches/${fleeting}`, refsync);
+        await halfAMinuteLater();
+        const [urgent, ...none] = await delivered();
+        assert.equal(none.length, 0);
+        assert.deepEqual(urgent.matches.map((m: { matchId: string }) => m.matchId).sort(), [...soon].sort());
+        await halfAMinuteLater();
+        const [rest] = await delivered();
+        assert.deepEqual(rest.matches.map((m: { matchId: string }) => m.matchId), [later]);
     });
 
     test("a moved kickoff and venue say where it was; notes and fees don't notify (NOTE-2)", async () => {

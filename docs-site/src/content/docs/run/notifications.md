@@ -6,7 +6,7 @@ description: How phone notifications reach people on a self-hosted LawFive serve
 A LawFive server can tell people's phones about two things:
 
 - **A new weather risk** to a match in the next 3 days.
-- **Matches from integrations:** an app with an API key, such as an assignor's, added a match, or canceled, postponed, moved or removed one that hasn't kicked off. Only keys set to notify count, and changes people make themselves never do. A key's changes are collected for a minute and sent as one notification, except a change to a match within a day, which goes at once.
+- **Matches from integrations:** an app with an API key, such as an assignor's, added a match, or canceled, postponed, moved or removed one that hasn't kicked off. Only keys set to notify count, and changes people make themselves never do. A key's changes are collected for a minute and sent as one notification; changes to matches within a day are collected for 30 seconds instead, so they arrive soon.
 
 Each person turns each one on in the app ([weather risks](/apps/phones/#weather-risks), [matches from integrations](/apps/phones/#matches-from-integrations)), and they're off until they do, on Android and the iPhone. Each phone tells your server which of the two it wants, so it's sent only those.
 

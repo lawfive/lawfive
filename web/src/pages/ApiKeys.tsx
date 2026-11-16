@@ -184,7 +184,7 @@ function NewKey({ notices, onClose, onCreated }: { notices: boolean; onClose: ()
                                         options={[["30", "In 30 days"], ["90", "In 90 days"], ["365", "In a year"]]} />
                                 </Field>
                                 {canNotify && (
-                                    <Field label="Notifications" info="For an app that adds your assignments: your phones are told when it adds a match, or cancels, postpones, moves or removes one, as one notification a minute at most. Leave it off for a script loading your own matches. Turn on Matches from integrations in the phone app too.">
+                                    <Field label="Notifications" info="For an app that adds your assignments: your phones are told when it adds a match, or cancels, postpones, moves or removes one, with each burst of changes as one notification. Leave it off for a script loading your own matches. Turn on Matches from integrations in the phone app too.">
                                         <Toggle label="Tell my phones when it adds or changes matches" checked={notify} onChange={setNotify} />
                                     </Field>
                                 )}

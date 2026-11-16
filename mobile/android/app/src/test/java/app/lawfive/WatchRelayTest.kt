@@ -141,6 +141,42 @@ class WatchRelayTest {
     }
 
     @Test
+    fun `the phone's fetch ahead asks for canceled and postponed matches too`() = runTest {
+        val fake = FakeServer()
+        val relay = WatchRelay(null, fake, { server })
+        relay.handle(message(1, "request", "/v1/watch/matches", "GET", JsonObject(mapOf("limit" to JsonPrimitive(10)))))
+        relay.refresh()
+        // SYNC-16: so the copy for later has them, for a watch build that shows them.
+        assertNull((fake.bodies[0] as JsonObject)["canceled"])
+        assertEquals("true", (fake.bodies[1] as JsonObject)["canceled"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `without signal only a watch that asked gets canceled and postponed matches`() = runTest {
+        val fake = FakeServer()
+        fun m(id: String, status: String? = null) = JsonObject(buildMap {
+            put("id", JsonPrimitive(id))
+            status?.let { put("status", JsonPrimitive(it)) }
+        })
+        fake.matches = JsonObject(mapOf("matches" to JsonArray(listOf(m("m1"), m("m2", "cancelled"), m("m3"), m("m4", "postponed")))))
+        val relay = WatchRelay(null, fake, { server })
+        fun ids(answer: JsonObject?) = answer!!["data"]!!.jsonObject["matches"]!!.jsonArray.map { it.jsonObject["id"]!!.jsonPrimitive.content }
+        val older = JsonObject(mapOf("limit" to JsonPrimitive(10)))
+        val newer = JsonObject(mapOf("limit" to JsonPrimitive(10), "canceled" to JsonPrimitive("true")))
+        // With signal, the server's answer goes to the watch as the server gave it.
+        assertEquals(listOf("m1", "m2", "m3", "m4"), ids(relay.handle(message(1, "request", "/v1/watch/matches", "GET", older))))
+        relay.refresh()
+        fake.online = false
+        // SYNC-16: from the copy, an older Garmin build (no canceled=true) gets the scheduled matches only.
+        assertEquals(listOf("m1", "m3"), ids(relay.handle(message(2, "request", "/v1/watch/matches", "GET", older))))
+        assertEquals(listOf("m1", "m3"), ids(relay.handle(message(3, "request", "/v1/watch/matches", "GET"))))
+        // One that asked gets them all, the Garmin's Monkey C true as well as "true".
+        assertEquals(listOf("m1", "m2", "m3", "m4"), ids(relay.handle(message(4, "request", "/v1/watch/matches", "GET", newer))))
+        val asBoolean = JsonObject(mapOf("limit" to JsonPrimitive(10), "canceled" to JsonPrimitive(true)))
+        assertEquals(listOf("m1", "m2", "m3", "m4"), ids(relay.handle(message(5, "request", "/v1/watch/matches", "GET", asBoolean))))
+    }
+
+    @Test
     fun `without signal or a fetch before the watch hears it couldn't reach the server`() = runTest {
         val fake = FakeServer().apply { online = false }
         assertEquals(WatchRelay.NO_SIGNAL, code(WatchRelay(null, fake, { server }).handle(message(1, "request", "/v1/watch/matches", "GET"))))
