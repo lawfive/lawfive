@@ -51,6 +51,8 @@ final class ScreenSnapshots: XCTestCase {
         await graph.weather.refresh()
         await graph.weather.refresh(past: true)
         await graph.onWatch.refresh()
+        // FILE-13: the next 3 days' matches' files, as after a sync with signal.
+        await graph.keptFiles.refresh(matches: graph.records.matches ?? [])
         ScreenSnapshots.graphs[key] = graph
         return graph
     }
@@ -89,6 +91,22 @@ final class ScreenSnapshots: XCTestCase {
         let graph = try await graph(.demo)
         let id = try XCTUnwrap(Fixtures.index.demo.matches["canceled"])
         try await Snapshots.take("match-canceled") { self.app(graph, tab: .matches, [.match(id)]) }
+    }
+
+    /// FILE-6, FILE-13: the next match's files, its competition's under them, kept on the phone for it.
+    func testTheNextMatchsFiles() async throws {
+        let graph = try await graph(.demo)
+        let id = try XCTUnwrap(Fixtures.index.demo.matches["next"])
+        try await Snapshots.take("match-files") { self.app(graph, tab: .matches, [.match(id)]) }
+    }
+
+    /// WEB-34: a competition's page, with its matches and files; and a venue's, with its files under its photos.
+    func testACompetitionAndAVenue() async throws {
+        let graph = try await graph(.demo)
+        let competition = try XCTUnwrap(FixtureServer.files(.demo).first { $0["recordType"] as? String == "competition" }?["recordId"] as? String)
+        let venue = try XCTUnwrap(FixtureServer.files(.demo).first { $0["recordType"] as? String == "venue" }?["recordId"] as? String)
+        try await Snapshots.take("competition") { self.app(graph, tab: .more, [.competitions, .competition(competition)]) }
+        try await Snapshots.take("venue") { self.app(graph, tab: .venues, [.venue(venue)]) }
     }
 
     func testSettings() async throws {

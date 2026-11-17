@@ -9,6 +9,8 @@ enum Route: Hashable {
     case venue(String)
     case referee(String)
     case competitions
+    /// WEB-34: a competition's page.
+    case competition(String)
     case templates
     case settings
     /// Settings opened at a group (Get ready's Change for the units, WEB-32).
@@ -278,6 +280,7 @@ struct SignedIn: View {
         case .venue(let id): VenueScreen(id: id)
         case .referee(let id): RefereeScreen(id: id)
         case .competitions: CompetitionsScreen()
+        case .competition(let id): CompetitionScreen(id: id)
         case .templates: TemplatesScreen()
         case .settings: SettingsScreen()
         case .settingsAt(let group): SettingsScreen(at: group)

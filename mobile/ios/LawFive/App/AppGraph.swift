@@ -23,6 +23,8 @@ final class AppGraph {
     @ObservationIgnored private(set) var watch: WatchBridge?
     /// Which matches are on which watch (SYNC-14), kept for when there's no signal.
     @ObservationIgnored private(set) var onWatch: OnWatchStore!
+    /// Files kept on the phone for the next 3 days' matches and with Keep on this phone (FILE-13).
+    @ObservationIgnored private(set) var keptFiles: KeptFiles!
     /// Decision 4c: the paired Apple Watch, linked from this phone over WatchConnectivity.
     @ObservationIgnored private(set) var appleWatch: AppleWatchLink!
     /// PUSH-5, NOTE-4: notifications from the server, through the push relay.
@@ -75,6 +77,7 @@ final class AppGraph {
         stats = StatsStore(api: api, file: folder.appending(path: "stats.json"))
         merging = Merging(api: api)
         onWatch = OnWatchStore(api: api, file: folder.appending(path: "on-watch.json"))
+        keptFiles = KeptFiles(api: api, folder: folder.appending(path: "kept-files"))
         appleWatch = AppleWatchLink(api: api) { [weak session] in
             guard let session, session.signedIn else { return nil }
             return (session.server, session.name ?? session.email ?? "")
@@ -135,6 +138,7 @@ final class AppGraph {
             await weather.refresh()
             await watch?.relay.refresh()
             await onWatch.refresh()
+            await keptFiles.refresh(matches: records.matches ?? [])
             try? await push.refresh()
         }
         return worked
@@ -354,6 +358,7 @@ final class AppGraph {
         weather.clear()
         stats.clear()
         onWatch.clear()
+        keptFiles.clear()
         refereePictures = [:]
         serverMeta = nil
         records.forgetDefaults()

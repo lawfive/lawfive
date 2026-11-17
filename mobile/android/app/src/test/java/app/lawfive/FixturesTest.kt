@@ -78,4 +78,13 @@ class FixturesTest {
         val heat = json.decodeFromJsonElement(Heat.serializer(), track["heat"]!!)
         assertEquals(heat.cols * heat.rows, heat.total.size)
     }
+
+    @Test
+    fun `the demo's files read as the Files cards and kept files read them`() {
+        // FILE-6: GET /v1/attachments?kind=file for each kind of record.
+        for (kind in listOf("venue", "competition", "match")) {
+            val files = json.decodeFromJsonElement(ListSerializer(app.lawfive.schema.Attachment.serializer()), obj("demo/files-$kind.json")["attachments"]!!)
+            assertTrue("files-$kind.json has files", files.isNotEmpty() && files.all { it.kind == "file" && it.recordType == kind && it.name != null })
+        }
+    }
 }

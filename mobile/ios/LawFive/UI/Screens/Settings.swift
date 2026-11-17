@@ -495,7 +495,17 @@ private struct YourData: View {
         if let plan {
             PlanRows(plan: plan)
         } else if let storage {
-            ListRow(title: "Photos and tracks", sub: storage, leading: { Avatar(icon: .photos) }, trailing: { EmptyView() })
+            ListRow(title: "Photos, files and tracks", sub: storage, leading: { Avatar(icon: .photos) }, trailing: { EmptyView() })
+        }
+        // FILE-13: how much is kept on this phone for a ground without signal, with Remove kept files.
+        let kept = graph.keptFiles!
+        ListRow(title: "Files kept on this phone",
+                sub: kept.count == 0 ? "None yet. The files of the next 3 days' matches are kept here when there's signal, and any you keep, so they open without it."
+                    : "\(fileSize(kept.bytes)) in \(kept.count == 1 ? "1 file" : "\(kept.count) files"): the next 3 days' matches' and any you keep, at most 200 MB.",
+                leading: { Avatar(icon: .keep) }, trailing: { EmptyView() })
+        if kept.count > 0 {
+            ListRow(title: "Remove kept files", sub: "The next 3 days' matches' come back when there's signal.", action: { kept.removeAll() },
+                    leading: { Avatar(icon: .trash) }, trailing: { EmptyView() })
         }
         // IOS-10, as APP-21.
         ListRow(title: "Delete your account", sub: "Your matches, venues, referees, tracks and everything else, for good.", action: onDelete,

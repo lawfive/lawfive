@@ -6,8 +6,8 @@ import UIKit
 // photos, made smaller on the phone (2000 px, a 480 px thumbnail, as a JPEG with nothing but the
 // picture in it), with captions; a referee's first photo is their picture. Photos need signal.
 
-/// How much of its room an account is using (SEC-6), and saying when a photo doesn't fit (FILE-7), as
-/// the website does.
+/// How much of its room an account is using (SEC-6), and saying when a photo or file doesn't fit
+/// (FILE-7), as the website does.
 struct StorageUse: Equatable {
     let usedBytes: Double
     let limitBytes: Double?
@@ -31,6 +31,9 @@ struct StorageUse: Equatable {
 /// Known not to fit before it's sent, once the server has refused another.
 struct NoRoomForPhoto: Error {}
 
+/// The same for a file (FILE-7).
+struct NoRoomForFile: Error {}
+
 /// "5.9 MB", "120 MB", "1.5 GB"; whole under 10 MB when it is, so a limit reads "6 MB".
 func storageSize(_ bytes: Double) -> String {
     if bytes >= 1_073_741_824 { return String(format: "%.1f GB", bytes / 1_073_741_824) }
@@ -42,14 +45,14 @@ func storageUsedLine(_ storage: StorageUse) -> String {
     "\(storageSize(storage.usedBytes)) of \(storageSize(storage.limitBytes ?? 0)) used"
 }
 
-/// The bold start of the notice: `noRoom` photos didn't fit, or none was tried.
-func noRoomTitle(_ noRoom: Int) -> String {
-    noRoom == 0 ? "Your storage is full." : noRoom == 1 ? "This photo didn't fit." : "\(noRoom) photos didn't fit."
+/// The bold start of the notice: `noRoom` photos (or files) didn't fit, or none was tried.
+func noRoomTitle(_ noRoom: Int, what: String = "photo") -> String {
+    noRoom == 0 ? "Your storage is full." : noRoom == 1 ? "This \(what) didn't fit." : "\(noRoom) \(what)s didn't fit."
 }
 
 /// The rest of it; an admin also gets a way to change the limit.
 func noRoomText(_ storage: StorageUse, admin: Bool) -> String {
-    "You've used \(storageSize(storage.usedBytes)) of \(storageSize(storage.limitBytes ?? 0)). Delete some photos or tracks to make room" + (admin ? "." : ", or ask an admin of this server for more.")
+    "You've used \(storageSize(storage.usedBytes)) of \(storageSize(storage.limitBytes ?? 0)). Delete some photos, files or tracks to make room" + (admin ? "." : ", or ask an admin of this server for more.")
 }
 
 /// A referee's picture, or their initials; round, or with `tile` a square board tile (WEB-28, on the
@@ -112,7 +115,6 @@ struct PhotosSection: View {
     /// FILE-7: how many didn't fit, once they've been tried; nil when there's nothing to say.
     @State private var noRoom: Int?
     @Environment(\.openURL) private var openURL
-    @Environment(\.ground) private var ground
     @Environment(\.colorScheme) private var scheme
 
     struct ViewerStart: Identifiable {
@@ -269,14 +271,15 @@ struct PhotosSection: View {
             }
             Button { picking = true } label: { Label { Text("From your photos") } icon: { Ph.photos.image } }
         } label: {
-            // The ground's colors fixed: iOS 17 draws a menu's label outside the ground's trait.
-            RoundedRectangle(cornerRadius: 6).fill(ink(\.surface2, ground, scheme))
+            // The panel's colors fixed: iOS 17 draws a menu's label outside the ground's trait, and the
+            // section itself sits on the grass, so its own ground isn't the card's.
+            RoundedRectangle(cornerRadius: 6).fill(ink(\.surface2, .panel, scheme))
                 .aspectRatio(1, contentMode: .fit)
-                .overlay(RoundedRectangle(cornerRadius: 6).stroke(ink(\.muted, ground, scheme).opacity(0.55), style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])))
+                .overlay(RoundedRectangle(cornerRadius: 6).stroke(ink(\.muted, .panel, scheme).opacity(0.55), style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])))
                 .overlay {
                     VStack(spacing: 6) {
-                        PhIcon(.camera, size: 24, tint: ink(\.muted, ground, scheme))
-                        Text("Add photos").font(.lfLabelMedium).foregroundStyle(ink(\.muted, ground, scheme))
+                        PhIcon(.camera, size: 24, tint: ink(\.muted, .panel, scheme))
+                        Text("Add photos").font(.lfLabelMedium).foregroundStyle(ink(\.muted, .panel, scheme))
                     }
                 }
         }
@@ -284,7 +287,7 @@ struct PhotosSection: View {
 }
 
 /// The native camera.
-private struct CameraPicker: UIViewControllerRepresentable {
+struct CameraPicker: UIViewControllerRepresentable {
     let done: (UIImage) -> Void
     @Environment(\.dismiss) private var dismiss
 

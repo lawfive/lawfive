@@ -1,7 +1,7 @@
 import SwiftUI
 
-// A venue's and a referee's own pages (IOS-4): what there is to know at a glance, with Edit for the
-// form, as a match has its page and its edit.
+// A venue's, a referee's and a competition's own pages (IOS-4, WEB-34): what there is to know at a
+// glance, with Edit for the form, as a match has its page and its edit.
 
 /// A venue: its map, Directions, pitches, tags and notes, the matches there, and photos.
 struct VenueScreen: View {
@@ -48,6 +48,8 @@ struct VenueScreen: View {
                 }
                 MatchesWith(title: "Matches here", matches: here, none: "No matches here yet.").id(matchesAnchor)
                 PhotosSection(recordType: "venue", recordId: id).padding(.top, 8)
+                // FILE-6: the venue's files, its parking map and field layout, under its photos.
+                FilesSection(recordType: "venue", recordId: id)
             }
             .backTitle("Venue · \(v.name)")
             .toolbar { ToolbarItem(placement: .topBarTrailing) { BarIcon(icon: .edit, label: "Edit") { nav.sheet = .venue(id) } } }
@@ -103,6 +105,70 @@ struct RefereeScreen: View {
         } else {
             Page("Referee", large: false) { LoadingPitch() }
         }
+    }
+}
+
+/// WEB-34: a competition: what it is, its dates, template, codes and notes, its matches, and its files (FILE-6).
+struct CompetitionScreen: View {
+    let id: String
+    @Environment(AppGraph.self) private var graph
+    @Environment(Nav.self) private var nav
+
+    var body: some View {
+        if let c = graph.records.competition(id) {
+            let template = (graph.records.templates ?? []).first { $0.id == c.templateId }
+            let sub = [c.type.prefix(1).uppercased() + c.type.dropFirst(), c.season, c.ageGroup, c.level, c.organiser].compactMap { $0 }.joined(separator: " · ").orNil
+            Page(c.name, sub: sub, large: false) {
+                let facts = [
+                    describeDates(c.startDate, c.endDate).map { Fact(icon: .calendar, label: "Dates", value: $0) },
+                    template.map { Fact(icon: .templates, label: "Match template", value: "\($0.name) · \(describeFormat($0.format))", wide: true) },
+                    c.misconductScheme.flatMap { s in misconductSchemes.first { $0.0 == s } }.map { Fact(icon: .report, label: "Misconduct codes", value: $0.1) },
+                    c.notes.map { Fact(icon: .note, label: "Notes", value: $0, wide: true) },
+                ].compactMap { $0 }
+                if !facts.isEmpty {
+                    SectionTitle("Details")
+                    FactsCard(facts: facts)
+                }
+                MatchesWith(title: "Matches", matches: (graph.records.matches ?? []).filter { $0.competitionId == id }, none: "No matches in this competition yet.")
+                FilesSection(recordType: "competition", recordId: id)
+            }
+            .backTitle("Competition · \(c.name)")
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { BarIcon(icon: .edit, label: "Edit") { nav.sheet = .competition(id) } } }
+        } else {
+            Page("Competition", large: false) { LoadingPitch() }
+        }
+    }
+}
+
+/// The misconduct code schemes, by id, as the website names them.
+let misconductSchemes = [("ifab", "Laws of the Game"), ("ussf", "United States"), ("fa", "England")]
+
+/// "Nov 14 – 15, 2026": when a competition runs, from its first and last days, as the website's and Android's.
+func describeDates(_ start: String?, _ end: String?) -> String? {
+    let parse = DateFormatter()
+    parse.locale = Locale(identifier: "en_US_POSIX")
+    parse.timeZone = TimeZone(identifier: "UTC")
+    parse.dateFormat = "yyyy-MM-dd"
+    func show(_ d: Date, _ format: String) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US")
+        f.timeZone = TimeZone(identifier: "UTC")
+        f.dateFormat = format
+        return f.string(from: d)
+    }
+    let first = start.flatMap { parse.date(from: $0) }
+    let last = end.flatMap { parse.date(from: $0) }
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(identifier: "UTC")!
+    switch (first, last) {
+    case let (first?, last?):
+        if first == last { return show(first, "MMM d, yyyy") }
+        if calendar.component(.year, from: first) != calendar.component(.year, from: last) { return "\(show(first, "MMM d, yyyy")) – \(show(last, "MMM d, yyyy"))" }
+        if calendar.component(.month, from: first) != calendar.component(.month, from: last) { return "\(show(first, "MMM d")) – \(show(last, "MMM d, yyyy"))" }
+        return "\(show(first, "MMM d")) – \(show(last, "d, yyyy"))"
+    case let (first?, nil): return "From \(show(first, "MMM d, yyyy"))"
+    case let (nil, last?): return "Until \(show(last, "MMM d, yyyy"))"
+    default: return nil
     }
 }
 

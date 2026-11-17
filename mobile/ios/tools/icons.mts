@@ -35,6 +35,10 @@ const icons: Record<string, string> = {
     help: "Question",
     // EVT-12: a sin bin, on its yellow card, as Android's and the website's.
     hourglass: "HourglassMedium",
+    // Files on a record (FILE-6, FILE-12, FILE-13): each kind's icon, as the website's, adding them, opening one in
+    // another app, and keeping one on the phone.
+    pdf: "FilePdf", xlsx: "FileXls", csv: "FileCsv", docx: "FileDoc", txt: "FileTxt", fileImage: "FileImage",
+    addFiles: "FilePlus", openWith: "ArrowSquareOut", keep: "PushPin", keepOff: "PushPinSlash",
 };
 
 // WCH-6: the ones the Apple Watch app uses, written to LawFiveWatch/Resources/Assets.xcassets/Phosphor too, in

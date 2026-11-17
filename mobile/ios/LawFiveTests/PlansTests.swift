@@ -11,11 +11,11 @@ final class PlansTests: XCTestCase {
     func testTheLimitsAPlanSetsAndStorageAlways() {
         XCTAssertEqual(planLines(plan(PlanLimits(matches: 50, storageMb: 2048, apiCallsPerMinute: 120, webhooks: 0))), [
             PlanLine(label: "Matches", figure: "40", of: "of 50", share: 0.8),
-            PlanLine(label: "Photos and tracks", figure: "512.5 MB", of: "of 2 GB", share: 512.5 / 2048),
+            PlanLine(label: "Photos, files and tracks", figure: "512.5 MB", of: "of 2 GB", share: 512.5 / 2048),
             PlanLine(label: "API requests a minute", figure: "120", of: "at most", share: nil),
             PlanLine(label: "Webhooks", figure: "0", of: "of none", share: 1),
         ])
-        XCTAssertEqual(planLines(plan(PlanLimits())), [PlanLine(label: "Photos and tracks", figure: "512.5 MB", of: nil, share: nil)])
+        XCTAssertEqual(planLines(plan(PlanLimits())), [PlanLine(label: "Photos, files and tracks", figure: "512.5 MB", of: nil, share: nil)])
     }
 
     func testWhenAPlanEndsAndWhatFollows() {

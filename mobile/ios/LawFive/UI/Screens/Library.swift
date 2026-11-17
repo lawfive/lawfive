@@ -201,6 +201,7 @@ struct VenueEditScreen: View {
             }
             if id != nil {
                 PhotosSection(recordType: "venue", recordId: recordId)
+                FilesSection(recordType: "venue", recordId: recordId)
                 // DUP-12: on servers that work out duplicates; the form closes and the merge opens on the page under it.
                 if mergingOffered {
                     SecondaryButton("Merge with…", icon: .merge, wide: true) {
@@ -409,8 +410,8 @@ struct CompetitionsScreen: View {
                     EmptyState(picture: .bracket, title: "No competitions yet", text: "Keep each league or cup together, and let it set the format of its matches.") { PrimaryButton("Add a competition", icon: .plus) { nav.sheet = .competition(nil) } }
                 }
                 ForEach(Array(competitions.sorted { $0.name.lowercased() < $1.name.lowercased() }.enumerated()), id: \.element.id) { i, c in
-                    ListRow(title: c.name, sub: [c.type.prefix(1).uppercased() + c.type.dropFirst(), c.season, c.organiser].compactMap { $0 }.joined(separator: " · "), divider: i > 0, action: { nav.sheet = .competition(c.id) },
-                            leading: { Avatar(icon: .competitions) }, trailing: { EmptyView() })
+                    ListRow(title: c.name, sub: [c.type.prefix(1).uppercased() + c.type.dropFirst(), c.season, c.organiser].compactMap { $0 }.joined(separator: " · "), divider: i > 0, action: { nav.push(.competition(c.id)) },
+                            leading: { Avatar(icon: .competitions) }, trailing: { PhIcon(.next, tint: LF.muted) })
                 }
             }
         }
@@ -423,6 +424,7 @@ struct CompetitionsScreen: View {
 struct CompetitionEditScreen: View {
     let id: String?
     @Environment(AppGraph.self) private var graph
+    @Environment(Nav.self) private var nav
     @Environment(\.dismiss) private var dismiss
     @State private var loaded = false
     @State private var recordId = newId()
@@ -439,7 +441,8 @@ struct CompetitionEditScreen: View {
 
     var body: some View {
         let templates = (graph.records.templates ?? []).sorted { $0.name < $1.name }
-        FormPage(title: id == nil ? "New competition" : (saved?.name ?? "Competition"), canSave: name.orNil != nil, loaded: loaded, snapshot: "\(name)|\(type)|\(season)|\(organizer)|\(ageGroup)|\(String(describing: templateId))|\(notes)", delete: id == nil ? nil : ("Delete competition", { deleting = true }), save: {
+        // WEB-34: opened from the competition's page, which it goes back to.
+        FormPage(title: id == nil ? "New competition" : "Edit competition", canSave: name.orNil != nil, loaded: loaded, snapshot: "\(name)|\(type)|\(season)|\(organizer)|\(ageGroup)|\(String(describing: templateId))|\(notes)", delete: id == nil ? nil : ("Delete competition", { deleting = true }), save: {
             var c = saved ?? Competition(id: recordId, version: 0, updatedAt: nowString(), name: "", type: CompetitionType.league)
             c.name = name.trimmingCharacters(in: .whitespaces)
             c.type = type
@@ -482,6 +485,9 @@ struct CompetitionEditScreen: View {
             Task {
                 await graph.records.delete(Collections.competitions, id: recordId)
                 dismiss()
+                // Past its own page, which has gone too.
+                nav.popToRoot()
+                nav.push(.competitions)
             }
         }
     }

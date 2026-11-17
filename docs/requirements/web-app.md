@@ -113,5 +113,4 @@ Everything above is built on the website, and on Android and the iPhone where a 
 
 Not built yet:
 
-- A competition's page (WEB-34) on the phones, which still open the competition's form.
 - Apple's color picker (WEB-19) hasn't been tried on a real iPhone.

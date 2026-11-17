@@ -115,8 +115,13 @@ final class FixturesTests: XCTestCase {
         XCTAssertEqual(devices.compactMap { $0["name"]?.string }, ["Garmin Venu 2"], "the demo's linked watch")
         let onWatch = try jsonDecoder.decode(JSONValue.self, from: Fixtures.data(.demo, "devices-matches.json"))["matches"]?.decoded(as: [MatchOnWatch].self)
         XCTAssertFalse(onWatch?.isEmpty ?? true, "and the matches on it")
+        // FILE-6: the demo's files on each kind of record, as the Files cards and KeptFiles read them.
+        for kind in ["venue", "competition", "match"] {
+            let list = try jsonDecoder.decode(JSONValue.self, from: Fixtures.data(.demo, "files-\(kind).json"))["attachments"]?.decoded(as: [Attachment].self)
+            XCTAssertTrue(list?.contains { $0.kind == "file" && $0.recordType == kind && $0.name != nil } ?? false, "files-\(kind).json has files")
+        }
         let files = try FileManager.default.subpathsOfDirectory(atPath: Fixtures.folder.path).filter { $0.hasSuffix(".json") }.sorted()
-        XCTAssertEqual(files, ["demo/changes.json", "demo/devices-matches.json", "demo/devices.json", "demo/stats.json", "demo/track.json", "demo/weather.json", "index.json",
+        XCTAssertEqual(files, ["demo/changes.json", "demo/devices-matches.json", "demo/devices.json", "demo/files-competition.json", "demo/files-match.json", "demo/files-venue.json", "demo/stats.json", "demo/track.json", "demo/weather.json", "index.json",
                                "new-account/changes.json", "new-account/stats.json", "new-account/weather.json"],
                        "a new fixture file wants a decoding check here")
     }

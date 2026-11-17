@@ -169,6 +169,8 @@ struct MatchScreen: View {
                 .padding(.top, 30)
             }
             PhotosSection(recordType: "match", recordId: m.id).padding(.top, 8)
+            // FILE-6: the match's files, with its competition's under them.
+            FilesSection(recordType: "match", recordId: m.id, competition: records.competition(m.competitionId))
         }
         .confirm("Put back the watch's?", isPresented: $reverting, message: "What the watch recorded comes back, and your corrections to the goals, cards and outcome go.", action: "Put back") {
             if let record { revert(record) }

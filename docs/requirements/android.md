@@ -116,7 +116,7 @@ Everything above is built. The app is in use on a real phone with a Garmin watch
 Not built yet:
 
 - The Play Store (APP-9).
-- Checks on a real phone (R-6): the launcher icon with and without themed icons, the launch screen, the notification icon, and the stripes, boards, slabs (WEB-28) and painted heatmap (TRK-9) in sunlight; Recent (WEB-26); the scanner reading a real QR code (APP-13).
+- Checks on a real phone (R-6): the launcher icon with and without themed icons, the launch screen, the notification icon, and the stripes, boards, slabs (WEB-28) and painted heatmap (TRK-9) in sunlight; Recent (WEB-26); the scanner reading a real QR code (APP-13); files (FILE-13): adding from the phone's files and the camera, real league PDFs, spreadsheets and Word documents opened with Open with and shared, and a kept parking map in airplane mode.
 - What came in from the watch (APP-26) with a real watch.
 - Deleting the account (APP-21) is checked only by the build and the server's tests.
 - Only the server's own answers (APP-23) is checked by unit tests, not yet by a sync during a real restart.

@@ -37,7 +37,7 @@ func planLines(_ plan: AccountPlan) -> [PlanLine] {
         guard let allowed else { return nil }
         return PlanLine(label: label, figure: allowed == 0 ? "None" : mb ? sizeOf(Double(allowed)) : count(allowed), of: allowed == 0 ? nil : "at most", share: nil)
     }
-    let storage = PlanLine(label: "Photos and tracks", figure: sizeOf(u.storageMb), of: l.storageMb.map { "of \(sizeOf(Double($0)))" },
+    let storage = PlanLine(label: "Photos, files and tracks", figure: sizeOf(u.storageMb), of: l.storageMb.map { "of \(sizeOf(Double($0)))" },
                            share: l.storageMb.map { $0 == 0 ? 1 : min(1, u.storageMb / Double($0)) })
     return [
         counted("Matches", l.matches, u.matches),
@@ -45,7 +45,8 @@ func planLines(_ plan: AccountPlan) -> [PlanLine] {
         counted("Venues", l.venues, u.venues),
         storage,
         most("Largest photo", l.photoMb, mb: true),
-        most("Largest file", l.fileMb, mb: true),
+        most("Largest file", l.attachmentMb, mb: true),
+        most("Largest import", l.fileMb, mb: true),
         counted("Watches and phones", l.devices, u.devices),
         counted("Notifications today", l.pushPerDay, u.pushPerDay),
         counted("API keys", l.apiKeys, u.apiKeys),

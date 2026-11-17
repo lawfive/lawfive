@@ -121,7 +121,7 @@ final class DataTests: XCTestCase {
         XCTAssertFalse(nearly.full)
         XCTAssertEqual(storageUsedLine(nearly), "5.9 MB of 6 MB used")
         XCTAssertEqual(noRoomTitle(3), "3 photos didn't fit.")
-        XCTAssertEqual(noRoomText(nearly, admin: true), "You've used 5.9 MB of 6 MB. Delete some photos or tracks to make room.")
+        XCTAssertEqual(noRoomText(nearly, admin: true), "You've used 5.9 MB of 6 MB. Delete some photos, files or tracks to make room.")
         XCTAssertTrue(noRoomText(nearly, admin: false).hasSuffix("or ask an admin of this server for more."))
         XCTAssertFalse(StorageUse(usedBytes: 100 * mb, limitBytes: nil).nearlyFull)
     }
