@@ -33,6 +33,7 @@ adb shell am start -n app.lawfive/app.lawfive.wear.MainActivity --es server http
 |---|---|
 | `server` | A server's address |
 | `token` | Link with a token (from the device flow, `client_id` `lawfive-wear`) |
+| `typedServer` | What Settings → Account → Server starts with, as if typed, for its check (SYNC-9); the emulator's keyboard doesn't hand text back |
 | `refusedRecord` (`--ez`) | A finished match whose upload LawFive refuses, first in the outbox (SYNC-17) |
 | `screen` | The match screen's choices, `clocks,mainClock,secondClock,breakClock,edge,names` (UI-21): clocks 0 one, 1 stacked, 2 side by side; clock styles 0 Match time, 1 Each half from 0, 2 Time left; break 0 time left, 1 time taken; edge 0 neither, 1 ring, 2 time of day; names 1 or 0 |
 | `syncScreen` | The sync screen at `1` or `2` of 3 matches, partway through a `track`, or `stopped` (UI-26) |

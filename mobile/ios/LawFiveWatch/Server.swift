@@ -8,6 +8,15 @@ struct ServerRefused: Error {
     let error: String?
 }
 
+/// SYNC-9, as the Garmin's server check: what GET /v1/meta's answer says of the address, nil for a LawFive server, or
+/// the problem: "No LawFive server there" for anything else that answers, "Can't reach the server" when nothing does.
+func serverProblem(product: String?, status: Int?, reached: Bool) -> String? {
+    if !reached { return "Can't reach the server" }
+    if status == nil && product == "LawFive" { return nil }
+    if status == nil || status == 404 { return "No LawFive server there" }
+    return "The server said no (\(status!))"
+}
+
 struct Server: Sendable {
     let base: String
     static let clientId = "lawfive-applewatch"
@@ -59,6 +68,24 @@ struct Server: Sendable {
     }
 
     @MainActor func get(_ path: String, token: String?) async throws -> Data { try await call("GET", path, token: token, body: nil) }
+
+    /// SYNC-9: nil when a LawFive server answers at this address, else what's wrong.
+    @MainActor func check() async -> String? {
+        do {
+            let answer = try await get("/v1/meta", token: nil)
+            // Something that isn't JSON (another website) isn't LawFive.
+            let meta = (try? JSONSerialization.jsonObject(with: answer)) as? [String: Any]
+            return serverProblem(product: meta?["product"] as? String, status: nil, reached: true)
+        } catch let e as ServerRefused {
+            return serverProblem(product: nil, status: e.status, reached: true)
+        } catch let e as URLError where e.code == .badServerResponse {
+            return serverProblem(product: nil, status: 404, reached: true)
+        } catch let e as URLError where e.code == .badURL || e.code == .unsupportedURL {
+            return "That isn't an address"
+        } catch {
+            return serverProblem(product: nil, status: nil, reached: false)
+        }
+    }
     @MainActor func post(_ path: String, token: String?, body: Data?) async throws -> Data { try await call("POST", path, token: token, body: body) }
 
     struct DeviceCode: Decodable {

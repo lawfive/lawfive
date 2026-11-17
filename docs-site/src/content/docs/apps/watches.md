@@ -30,7 +30,7 @@ Choose your server before linking. You can change it whenever the watch isn't li
 
 **On Garmin:** choose **Server** in the Link account menu, then **My own server**, and type your address. An address without `https://` gets it added. The watch asks the address for LawFive's server information, and keeps it only when a LawFive server answers, showing "Found LawFive". Otherwise it says what went wrong, so you can try again. You can also set it from your phone: in the Connect IQ app, LawFive's **Settings** has **LawFive server to link to**. A watch that's already linked keeps the server it linked with.
 
-**On Wear OS and Apple Watch:** open **Settings → Account**, and type your address in the server field. It needs `https://`, which is added if you leave it out. On Wear OS, leaving the field empty goes back to the hosted service.
+**On Wear OS and Apple Watch:** open **Settings → Account**, and type your address in the server field. It needs `https://`, which is added if you leave it out. As on Garmin, the watch keeps it only when a LawFive server answers there, showing "Found LawFive"; otherwise it says what went wrong and leaves the address in the field to correct. Leaving the field empty goes back to the hosted service.
 
 A Garmin app you install yourself over USB can also have a server built in. See [the Garmin app](/contribute/garmin/#installing-on-your-watch).
 

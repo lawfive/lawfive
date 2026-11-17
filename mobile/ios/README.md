@@ -108,6 +108,7 @@ xcrun simctl launch <watch> app.lawfive.watchkitapp -server http://localhost:300
 | `-screen` | The match screen's choices, as Wear OS's `screen` extra (UI-21) |
 | `-reset`, `-clear` | Forget everything, or the match |
 | `-token` | Link with a token |
+| `-typedServer` | Types that address into Account's Server box and submits it, once, for its check (SYNC-9) |
 | `-refusedRecord` | A finished match whose upload LawFive refuses, first in the outbox (SYNC-17) |
 | `-syncScreen` | The sync screen at `1` or `2` of 3 matches, partway through a `track`, or `stopped` (UI-26) |
 | `-plain`, `-cup` | A test format; `-golden` adds golden goal to `-cup` |

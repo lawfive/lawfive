@@ -707,25 +707,54 @@ private fun AboutPage() {
 /** SYNC-9: a self-hosted server's address. */
 @Composable
 private fun ServerPage(pop: () -> Unit) {
-    var text by remember { mutableStateOf(AppState.saved.server ?: "") }
+    // SYNC-9: typedServer, for testing, stands in for typing, as the emulator's text entry doesn't hand text back.
+    var text by remember { mutableStateOf(AppState.typedServerForTesting.also { AppState.typedServerForTesting = null } ?: AppState.saved.server ?: "") }
     var refused by remember { mutableStateOf(false) }
-    val type = rememberTextEntry("Server address") { text = it; refused = false }
+    // SYNC-9: the address being checked, and what the check found: null while checking, "" for LawFive, else the problem.
+    var checking by remember { mutableStateOf<String?>(null) }
+    var found by remember { mutableStateOf<String?>(null) }
+    var attempt by remember { mutableStateOf(0) }
+    val type = rememberTextEntry("Server address") { text = it; refused = false; checking = null; found = null }
+    LaunchedEffect(attempt) {
+        val address = checking ?: return@LaunchedEffect
+        found = null
+        val problem = Server { address }.check()
+        found = problem ?: ""
+        if (problem == null) {
+            AppState.setServer(address)
+            delay(1200)
+            pop()
+        }
+    }
+    val status = when {
+        refused -> "It needs https://"
+        checking != null && found == null -> "Checking…"
+        found == "" -> "Found LawFive"
+        found != null -> found!!
+        else -> "Empty for LawFive's own"
+    }
+    val statusColor = if (refused || (found != null && found != "")) C.red else if (found == "") C.brand else C.dim
     Column(Modifier.fillMaxSize().padding(horizontal = 22.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         T("Server address", 14.sp, weight = FontWeight.SemiBold)
         Spacer(Modifier.height(8.dp))
         Box(Modifier.fillMaxWidth().background(C.row, RoundedCornerShape(12.dp)).clickable { type() }.padding(10.dp)) {
             if (text.isEmpty()) T("Tap to type", 14.sp, C.dim, FontWeight.Normal) else T(text, 14.sp, weight = FontWeight.Normal)
         }
-        T(if (refused) "It needs https://" else "Empty for LawFive's own", 12.sp, if (refused) C.red else C.dim, FontWeight.Normal, Modifier.padding(top = 6.dp))
+        T(status, 12.sp, statusColor, if (found == "") FontWeight.SemiBold else FontWeight.Normal, Modifier.padding(top = 6.dp), lines = 2)
         Spacer(Modifier.height(10.dp))
         PillButton("Save") {
             val address = text.ifBlank { null }?.let { if (it.contains("://")) it else "https://$it" }
             // WCH-4: the session's token never goes over plain http, except from a debug build to a test server.
             if (address != null && !address.startsWith("https://") && !BuildConfig.DEBUG) {
                 refused = true
-            } else {
-                AppState.setServer(address)
+            } else if (address == null) {
+                AppState.setServer(null)
                 pop()
+            } else {
+                // SYNC-9: kept only once a LawFive server answers there, as on Garmin; otherwise the box keeps it to correct.
+                found = null
+                checking = address
+                attempt++
             }
         }
     }

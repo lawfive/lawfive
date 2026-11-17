@@ -801,6 +801,9 @@ struct AccountPage: View {
     @State private var confirming = false
     @State private var address = ""
     @State private var refused = false
+    /// SYNC-9: the check of a typed address: "Checking…", "Found LawFive", or what's wrong.
+    @State private var check: String?
+    @State private var found = false
 
     /// UI-16, WCH-13: the quiet sync when the app opens; Sync now in Matches always works.
     private var syncOnOpening: some View {
@@ -828,33 +831,70 @@ struct AccountPage: View {
                     MenuRow(label: "Unlink", sub: host) { confirming = true }
                 } else {
                     NavigationLink { LinkPage() } label: { RowLabel(label: "Link account", sub: "Get a code", icon: "link") }.buttonStyle(.plain)
-                    // SYNC-9: a self-hosted server's address, with the system's text entry.
+                    // SYNC-9: a self-hosted server's address, with the system's text entry, kept once a LawFive server
+                    // answers there, as on Garmin; otherwise it stays in the box to correct.
                     if refused { Text("It needs https://").font(.barlow(12)).foregroundStyle(C.red) }
+                    if let check {
+                        Text(check).font(.barlow(12, found ? .semibold : .regular)).foregroundStyle(found ? C.brand : check == "Checking…" ? C.dim : C.red)
+                            .multilineTextAlignment(.center)
+                    }
                     TextField("Server: \(host)", text: $address)
                         .font(.barlow(13))
-                        .onSubmit {
-                            let typed = address.trimmingCharacters(in: .whitespaces)
-                            let full = typed.isEmpty ? nil : typed.contains("://") ? typed : "https://" + typed
-                            // WCH-4: the session's token never goes over plain http, except from a debug build to a test server.
-                            #if DEBUG
-                            state.setServer(full)
-                            address = ""
-                            #else
-                            if full == nil || full!.hasPrefix("https://") {
-                                state.setServer(full)
-                                address = ""
-                            } else {
-                                refused = true
-                            }
-                            #endif
-                        }
+                        .onSubmit(submit)
                     syncOnOpening
                 }
                 // UI-17: Record track and Save to Health are in Settings itself.
             }
+            #if DEBUG
+            .onAppear {
+                // SYNC-9: -typedServer types an address and submits it, once, as the UI tests can't drive watchOS's text entry.
+                if !typedServerUsed, !state.linked, let typed = UserDefaults.standard.string(forKey: "typedServer") {
+                    typedServerUsed = true
+                    address = typed
+                    submit()
+                }
+            }
+            #endif
+        }
+    }
+
+    /// SYNC-9: the typed address, checked before it's kept, as the Garmin's ServerCheckView.
+    private func submit() {
+        let typed = address.trimmingCharacters(in: .whitespaces)
+        let full = typed.isEmpty ? nil : typed.contains("://") ? typed : "https://" + typed
+        refused = false
+        found = false
+        // WCH-4: the session's token never goes over plain http, except from a debug build to a test server.
+        #if !DEBUG
+        if let full, !full.hasPrefix("https://") {
+            refused = true
+            return
+        }
+        #endif
+        guard let full else {
+            state.setServer(nil)
+            check = nil
+            return
+        }
+        check = "Checking…"
+        Task {
+            let problem = await Server(base: full).check()
+            guard address.trimmingCharacters(in: .whitespaces) == typed else { return }
+            if let problem {
+                check = problem
+            } else {
+                state.setServer(full)
+                found = true
+                check = "Found LawFive"
+                address = ""
+            }
         }
     }
 }
+
+#if DEBUG
+@MainActor private var typedServerUsed = false
+#endif
 
 /// SYNC-1: a code for the website; approved there, the watch gets its token.
 struct LinkPage: View {

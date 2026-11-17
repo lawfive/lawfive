@@ -28,6 +28,20 @@ const val CLIENT_ID = "lawfive-wear"
 
 class ServerRefused(val status: Int, val body: JsonObject?) : Exception("HTTP $status")
 
+/** APP-23: something other than LawFive answered (a proxy, or another website), so nothing it says counts. */
+class NotLawFive(code: Int) : IOException("Something in front of the server answered $code")
+
+/**
+ * SYNC-9, as the Garmin's server check: what GET /v1/meta's answer says of the address, null for a LawFive server, or
+ * the problem: "No LawFive server there" for anything else that answers, "Can't reach the server" when nothing does.
+ */
+fun serverProblem(product: String?, status: Int?, reached: Boolean): String? = when {
+    !reached -> "Can't reach the server"
+    status == null && product == "LawFive" -> null
+    status == null || status == 404 -> "No LawFive server there"
+    else -> "The server said no ($status)"
+}
+
 fun JsonObject.str(key: String): String? = (this[key] as? JsonPrimitive)?.contentOrNull
 fun JsonObject.int(key: String): Int? = (this[key] as? JsonPrimitive)?.intOrNull
 fun JsonObject.bool(key: String): Boolean? = (this[key] as? JsonPrimitive)?.booleanOrNull
@@ -57,13 +71,26 @@ class Server(private val base: () -> String) {
             val parsed = runCatching { json.parseToJsonElement(text).jsonObject }.getOrNull()
             // APP-23: only the server's own answer (its LawFive-Version header, or an older one's JSON)
             // counts; a proxy's 404 or 502 while it restarts is as if it couldn't be reached, so nothing is dropped.
-            if (!res.isSuccessful && res.header("LawFive-Version") == null && parsed == null) throw IOException("Something in front of the server answered ${res.code}")
+            if (!res.isSuccessful && res.header("LawFive-Version") == null && parsed == null) throw NotLawFive(res.code)
             if (!res.isSuccessful) throw ServerRefused(res.code, parsed)
             parsed ?: JsonObject(emptyMap())
         }
     }
 
     suspend fun get(path: String, token: String?) = call("GET", path, token, null)
+
+    /** SYNC-9: null when a LawFive server answers at this address, else what's wrong. */
+    suspend fun check(): String? = try {
+        serverProblem(get("/v1/meta", null).str("product"), null, true)
+    } catch (e: ServerRefused) {
+        serverProblem(null, e.status, true)
+    } catch (_: NotLawFive) {
+        serverProblem(null, 404, true)
+    } catch (_: IllegalArgumentException) {
+        "That isn't an address"
+    } catch (_: Exception) {
+        serverProblem(null, null, false)
+    }
     suspend fun post(path: String, token: String?, body: JsonElement?) = call("POST", path, token, body)
 
     /** SYNC-1: a code to enter on the website. */

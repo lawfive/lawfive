@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
         // For testing on an emulator: its address for the demo, and a layout to look at.
         if (BuildConfig.DEBUG) {
             intent.getStringExtra("server")?.let { AppState.setServer(it) }
+            // SYNC-9: what Settings → Account → Server starts with, as if typed, to check.
+            intent.getStringExtra("typedServer")?.let { AppState.typedServerForTesting = it }
             // SYNC-1: linked with a token got by the device flow, as the Apple Watch's -token.
             intent.getStringExtra("token")?.let { token -> AppState.update { it.copy(token = token) } }
             // SYNC-17: a finished match LawFive refuses, first in the outbox.

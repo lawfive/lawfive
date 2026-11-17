@@ -114,6 +114,32 @@ final class DemoSync: XCTestCase {
         shot("account, sync on opening off")
     }
 
+    // SYNC-9: a typed address is checked before it's kept: nothing there says so, and it stays in the box to correct; the
+    // demo is found, and kept. -typedServer types it, as watchOS's text entry can't be driven here.
+    func testCheckingAServerAddress() throws {
+        let server = try XCTUnwrap(environment["LAWFIVE_DEMO"], "needs the demo server")
+        continueAfterFailure = false
+        func openAccount() {
+            app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Settings'")).firstMatch.tap()
+            let account = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Account'")).firstMatch
+            XCTAssertTrue(account.waitForExistence(timeout: 5))
+            account.tap()
+        }
+        app.launchArguments = ["-reset", "1", "-noWorkout", "1", "-typedServer", "http://localhost:9"]
+        app.launch()
+        openAccount()
+        XCTAssertTrue(app.staticTexts["Can't reach the server"].waitForExistence(timeout: 40), app.debugDescription)
+        XCTAssertEqual(app.textFields.firstMatch.value as? String, "http://localhost:9", "kept in the box to correct")
+        shot("server not there")
+        app.terminate()
+        app.launchArguments = ["-noWorkout", "1", "-typedServer", server]
+        app.launch()
+        openAccount()
+        XCTAssertTrue(app.staticTexts["Found LawFive"].waitForExistence(timeout: 20), app.debugDescription)
+        XCTAssertTrue(app.textFields.firstMatch.placeholderValue?.contains("localhost:3000") == true, app.debugDescription)
+        shot("server found")
+    }
+
     // UI-19: the demo's next match: Start match, the fee, its details labeled one row each, with the crew, and Mark pitch.
     func testADownloadedMatch() throws {
         try XCTSkipUnless(environment["LAWFIVE_DEMO"] != nil, "needs the demo server")

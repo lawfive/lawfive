@@ -524,6 +524,9 @@ object AppState {
 
     fun deviceFlow() = server
 
+    /** For testing on an emulator (SYNC-9): the address the server page starts with, once. */
+    var typedServerForTesting: String? = null
+
     // ---- Opening (WCH-13) ----
 
     private var openedBefore = false
