@@ -25,11 +25,19 @@ module Phone {
     var _pending as Dictionary? = null;
     var _callback as Method(code as Number, data as Dictionary or String or Null) as Void or Null = null;
     var _registered as Boolean = false;
+    //! Tests only: answers each request as [code, data] in place of the phone and the server.
+    typedef StandIn as Method(verb as String, path as String) as Array<Number or Dictionary or Null>;
+    var standIn as StandIn? = null;
 
     //! A request to the server, through the phone app when it's there. `body` is the JSON body of a
     //! POST, or the query of a GET. `callback` gets the status code and the answer, as from
     //! Communications.makeWebRequest.
     function request(method as String, path as String, body as Dictionary?, callback as Method(code as Number, data as Dictionary or String or Null) as Void) as Void {
+        if (standIn != null) {
+            var reply = (standIn as StandIn).invoke(method, path);
+            callback.invoke(reply[0] as Number, reply[1] as Dictionary or Null);
+            return;
+        }
         _callback = callback;
         var asked = present;
         if (asked == false && System.getTimer() - _checkedAt < RETRY_MS) {

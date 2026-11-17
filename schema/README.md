@@ -29,7 +29,7 @@ pnpm generate    # rewrite generated/ after changing src/ (the tests fail until 
 | `examples/` | Example records, named `<Type>.<description>.json`. Each must parse as its type. |
 | `quiz/` | The quiz's questions, one file per language ([docs/QUIZ.md](../docs/QUIZ.md)). `pnpm generate` copies English to the iPhone app. |
 | `match-cases/` | The match rules' shared cases (see below). |
-| `short-names.json` | Cases for a team's short name: `src/shortNames.ts` runs them, and `pnpm generate` copies them into Android's and the iPhone's tests (`generated/kotlin-tests/`, `mobile/ios/LawFiveTests/`) for their ports in `Format.kt` and `Format.swift`. |
+| `short-names.json` | Cases for a team's short name: `src/shortNames.ts` runs them, and `pnpm generate` copies them into Android's, the iPhone's and the Garmin watch's tests (`generated/kotlin-tests/`, `mobile/ios/LawFiveTests/`, `watch-garmin/source/ShortNameCases.mc`) for their ports in `Format.kt`, `Format.swift` and `Settings.mc`. |
 | `misconduct/` | Misconduct code schemes (IFAB, US Soccer, The FA) as data. To add one, add its file and import it in `src/misconduct.ts`; a test checks every file is imported. |
 | `scripts/` | `generate.ts` (behind `pnpm generate`) and `garminModels.ts`, which reads the Connect IQ SDK's device files. |
 | `test/` | Examples, misconduct files, ranges, the API description, tracks, pitches, the match screen, the quiz, stats filters, and that `generated/` is up to date. |

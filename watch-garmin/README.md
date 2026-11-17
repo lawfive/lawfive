@@ -71,7 +71,7 @@ bash -c 'source tools/sim/sim.sh; sim_run "$(sim_testcopy fr965 serverUrl=http:/
 - The simulator's text entry takes no typing from the Mac keyboard, so set the server with `serverUrl=` as above.
 - For a track (TRK-7), play a GPX file in *Simulation → Activity Data* and set *Settings → Set GPS Quality* to Good before kickoff (no heart rate from GPX).
 - Through the Android app instead (APP-7): [mobile/android/README.md](../mobile/android/README.md#testing-the-watch-through-the-phone).
-- Failures show as codes: -1001 not HTTPS, -400 an unreadable response, -104 no phone connection, 401 unlinked, 404 a route the server doesn't have (an older server).
+- Failures show as codes: -1001 not HTTPS, -400 an unreadable response (a proxy's error page while the server restarts arrives this way through Garmin Connect, R-19), -104 no phone connection, 401 unlinked, 404 a route the server doesn't have (an older server). A 400, 401 or 404 without LawFive's JSON error is checked against `/v1/meta` before the watch acts on it (SYNC-17).
 
 ### On a real watch
 
@@ -129,7 +129,7 @@ Edited in the Garmin Connect app, or in the simulator under *File → Edit Persi
 | Key | Default | Meaning |
 |---|---|---|
 | `homeName`, `awayName` | blank | A planned match's teams |
-| `homeAlias`, `awayAlias` | blank | Short names, up to 4 characters; blank is the first 3 letters (SET-5) |
+| `homeAlias`, `awayAlias` | blank | Short names, up to 4 characters; blank is made from both names, as everywhere else (SET-5) |
 | `homeColor`, `awayColor` | blank | Team colors as hex, `#C8102E` (UI-10) |
 | `numPeriods`, `periodMin`, `halftimeMin` | 2, 45, 15 | Format; minutes can be fractions (22.5); 1 to 4 periods (SET-16) |
 | `teamSize` | 11 | Stored with the match only |

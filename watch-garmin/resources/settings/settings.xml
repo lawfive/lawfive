@@ -1,10 +1,10 @@
 <resources>
     <strings>
         <string id="homeNameTitle">Home team name</string>
-        <string id="homeAliasTitle">Home short name, up to 4 letters (blank = first 3 letters of the name, or HOM)</string>
+        <string id="homeAliasTitle">Home short name, up to 4 letters (blank: made from both team names, or HOM)</string>
         <string id="homeColorTitle">Home color, hex such as #C8102E (blank = none)</string>
         <string id="awayNameTitle">Away team name</string>
-        <string id="awayAliasTitle">Away short name, up to 4 letters (blank = first 3 letters of the name, or AWY)</string>
+        <string id="awayAliasTitle">Away short name, up to 4 letters (blank: made from both team names, or AWY)</string>
         <string id="awayColorTitle">Away color, hex such as #1D428A (blank = none)</string>
         <string id="numPeriodsTitle">Number of periods</string>
         <string id="periodMinTitle">Period length (minutes)</string>

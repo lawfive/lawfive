@@ -12,9 +12,9 @@ passed=()
 
 step() { printf '\n== %s\n' "$1"; }
 
-# The cases are generated from schema/match-cases; out of date, every copy would test old cases.
+# The cases are generated from schema/match-cases and schema/short-names.json; out of date, every copy would test old cases.
 step "Shared cases (schema)"
-generated=(schema/generated/match-cases.json schema/generated/kotlin-tests/MatchCases.kt schema/generated/swift-tests/MatchCases.swift watch-garmin/source/MatchCases.mc mobile/ios/LawFiveTests/MatchCases.swift)
+generated=(schema/generated/match-cases.json schema/generated/kotlin-tests/MatchCases.kt schema/generated/swift-tests/MatchCases.swift watch-garmin/source/MatchCases.mc mobile/ios/LawFiveTests/MatchCases.swift schema/generated/kotlin-tests/ShortNameCases.kt mobile/ios/LawFiveTests/ShortNameCases.swift watch-garmin/source/ShortNameCases.mc)
 before=$(cat "${generated[@]}" 2>/dev/null | shasum)
 if (cd schema && pnpm -s generate >/dev/null) && [ "$(cat "${generated[@]}" | shasum)" = "$before" ]; then
     passed+=("cases up to date")

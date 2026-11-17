@@ -24,7 +24,7 @@ Where the referee went and how hard they worked in a match: GPS and heart rate, 
 
 ## Getting a track
 
-- **TRK-7** **The Garmin app records its own track**, on by default; **Record track** in Settings → Account (and the phone settings) turns it off.
+- **TRK-7** **The Garmin app records its own track**, on by default; **Record track** in Settings (and the phone settings) turns it off.
   - GPS (with the watch's speed) and heart rate about once a second, from kickoff to the end of each period, not the breaks.
   - Saved as it goes in 5-minute chunks (about 100 KB for a 90-minute match), so closing the app mid-match keeps it (TMR-8). If storage fills, recording stops and what was recorded is kept. Restarting (PRE-6) or canceling the match throws it away.
   - Uploaded after the match, a chunk a request, through the same sync (SYNC-4); the full-time screen says "Sending track…" or "Track uploads when phone is near" until it's in. A watch not yet linked sends it with the match once linked. The last 3 tracks wait on the watch; beyond that the oldest is dropped.

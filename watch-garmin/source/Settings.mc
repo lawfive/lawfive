@@ -68,18 +68,81 @@ module Settings {
         if (full.length() <= maxRowTitle) {
             return full;
         }
-        return teamAlias(getString("homeAlias"), teams[0], "HOM") + " v " + teamAlias(getString("awayAlias"), teams[1], "AWY");
+        var shown = shortNames(getString("homeAlias"), getString("homeName"), getString("awayAlias"), getString("awayName"));
+        return shown[0] + " v " + shown[1];
     }
 
-    //! SET-5: the short name shown on screen: the alias (up to 4 characters), else the first three
-    //! letters of the name in capitals, else the default.
-    function teamAlias(shortName as String, name as String, fallback as String) as String {
-        if (shortName.length() > 0) {
-            return shortName.length() > 4 ? shortName.substring(0, 4) as String : shortName;
-        } else if (name.length() > 0) {
-            return (name.length() > 3 ? name.substring(0, 3) as String : name).toUpper();
+    //! SET-5: the short names a pair of teams shows, [home, away]: each typed one (up to 4
+    //! characters), else the one suggested from both names, else HOM and AWY. A copy of shortName in
+    //! schema/src/shortNames.ts, run against the cases in schema/short-names.json (testShortNames).
+    function shortNames(homeAlias as String, homeName as String, awayAlias as String, awayName as String) as [String, String] {
+        var suggested = suggestShortNames(homeName, awayName);
+        return [typedOr(homeAlias, suggested[0], "HOM"), typedOr(awayAlias, suggested[1], "AWY")] as [String, String];
+    }
+
+    function typedOr(typed as String, suggested as String, fallback as String) as String {
+        if (typed.length() > 0) {
+            return typed.length() > 4 ? typed.substring(0, 4) as String : typed;
         }
-        return fallback;
+        return suggested.length() > 0 ? suggested : fallback;
+    }
+
+    //! SET-5: the first three letters or digits of each name in capitals ("" for none). When those
+    //! are the same, the words the names start with in common are skipped, so "Strikers U12" and
+    //! "Strikers U14" become U12 and U14 (suggestAliases in schema/src/shortNames.ts).
+    function suggestShortNames(homeName as String, awayName as String) as [String, String] {
+        var home = nameWords(homeName);
+        var away = nameWords(awayName);
+        var simple = [firstThree(home, 0), firstThree(away, 0)] as [String, String];
+        if (simple[0].length() == 0 || !simple[0].equals(simple[1])) {
+            return simple;
+        }
+        var shared = 0;
+        while (shared < home.size() && shared < away.size() && home[shared].toLower().equals(away[shared].toLower())) {
+            shared++;
+        }
+        var distinct = [firstThree(home, shared), firstThree(away, shared)] as [String, String];
+        if (distinct[0].length() == 0) {
+            distinct[0] = simple[0];
+        }
+        if (distinct[1].length() == 0) {
+            distinct[1] = simple[1];
+        }
+        return distinct[0].equals(distinct[1]) ? simple : distinct;
+    }
+
+    //! The first three characters of the words from `from` on, in capitals.
+    function firstThree(words as Array<String>, from as Number) as String {
+        var joined = "";
+        for (var i = from; i < words.size() && joined.length() < 3; i++) {
+            joined += words[i];
+        }
+        return (joined.length() > 3 ? joined.substring(0, 3) as String : joined).toUpper();
+    }
+
+    //! A name's words: its letters and digits, split at anything else. Monkey C has no Unicode
+    //! classes, so a letter or digit is 0-9, A-Z, a-z, or any character from U+00C0 on but × and ÷
+    //! and the punctuation blocks (curly quotes, dashes, CJK punctuation): every Latin letter with
+    //! an accent, and other scripts' letters.
+    function nameWords(name as String) as Array<String> {
+        var words = [] as Array<String>;
+        var word = "";
+        var chars = name.toCharArray();
+        for (var i = 0; i < chars.size(); i++) {
+            var c = chars[i].toNumber();
+            var letter = (c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)
+                || (c >= 0xC0 && c != 0xD7 && c != 0xF7 && !(c >= 0x2000 && c <= 0x206F) && !(c >= 0x3000 && c <= 0x303F));
+            if (letter) {
+                word += chars[i].toString();
+            } else if (word.length() > 0) {
+                words.add(word);
+                word = "";
+            }
+        }
+        if (word.length() > 0) {
+            words.add(word);
+        }
+        return words;
     }
 
     //! The setup for a new match (SET-10, SET-11): the format from the phone settings, with the
@@ -89,9 +152,10 @@ module Settings {
     function matchSetup(planned as Boolean) as MatchData {
         var homeName = planned ? getString("homeName") : "";
         var awayName = planned ? getString("awayName") : "";
+        var shown = shortNames(planned ? getString("homeAlias") : "", homeName, planned ? getString("awayAlias") : "", awayName);
         return {
-            "home" => teamAlias(planned ? getString("homeAlias") : "", homeName, "HOM"),
-            "away" => teamAlias(planned ? getString("awayAlias") : "", awayName, "AWY"),
+            "home" => shown[0],
+            "away" => shown[1],
             "homeName" => homeName,
             "awayName" => awayName,
             "homeColor" => planned ? Colors.parse(getString("homeColor")) : -1,

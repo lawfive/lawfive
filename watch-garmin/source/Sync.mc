@@ -534,11 +534,24 @@ module Sync {
         Application.Storage.setValue(STORAGE_PITCHES, remaining as Array<Application.Storage.ValueType>);
     }
 
-    //! SYNC-4, TRK-7: whether an error answer is LawFive's own, which always says what's wrong as JSON
-    //! with an "error", rather than a proxy's (Traefik answers 404 while a server restarts, R-19).
-    //! Only LawFive's own refusal drops what was being sent; anything else waits for the next sync.
+    //! SYNC-17: whether an error answer is LawFive's own, which always says what's wrong as JSON: an
+    //! "error", or Better Auth's "message" and "code" from the account endpoints (sign-out). A proxy's
+    //! page while the server restarts isn't (R-19); going straight through Garmin Connect, it
+    //! arrives as a failed request with no body.
     function fromServer(data as Dictionary or String or Null) as Boolean {
-        return data instanceof Dictionary && data.hasKey("error");
+        return data instanceof Dictionary && (data.hasKey("error") || (data.hasKey("message") && data.hasKey("code")));
+    }
+
+    //! SYNC-17: whether an answer needs checking before the watch acts on it: a 400 or 404 (a
+    //! refusal) or a 401 (unlinked) without LawFive's JSON, unless it's the answer to the second
+    //! send after the check.
+    function needsCheck(code as Number, data as Dictionary or String or Null, checked as Boolean) as Boolean {
+        return !checked && (code == 400 || code == 404 || code == 401) && !fromServer(data);
+    }
+
+    //! SYNC-17: whether GET /v1/meta answered as LawFive, so the server is up and its answers are its own.
+    function isLawFive(code as Number, data as Dictionary or String or Null) as Boolean {
+        return code == 200 && data instanceof Dictionary && "LawFive".equals(data["product"] as String?);
     }
 
     //! Takes a match off the outbox once the server has it.
@@ -835,6 +848,14 @@ class SyncJob {
     private var _matchesSent as Number = 0;
     private var _chunksTotal as Number = 0;
     private var _chunksSent as Number = 0;
+    // SYNC-17: the last request, to send again after the check, and whether the answer being
+    // handled is to that second send (set for it, read and cleared by `checking`).
+    private var _lastMethod as String = "";
+    private var _lastPath as String = "";
+    private var _lastBody as Dictionary? = null;
+    private var _lastCallback as Method(code as Number, data as Dictionary or String or Null) as Void or Null = null;
+    private var _resending as Boolean = false;
+    private var _checked as Boolean = false;
 
     function initialize(done as Method(ok as Boolean) as Void or Null) {
         _done = done;
@@ -862,10 +883,13 @@ class SyncJob {
         var upload = queued[queued.size() - 1];
         _sending = upload["created"] as Number;
         Sync.step("Sending match", _matchesSent + 1, _matchesTotal > _matchesSent ? _matchesTotal : _matchesSent + 1, _matchesSent + _chunksSent, _matchesTotal + _chunksTotal);
-        Phone.request("POST", "/v1/watch/records", upload, method(:onUploaded));
+        request("POST", "/v1/watch/records", upload, method(:onUploaded));
     }
 
     function onUploaded(code as Number, data as Dictionary or String or Null) as Void {
+        if (checking(code, data)) {
+            return;
+        }
         // APP-7: Phone.KEPT is the phone app keeping it for when it has signal: sent, as far as the watch goes.
         if (code == 200 || code == 201 || code == Phone.KEPT) {
             Sync.sent(_sending as Number);
@@ -873,8 +897,8 @@ class SyncJob {
             _matchesSent += 1;
             Sync.matchesSentLast = _matchesSent;
             uploadNext();
-        } else if (code == 400 && Sync.fromServer(data)) {
-            // The server can't take this one; dropping it lets the others through.
+        } else if (code == 400) {
+            // SYNC-17: LawFive can't take this one; dropping it lets the others through.
             Sync.sent(_sending as Number);
             uploadNext();
         } else {
@@ -898,17 +922,20 @@ class SyncJob {
             uploadTrack();
             return;
         }
-        Phone.request("POST", "/v1/watch/tracks", upload, method(:onTrackSent));
+        request("POST", "/v1/watch/tracks", upload, method(:onTrackSent));
     }
 
     function onTrackSent(code as Number, data as Dictionary or String or Null) as Void {
+        if (checking(code, data)) {
+            return;
+        }
         var entry = _track as Array<Number>;
-        if (code == 200 || code == 201 || code == Phone.KEPT || (code == 400 && Sync.fromServer(data))) {
+        if (code == 200 || code == 201 || code == Phone.KEPT || code == 400) {
             // Sent (or kept on the phone), or a chunk the server can't take: either way, on to the next.
             TrackLog.sent(entry[0], entry[3]);
             _chunksSent += 1;
             uploadTrack();
-        } else if (code == 404 && Sync.fromServer(data)) {
+        } else if (code == 404) {
             // A server from before TRK-7, or the match was deleted: the track has nowhere to go.
             TrackLog.drop(entry[0]);
             uploadTrack();
@@ -928,12 +955,15 @@ class SyncJob {
         var change = queued[queued.size() - 1];
         _fee = change;
         Sync.progress = "Sending fee…";
-        Phone.request("POST", "/v1/watch/fee", change, method(:onFeeSent));
+        request("POST", "/v1/watch/fee", change, method(:onFeeSent));
     }
 
     function onFeeSent(code as Number, data as Dictionary or String or Null) as Void {
+        if (checking(code, data)) {
+            return;
+        }
         if (code == 200 || code == Phone.KEPT || code == 400 || code == 404) {
-            // Done (or kept on the phone), or one the server can't take (the match has gone, or a server from before it): on to the next.
+            // Done (or kept on the phone), or one LawFive can't take (the match has gone, or a server from before it): on to the next.
             Sync.feeSent(_fee as Dictionary);
             sendFee();
         } else {
@@ -948,12 +978,15 @@ class SyncJob {
             sendPitch();
             return;
         }
-        Phone.request("POST", "/v1/watch/screen", change, method(:onScreenSent));
+        request("POST", "/v1/watch/screen", change, method(:onScreenSent));
     }
 
     function onScreenSent(code as Number, data as Dictionary or String or Null) as Void {
+        if (checking(code, data)) {
+            return;
+        }
         if (code == 200 || code == Phone.KEPT || code == 400 || code == 404) {
-            // Done (or kept on the phone), or one the server can't take (a server from before it).
+            // Done (or kept on the phone), or one LawFive can't take (a server from before it).
             Application.Storage.deleteValue(Sync.STORAGE_SCREEN_CHANGE);
             sendPitch();
         } else {
@@ -979,12 +1012,15 @@ class SyncJob {
         }
         _pitch = marking;
         Sync.progress = "Sending pitch…";
-        Phone.request("POST", "/v1/watch/pitch", marking, method(:onPitchSent));
+        request("POST", "/v1/watch/pitch", marking, method(:onPitchSent));
     }
 
     function onPitchSent(code as Number, data as Dictionary or String or Null) as Void {
+        if (checking(code, data)) {
+            return;
+        }
         if (code == 200 || code == Phone.KEPT || code == 400 || code == 404) {
-            // Kept (here or on the phone), or one the server can't take (the match has gone, or a server from before it).
+            // Kept (here or on the phone), or one LawFive can't take (the match has gone, or a server from before it).
             Sync.pitchSent(_pitch as Dictionary);
             sendPitch();
         } else {
@@ -994,10 +1030,13 @@ class SyncJob {
 
     private function download() as Void {
         Sync.progress = "Getting matches…";
-        Phone.request("GET", "/v1/watch/matches", Sync.matchesQuery(), method(:onMatches));
+        request("GET", "/v1/watch/matches", Sync.matchesQuery(), method(:onMatches));
     }
 
     function onMatches(code as Number, data as Dictionary or String or Null) as Void {
+        if (checking(code, data)) {
+            return;
+        }
         if (code == 200 && data instanceof Dictionary && data["matches"] instanceof Array) {
             Application.Storage.setValue(Sync.STORAGE_MATCHES, data["matches"] as Array<Application.Storage.ValueType>);
             if (data["serverVersion"] instanceof String) {
@@ -1019,9 +1058,45 @@ class SyncJob {
         }
     }
 
+    //! Sends one request, kept so the SYNC-17 check can send it again.
+    private function request(method as String, path as String, body as Dictionary?, callback as Method(code as Number, data as Dictionary or String or Null) as Void) as Void {
+        _lastMethod = method;
+        _lastPath = path;
+        _lastBody = body;
+        _lastCallback = callback;
+        _checked = _resending;
+        _resending = false;
+        Phone.request(method, path, body, callback);
+    }
+
+    //! SYNC-17: a 400, 404 or 401 without LawFive's JSON error may be a proxy's while the server
+    //! restarts, so before acting on it the watch asks GET /v1/meta. Answered as LawFive, the same
+    //! request goes once more, and its answer is acted on; otherwise the sync stops and everything
+    //! waits. True while checking, so the handler leaves the answer alone.
+    private function checking(code as Number, data as Dictionary or String or Null) as Boolean {
+        var checked = _checked;
+        _checked = false;
+        if (!Sync.needsCheck(code, data, checked)) {
+            return false;
+        }
+        Sync.progress = "Checking server…";
+        Phone.request("GET", "/v1/meta", null, method(:onMeta));
+        return true;
+    }
+
+    function onMeta(code as Number, data as Dictionary or String or Null) as Void {
+        var callback = _lastCallback;
+        if (Sync.isLawFive(code, data) && callback != null) {
+            _resending = true;
+            request(_lastMethod, _lastPath, _lastBody, callback);
+        } else {
+            finish(false, Sync.problemFor(code < 0 ? code : Communications.NETWORK_REQUEST_TIMED_OUT));
+        }
+    }
+
     private function fail(code as Number) as Void {
         if (code == 401) {
-            // SYNC-6: unlinked on the website (or the session ran out).
+            // SYNC-6: unlinked on the website (or the session ran out): LawFive said so (SYNC-17).
             Sync.unlink();
             finish(false, "Unlinked; link again");
         } else {

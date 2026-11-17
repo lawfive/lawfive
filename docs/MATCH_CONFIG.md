@@ -79,9 +79,9 @@ The formal definition is `Match` and `MatchFormat` in [schema/src/](../schema/sr
   - A second for the same number is a send-off.
   - Recorded as `SB` (with the length), and `SB2` for a second (EVT-12).
 - **Aliases** (short names) show on the match screen (SET-5).
-  - A downloaded match has them from the server: the one typed for it; else one made from both team names, the first 3 letters or digits of each in capitals, skipping words both names start with when those would match (L84_Roach v L84_Smith shows ROA v SMI); else HOM/AWY with no name.
+  - The one typed for the match; else one made from both team names, the first 3 letters or digits of each in capitals, skipping words both names start with when those would match (L84_Roach v L84_Smith shows ROA v SMI); else HOM/AWY with no name.
   - Only a typed alias is stored, so the rest follow the names.
-  - Garmin's planned match from the phone settings takes a blank alias as the name's first 3 letters in capitals.
+  - A downloaded match has them from the server; Garmin's planned match from the phone settings works them out on the watch, by the same rule.
 - **Colors** are hex on the phone (`#C8102E`, `C8102E` or `#C12`). Create match offers None, Black, White, Red, Orange, Yellow, Green, Blue and Purple under "Team colors" (SET-14). The name's text is black or white, whichever contrasts more.
 
 ### Keys

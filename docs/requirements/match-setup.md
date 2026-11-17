@@ -61,15 +61,12 @@ How a match is set up before it starts: its format, teams and details, on the wa
   - A short name typed for the match shows as typed. An empty one counts as none.
   - With none, it's made from both team names: the first three letters or digits of each, in capitals (`RIV` for Riverside FC, `STL` for St. Louis City). When those are the same, the words both names start with are skipped (`L84_Roach` v `L84_Smith` gives `ROA` v `SMI`, `L84-HENDERSON_M` v `L84-DE ANGELIS_K` gives `HEN` v `DEA`, `Strikers U12` v `Strikers U14` gives `U12` v `U14`), unless that still can't tell them apart. With no name, `HOM` and `AWY`.
   - The suggestion comes from the two names alone, even when the other team's short name was typed.
-  - One rule everywhere: the server's watch download (so every watch shows it), the website, Try a match and both phones, checked by the shared cases in [`schema/short-names.json`](../../schema/short-names.json). Garmin's planned match from its own phone settings takes the name's first three characters instead.
+  - One rule everywhere: the server's watch download (so every watch shows it), the website, Try a match and both phones, and Garmin's planned match from its own phone settings, checked by the shared cases in [`schema/short-names.json`](../../schema/short-names.json).
   - Only a typed short name is stored, so short names follow the names wherever they change (the forms, an import, a calendar feed, the API). The forms show the suggestion as the field's placeholder, a watch's quick match keeps its short name only when it differs from what its names give, and the match spreadsheet exports only typed short names.
-  - If a short name doesn't fit, the score line uses a smaller font; only then is it cut. Full names are used for the planned match in the start menu and for the activity's name.
+  - If a short name doesn't fit, the score line uses a smaller font; only then is it cut. Full names are used for the planned match in the start menu when they fit, and for the activity's name.
 - **SET-10** Every match carries the fields in [MATCH_CONFIG.md](../MATCH_CONFIG.md), with that file's defaults. Team size is stored and changes nothing on the watch. A downloaded match's name or competition, kickoff, role, venue and pitch, other officials, forecast, notes and fee are shown on its own screen (UI-19); the outlook isn't sent to the watch.
 - **SET-15** **Assignor**: who assigned the match, as a name on the match, beside the match number on the website's and phones' forms. As it's typed, it offers the assignors already used on other matches. Integrations and imports fill it in (an **Assignor** column), and people can type it. It's shown on the match page and the printed report and found by the match list's search. It isn't sent to the watch.
 
 ## Status
 
 Everything above is built on the watches, the website, both phones, the server and Try a match, where each applies.
-
-Not built yet:
-- SET-5's rule for Garmin's planned match from its own phone settings, which takes the name's first three characters (a downloaded match has its short names from the server).

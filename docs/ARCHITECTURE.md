@@ -181,7 +181,6 @@ Still to do:
 - **Proposals in [plans/](plans/):**
   - [Mileage](plans/mileage.md) from home to the pitch.
   - [Wear OS and Apple Watch catching up with Garmin](plans/watch-catch-up.md).
-  - [Garmin corrections](plans/garmin-corrections.md): short names from the phone settings (SET-5), and telling the server's refusals from a proxy's (R-19).
   - [Accounts](plans/accounts.md): signing in with Google or Apple, confirming email addresses, and ending other sessions on a password reset.
   - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
   - [Files on venues, competitions and more](plans/attachments.md) (FILE-6).

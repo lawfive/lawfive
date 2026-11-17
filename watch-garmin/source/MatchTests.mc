@@ -943,28 +943,55 @@ function testCountdownToBreak(logger as Logger) as Boolean {
     return true;
 }
 
-//! SET-5: the alias, else the first three letters of the name, else the default.
+//! SET-5: every shared case (schema/short-names.json, generated into ShortNameCases.mc), as the
+//! server, the website and both phones run them.
 (:test)
-function testTeamAlias(logger as Logger) as Boolean {
-    Test.assertEqualMessage(Settings.teamAlias("", "Riverside FC", "HOM"), "RIV", "first three letters, capitals");
-    Test.assertEqualMessage(Settings.teamAlias("RivFC", "Riverside FC", "HOM"), "RivF", "alias cut to four characters");
-    Test.assertEqualMessage(Settings.teamAlias("RFC", "Riverside FC", "HOM"), "RFC", "alias as given");
-    Test.assertEqualMessage(Settings.teamAlias("", "", "AWY"), "AWY", "default");
+function testShortNames(logger as Logger) as Boolean {
+    var cases = shortNameCases();
+    for (var i = 0; i < cases.size(); i++) {
+        var c = cases[i];
+        var home = c["home"] as Dictionary;
+        var away = c["away"] as Dictionary;
+        var shown = Settings.shortNames(caseText(home, "alias"), caseText(home, "name"), caseText(away, "alias"), caseText(away, "name"));
+        var want = c["shown"] as Array<String>;
+        Test.assertEqualMessage(shown[0] + " v " + shown[1], want[0] + " v " + want[1], c["name"] as String);
+    }
+    Test.assertEqualMessage(Settings.shortNames("RivFC", "Riverside FC", "", "")[0], "RivF", "a typed one cut to four characters");
     return true;
+}
+
+(:debug)
+function caseText(team as Dictionary, key as String) as String {
+    var value = team[key];
+    return value instanceof String ? value : "";
 }
 
 //! The planned match's row in New match: the names when they fit, else the short names.
 (:test)
 function testPlannedTitle(logger as Logger) as Boolean {
-    var kept = [Application.Properties.getValue("homeAlias"), Application.Properties.getValue("awayAlias")];
-    Application.Properties.setValue("homeAlias", "");
-    Application.Properties.setValue("awayAlias", "ROV");
-    Test.assertEqualMessage(Settings.plannedTitle(["Strikers", "Rovers"] as [String, String]), "STR v ROV", "short names when they don't fit");
-    Test.assertEqualMessage(Settings.plannedTitle(["STR", "ROV"] as [String, String]), "STR v ROV", "names that fit");
-    Test.assertEqualMessage(Settings.plannedTitle(["Strikers U12", "Rovers U12"] as [String, String]), "STR v ROV", "the alias set, else the first three letters");
-    Application.Properties.setValue("homeAlias", kept[0] as Application.Properties.ValueType);
-    Application.Properties.setValue("awayAlias", kept[1] as Application.Properties.ValueType);
+    var keys = ["homeName", "awayName", "homeAlias", "awayAlias"];
+    var kept = [] as Array<Application.Properties.ValueType>;
+    for (var i = 0; i < keys.size(); i++) {
+        kept.add(Application.Properties.getValue(keys[i]));
+    }
+    var plan = plannedTitleWith(["Strikers U12", "Strikers U14", "", ""]);
+    Test.assertEqualMessage(plan, "U12 v U14", "short names when they don't fit, from both names (SET-5)");
+    Test.assertEqualMessage(plannedTitleWith(["STR", "ROV", "", ""]), "STR v ROV", "names that fit");
+    Test.assertEqualMessage(plannedTitleWith(["Strikers U12", "Rovers U12", "", "ROVR"]), "STR v ROVR", "a typed short name");
+    for (var i = 0; i < keys.size(); i++) {
+        Application.Properties.setValue(keys[i], kept[i]);
+    }
     return true;
+}
+
+//! The planned match's row with these settings: home name, away name, home alias, away alias.
+(:debug)
+function plannedTitleWith(settings as Array<String>) as String {
+    var keys = ["homeName", "awayName", "homeAlias", "awayAlias"];
+    for (var i = 0; i < keys.size(); i++) {
+        Application.Properties.setValue(keys[i], settings[i]);
+    }
+    return Settings.plannedTitle([settings[0], settings[1]] as [String, String]);
 }
 
 //! UI-10: hex colours parse, and the text colour is whichever of black or white contrasts more.
@@ -2186,15 +2213,127 @@ function testAbandon(logger as Logger) as Boolean {
     return true;
 }
 
-//! SYNC-4, TRK-7: only LawFive's own refusal (JSON with an "error") drops what was being sent; a
-//! proxy's 404 while a server restarts leaves it for the next sync.
+//! SYNC-17: only LawFive's own refusal (JSON with an "error", or Better Auth's "message" and
+//! "code") is acted on at once; anything else is checked first.
 (:test)
 function testOnlyTheServerDropsUploads(logger as Logger) as Boolean {
     Test.assertMessage(Sync.fromServer({ "error" => "invalid track chunk" }), "LawFive's own answer");
+    Test.assertMessage(Sync.fromServer({ "message" => "Unauthorized", "code" => "UNAUTHORIZED" }), "Better Auth's");
     Test.assertMessage(!Sync.fromServer("404 page not found"), "a proxy's page");
     Test.assertMessage(!Sync.fromServer(null), "no body");
     Test.assertMessage(!Sync.fromServer({ "message" => "Not Found" }), "someone else's JSON");
+    Test.assertMessage(Sync.needsCheck(404, null, false), "a 404 with no body");
+    Test.assertMessage(Sync.needsCheck(401, null, false), "a 401 with no body");
+    Test.assertMessage(!Sync.needsCheck(404, null, true), "the second send's 404");
+    Test.assertMessage(!Sync.needsCheck(404, { "error" => "no such match" }, false), "LawFive's 404");
+    Test.assertMessage(!Sync.needsCheck(503, null, false), "a 503 waits anyway");
+    Test.assertMessage(!Sync.needsCheck(-400, null, false), "a failed request waits anyway");
+    Test.assertMessage(Sync.isLawFive(200, { "product" => "LawFive" }), "/v1/meta as LawFive");
+    Test.assertMessage(!Sync.isLawFive(200, { "product" => "Other" }), "someone else's server");
+    Test.assertMessage(!Sync.isLawFive(404, null), "a proxy");
     return true;
+}
+
+//! SYNC-17: whole syncs against a stand-in server: a fee change refused without LawFive's JSON is
+//! dropped only after /v1/meta answers as LawFive and the second send is refused too; a proxy's
+//! answer keeps it; a 401 unlinks only when LawFive said so.
+(:test)
+function testSyncRefusals(logger as Logger) as Boolean {
+    var keys = [Sync.STORAGE_OUTBOX, Sync.STORAGE_FEES, Sync.STORAGE_SCREEN_CHANGE, Sync.STORAGE_PITCHES, TrackLog.STORAGE_OUTBOX, Sync.STORAGE_TOKEN];
+    var kept = [] as Array<Application.Storage.ValueType or Null>;
+    for (var i = 0; i < keys.size(); i++) {
+        kept.add(Application.Storage.getValue(keys[i]));
+    }
+    var problem = Sync.lastProblem;
+    var lawFive = [200, { "product" => "LawFive" }];
+    var proxy = [-400, null];
+    var nothing = [404, null];
+    var none = [] as Array;
+
+    var run = syncAgainst([nothing, nothing], [lawFive], none);
+    Test.assertEqualMessage(run.asked(), "fee meta fee matches", "checked, then refused again");
+    Test.assertEqualMessage(Sync.feeOutbox().size(), 0, "so the fee change is dropped");
+
+    run = syncAgainst([nothing], [proxy], none);
+    Test.assertEqualMessage(run.asked(), "fee meta", "the check found a proxy");
+    Test.assertEqualMessage(Sync.feeOutbox().size(), 1, "so the fee change waits");
+    Test.assertEqualMessage(Sync.lastProblem as String, "Couldn't reach server", "and the sync says why");
+
+    run = syncAgainst([[404, { "error" => "no such match" }]], none, none);
+    Test.assertEqualMessage(run.asked(), "fee matches", "LawFive's refusal needs no check");
+    Test.assertEqualMessage(Sync.feeOutbox().size(), 0, "LawFive's refusal drops it");
+
+    run = syncAgainst([nothing, [200, {}]], [lawFive], none);
+    Test.assertEqualMessage(run.asked(), "fee meta fee matches", "accepted on the second send");
+    Test.assertEqualMessage(Sync.feeOutbox().size(), 0, "so it's sent");
+
+    run = syncAgainst([[503, null]], none, none);
+    Test.assertEqualMessage(run.asked(), "fee", "a 503 isn't checked");
+    Test.assertEqualMessage(Sync.feeOutbox().size(), 1, "and the fee change waits");
+
+    run = syncAgainst([[200, {}]], [proxy], [[401, null]]);
+    Test.assertEqualMessage(run.asked(), "fee matches meta", "a 401 with no body is checked");
+    Test.assertMessage(Sync.token() != null, "and a proxy's leaves the watch linked");
+
+    run = syncAgainst([[200, {}]], [lawFive], [[401, null], [401, null]]);
+    Test.assertEqualMessage(run.asked(), "fee matches meta matches", "LawFive answering, the 401 again");
+    Test.assertMessage(Sync.token() == null, "unlinks");
+
+    run = syncAgainst([[200, {}]], none, [[401, { "error" => "sign in first" }]]);
+    Test.assertEqualMessage(run.asked(), "fee matches", "LawFive's 401");
+    Test.assertMessage(Sync.token() == null, "unlinks at once");
+
+    for (var i = 0; i < keys.size(); i++) {
+        if (kept[i] == null) {
+            Application.Storage.deleteValue(keys[i]);
+        } else {
+            Application.Storage.setValue(keys[i], kept[i] as Application.Storage.ValueType);
+        }
+    }
+    Sync.lastProblem = problem;
+    return true;
+}
+
+//! One sync with a fee change waiting and nothing else, against a stand-in answering each path in turn.
+(:debug)
+function syncAgainst(fee as Array, meta as Array, matches as Array) as StandInServer {
+    Application.Storage.setValue(Sync.STORAGE_TOKEN, "test-token");
+    Application.Storage.setValue(Sync.STORAGE_FEES, [{ "matchId" => "m1", "paid" => true, "at" => 1 }] as Array<Application.Storage.ValueType>);
+    Application.Storage.deleteValue(Sync.STORAGE_OUTBOX);
+    Application.Storage.deleteValue(Sync.STORAGE_SCREEN_CHANGE);
+    Application.Storage.deleteValue(Sync.STORAGE_PITCHES);
+    Application.Storage.deleteValue(TrackLog.STORAGE_OUTBOX);
+    var server = new StandInServer({ "/v1/watch/fee" => fee, "/v1/meta" => meta, "/v1/watch/matches" => matches });
+    Phone.standIn = server.method(:answer);
+    new SyncJob(null).start();
+    Phone.standIn = null;
+    return server;
+}
+
+//! Answers each path with its answers in turn, then 503; remembers what was asked.
+(:debug)
+class StandInServer {
+    private var _answers as Dictionary;
+    private var _asked as String = "";
+
+    function initialize(answers as Dictionary) {
+        _answers = answers;
+    }
+
+    function answer(verb as String, path as String) as Array<Number or Dictionary or Null> {
+        var name = path.substring(path.find("/v1/watch/") == null ? 4 : 10, null) as String;
+        _asked += (_asked.length() > 0 ? " " : "") + name;
+        var list = _answers[path] as Array?;
+        if (list == null || list.size() == 0) {
+            return [503, null];
+        }
+        _answers[path] = list.slice(1, null);
+        return list[0] as Array<Number or Dictionary or Null>;
+    }
+
+    function asked() as String {
+        return _asked;
+    }
 }
 
 //! INP-10: the account's team swipes, as the server sends them; the team controls slide in the way

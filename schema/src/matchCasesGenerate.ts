@@ -125,7 +125,7 @@ function screenRunnable(c: ScreenCase) {
 }
 
 /** Monkey C has no JSON reader: the cases as a literal, for the Garmin watch's tests (MatchTests.mc). */
-function monkeyC(value: unknown, indent = ""): string {
+export function monkeyC(value: unknown, indent = ""): string {
     if (value === null || value === undefined) {
         return "null";
     }

@@ -5,7 +5,7 @@ import "./index.ts";
 import * as api from "./api.ts";
 import { type Endpoint, collectionDocs, endpoints, groups, responsesOf } from "./endpoints.ts";
 import { kotlinModels } from "./kotlin.ts";
-import { matchCaseFiles } from "./matchCasesGenerate.ts";
+import { matchCaseFiles, monkeyC } from "./matchCasesGenerate.ts";
 import { misconductFiles } from "./misconductGenerate.ts";
 import { swiftModels } from "./swift.ts";
 import { starterFormats } from "./format.ts";
@@ -88,9 +88,10 @@ export function generatedFiles(): Record<string, string> {
     return files;
 }
 
-/** SET-5: short-names.json in the phones' tests, as a string each one parses. */
+/** SET-5: short-names.json in the phones' tests, as a string each one parses, and in the Garmin watch's as a literal. */
 function shortNameFiles(): Record<string, string> {
-    const cases = JSON.stringify(JSON.parse(readFileSync(new URL("../short-names.json", import.meta.url), "utf8")));
+    const parsed = JSON.parse(readFileSync(new URL("../short-names.json", import.meta.url), "utf8")) as { cases: unknown[] };
+    const cases = JSON.stringify(parsed);
     if (cases.includes("$") || cases.includes('"""') || cases.includes('"#')) {
         throw new Error("schema/short-names.json: a case's text can't be embedded in Kotlin or Swift");
     }
@@ -101,6 +102,7 @@ function shortNameFiles(): Record<string, string> {
         "generated/swift-tests/ShortNameCases.swift": swift,
         // The iPhone's test target takes files only from its own folder.
         "../mobile/ios/LawFiveTests/ShortNameCases.swift": swift,
+        "../watch-garmin/source/ShortNameCases.mc": `${header.replace("//", "//!")}\n\nimport Toybox.Lang;\n\n(:debug)\nfunction shortNameCases() as Array<Dictionary> {\n    return ${monkeyC(parsed.cases, "    ")} as Array<Dictionary>;\n}\n`,
     };
 }
 

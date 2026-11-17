@@ -42,7 +42,7 @@ How the watch app looks: the running screen and the choices it's built from, the
   - It's chosen on the website, the phones or a watch, and **the latest change wins**: a watch sends its change at its next sync and takes a newer one from the account. A watch starts a changed screen at the next kickoff.
   - **Until one is chosen**, it's two clocks stacked, **Time left** over **Match time**, the break clock's Time left, the time of day and the names. A watch with its own choice keeps it; an account with no settings yet leaves it on that watch only.
   - Unlinking leaves the watch's screen as it is.
-  - Changes in the Garmin Connect phone settings aren't sent up (R-9); the account's next change replaces them.
+  - Changes in the Garmin Connect phone settings aren't sent up (R-9); the account's next change replaces them. A change LawFive refuses (a server from before it) is dropped (SYNC-17).
   - Older watch builds, with six fixed layouts, get the nearest one; one that sends its layout to an account with nothing chosen counts up.
 - **UI-27** **The match screen setup** on the website and phones (Settings → Match screen) asks UI-21's questions one step at a time, then a review to save.
   - The steps (Clocks, How they count, Ring or time, Names, Review) are named above, and any can be gone to.
