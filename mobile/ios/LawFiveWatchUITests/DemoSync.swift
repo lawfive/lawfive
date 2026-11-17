@@ -13,6 +13,15 @@ final class DemoSync: XCTestCase {
         return ["-reset", "1", "-noWorkout", "1", "-server", server, "-token", token]
     }
 
+    /// UI-26: the sync screen comes up over full time and closes itself 3 seconds after All synced.
+    private func waitForTheSyncScreen() {
+        let synced = app.staticTexts["All synced"]
+        if synced.waitForExistence(timeout: 5) {
+            expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: synced)
+            waitForExpectations(timeout: 10)
+        }
+    }
+
     private func shot(_ name: String) {
         sleep(1)
         let attachment = XCTAttachment(screenshot: app.screenshot())
@@ -29,6 +38,7 @@ final class DemoSync: XCTestCase {
         app.launchArguments = try linkedArguments() + ["-refusedRecord", "1", "-begin", "1", "-finish", "1"]
         app.launch()
         XCTAssertTrue(app.staticTexts["Sent to LawFive"].waitForExistence(timeout: 30), "the match after it went: \(app.debugDescription)")
+        waitForTheSyncScreen()
         shot("full time, sent")
         app.buttons["Done"].tap()
         let history = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'History'")).firstMatch
@@ -42,6 +52,34 @@ final class DemoSync: XCTestCase {
         refused.tap()
         XCTAssertTrue(app.staticTexts["Not on LawFive"].waitForExistence(timeout: 5))
         shot("not on LawFive")
+    }
+
+    // UI-17, SYNC-4: History's status row: the match that went says when, and one no longer waiting is sent again from
+    // it (and, refused again, is still not on LawFive).
+    func testSendingFromHistory() throws {
+        try XCTSkipUnless(environment["LAWFIVE_DEMO"] != nil, "needs the demo server")
+        continueAfterFailure = false
+        app.launchArguments = try linkedArguments() + ["-refusedRecord", "1", "-begin", "1", "-finish", "1"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["Sent to LawFive"].waitForExistence(timeout: 30), app.debugDescription)
+        waitForTheSyncScreen()
+        app.buttons["Done"].tap()
+        let history = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'History'")).firstMatch
+        XCTAssertTrue(history.waitForExistence(timeout: 5))
+        history.tap()
+        app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'HOM'")).firstMatch.tap()
+        let sent = app.staticTexts["Sent to LawFive"]
+        XCTAssertTrue(sent.waitForExistence(timeout: 5), app.debugDescription)
+        shot("sent, with when")
+        app.buttons["Back"].firstMatch.tap()
+        app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'REF 0-0 USD'")).firstMatch.tap()
+        let send = app.buttons["Not on LawFive, Press to send"]
+        XCTAssertTrue(send.waitForExistence(timeout: 5), app.debugDescription)
+        shot("press to send")
+        send.tap()
+        // Queued again and sent, LawFive refuses it once more: the row says so again once the sync is done.
+        XCTAssertTrue(app.buttons["Not on LawFive, Press to send"].waitForExistence(timeout: 30), app.debugDescription)
+        shot("refused again")
     }
 
     // SYNC-5, UI-16: linked, Account has the last sync, the server, Sync on opening and Unlink, and no Sync now, which is

@@ -26,7 +26,25 @@ data class Finished(val created: Long, val title: String, val home: String, val 
     /** ET-6: it ended on a golden goal. */
     val golden: Boolean = false,
     /** The planned match it was started from, for Mark pitch (TRK-13). */
-    val matchId: String? = null)
+    val matchId: String? = null,
+    /**
+     * UI-17, as on the Garmin watch: the format, the events and the clock it was played with, for its Summary and
+     * Events; the distance; and the fee it had (UI-20). Left out for matches kept before them.
+     */
+    val setup: MatchSetup? = null,
+    val events: List<MatchEvent>? = null,
+    val clockStyle: Int? = null,
+    val distanceM: Double? = null,
+    val fee: FinishedFee? = null,
+    /** SYNC-4: the match as it's uploaded, so one no longer waiting can be sent again from History, as on Garmin. */
+    val upload: JsonObject? = null,
+    /** UI-17: when LawFive had it, and whether it had a track for LawFive (TRK-7), which stays known once it's gone. */
+    val sentAt: Long? = null,
+    val track: Boolean = false)
+
+/** UI-20: a planned match's fee as it was at kickoff, marked paid since too. */
+@Serializable
+data class FinishedFee(val text: String, val paid: Boolean)
 
 /** TRK-13, SYNC-12: a pitch's corners walked on the watch, until the server has them (POST /v1/watch/pitch). */
 @Serializable

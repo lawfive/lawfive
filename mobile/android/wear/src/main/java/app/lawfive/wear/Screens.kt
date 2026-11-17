@@ -38,8 +38,12 @@ import androidx.wear.input.wearableExtender
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.json.JsonObject
+import android.icu.util.LocaleData
+import android.icu.util.ULocale
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 // The screens before and after a match (UI-15 to UI-20, on a watch that isn't Garmin): a stack of
 // pages, Back going down it, and the match screen in place of all of them while a match is on.
@@ -62,6 +66,8 @@ sealed interface Page {
     data object TeamColors : Page
     data class ColorChoice(val home: Boolean) : Page
     data class Played(val created: Long) : Page
+    data class Summary(val created: Long) : Page
+    data class PlayedEvents(val created: Long) : Page
     data class Pitch(val matchId: String?, val created: Long?) : Page
     data object Link : Page
     data object ServerAddress : Page
@@ -105,7 +111,9 @@ private fun Pages(button: SharedFlow<Unit>) {
             Page.NewMatch -> NewMatchPage(::push)
             Page.Custom -> CustomPage(::push)
             Page.History -> HistoryPage(::push)
-            is Page.Played -> PlayedPage(page.created, ::push)
+            is Page.Played -> PlayedPage(page.created, ::push, ::pop)
+            is Page.Summary -> SummaryPage(page.created)
+            is Page.PlayedEvents -> PlayedEventsPage(page.created)
             is Page.Pitch -> PitchPage(page.matchId, page.created, ::pop)
             Page.Settings -> SettingsPage(::push)
             Page.Screen -> ScreenPage(::push)
@@ -365,14 +373,37 @@ private fun playedTitle(h: Finished): String {
 }
 
 /** As the Garmin's History list: one LawFive refused is no longer waiting (SYNC-4). */
-private fun sentLine(h: Finished) = if (h.sent) "Sent" else if (AppState.linked && AppState.isQueued(h.created)) "Waiting to send" else "Not sent"
+private fun sentLine(h: Finished) = when {
+    AppState.linked && AppState.isQueued(h.created) -> "Waiting to send"
+    h.sent -> "Sent"
+    h.upload == null -> "On watch"
+    else -> "Not sent"
+}
 
-/** UI-17: whether it's on LawFive, in the Garmin's History words. */
-private fun sentState(h: Finished) = when {
-    h.sent -> "Sent to LawFive"
-    !AppState.linked -> "On this watch only · Link to send it"
-    AppState.isQueued(h.created) -> "Waiting to send"
-    else -> "Not on LawFive"
+/**
+ * UI-17: the status row of a played match, as the Garmin's History: whether it's on LawFive, and what pressing it does
+ * or when it went. Unlinked, it waits for a link, as the full-time screen says (SYNC-4).
+ */
+private fun historyStatus(h: Finished): Pair<String, String?> = when {
+    AppState.linked && AppState.isQueued(h.created) -> "Waiting to send" to "Press to send now"
+    h.sent -> "Sent to LawFive" to listOfNotNull(h.sentAt?.let(::sentWhen), trackState(h)).joinToString(" · ").ifEmpty { null }
+    !AppState.linked && (h.upload != null || AppState.isQueued(h.created)) -> "On this watch only" to "Link to send it"
+    h.upload == null -> "On this watch" to "Kept by an older version"
+    else -> "Not on LawFive" to "Press to send"
+}
+
+/** TRK-7: "track 3 of 18 sent" while it goes, "track sent" after; null without one. */
+private fun trackState(h: Finished): String? =
+    AppState.saved.tracks.firstOrNull { it.created == h.created }?.let { "track ${it.next} of ${it.count} sent" } ?: if (h.track) "track sent" else null
+
+/** "Sat, Nov 7": the day it was played, in the watch's own order. */
+private fun playedDay(h: Finished): String =
+    SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEEMMMd"), Locale.getDefault()).format(Date(h.created * 1000))
+
+/** "Sat 9:41 AM": when it reached LawFive. */
+private fun sentWhen(at: Long): String {
+    val date = Date(at * 1000)
+    return "${SimpleDateFormat("EEE", Locale.getDefault()).format(date)} ${DateFormat.getTimeInstance(DateFormat.SHORT).format(date)}"
 }
 
 @Composable
@@ -380,17 +411,102 @@ private fun HistoryPage(push: (Page) -> Unit) {
     val s = AppState.saved
     WatchList("History") {
         if (s.history.isEmpty()) item { T("Finished matches show here", 13.sp, C.dim, modifier = Modifier.padding(top = 10.dp)) }
-        items(s.history) { h -> MenuRow(playedTitle(h), sentLine(h)) { push(Page.Played(h.created)) } }
+        // As the Garmin's: "Sat, Nov 7 · Sent".
+        items(s.history) { h -> MenuRow(playedTitle(h), "${playedDay(h)} · ${sentLine(h)}") { push(Page.Played(h.created)) } }
     }
 }
 
-/** UI-17, UI-20: a played match from History, with Mark pitch (TRK-13). */
+/**
+ * UI-17, UI-20: a played match from History, as on the Garmin watch: its status row (pressed, it sends the match, or
+ * links the watch first), its Summary and Events, the fee's Paid toggle, Mark pitch (TRK-13) and Remove from watch.
+ */
 @Composable
-private fun PlayedPage(created: Long, push: (Page) -> Unit) {
+private fun PlayedPage(created: Long, push: (Page) -> Unit, pop: () -> Unit) {
     val h = AppState.saved.history.firstOrNull { it.created == created } ?: return
+    var removing by remember { mutableStateOf(false) }
+    if (removing) {
+        BackHandler { removing = false }
+        // Removing one that hasn't reached LawFive loses it for good, so it says so.
+        ConfirmScreen(
+            if (h.sent) "Remove from watch?" else "Not sent to LawFive", if (h.sent) "It stays on LawFive" else "Remove it anyway? It will be lost",
+            yes = "Remove", danger = true, onYes = { removing = false; AppState.removeFinished(created); pop() }, onNo = { removing = false },
+        )
+        return
+    }
+    val (state, detail) = historyStatus(h)
+    val waiting = AppState.isQueued(created) || AppState.saved.tracks.any { it.created == created }
     WatchList(playedTitle(h)) {
-        item { T(sentState(h), 13.sp, C.dim, FontWeight.Normal, Modifier.padding(bottom = 4.dp)) }
+        // While any sync runs, the row follows it, as on Garmin.
+        item {
+            MenuRow(state, if (AppState.syncing) syncLine() else detail, subLines = 2) {
+                when {
+                    h.sent && !waiting -> Unit
+                    !AppState.linked -> push(Page.Link)
+                    else -> AppState.sendNow(created)
+                }
+            }
+        }
+        if (h.setup != null) {
+            item { MenuRow("Summary", playedDay(h)) { push(Page.Summary(created)) } }
+            item { MenuRow("Events", eventsCount(h)) { push(Page.PlayedEvents(created)) } }
+        }
+        val fee = h.fee
+        val id = h.matchId
+        if (fee != null && id != null) {
+            item { ToggleRow("Fee ${fee.text}", fee.paid, if (fee.paid) "Paid" else "Not paid yet") { paid -> AppState.markPaid(id, paid) } }
+        }
         item { MenuRow("Mark pitch", "Walk its corners", R.drawable.ph_flag) { push(Page.Pitch(h.matchId, h.created)) } }
+        item { MenuRow("Remove from watch") { removing = true } }
+    }
+}
+
+private fun eventsCount(h: Finished) = listedEvents(h.events ?: emptyList()).size.let { if (it == 0) "None recorded" else if (it == 1) "1 event" else "$it events" }
+
+/** SYNC-7: in miles where roads are, else kilometers. */
+private fun distanceText(meters: Double): String {
+    val system = LocaleData.getMeasurementSystem(ULocale.getDefault())
+    return if (system == LocaleData.MeasurementSystem.SI) String.format(Locale.getDefault(), "%.1f km", meters / 1000)
+    else String.format(Locale.getDefault(), "%.1f mi", meters / 1609.344)
+}
+
+/**
+ * UI-17: a finished match at a glance, as the Garmin watch's: the score, each period played with what was added, the
+ * cards and the distance.
+ */
+@Composable
+private fun SummaryPage(created: Long) {
+    val h = AppState.saved.history.firstOrNull { it.created == created } ?: return
+    val setup = h.setup ?: return
+    val events = h.events ?: emptyList()
+    val ends = events.filter { it.type == EVENT_PERIOD_END && it.seconds >= 0 }
+    // As in the website's Stats: a second caution is one of each, and team officials' cards count (EVT-15); a second
+    // sin bin is a send-off, and sin bins are counted on their own (EVT-12).
+    val yellow = events.count { it.type in setOf(EVENT_YELLOW, EVENT_SECOND_YELLOW, EVENT_OFFICIAL_YELLOW) }
+    val red = events.count { it.type in setOf(EVENT_RED, EVENT_SECOND_YELLOW, EVENT_OFFICIAL_RED, EVENT_SECOND_SIN_BIN) }
+    val binned = events.count { it.type == EVENT_SIN_BIN || it.type == EVENT_SECOND_SIN_BIN }
+    WatchList("Summary") {
+        val pens = h.pens?.let { " · ${it[0]}-${it[1]} pens" } ?: if (h.golden) " · golden goal" else ""
+        item { MenuRow("Score", "${h.home} ${h.score[0]}-${h.score[1]} ${h.away}$pens", subLines = 2) {} }
+        items(ends) { e ->
+            val length = if (e.period < setup.numPeriods) setup.periodSec else setup.etPeriodSec
+            val added = if (e.seconds > length) " · +${formatClock((e.seconds - length) * 1000L)}" else ""
+            MenuRow(periodName(e.period, setup.numPeriods, setup.etPeriods).capitalized(), "Played ${formatClock(e.seconds * 1000L)}$added") {}
+        }
+        item { MenuRow("Cards", (if (yellow == 1) "1 caution" else "$yellow cautions") + " · " + (if (red == 1) "1 send-off" else "$red send-offs"), subLines = 2) {} }
+        if (binned > 0) item { MenuRow("Sin bins", if (binned == 1) "1 sin bin" else "$binned sin bins") {} }
+        h.distanceM?.takeIf { it > 0 }?.let { item { MenuRow("Distance", distanceText(it)) {} } }
+    }
+}
+
+/** UI-17: the events of a finished match, the same list as at full time. */
+@Composable
+private fun PlayedEventsPage(created: Long) {
+    val h = AppState.saved.history.firstOrNull { it.created == created } ?: return
+    val setup = h.setup ?: return
+    val shown = listedEvents(h.events ?: emptyList())
+    WatchList("Events") {
+        if (shown.isEmpty()) item { T("None recorded", 13.sp, C.dim) }
+        items(shown) { e -> MenuRow(describeEvent(e, h.home, h.away), eventWhen(e, setup, h.clockStyle ?: CLOCK_UP)) {} }
     }
 }
 

@@ -162,8 +162,8 @@ struct MatchFlow: View {
                     case .penalties: PenaltiesScreen(match: match, size: geo.size, revision: state.revision)
                     case .golden: GoldenScreen(match: match, size: geo.size, revision: state.revision)
                     case .done: FullTimeScreen(match: match, size: geo.size, revision: state.revision) { overlay = .events }
-                        .onAppear { state.screenFree = true }
-                        .onDisappear { state.screenFree = false }
+                        .onAppear { if !state.screenFree { state.screenFree = true } }
+                        .onDisappear { if state.screenFree { state.screenFree = false } }
                     }
                     // EVT-12: a sin bin over, over play's screen until a tap (VIB-6); swipes still open the menus, as with VIB-1's alerts.
                     if match.phase == .running || match.phase == .golden, let back = match.sinBinReturns.first {

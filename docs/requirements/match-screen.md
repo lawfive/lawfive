@@ -90,7 +90,7 @@ How the watch app looks: the running screen and the choices it's built from, the
   - **About**: the app's version, the server and its version, history kept, where the source is, where the license texts are (WX-12), and Reset LawFive (DATA-8).
   - A sideloaded watch, with no phone settings (R-9), can change everything here.
 
-  **History** lists the watch's finished matches with "Sent", "Waiting to send" or "Not sent". Each opens its status (when sent, with the track's progress, or press to send; one finished unlinked goes on linking, SYNC-4), **Summary** (score, each period with its added time, cards, distance), **Events**, and **Remove from watch** (confirmed, warning when it hasn't reached LawFive). Wear OS has a Permissions row while anything's refused.
+  **History** lists the watch's finished matches with the day and "Sent", "Waiting to send" or "Not sent". Each opens its status (when sent, with the track's progress, or press to send; one finished unlinked goes on linking, SYNC-4), **Summary** (score, each period with its added time, cards, distance), **Events**, and **Remove from watch** (confirmed, warning when it hasn't reached LawFive). Wear OS has a Permissions row while anything's refused.
 - **UI-20** **History's match screen** has the fee's **Paid** toggle too, so a fee paid after the game can be marked (the fee as it was at kickoff), and **Mark pitch** (TRK-13).
 - **UI-18** **Icons**: Phosphor (bold) in black on a LawFive green circle, left of each row in the start menu, New match and Settings, the same on all three watches (WCH-6):
   - Matches CalendarBlank, New match Plus, History ClockCounterClockwise, Settings GearSix; Quick match Lightning, Same as last ArrowCounterClockwise, Custom SlidersHorizontal; Account UserCircle, Alerts Vibrate, Controls Hand, Match screen Watch, Timer names TextAa, About Info.
@@ -107,7 +107,7 @@ How the watch app looks: the running screen and the choices it's built from, the
 
 ## Status
 
-Everything above is built on the Garmin watch, with the setup's pictures, moments and Play through on the website and both phones, and the running screen in Try a match. Wear OS and Apple Watch have it too, but differ in the confirmations (UI-7), the number entry (UI-8), the start menu's sub-labels (UI-15), the sync's steps (UI-16, UI-26), History (UI-17, UI-20) and a downloaded match's screen (UI-19); the [watch catch-up plan](../plans/watch-catch-up.md) lists each gap.
+Everything above is built on the Garmin watch, with the setup's pictures, moments and Play through on the website and both phones, and the running screen in Try a match. Wear OS and Apple Watch have it too, but differ in the confirmations (UI-7), the number entry (UI-8), the start menu's sub-labels (UI-15), the sync's steps (UI-16, UI-26) and a downloaded match's screen (UI-19); the [watch catch-up plan](../plans/watch-catch-up.md) lists each gap.
 
 Not built yet:
 

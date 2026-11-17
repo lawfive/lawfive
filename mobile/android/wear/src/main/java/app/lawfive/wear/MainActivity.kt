@@ -80,6 +80,8 @@ class MainActivity : ComponentActivity() {
             }
             // TMR-13: suspended for a reason (0 weather, 1 lightning, 2 crowd trouble, 4 other), suspendAgo seconds back.
             if (intent.hasExtra("suspend")) AppState.changeMatch { suspend(intent.getIntExtra("suspend", 1), System.currentTimeMillis() - intent.getLongExtra("suspendAgo", 0) * 1000) }
+            // UI-17: full time, so the match is in History, as the Apple Watch's -finish.
+            if (intent.getBooleanExtra("finish", false)) AppState.changeMatch { finish(System.currentTimeMillis()) }
         }
         // WCH-7: the system's questions come from the first launch's own screen (FirstLaunchPermissions), never at
         // Quick match or the kickoff; with nothing left to ask, that screen is skipped.

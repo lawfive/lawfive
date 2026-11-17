@@ -625,7 +625,7 @@ final class WatchFlow: XCTestCase {
         shot("two corners")
         app.buttons["Back"].firstMatch.tap()
         // Back on the played match, which waits for a link to send it and its corners.
-        see("Not sent")
+        see("On this watch only")
     }
 
     func testAWholeMatch() {
@@ -736,9 +736,10 @@ final class WatchFlow: XCTestCase {
         history.tap()
         XCTAssertTrue(app.staticTexts["HOM 1-0 AWY"].waitForExistence(timeout: 5))
 
-        // UI-17: its own screen, as on the Garmin watch: Summary, Events, Mark pitch and Remove from watch.
+        // UI-17: its own screen, as on the Garmin watch: the status row, Summary, Events, Mark pitch and Remove from watch.
         app.staticTexts["HOM 1-0 AWY"].tap()
-        see("On this watch only · Link to send it")
+        // Unlinked, the status row says so, and leads to Link account.
+        XCTAssertTrue(app.buttons["On this watch only, Link to send it"].waitForExistence(timeout: 5), app.debugDescription)
         shot("history match")
         let summary = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Summary'")).firstMatch
         XCTAssertTrue(summary.waitForExistence(timeout: 5))
@@ -759,6 +760,7 @@ final class WatchFlow: XCTestCase {
         tap("Remove")
         XCTAssertTrue(app.staticTexts["Finished matches show here"].waitForExistence(timeout: 5))
     }
+
 
     // INP-3, INP-6: during play the period's end comes first, and Undo only once there's an event this period;
     // UI-17: Settings' Controls row and the switches beside it, and Alerts' repeat intervals.

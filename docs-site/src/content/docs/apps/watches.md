@@ -42,7 +42,7 @@ A Garmin app you install yourself over USB can also have a server built in. See 
 | Garmin, otherwise | Directly, through Garmin Connect on the phone. It needs signal when it syncs. |
 | Wear OS and Apple Watch | Directly, over the watch's own connection: through the phone, Wi-Fi or LTE. |
 
-A watch syncs when the app opens (on Wear OS and Apple Watch, also when it comes back after five minutes or more away), never during a match; at full time, to send the match; after anything changed on the watch; and with **Sync now** in **Matches**. **Settings → Account** shows the last sync, what's waiting to upload and the server, and **Sync on opening** turns the sync on opening off. A match your server refuses is set aside so the others still go, and History says it's not on LawFive.
+A watch syncs when the app opens (on Wear OS and Apple Watch, also when it comes back after five minutes or more away), never during a match; at full time, to send the match; after anything changed on the watch; and with **Sync now** in **Matches**. **Settings → Account** shows the last sync, what's waiting to upload and the server, and **Sync on opening** turns the sync on opening off. A match your server refuses is set aside so the others still go, and History says it's not on LawFive; pressing that line in the match's History sends it again.
 
 Through Garmin Connect, your server must be reachable from the internet with a valid HTTPS certificate. See [Set up HTTPS](/run/https/), and if a watch can't connect, [Troubleshooting](/run/troubleshooting/#a-watch-or-phone-cant-connect).
 

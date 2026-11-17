@@ -64,6 +64,4 @@ Not built yet:
 - Recording, Mark pitch (WCH-7) and the compass (WCH-10) on real watches (R-13); Health Connect from a real phone.
 - Linking the Apple Watch from the iPhone (WCH-12) on hardware (R-6, R-13).
 - The icons in a real watch's app list (seen as renderings only).
-- Behind Garmin:
-  - History: on Wear OS, only the sent line and Mark pitch, with no Summary, Events, Paid toggle or Remove from watch; on both, the sent line is plain text, without when it went, the track's progress or a way to send it now (UI-17, UI-20).
-  - The rest, and the plan to close each gap, are in the [watch catch-up plan](../plans/watch-catch-up.md).
+- Behind Garmin: what's left, and the plan to close each gap, are in the [watch catch-up plan](../plans/watch-catch-up.md).

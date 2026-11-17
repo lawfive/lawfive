@@ -183,6 +183,9 @@ fun suspensionWords(e: MatchEvent): String? = when (e.type) {
     else -> null
 }
 
+/** The match time at a period's start, for Match time's clock (TMR-11). */
+fun MatchSetup.periodStartSec(p: Int) = if (p < numPeriods) p * periodSec else numPeriods * periodSec + (p - numPeriods) * etPeriodSec
+
 /** What a match is started from: a downloaded match's format, or Quick match's (SET-9). */
 @Serializable
 data class MatchSetup(
@@ -407,7 +410,7 @@ class Match(
         val first = if (extra) etKickoff else kickoff
         return if (first < 0) -1 else if ((if (extra) p - setup.numPeriods else p) % 2 == 0) first else 1 - first
     }
-    fun periodStartSec(p: Int) = if (p < setup.numPeriods) p * setup.periodSec else setup.numPeriods * setup.periodSec + (p - setup.numPeriods) * setup.etPeriodSec
+    fun periodStartSec(p: Int) = setup.periodStartSec(p)
 
     /** TMR-11, TMR-2: the clock as shown, and the added time under it once the period's length is reached. */
     fun clockDisplay(now: Long): Pair<String, String?> {

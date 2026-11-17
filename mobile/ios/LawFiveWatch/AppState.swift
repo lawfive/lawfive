@@ -41,6 +41,11 @@ struct FinishedMatch: Codable, Identifiable {
     var clockStyle: Int?
     var distanceM: Double?
     var fee: PlannedMatch.Fee?
+    /// SYNC-4: the match as it's uploaded, so one no longer waiting can be sent again from History, as on Garmin.
+    var upload: Data?
+    /// UI-17: when LawFive had it, and whether it had a track for LawFive (TRK-7), which stays known once it's gone.
+    var sentAt: Int64?
+    var track: Bool?
     var id: Int64 { created }
 }
 
@@ -312,9 +317,11 @@ final class AppState {
         // outbox, so the next sync gives it up and carries on with the rest.
         if args.string(forKey: "refusedRecord") != nil {
             let created = nowSeconds() - 3600
-            saved.outbox.insert(Data(#"{"created":\#(created),"home":"REF","away":"USD"}"#.utf8), at: 0)
+            let upload = Data(#"{"created":\#(created),"home":"REF","away":"USD"}"#.utf8)
+            saved.outbox.insert(upload, at: 0)
             saved.outboxCreated.insert(created, at: 0)
-            saved.history.insert(FinishedMatch(created: created, home: "REF", away: "USD", score: [0, 0], pens: nil), at: 0)
+            // Kept as History keeps it, so its status row can send it again, and be refused again (UI-17).
+            saved.history.insert(FinishedMatch(created: created, home: "REF", away: "USD", score: [0, 0], pens: nil, upload: upload), at: 0)
         }
         if let heading = args.string(forKey: "heading").flatMap(Double.init) { Compass.fake = heading }
         if let swipes = args.string(forKey: "swipes") { saved.teamSwipes = swipes }
@@ -648,15 +655,18 @@ final class AppState {
     }
 
     private func matchFinished(_ m: Match) {
+        let body = uploadFor(m)
         update { s in
-            if let body = uploadFor(m) {
+            if let body {
                 s.outbox.append(body)
                 s.outboxCreated.append(m.created)
             }
             // UI-20: the fee the planned match had, which a fee paid later changes here too.
             let fee = m.setup.matchId.flatMap { id in s.matches.first { $0.id == id }?.fee }
+            // SYNC-4: the match as it's uploaded too, and whether it has a track (TRK-7), for History's status row (UI-17).
             s.history.insert(FinishedMatch(created: m.created, home: m.setup.home, away: m.setup.away, score: m.score, pens: m.penaltyScore(), golden: m.endedGolden,
-                                           matchId: m.setup.matchId, setup: m.setup, events: m.events, clockStyle: m.clockStyle, distanceM: m.distanceM, fee: fee), at: 0)
+                                           matchId: m.setup.matchId, setup: m.setup, events: m.events, clockStyle: m.clockStyle, distanceM: m.distanceM, fee: fee,
+                                           upload: body, track: s.tracks?.contains { $0.created == m.created } == true), at: 0)
             s.history = Array(s.history.prefix(historyKept))
         }
         sync()
@@ -669,7 +679,8 @@ final class AppState {
                 s.outbox.remove(at: i)
                 s.outboxCreated.remove(at: i)
             }
-            if let body = uploadFor(m) {
+            let body = uploadFor(m)
+            if let body {
                 s.outbox.append(body)
                 s.outboxCreated.append(m.created)
             }
@@ -677,6 +688,7 @@ final class AppState {
                 s.history[i].sent = false
                 // EVT-7: a card after full time shows in History's Events too.
                 s.history[i].events = m.events
+                s.history[i].upload = body
             }
         }
     }
@@ -772,6 +784,21 @@ final class AppState {
 
     /// SYNC-4: a finished match still waiting in the outbox; one LawFive refused has left it (SYNC-17).
     func isQueued(_ created: Int64) -> Bool { saved.outboxCreated.contains(created) }
+
+    /// UI-17, SYNC-4: the status row's press, as on the Garmin watch: one no longer waiting (refused by LawFive, say) is
+    /// queued again from History's copy, then a sync sends it, with its track and anything else waiting.
+    func sendNow(_ created: Int64) {
+        guard !syncing, let h = saved.history.first(where: { $0.created == created }) else { return }
+        if !isQueued(created) && !h.sent {
+            // One kept before History held the whole match has nothing to send.
+            guard let upload = h.upload else { return }
+            update { s in
+                s.outbox.append(upload)
+                s.outboxCreated.append(created)
+            }
+        }
+        sync()
+    }
 
     /// Remove from watch: the match, and anything of it still waiting to send (it's lost if it hadn't gone).
     func removeFinished(_ created: Int64) {
@@ -911,7 +938,11 @@ final class AppState {
                     update { s in
                         s.outbox.removeFirst()
                         s.outboxCreated.removeFirst()
-                        if let i = s.history.firstIndex(where: { $0.created == created }) { s.history[i].sent = true }
+                        if let i = s.history.firstIndex(where: { $0.created == created }) {
+                            s.history[i].sent = true
+                            // UI-17: History says when it went.
+                            s.history[i].sentAt = nowSeconds()
+                        }
                     }
                 }
                 // TRK-7: the tracks of matches sent, a chunk a request, oldest first.

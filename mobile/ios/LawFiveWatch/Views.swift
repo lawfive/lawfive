@@ -20,9 +20,11 @@ struct LawFiveWatchApp: App {
                     PermissionsPage()
                 } else {
                     NavigationStack {
+                        // UI-26: set only when it changes: watchOS calls these again deep in History, and writing the
+                        // same value anyway redrew the stack without end.
                         HomePage()
-                            .onAppear { state.screenFree = true }
-                            .onDisappear { state.screenFree = false }
+                            .onAppear { if !state.screenFree { state.screenFree = true } }
+                            .onDisappear { if state.screenFree { state.screenFree = false } }
                     }
                     // DATA-8: after Reset LawFive, back to the start.
                     .id(state.resets)
@@ -531,11 +533,32 @@ struct AboutPage: View {
 }
 
 /// As the Garmin's History list: one LawFive refused is no longer waiting (SYNC-4).
-private func sentLine(_ h: FinishedMatch, linked: Bool, queued: Bool) -> String { h.sent ? "Sent" : linked && queued ? "Waiting to send" : "Not sent" }
+private func sentLine(_ h: FinishedMatch, linked: Bool, queued: Bool) -> String {
+    linked && queued ? "Waiting to send" : h.sent ? "Sent" : h.upload == nil ? "On watch" : "Not sent"
+}
 
-/// UI-17: whether it's on LawFive, in the Garmin's History words.
-private func sentState(_ h: FinishedMatch, linked: Bool, queued: Bool) -> String {
-    h.sent ? "Sent to LawFive" : !linked ? "On this watch only · Link to send it" : queued ? "Waiting to send" : "Not on LawFive"
+/// UI-17: the status row of a played match, as the Garmin's History: whether it's on LawFive, and what pressing it does
+/// or when it went. Unlinked, it waits for a link, as the full-time screen says (SYNC-4).
+private func historyStatus(_ h: FinishedMatch, linked: Bool, queued: Bool, track: TrackUpload?) -> (String, String?) {
+    if linked && queued { return ("Waiting to send", "Press to send now") }
+    if h.sent {
+        let parts = [h.sentAt.map(sentWhen), trackState(h, track)].compactMap { $0 }
+        return ("Sent to LawFive", parts.isEmpty ? nil : parts.joined(separator: " · "))
+    }
+    if !linked && (h.upload != nil || queued) { return ("On this watch only", "Link to send it") }
+    if h.upload == nil { return ("On this watch", "Kept by an older version") }
+    return ("Not on LawFive", "Press to send")
+}
+
+/// TRK-7: "track 3 of 18 sent" while it goes, "track sent" after; nil without one.
+private func trackState(_ h: FinishedMatch, _ track: TrackUpload?) -> String? {
+    if let track { return "track \(track.next) of \(track.count) sent" }
+    return h.track == true ? "track sent" : nil
+}
+
+/// "Sat 9:41 AM": when it reached LawFive.
+private func sentWhen(_ at: Int64) -> String {
+    Date(timeIntervalSince1970: TimeInterval(at)).formatted(.dateTime.weekday(.abbreviated).hour().minute())
 }
 
 private func playedTitle(_ h: FinishedMatch) -> String {
@@ -543,8 +566,8 @@ private func playedTitle(_ h: FinishedMatch) -> String {
     return "\(h.home) \(h.score[0])-\(h.score[1])\(pens) \(h.away)"
 }
 
-/// UI-17, UI-20: a played match from History, as on the Garmin watch: whether it's on LawFive, its Summary and Events,
-/// the fee's Paid toggle, Mark pitch (TRK-13) and Remove from watch.
+/// UI-17, UI-20: a played match from History, as on the Garmin watch: its status row (pressed, it sends the match, or
+/// links the watch first), its Summary and Events, the fee's Paid toggle, Mark pitch (TRK-13) and Remove from watch.
 struct PlayedPage: View {
     @Environment(AppState.self) private var state
     @Environment(\.dismiss) private var dismiss
@@ -562,9 +585,19 @@ struct PlayedPage: View {
                     dismiss()
                 }, onNo: { removing = false })
             } else {
+                let queued = state.isQueued(h.created)
+                let track = state.saved.tracks?.first { $0.created == h.created }
+                let (label, detail) = historyStatus(h, linked: state.linked, queued: queued, track: track)
+                // While any sync runs, the row follows it, as on Garmin.
+                let status = RowLabel(label: label, sub: state.syncing ? state.syncLine : detail, subLines: 2)
                 WatchList(title: playedTitle(h)) {
-                    Text(sentState(h, linked: state.linked, queued: state.isQueued(h.created)))
-                        .font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center)
+                    if !state.linked && !h.sent {
+                        NavigationLink { LinkPage() } label: { status }.buttonStyle(.plain)
+                    } else if h.sent && !queued && track == nil {
+                        status
+                    } else {
+                        Button { state.sendNow(created) } label: { status }.buttonStyle(TapOnly())
+                    }
                     if h.setup != nil {
                         NavigationLink { SummaryPage(created: created) } label: { RowLabel(label: "Summary", sub: playedWhen(h)) }.buttonStyle(.plain)
                         NavigationLink { PlayedEventsPage(created: created) } label: { RowLabel(label: "Events", sub: eventsCount(h)) }.buttonStyle(.plain)
@@ -585,7 +618,7 @@ struct PlayedPage: View {
     }
 }
 
-/// "Sat Nov 7", when it was played.
+/// "Sat, Nov 7", when it was played.
 private func playedWhen(_ h: FinishedMatch) -> String {
     Date(timeIntervalSince1970: TimeInterval(h.created)).formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())
 }
@@ -649,7 +682,10 @@ struct HistoryPage: View {
                 Text("Finished matches show here").font(.barlow(13)).foregroundStyle(C.dim).multilineTextAlignment(.center).padding(.top, 8)
             }
             ForEach(state.saved.history) { h in
-                NavigationLink { PlayedPage(created: h.created) } label: { RowLabel(label: playedTitle(h), sub: sentLine(h, linked: state.linked, queued: state.isQueued(h.created))) }.buttonStyle(.plain)
+                // As the Garmin's: "Sat, Nov 7 · Sent".
+                NavigationLink { PlayedPage(created: h.created) } label: {
+                    RowLabel(label: playedTitle(h), sub: "\(playedWhen(h)) · \(sentLine(h, linked: state.linked, queued: state.isQueued(h.created)))")
+                }.buttonStyle(.plain)
             }
         }
     }

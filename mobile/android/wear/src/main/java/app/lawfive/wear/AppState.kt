@@ -278,33 +278,76 @@ object AppState {
      */
     fun queueRefusedForTesting() {
         val created = System.currentTimeMillis() / 1000 - 3600
+        // Kept as History keeps it, so its status row can send it again, and be refused again (UI-17).
+        val upload = buildJsonObject { put("created", created); put("home", "REF"); put("away", "USD") }
         update { s ->
             s.copy(
-                outbox = listOf(buildJsonObject { put("created", created); put("home", "REF"); put("away", "USD") }) + s.outbox,
-                history = (listOf(Finished(created, "REF v USD", "REF", "USD", listOf(0, 0), when_ = created)) + s.history).take(HISTORY_KEPT),
+                outbox = listOf(upload) + s.outbox,
+                history = (listOf(Finished(created, "REF v USD", "REF", "USD", listOf(0, 0), when_ = created, upload = upload)) + s.history).take(HISTORY_KEPT),
             )
         }
     }
 
     /** SYNC-4: a finished match still waiting in the outbox; one LawFive refused has left it (SYNC-17). */
-    fun isQueued(created: Long) = saved.outbox.any { it["created"]?.toString() == created.toString() }
+    fun isQueued(created: Long) = saved.outbox.any { it.isFor(created) }
+
+    private fun JsonObject.isFor(created: Long) = this["created"]?.toString() == created.toString()
 
     private fun matchFinished(m: Match) {
+        val upload = uploadFor(m)
         update {
-            it.copy(
-                outbox = it.outbox + uploadFor(m),
-                history = (listOf(Finished(m.created, title(m), m.setup.home, m.setup.away, m.score.toList(), m.penaltyScore(), System.currentTimeMillis() / 1000, golden = m.endedGolden, matchId = m.setup.matchId)) + it.history).take(HISTORY_KEPT),
+            // UI-20: the fee the planned match had, which a fee paid later changes here too.
+            val fee = m.setup.matchId?.let { id -> it.matches.firstOrNull { p -> p.str("id") == id } }?.let { p -> p["fee"] as? JsonObject }
+                ?.let { f -> FinishedFee(f.str("text") ?: "", f.bool("paid") == true) }
+            val finished = Finished(
+                m.created, title(m), m.setup.home, m.setup.away, m.score.toList(), m.penaltyScore(), System.currentTimeMillis() / 1000,
+                golden = m.endedGolden, matchId = m.setup.matchId,
+                // UI-17: what its Summary and Events show, as on the Garmin watch, and the match as it's uploaded (SYNC-4).
+                setup = m.setup, events = m.events.toList(), clockStyle = m.clockStyle, distanceM = m.distanceM, fee = fee, upload = upload,
+                track = it.tracks.any { t -> t.created == m.created },
             )
+            it.copy(outbox = it.outbox + upload, history = (listOf(finished) + it.history).take(HISTORY_KEPT))
         }
         sync()
     }
 
-    /** Cards given after full time belong in the record too (EVT-7). */
+    /** Cards given after full time belong in the record too (EVT-7), and in History's Events. */
     private fun refreshFinished(m: Match) {
+        val upload = uploadFor(m)
         update { s ->
             s.copy(
-                outbox = s.outbox.filterNot { it["created"]?.toString() == m.created.toString() } + uploadFor(m),
-                history = s.history.map { if (it.created == m.created) it.copy(score = m.score.toList(), sent = false) else it },
+                outbox = s.outbox.filterNot { it.isFor(m.created) } + upload,
+                history = s.history.map { if (it.created == m.created) it.copy(score = m.score.toList(), sent = false, events = m.events.toList(), upload = upload) else it },
+            )
+        }
+    }
+
+    // ---- History (UI-17) ----
+
+    /**
+     * UI-17, SYNC-4: the status row's press, as on the Garmin watch: one no longer waiting (refused by LawFive, say) is
+     * queued again from History's copy, then a sync sends it, with its track and anything else waiting.
+     */
+    fun sendNow(created: Long) {
+        val h = saved.history.firstOrNull { it.created == created } ?: return
+        if (syncing) return
+        if (!isQueued(created) && !h.sent) {
+            // One kept before History held the whole match has nothing to send.
+            val upload = h.upload ?: return
+            update { it.copy(outbox = it.outbox + upload) }
+        }
+        sync()
+    }
+
+    /** Remove from watch: the match, and anything of it still waiting to send (it's lost if it hadn't gone). */
+    fun removeFinished(created: Long) {
+        saved.tracks.firstOrNull { it.created == created }?.let { track.delete(created, it.next, it.count) }
+        update { s ->
+            s.copy(
+                history = s.history.filterNot { it.created == created },
+                outbox = s.outbox.filterNot { it.isFor(created) },
+                tracks = s.tracks.filterNot { it.created == created },
+                pitches = s.pitches.filterNot { it.created == created && it.matchId == null },
             )
         }
     }
@@ -407,6 +450,8 @@ object AppState {
         update { s ->
             s.copy(
                 matches = s.matches.map { m -> if (m.str("id") == matchId) m.withFeePaid(paid) else m },
+                // UI-20: marked from History, or before the game; both show it.
+                history = s.history.map { h -> if (h.matchId == matchId && h.fee != null) h.copy(fee = h.fee.copy(paid = paid)) else h },
                 fees = s.fees.filterNot { it.matchId == matchId } + FeeChange(matchId, paid, at),
             )
         }
@@ -516,7 +561,9 @@ object AppState {
                     }
                     if (refused != null) throw refused
                     syncSent++
-                    update { s -> s.copy(outbox = s.outbox - upload, history = s.history.map { if (it.created.toString() == upload["created"].toString()) it.copy(sent = true) else it }) }
+                    // UI-17: History says when it went.
+                    val at = System.currentTimeMillis() / 1000
+                    update { s -> s.copy(outbox = s.outbox - upload, history = s.history.map { if (it.created.toString() == upload["created"].toString()) it.copy(sent = true, sentAt = at) else it }) }
                 }
                 // TRK-7: the tracks of matches sent, a chunk a request, oldest first.
                 while (true) {

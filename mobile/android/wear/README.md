@@ -43,6 +43,7 @@ adb shell am start -n app.lawfive/app.lawfive.wear.MainActivity --es server http
 | `stoppage` | Start a stoppage (with `"stoppingClock":true` in `format`, the clock stands still, TMR-15) |
 | `goals` | Add some goals |
 | `suspend` (`--ei`), `suspendAgo` (`--el`) | Suspend for a reason's number (1 lightning, TMR-13), that many seconds back |
+| `finish` (`--ez`) | End the match, so it's in History (UI-17) |
 | `sinBins` | `team,player,secondsAgo;…` (team 0 home, 1 away, player 0 for none), with `"sinBins":true` in `format` (EVT-12) |
 | `cardReasons` (`--ez`) | Card reasons on or off (EVT-14) |
 | `heading` (`--ef`) | A made-up compass reading in radians |

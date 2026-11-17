@@ -333,7 +333,7 @@ fun MatchFlow(button: SharedFlow<Unit>) {
             Overlay.Events -> {
                 BackHandler { overlay = null }
                 WatchList("Events") {
-                    val shown = match.events.filter { it.type != EVENT_STOPPAGE && it.type != EVENT_PERIOD_END }
+                    val shown = listedEvents(match.events)
                     if (shown.isEmpty()) item { T("None recorded", 13.sp, C.dim) }
                     items(shown) { e -> MenuRow(describe(e, match), eventTime(e, match)) {} }
                 }
@@ -387,11 +387,14 @@ private val officialWords = listOf("head coach", "assistant coach", "team offici
  * "Goal HOM #9", "Yellow HOM head coach" (EVT-15), "Injury AWY #4" (EVT-16), "Clock +0:40" (TMR-14),
  * "Suspended, lightning" and "Resumed after 30:00" (TMR-13).
  */
-private fun describe(e: MatchEvent, m: Match) =
+private fun describe(e: MatchEvent, m: Match) = describeEvent(e, m.setup.home, m.setup.away)
+
+/** [describe] for a match kept in History (UI-17), from its teams. */
+internal fun describeEvent(e: MatchEvent, home: String, away: String) =
     suspensionWords(e) ?: if (e.type == EVENT_ABANDON) "Abandoned: ${abandonReasons.getOrElse(e.extra ?: -1) { "other" }}"
     else if (e.type == EVENT_CLOCK_ADJUSTED) "Clock ${formatChange(e.extra ?: 0)}"
     else if (e.type == EVENT_ADDED_ADJUSTED) "Added time ${formatChange(e.extra ?: 0)}"
-    else "${typeName(e.type)} ${m.teamName(e.team)}" +
+    else "${typeName(e.type)} ${if (e.team == HOME) home else away}" +
         (if (e.type == EVENT_OFFICIAL_YELLOW || e.type == EVENT_OFFICIAL_RED) " ${officialWords.getOrElse(e.extra ?: 2) { officialWords[2] }}" else "") +
         (e.player?.let { " #$it" } ?: "") +
         // EVT-14: "Yellow HOM #4 UB".
@@ -400,14 +403,20 @@ private fun describe(e: MatchEvent, m: Match) =
 /** EVT-11: the numbers are what the server reads. */
 private val abandonReasons = listOf("Weather", "Lightning", "Crowd trouble", "Not enough players", "Other")
 
-private fun eventTime(e: MatchEvent, m: Match) = when (e.seconds) {
+private fun eventTime(e: MatchEvent, m: Match) = eventWhen(e, m.setup, m.clockStyle)
+
+/** The full-time screen's Events: what was recorded, without the stoppages and periods' ends; History's too (UI-17). */
+internal fun listedEvents(events: List<MatchEvent>) = events.filter { it.type != EVENT_STOPPAGE && it.type != EVENT_PERIOD_END }
+
+/** [eventTime] for a match kept in History (UI-17), from its format and the clock it was played with. */
+internal fun eventWhen(e: MatchEvent, setup: MatchSetup, clockStyle: Int) = when (e.seconds) {
     SECONDS_BEFORE_KICKOFF -> "Before kickoff"
     SECONDS_AT_BREAK -> "At the break"
     SECONDS_AFTER_FULL_TIME -> "After full time"
     SECONDS_PENALTIES -> "Shoot-out"
     else -> {
-        val base = if (m.clockStyle == CLOCK_UP) m.periodStartSec(e.period) else 0
-        withPeriod(e.period, m.setup.numPeriods, formatClock((base + e.seconds) * 1000L))
+        val base = if (clockStyle == CLOCK_UP) setup.periodStartSec(e.period) else 0
+        withPeriod(e.period, setup.numPeriods, formatClock((base + e.seconds) * 1000L))
     }
 }
 
