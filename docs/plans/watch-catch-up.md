@@ -1,6 +1,6 @@
 # Plan: Wear OS and Apple Watch catch up with Garmin
 
-**Status:** Being built. Done: steps 1 (Extra time and Penalties in the game menu) and 2 (uploads LawFive refuses; sending one again from History comes with step 5). The model: the Garmin app is the reference, and every place the Wear OS app ([mobile/android/wear/](../../mobile/android/wear/)) or the Apple Watch app ([mobile/ios/LawFiveWatch/](../../mobile/ios/LawFiveWatch/)) falls short of an agreed watch requirement is brought up to it, on both where both lack it. Almost nothing here is new behavior, so [Proposed requirements](#proposed-requirements) mostly lists the existing IDs these watches will then meet, with one new one.
+**Status:** Being built. Done: steps 1 (Extra time and Penalties in the game menu) 2 (uploads LawFive refuses; sending one again from History comes with step 5) and 3 (Wear OS's alert intervals, in the shared cases). The model: the Garmin app is the reference, and every place the Wear OS app ([mobile/android/wear/](../../mobile/android/wear/)) or the Apple Watch app ([mobile/ios/LawFiveWatch/](../../mobile/ios/LawFiveWatch/)) falls short of an agreed watch requirement is brought up to it, on both where both lack it. Almost nothing here is new behavior, so [Proposed requirements](#proposed-requirements) mostly lists the existing IDs these watches will then meet, with one new one.
 
 ## In short
 

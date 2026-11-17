@@ -22,7 +22,8 @@ function caseTeamName(team as Number) as String? {
     return team == TEAM_HOME ? "home" : team == TEAM_AWAY ? "away" : null;
 }
 
-//! A case's format as a new match's setup; what it leaves out is the other watches' default.
+//! A case's format as a new match's setup; what it leaves out is the other watches' default. The watch's settings
+//! the match takes at kickoff come in it too: the alerts' switches and intervals (repeatSec, reminderSec, VIB-5).
 (:debug)
 function caseMatch(format as Dictionary) as Match {
     var d = {

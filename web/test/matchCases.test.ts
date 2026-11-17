@@ -151,8 +151,11 @@ function reopened(m: Match): Match {
 
 for (const c of all.match) {
     test(`match › ${c.name}`, () => {
-        const { vibeAdded, vibeSinBin, ...format } = c.format;
+        const { vibeAdded, vibeSinBin, repeatSec, reminderSec, ...format } = c.format;
         let m = new Match(format);
+        // VIB-5: the watch's settings the match takes at kickoff.
+        m.repeatSec = typeof repeatSec === "number" ? repeatSec : 10;
+        m.reminderSec = typeof reminderSec === "number" ? reminderSec : 10;
         if (vibeAdded === false) {
             m.vibeAdded = false;
         }

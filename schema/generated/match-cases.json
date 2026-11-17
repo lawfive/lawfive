@@ -2721,6 +2721,125 @@
       ]
     },
     {
+      "name": "alerts › Repeat alerts every 5 s: full time repeats every 5 s until acknowledged",
+      "format": {
+        "repeatSec": 5
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ]
+        },
+        {
+          "at": 2700000,
+          "do": [],
+          "expect": {
+            "alert": "fullTime",
+            "alerting": true
+          }
+        },
+        {
+          "at": 2704000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 2705000,
+          "do": [],
+          "expect": {
+            "alert": "fullTime"
+          }
+        },
+        {
+          "at": 2710000,
+          "do": [],
+          "expect": {
+            "alert": "fullTime"
+          }
+        },
+        {
+          "at": 2711000,
+          "do": [
+            {
+              "do": "acknowledge"
+            }
+          ],
+          "expect": {
+            "alerting": false
+          }
+        },
+        {
+          "at": 2715000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "alerts › Repeat alerts every 30 s: the halfway break due repeats every 30 s",
+      "format": {
+        "midBreak": true,
+        "repeatSec": 30
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ]
+        },
+        {
+          "at": 1290000,
+          "do": [],
+          "expect": {
+            "alert": "breakStart",
+            "breakDue": true
+          }
+        },
+        {
+          "at": 1300000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 1319000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 1320000,
+          "do": [],
+          "expect": {
+            "alert": "breakStart"
+          }
+        }
+      ]
+    },
+    {
       "name": "breaks › added on as stoppage, due at halfway (22:30), repeating until started, over after its length",
       "format": {
         "midBreak": true,
@@ -9598,6 +9717,195 @@
             },
             "stoppageRunning": false,
             "stoppageMs": 60000
+          }
+        }
+      ]
+    },
+    {
+      "name": "stoppage › the reminder comes every 10 s while a stoppage runs, and stops with it",
+      "format": {
+        "trackStoppage": true
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ]
+        },
+        {
+          "at": 300000,
+          "do": [
+            {
+              "do": "stoppage"
+            }
+          ]
+        },
+        {
+          "at": 309000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 310000,
+          "do": [],
+          "expect": {
+            "alert": "reminder"
+          }
+        },
+        {
+          "at": 319000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 320000,
+          "do": [],
+          "expect": {
+            "alert": "reminder"
+          }
+        },
+        {
+          "at": 325000,
+          "do": [
+            {
+              "do": "stoppage"
+            }
+          ]
+        },
+        {
+          "at": 330000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        }
+      ]
+    },
+    {
+      "name": "stoppage › Remind every 20 s: the reminder comes every 20 s",
+      "format": {
+        "trackStoppage": true,
+        "reminderSec": 20
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ]
+        },
+        {
+          "at": 300000,
+          "do": [
+            {
+              "do": "stoppage"
+            }
+          ]
+        },
+        {
+          "at": 310000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 319000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 320000,
+          "do": [],
+          "expect": {
+            "alert": "reminder"
+          }
+        },
+        {
+          "at": 330000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 340000,
+          "do": [],
+          "expect": {
+            "alert": "reminder"
+          }
+        }
+      ]
+    },
+    {
+      "name": "stoppage › Remind every Off: a stoppage runs without reminders",
+      "format": {
+        "trackStoppage": true,
+        "reminderSec": 0
+      },
+      "screen": {},
+      "steps": [
+        {
+          "at": 0,
+          "do": [
+            {
+              "do": "kickoff",
+              "team": "home"
+            },
+            {
+              "do": "start"
+            }
+          ]
+        },
+        {
+          "at": 300000,
+          "do": [
+            {
+              "do": "stoppage"
+            }
+          ]
+        },
+        {
+          "at": 310000,
+          "do": [],
+          "expect": {
+            "alert": null,
+            "stoppageRunning": true
+          }
+        },
+        {
+          "at": 320000,
+          "do": [],
+          "expect": {
+            "alert": null
+          }
+        },
+        {
+          "at": 360000,
+          "do": [],
+          "expect": {
+            "alert": null
           }
         }
       ]

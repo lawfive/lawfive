@@ -82,6 +82,9 @@ export const CaseFormat = z.strictObject({
     penalties: z.boolean().optional(),
     /** VIB-7: the added time alert's switch, which the match takes from the watch's settings. */
     vibeAdded: z.boolean().optional(),
+    /** VIB-5: Repeat alerts every (VIB-1, VIB-4, VIB-7, VIB-8) and Remind every (VIB-2, 0 for off), in seconds, from the watch's settings; 10 when left out. */
+    repeatSec: z.int().min(1).max(60).optional(),
+    reminderSec: z.int().min(0).max(60).optional(),
     /** EVT-12: sin bins, and their length (10 minutes when left out). */
     sinBins: z.boolean().optional(),
     sinBinSec: z.int().min(60).max(1200).optional(),

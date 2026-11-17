@@ -148,6 +148,9 @@ func runMatchCases() {
         var m = Match(setup: setupOf(format), created: t0 / 1000)
         if let v = format["vibeAdded"] as? Bool { m.vibeAdded = v }
         if let v = format["vibeSinBin"] as? Bool { m.vibeSinBin = v }
+        // VIB-5: Repeat alerts every and Remind every, as the match takes them from the watch's settings at kickoff.
+        if let v = format["repeatSec"] as? Int { m.repeatSec = v }
+        if let v = format["reminderSec"] as? Int { m.reminderSec = v }
         for (i, step) in (c["steps"] as! [[String: Any]]).enumerated() {
             let now = t0 + Int64(step["at"] as! Int)
             for a in step["do"] as? [[String: Any]] ?? [] {

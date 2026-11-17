@@ -60,6 +60,12 @@ data class Saved(
     val vibeSinBin: Boolean = true,
     val vibeBreak: Boolean = true,
     val vibeStoppage: Boolean = true,
+    /**
+     * VIB-1, VIB-2, VIB-4, VIB-7, VIB-8: how often the repeating alerts repeat, and the stoppage reminder (0 for off),
+     * as the Garmin watch's Repeat alerts every and Remind every; the match takes them at kickoff.
+     */
+    val alertRepeatSec: Int = 10,
+    val stoppageReminderSec: Int = 10,
     val tapStoppage: Boolean = false,
     /** EVT-14: Card reasons: the misconduct codes listed after a card's number (or role); off for settings saved before it. */
     val cardReasons: Boolean = false,

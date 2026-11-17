@@ -154,8 +154,9 @@ class MatchCasesTest {
             val name = c.text("name")
             val screen = screenOf(c["screen"]!!.jsonObject)
             val format = c["format"]!!.jsonObject
+            // VIB-5: the watch's settings the match takes at kickoff.
             var m = Match(setupOf(format), created = t0 / 1000, vibeAdded = format.flag("vibeAdded") ?: true,
-                vibeSinBin = format.flag("vibeSinBin") ?: true)
+                vibeSinBin = format.flag("vibeSinBin") ?: true, repeatSec = format.number("repeatSec") ?: 10, reminderSec = format.number("reminderSec") ?: 10)
             c["steps"]!!.jsonArray.forEachIndexed { i, s ->
                 val step = s.jsonObject
                 val now = t0 + step["at"]!!.jsonPrimitive.long

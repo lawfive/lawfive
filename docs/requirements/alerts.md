@@ -31,7 +31,7 @@ The watch's vibrations during a match (full time, added time, stoppage reminders
 
 ## Status
 
-Everything above is built on all three watches and in Try a match, except Remind every and Repeat alerts every on Wear OS, which repeats every 10 seconds (the [watch catch-up plan](../plans/watch-catch-up.md)).
+Everything above is built on all three watches and in Try a match, with the intervals in the shared match cases. How often alerts repeat is still to feel during play on real Wear OS and Apple watches (R-13).
 
 Not built yet:
 - Full time's one vibration or repeat (VIB-1) has been checked only by the shared cases and tests, not on a real watch.

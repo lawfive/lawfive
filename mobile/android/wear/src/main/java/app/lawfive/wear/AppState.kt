@@ -194,6 +194,8 @@ object AppState {
             // SET-8: the names as they are now, kept with the match.
             setup.copy(stoppageLabel = s.stoppageLabel, breakLabel = s.breakLabel), created = System.currentTimeMillis() / 1000,
             vibeFullTime = s.vibeFullTime, vibeBreak = s.vibeBreak, vibeStoppage = s.vibeStoppage, vibeAdded = s.vibeAdded, vibeSinBin = s.vibeSinBin,
+            // VIB-5: Repeat alerts every and Remind every, as they are now.
+            repeatSec = s.alertRepeatSec, reminderSec = s.stoppageReminderSec,
             recordTrack = s.recordTrack,
             // EVT-14: the planned match's scheme, else the account's (a quick or created match), else IFAB's.
             misconductScheme = Misconduct.scheme(setup.misconductScheme ?: s.misconductScheme),
@@ -246,6 +248,7 @@ object AppState {
                 Saved(
                     quick = s.quick, faceLayout = s.faceLayout, secondClock = s.secondClock, screen = s.screen, screenAt = s.screenAt,
                     vibeFullTime = s.vibeFullTime, vibeAdded = s.vibeAdded, vibeBreak = s.vibeBreak, vibeStoppage = s.vibeStoppage, vibeSinBin = s.vibeSinBin,
+                    alertRepeatSec = s.alertRepeatSec, stoppageReminderSec = s.stoppageReminderSec,
                     tapStoppage = s.tapStoppage, cardReasons = s.cardReasons, stoppageName = s.stoppageName, breakName = s.breakName, recordTrack = s.recordTrack,
                     signOuts = s.signOuts + listOfNotNull(left),
                 )

@@ -109,7 +109,7 @@ private fun Pages(button: SharedFlow<Unit>) {
             is Page.Pitch -> PitchPage(page.matchId, page.created, ::pop)
             Page.Settings -> SettingsPage(::push)
             Page.Screen -> ScreenPage(::push)
-            Page.Alerts -> AlertsPage()
+            Page.Alerts -> AlertsPage(::push)
             Page.Controls -> ControlsPage()
             Page.Permissions -> PermissionsPage()
             Page.Account -> AccountPage(::push, ::pop)
@@ -448,7 +448,7 @@ private fun ScreenPage(push: (Page) -> Unit) {
 }
 
 @Composable
-private fun AlertsPage() {
+private fun AlertsPage(push: (Page) -> Unit) {
     val s = AppState.saved
     WatchList("Alerts") {
         item { ToggleRow("Full time", s.vibeFullTime, "End of each period") { v -> AppState.update { it.copy(vibeFullTime = v) } } }
@@ -457,6 +457,19 @@ private fun AlertsPage() {
         item { ToggleRow("Sin bin over", s.vibeSinBin, "When a player can return") { v -> AppState.update { it.copy(vibeSinBin = v) } } }
         item { ToggleRow("Breaks", s.vibeBreak, "When due and over") { v -> AppState.update { it.copy(vibeBreak = v) } } }
         item { ToggleRow("Stoppage", s.vibeStoppage, "Remind while it runs") { v -> AppState.update { it.copy(vibeStoppage = v) } } }
+        // VIB-2, VIB-5, as on the Garmin watch: the same choices and defaults; the match takes them at kickoff.
+        val remind = s.stoppageReminderSec.let { if (it == 0) "Off" else "$it s" }
+        item {
+            MenuRow("Remind every", remind) {
+                push(Page.Picker("Remind every", listOf(0, 10, 20, 30, 60).map { it to if (it == 0) "Off" else "$it s" }, s.stoppageReminderSec) { v -> AppState.update { it.copy(stoppageReminderSec = v) } })
+            }
+        }
+        // VIB-1, VIB-4, VIB-7, VIB-8: how often a repeating alert repeats until it's answered.
+        item {
+            MenuRow("Repeat alerts every", "${s.alertRepeatSec} s") {
+                push(Page.Picker("Repeat every", listOf(5, 10, 15, 20, 30).map { it to "$it s" }, s.alertRepeatSec) { v -> AppState.update { it.copy(alertRepeatSec = v) } })
+            }
+        }
     }
 }
 

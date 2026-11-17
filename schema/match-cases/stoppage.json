@@ -1,5 +1,5 @@
 {
-    "$comment": "WCH-2: stoppage (TMR-3, TMR-10).",
+    "$comment": "WCH-2: stoppage (TMR-3, TMR-10) and its reminder (VIB-2), every 10 s or as Remind every sets it (reminderSec, the watch's setting the match takes at kickoff; 0 is off).",
     "match": [
         {
             "name": "not tracked: the button does nothing",
@@ -19,6 +19,47 @@
                 { "at": "5:30", "expect": { "stoppageMs": 30000 } },
                 { "at": "6:00", "do": "stoppage" },
                 { "at": "9:00", "expect": { "stoppageMs": 60000, "stoppageRunning": false, "last": { "type": "S", "team": null, "seconds": 300, "player": null, "extra": 60 } } }
+            ]
+        },
+        {
+            "name": "the reminder comes every 10 s while a stoppage runs, and stops with it",
+            "ids": ["VIB-2"],
+            "format": { "trackStoppage": true },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage" },
+                { "at": "5:09", "expect": { "alert": null } },
+                { "at": "5:10", "expect": { "alert": "reminder" } },
+                { "at": "5:19", "expect": { "alert": null } },
+                { "at": "5:20", "expect": { "alert": "reminder" } },
+                { "at": "5:25", "do": "stoppage" },
+                { "at": "5:30", "expect": { "alert": null } }
+            ]
+        },
+        {
+            "name": "Remind every 20 s: the reminder comes every 20 s",
+            "ids": ["VIB-2", "VIB-5"],
+            "format": { "trackStoppage": true, "reminderSec": 20 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage" },
+                { "at": "5:10", "expect": { "alert": null } },
+                { "at": "5:19", "expect": { "alert": null } },
+                { "at": "5:20", "expect": { "alert": "reminder" } },
+                { "at": "5:30", "expect": { "alert": null } },
+                { "at": "5:40", "expect": { "alert": "reminder" } }
+            ]
+        },
+        {
+            "name": "Remind every Off: a stoppage runs without reminders",
+            "ids": ["VIB-2", "VIB-5"],
+            "format": { "trackStoppage": true, "reminderSec": 0 },
+            "steps": [
+                { "at": "0:00", "do": [{ "kickoff": "home" }, "start"] },
+                { "at": "5:00", "do": "stoppage" },
+                { "at": "5:10", "expect": { "alert": null, "stoppageRunning": true } },
+                { "at": "5:20", "expect": { "alert": null } },
+                { "at": "6:00", "expect": { "alert": null } }
             ]
         }
     ]
