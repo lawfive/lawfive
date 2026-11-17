@@ -954,7 +954,8 @@ private struct FullTimeScreen: View {
             // SYNC-4: unlinked, it's kept and goes once linked, in the Garmin watch's History words, on two lines.
             let unlinked = !sent && !state.linked
             Text("Match saved").font(.barlow(w * 0.08, .semibold)).foregroundStyle(C.brand).at(0.5, unlinked ? 0.43 : 0.45, size)
-            Text(sent ? "Sent to LawFive" : state.linked ? "Waiting to send" : "On this watch only\nLink to send it").font(.barlow(w * 0.058)).foregroundStyle(C.dim)
+            // SYNC-17: one LawFive refused is no longer waiting.
+            Text(sent ? "Sent to LawFive" : !state.linked ? "On this watch only\nLink to send it" : state.isQueued(match.created) ? "Waiting to send" : "Not on LawFive").font(.barlow(w * 0.058)).foregroundStyle(C.dim)
                 .multilineTextAlignment(.center).at(0.5, unlinked ? 0.535 : 0.54, size)
             PillButton(label: "Done", width: w * 0.56) { state.clearMatch() }.frame(width: w * 0.56).at(0.5, 0.71, size)
             Button(action: events) { Text("Events").font(.barlow(w * 0.065, .semibold)).foregroundStyle(C.brand).padding(6) }.buttonStyle(TapOnly()).at(0.5, 0.88, size)

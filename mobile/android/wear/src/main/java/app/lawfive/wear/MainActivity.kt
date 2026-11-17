@@ -19,6 +19,10 @@ class MainActivity : ComponentActivity() {
         // For testing on an emulator: its address for the demo, and a layout to look at.
         if (BuildConfig.DEBUG) {
             intent.getStringExtra("server")?.let { AppState.setServer(it) }
+            // SYNC-1: linked with a token got by the device flow, as the Apple Watch's -token.
+            intent.getStringExtra("token")?.let { token -> AppState.update { it.copy(token = token) } }
+            // SYNC-17: a finished match LawFive refuses, first in the outbox.
+            if (intent.getBooleanExtra("refusedRecord", false)) AppState.queueRefusedForTesting()
             if (intent.hasExtra("heading")) Compass.fake = intent.getFloatExtra("heading", 0f)
             // UI-26: the sync screen partway through: "sent of total", or "stopped".
             intent.getStringExtra("syncScreen")?.let { AppState.showSyncScreenForTesting(it) }

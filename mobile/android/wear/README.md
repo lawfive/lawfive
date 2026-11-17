@@ -32,6 +32,8 @@ adb shell am start -n app.lawfive/app.lawfive.wear.MainActivity --es server http
 | Extra | What it does |
 |---|---|
 | `server` | A server's address |
+| `token` | Link with a token (from the device flow, `client_id` `lawfive-wear`) |
+| `refusedRecord` (`--ez`) | A finished match whose upload LawFive refuses, first in the outbox (SYNC-17) |
 | `screen` | The match screen's choices, `clocks,mainClock,secondClock,breakClock,edge,names` (UI-21): clocks 0 one, 1 stacked, 2 side by side; clock styles 0 Match time, 1 Each half from 0, 2 Time left; break 0 time left, 1 time taken; edge 0 neither, 1 ring, 2 time of day; names 1 or 0 |
 | `syncScreen` | The sync screen at `1` or `2` of 3, or `stopped` (UI-26) |
 | `format` | A Quick match format as JSON |

@@ -982,7 +982,8 @@ private fun FullTimeScreen(m: Match, events: () -> Unit) {
         val twoLines = !sent && !AppState.linked
         At(if (twoLines) 0.45f else 0.47f) { T("Match saved", fraction(0.072f), C.brand, FontWeight.SemiBold) }
         At(if (twoLines) 0.54f else 0.55f) {
-            T(if (sent) "Sent to LawFive" else if (AppState.linked) "Waiting to send" else "On this watch only\nLink to send it", fraction(0.052f), C.dim, lines = 2)
+            // SYNC-17: one LawFive refused is no longer waiting.
+            T(if (sent) "Sent to LawFive" else if (!AppState.linked) "On this watch only\nLink to send it" else if (AppState.isQueued(m.created)) "Waiting to send" else "Not on LawFive", fraction(0.052f), C.dim, lines = 2)
         }
         At(0.72f) { PillButton("Done", width = maxWidth * 0.5f) { AppState.clearMatch() } }
         val eventsSize = fraction(0.058f)

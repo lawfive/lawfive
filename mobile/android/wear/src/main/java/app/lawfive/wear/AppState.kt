@@ -269,6 +269,23 @@ object AppState {
 
     private fun title(m: Match) = "${m.setup.home} v ${m.setup.away}"
 
+    /**
+     * For testing on an emulator (SYNC-17): a finished match an hour old whose upload LawFive refuses, as a record it
+     * can't read, first in the outbox, so the next sync gives it up and carries on with the rest.
+     */
+    fun queueRefusedForTesting() {
+        val created = System.currentTimeMillis() / 1000 - 3600
+        update { s ->
+            s.copy(
+                outbox = listOf(buildJsonObject { put("created", created); put("home", "REF"); put("away", "USD") }) + s.outbox,
+                history = (listOf(Finished(created, "REF v USD", "REF", "USD", listOf(0, 0), when_ = created)) + s.history).take(HISTORY_KEPT),
+            )
+        }
+    }
+
+    /** SYNC-4: a finished match still waiting in the outbox; one LawFive refused has left it (SYNC-17). */
+    fun isQueued(created: Long) = saved.outbox.any { it["created"]?.toString() == created.toString() }
+
     private fun matchFinished(m: Match) {
         update {
             it.copy(
@@ -453,7 +470,15 @@ object AppState {
         scope.launch {
             try {
                 for (upload in saved.outbox) {
-                    server.post("/v1/watch/records", token, upload)
+                    val refused = runCatching { server.post("/v1/watch/records", token, upload) }.exceptionOrNull()
+                    if (refused is ServerRefused && refused.status == 400) {
+                        // SYNC-4, SYNC-17: LawFive itself can't take this one; giving it up lets the others through.
+                        // History keeps it, no longer waiting ("Not on LawFive").
+                        syncTotal--
+                        update { s -> s.copy(outbox = s.outbox - upload) }
+                        continue
+                    }
+                    if (refused != null) throw refused
                     syncSent++
                     update { s -> s.copy(outbox = s.outbox - upload, history = s.history.map { if (it.created.toString() == upload["created"].toString()) it.copy(sent = true) else it }) }
                 }

@@ -306,6 +306,14 @@ final class AppState {
         if args.string(forKey: "reset") != nil { saved = Saved() }
         if let server = args.string(forKey: "server") { saved.server = server }
         if let token = args.string(forKey: "token") { saved.token = token }
+        // SYNC-17: a finished match an hour old whose upload LawFive refuses, as a record it can't read, first in the
+        // outbox, so the next sync gives it up and carries on with the rest.
+        if args.string(forKey: "refusedRecord") != nil {
+            let created = nowSeconds() - 3600
+            saved.outbox.insert(Data(#"{"created":\#(created),"home":"REF","away":"USD"}"#.utf8), at: 0)
+            saved.outboxCreated.insert(created, at: 0)
+            saved.history.insert(FinishedMatch(created: created, home: "REF", away: "USD", score: [0, 0], pens: nil), at: 0)
+        }
         if let heading = args.string(forKey: "heading").flatMap(Double.init) { Compass.fake = heading }
         if let swipes = args.string(forKey: "swipes") { saved.teamSwipes = swipes }
         // EVT-14: -reasons ussf turns Card reasons on, with that scheme as the account's.
@@ -760,6 +768,9 @@ final class AppState {
 
     // MARK: History (UI-17)
 
+    /// SYNC-4: a finished match still waiting in the outbox; one LawFive refused has left it (SYNC-17).
+    func isQueued(_ created: Int64) -> Bool { saved.outboxCreated.contains(created) }
+
     /// Remove from watch: the match, and anything of it still waiting to send (it's lost if it hadn't gone).
     func removeFinished(_ created: Int64) {
         if let queued = saved.tracks?.first(where: { $0.created == created }) { track.delete(created, from: queued.next, to: queued.count) }
@@ -850,7 +861,18 @@ final class AppState {
             defer { syncing = false }
             do {
                 while let body = saved.outbox.first {
-                    _ = try await server.post("/v1/watch/records", token: token, body: body)
+                    do {
+                        _ = try await server.post("/v1/watch/records", token: token, body: body)
+                    } catch let e as ServerRefused where e.status == 400 {
+                        // SYNC-4, SYNC-17: LawFive itself can't take this one; giving it up lets the others through.
+                        // History keeps it, no longer waiting ("Not on LawFive").
+                        syncTotal -= 1
+                        update { s in
+                            s.outbox.removeFirst()
+                            s.outboxCreated.removeFirst()
+                        }
+                        continue
+                    }
                     syncSent += 1
                     let created = saved.outboxCreated.first
                     update { s in

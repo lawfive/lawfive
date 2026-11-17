@@ -529,7 +529,13 @@ struct AboutPage: View {
     }
 }
 
-private func sentLine(_ h: FinishedMatch, linked: Bool) -> String { h.sent ? "Sent" : linked ? "Waiting to send" : "Not sent" }
+/// As the Garmin's History list: one LawFive refused is no longer waiting (SYNC-4).
+private func sentLine(_ h: FinishedMatch, linked: Bool, queued: Bool) -> String { h.sent ? "Sent" : linked && queued ? "Waiting to send" : "Not sent" }
+
+/// UI-17: whether it's on LawFive, in the Garmin's History words.
+private func sentState(_ h: FinishedMatch, linked: Bool, queued: Bool) -> String {
+    h.sent ? "Sent to LawFive" : !linked ? "On this watch only · Link to send it" : queued ? "Waiting to send" : "Not on LawFive"
+}
 
 private func playedTitle(_ h: FinishedMatch) -> String {
     let pens = h.pens.map { " (\($0[0])-\($0[1]))" } ?? (h.golden == true ? " (GG)" : "")
@@ -556,7 +562,7 @@ struct PlayedPage: View {
                 }, onNo: { removing = false })
             } else {
                 WatchList(title: playedTitle(h)) {
-                    Text(h.sent ? "Sent to LawFive" : state.linked ? "Waiting to send" : "On this watch only · Link to send it")
+                    Text(sentState(h, linked: state.linked, queued: state.isQueued(h.created)))
                         .font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center)
                     if h.setup != nil {
                         NavigationLink { SummaryPage(created: created) } label: { RowLabel(label: "Summary", sub: playedWhen(h)) }.buttonStyle(.plain)
@@ -642,7 +648,7 @@ struct HistoryPage: View {
                 Text("Finished matches show here").font(.barlow(13)).foregroundStyle(C.dim).multilineTextAlignment(.center).padding(.top, 8)
             }
             ForEach(state.saved.history) { h in
-                NavigationLink { PlayedPage(created: h.created) } label: { RowLabel(label: playedTitle(h), sub: sentLine(h, linked: state.linked)) }.buttonStyle(.plain)
+                NavigationLink { PlayedPage(created: h.created) } label: { RowLabel(label: playedTitle(h), sub: sentLine(h, linked: state.linked, queued: state.isQueued(h.created))) }.buttonStyle(.plain)
             }
         }
     }

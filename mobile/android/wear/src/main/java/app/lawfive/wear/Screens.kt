@@ -364,7 +364,16 @@ private fun playedTitle(h: Finished): String {
     return "${h.home} ${h.score[0]}-${h.score[1]}$pens ${h.away}"
 }
 
-private fun sentLine(h: Finished) = if (h.sent) "Sent" else if (AppState.linked) "Waiting to send" else "Not sent"
+/** As the Garmin's History list: one LawFive refused is no longer waiting (SYNC-4). */
+private fun sentLine(h: Finished) = if (h.sent) "Sent" else if (AppState.linked && AppState.isQueued(h.created)) "Waiting to send" else "Not sent"
+
+/** UI-17: whether it's on LawFive, in the Garmin's History words. */
+private fun sentState(h: Finished) = when {
+    h.sent -> "Sent to LawFive"
+    !AppState.linked -> "On this watch only · Link to send it"
+    AppState.isQueued(h.created) -> "Waiting to send"
+    else -> "Not on LawFive"
+}
 
 @Composable
 private fun HistoryPage(push: (Page) -> Unit) {
@@ -380,7 +389,7 @@ private fun HistoryPage(push: (Page) -> Unit) {
 private fun PlayedPage(created: Long, push: (Page) -> Unit) {
     val h = AppState.saved.history.firstOrNull { it.created == created } ?: return
     WatchList(playedTitle(h)) {
-        item { T(sentLine(h), 13.sp, C.dim, FontWeight.Normal, Modifier.padding(bottom = 4.dp)) }
+        item { T(sentState(h), 13.sp, C.dim, FontWeight.Normal, Modifier.padding(bottom = 4.dp)) }
         item { MenuRow("Mark pitch", "Walk its corners", R.drawable.ph_flag) { push(Page.Pitch(h.matchId, h.created)) } }
     }
 }
