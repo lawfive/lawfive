@@ -176,9 +176,16 @@ Still to do:
 - **Real devices:** the open checks on Garmin and Android (R-6); the iPhone, Wear OS and Apple Watch on real hardware, including tracks and pitch marking on the watches (R-12, R-13).
 - **The iPhone's Garmin bridge** proven over Bluetooth (IOS-9).
 - **Server notifications** on a real Android phone (R-18), and built on the iPhone.
-- **More track sources:** Strava, Health Connect and Apple Health (TRK-12).
+- **More track sources:** Strava, Health Connect and Apple Health (TRK-12), as a proposal in [plans/health-integrations.md](plans/health-integrations.md).
 - **The watches' match screens** in the website's look ([DESIGN.md](../DESIGN.md)).
-- **Mileage** from home to the pitch, as a proposal in [plans/mileage.md](plans/mileage.md).
+- **Proposals in [plans/](plans/):**
+  - [Mileage](plans/mileage.md) from home to the pitch.
+  - [Wear OS and Apple Watch catching up with Garmin](plans/watch-catch-up.md).
+  - [Garmin corrections](plans/garmin-corrections.md): short names from the phone settings (SET-5), and telling the server's refusals from a proxy's (R-19).
+  - [Accounts](plans/accounts.md): signing in with Google or Apple, confirming email addresses, and ending other sessions on a password reset.
+  - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
+  - [Files on venues, competitions and more](plans/attachments.md) (FILE-6).
+  - [Rosters and substitutions](plans/rosters.md) (EVT-13), with reading team sheets and care for minors' data.
 - **The stores:** Connect IQ (starting with a private beta), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
 - **The paid hosted service,** once there is something worth paying for (A-4).
 

@@ -30,4 +30,3 @@ The server's notices, the website's option on API keys and its warning when no p
 
 Not built yet:
 - A notification on a real phone, asleep (R-18), the iPhone's through TestFlight.
-- The watch, for a match canceled while it's on the watch's list.

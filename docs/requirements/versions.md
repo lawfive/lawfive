@@ -30,7 +30,3 @@ How each part of LawFive gets its version, where it shows, and how apps and serv
 ## Status
 
 Everything above is built: versions from git for every part (CI builds the server's into its image), shown in each About, in the device header and devices lists, and in `GET /v1/meta`; releases (VER-5) with `tools/release.sh` and CI.
-
-Not done yet:
-
-- The first release (VER-5).
