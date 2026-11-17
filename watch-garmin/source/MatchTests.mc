@@ -2149,6 +2149,9 @@ function testSyncScreenOffered(logger as Logger) as Boolean {
     var total = Sync.stepsTotal;
     var problem = Sync.lastProblem;
     var shown = Sync._screenShown;
+    // A sync an earlier test started may still be waiting for its answer: set it aside.
+    var job = Sync._job;
+    Sync._job = null;
     Sync._screenShown = false;
     Sync.lastProblem = null;
     Sync.stepsTotal = 20;
@@ -2163,6 +2166,7 @@ function testSyncScreenOffered(logger as Logger) as Boolean {
     Test.assertMessage(!Sync.wantsScreen(), "once a sync");
     Sync.stepsTotal = total;
     Sync.lastProblem = problem;
+    Sync._job = job;
     Sync._screenShown = shown;
     return true;
 }
