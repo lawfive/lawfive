@@ -17,10 +17,15 @@ const stores = [
     { name: "App Store", icon: "apple", url: undefined },
 ] as const satisfies readonly { name: string; icon: string; url: string | undefined }[];
 
-/** APP-15: while neither store has it, the apps are in testing, and testers are invited by writing in. */
+/**
+ * APP-15: while neither store has it, the apps are in testing. Android testers join Google Play's test
+ * themselves (its Google Group, then the test); iPhone testers are invited by writing in.
+ */
 const inTesting = stores.every((s) => !s.url);
-const invitationUrl = "mailto:support@lawfive.app?subject=" + encodeURIComponent("Testing the LawFive app")
-    + "&body=" + encodeURIComponent("I'd like to test the LawFive app on my phone (Android or iPhone): ");
+const testersGroupUrl = "https://groups.google.com/g/lawfive-testers";
+const playTestUrl = "https://play.google.com/apps/testing/app.lawfive";
+const invitationUrl = "mailto:support@lawfive.app?subject=" + encodeURIComponent("Testing the LawFive iPhone app")
+    + "&body=" + encodeURIComponent("I'd like to test the LawFive app on my iPhone.");
 
 /** How many times a new code takes the place of an expired one before asking. */
 const maxRenewals = 5;
@@ -142,8 +147,11 @@ function SignInCode() {
                             <b>Install LawFive</b>
                             {inTesting && (
                                 <span className="get-app-testing">
-                                    In testing: <a href={invitationUrl}>ask for an invitation</a>
-                                    <span className="muted"> at support@lawfive.app, saying whether it's for Android or an iPhone.</span>
+                                    In testing. Android: join the <a href={testersGroupUrl} target="_blank" rel="noreferrer">testers' group</a>, then{" "}
+                                    <a href={playTestUrl} target="_blank" rel="noreferrer">the test</a>
+                                    <span className="muted"> with the same Google account, and install it from Google Play.</span>{" "}
+                                    iPhone: <a href={invitationUrl}>ask for an invitation</a>
+                                    <span className="muted"> at support@lawfive.app.</span>
                                 </span>
                             )}
                             <Stores />

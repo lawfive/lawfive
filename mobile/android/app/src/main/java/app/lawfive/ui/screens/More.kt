@@ -139,6 +139,8 @@ fun linkWatchSub(context: Context): String =
 
 /** WEB-29: Help, LawFive's support page on lawfive.app: questions, and how to reach us. */
 const val HELP_URL = "https://lawfive.app/support"
+/** LawFive's page in Garmin's Connect IQ Store (APP-12). */
+const val GARMIN_STORE_URL = "https://apps.garmin.com/en-US/apps/1e9bdbc1-ba90-4096-8279-d4db70f3721a"
 
 /** Help, the same on the website and both phones: in More and in Settings → About. */
 @Composable
@@ -281,11 +283,13 @@ fun LinkWatchScreen() {
                         }
                     })
                     if (w.hasLawFive == false) {
-                        // Installing from the Connect IQ Store comes once LawFive is listed there.
-                        Text(
-                            "Install LawFive on the watch first. Until it's in Garmin's Connect IQ Store, it's installed from a computer (lawfive.dev).",
-                            style = MaterialTheme.typography.bodySmall, color = colors.muted, modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
-                        )
+                        // APP-12: a watch without LawFive gets it from the Connect IQ Store, which hands it to Garmin Connect.
+                        Column(Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)) {
+                            Text("Install LawFive on the watch first, from Garmin's Connect IQ Store.", style = MaterialTheme.typography.bodySmall, color = colors.muted)
+                            Box(Modifier.offset(x = (-6).dp)) {
+                                app.lawfive.ui.components.LinkButton("Open the Connect IQ Store") { context.startActivity(Intent(Intent.ACTION_VIEW, GARMIN_STORE_URL.toUri())) }
+                            }
+                        }
                     }
                     linking?.takeIf { it.watch == w.id }?.let { state ->
                         LinkProgress(w.name, state, onRetry = { graph.watch.linker.offer(w.id) }, onDone = { graph.watch.linker.dismiss() })

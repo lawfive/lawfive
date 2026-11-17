@@ -3,9 +3,10 @@ title: Watches
 description: Connect Garmin, Wear OS and Apple Watch apps to your own LawFive server.
 ---
 
-:::note[Availability]
-The watch apps aren't in their stores yet. Until they are, [build them from source](/contribute/overview/).
-:::
+## Getting the app
+
+- **Garmin:** install LawFive from [Garmin's Connect IQ Store](https://apps.garmin.com/en-US/apps/1e9bdbc1-ba90-4096-8279-d4db70f3721a), in the Connect IQ app on your phone or from that page. It lists the watches it runs on.
+- **Wear OS and Apple Watch:** not in their stores yet. Until they are, [build them from source](/contribute/overview/).
 
 What each watch app asks the watch for (location, heart rate and the rest), when it asks, and what still works without each, is on [Permissions](https://lawfive.app/permissions) at lawfive.app.
 
@@ -27,7 +28,7 @@ Once it's linked, the website and the phone apps offer the next two steps: set u
 
 Choose your server before linking. You can change it whenever the watch isn't linked.
 
-**On Garmin:** choose **Server** in the Link account menu, then **My own server**, and type your address. An address without `https://` gets it added. The watch asks the address for LawFive's server information, and keeps it only when a LawFive server answers, showing "Found LawFive". Otherwise it says what went wrong, so you can try again.
+**On Garmin:** choose **Server** in the Link account menu, then **My own server**, and type your address. An address without `https://` gets it added. The watch asks the address for LawFive's server information, and keeps it only when a LawFive server answers, showing "Found LawFive". Otherwise it says what went wrong, so you can try again. You can also set it from your phone: in the Connect IQ app, LawFive's **Settings** has **LawFive server to link to**. A watch that's already linked keeps the server it linked with.
 
 **On Wear OS and Apple Watch:** open **Settings → Account**, and type your address in the server field. It needs `https://`, which is added if you leave it out. On Wear OS, leaving the field empty goes back to the hosted service.
 

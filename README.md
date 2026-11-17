@@ -6,7 +6,7 @@ A product for soccer referees, named after Law 5 ("The Referee") of the Laws of 
 
 | Folder | What it is | Where it stands |
 |---|---|---|
-| [watch-garmin/](watch-garmin/) | Garmin Connect IQ watch app (Monkey C) | In use on a real watch, installed over USB; not in the Connect IQ Store yet |
+| [watch-garmin/](watch-garmin/) | Garmin Connect IQ watch app (Monkey C) | In the [Connect IQ Store](https://apps.garmin.com/en-US/apps/1e9bdbc1-ba90-4096-8279-d4db70f3721a) |
 | [mobile/android/](mobile/android/) | Android app (Kotlin, Compose) | In use on a real phone, installed over USB; not on Google Play yet |
 | [mobile/android/wear/](mobile/android/wear/) | Wear OS watch app | Built; run on an emulator and a Galaxy Watch4 |
 | [mobile/ios/](mobile/ios/) | iPhone app (Swift, SwiftUI) | Built; run on simulators and once on an iPad, not yet on an iPhone |

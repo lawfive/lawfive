@@ -14,7 +14,7 @@ The marketing site at lawfive.app, with its feature pages, playable parts and le
 
 - **SITE-6** **The home page shows**:
   - the phone apps on Android and iPhone, notifications included;
-  - the watch apps on Garmin, Wear OS and Apple Watch, each with its state (in testing or early testing);
+  - the watch apps on Garmin, Wear OS and Apple Watch, each with its state: in its store (linking to its page there), in testing or in early testing;
   - a closer look at kickoff direction (PRE-8), marking the pitch's corners (TRK-13), the match screen setup (UI-27), match replay (TRK-10), weather warnings (WX-3, PUSH-5) and the Laws quiz (QUIZ-1 to QUIZ-5), each saying which devices have it;
   - a **Find out more** row of cards for the feature pages and FAQ (SITE-8);
   - links to the docs at lawfive.dev, in the header, the footer and a section for self-hosters and developers.
@@ -75,6 +75,3 @@ The marketing site at lawfive.app, with its feature pages, playable parts and le
 Everything above is built, with every page of lawfive.app and lawfive.dev checked from phone to desktop widths in light and dark.
 
 The permissions page's (SITE-14) Garmin entries use Garmin's names for the permissions, still to be checked against what the Connect IQ Store shows.
-
-Not built yet:
-- The support page linked from the apps' About.

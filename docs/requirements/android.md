@@ -30,7 +30,7 @@ The Android phone app: most of what the website does, on match day, without sign
   - A self-hosted server sets `API_URL` when phones should use an address other than `PUBLIC_URL`; `GET /v1/meta` tells them.
 - **APP-14** **An invitation by QR code.** People shows any open invitation as a QR code holding its link. The app's scanner reads it and shows the sign-up form on the phone (who invited them, Name, Email, fixed when the invitation is for one address, Password), signed in at once, whatever the sign-up setting (USR-3). A phone's camera opens the web page instead, which on a touch screen also offers **Use the app instead** (`lawfive://invite?server=…&token=…`).
 - **APP-15** **Get the app**, the website's `/get-app` page (from Settings → Watches and devices, and Get ready, WEB-32): the steps (install, open and scan, check it's you) beside the code.
-  - Each store shows "Coming soon" until it has a listing. While both do, step 1 says "In testing: ask for an invitation" (mail to support@lawfive.app), and the code waits for **I have the app** (shown at once when a phone is signed in), so its countdown doesn't run for nothing.
+  - Each store shows "Coming soon" until it has a listing. While both do, step 1 says how to test: on Android, join the testers' Google Group, then Google Play's test, with the same Google account; on an iPhone, ask for an invitation (mail to support@lawfive.app). The code waits for **I have the app** (shown at once when a phone is signed in), so its countdown doesn't run for nothing.
   - Signed out, or opened from the QR code, it offers Open in the app and the stores. At phone width it leads with those and the code in letters, the QR code behind "Using another phone?".
 - **APP-10** **A server on the home network.** Android 17 lets an app reach the local network only with the "nearby devices" permission. When signing in to such a server fails, the app asks for it and tries again.
 
@@ -98,7 +98,7 @@ The Android phone app: most of what the website does, on match day, without sign
   - Link shows the steps (open LawFive on the watch, press Start, linked) and asks the watch to open LawFive, offering this phone's server and account, every few seconds (and to open LawFive every 20); after a minute without an answer, Try again.
   - Once the watch says yes (SYNC-13), the phone links it as the website does, with the phone's session, and sends the watch its server and its own token. Nothing is typed on the watch.
   - Linking with the watch's code (SYNC-1) stays below, for watches without the phone app; on a phone without Garmin Connect, the code comes first.
-  - A watch without LawFive says how to install it; once LawFive is in the Connect IQ Store, Link opens its page there.
+  - A watch without LawFive says to install it from Garmin's Connect IQ Store, with **Open the Connect IQ Store** opening LawFive's page there.
 
 ## The phone's data and the account
 
