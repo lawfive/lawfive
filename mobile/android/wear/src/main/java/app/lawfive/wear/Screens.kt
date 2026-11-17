@@ -73,8 +73,8 @@ sealed interface Page {
     data object ServerAddress : Page
     data class Planned(val id: String) : Page
     data class Picker(val title: String, val values: List<Pair<Int, String>>, val current: Int, val pick: (Int) -> Unit) : Page
-    /** UI-8: two digits, from [min] to [max]. */
-    data class Digits(val title: String, val unit: String, val current: Int, val min: Int, val max: Int, val pick: (Int) -> Unit) : Page
+    /** UI-8: two digits, from [min] to [max]; [zero] names 00 where it means something ("No break"). */
+    data class Digits(val title: String, val unit: String, val current: Int, val min: Int, val max: Int, val zero: String? = null, val pick: (Int) -> Unit) : Page
 }
 
 @Composable
@@ -134,7 +134,7 @@ private fun Pages(button: SharedFlow<Unit>) {
                     MenuRow(label, if (value == page.current) "Chosen" else null) { page.pick(value); pop() }
                 }
             }
-            is Page.Digits -> DigitsEntry(page.title, page.unit, page.current, page.min, page.max) { page.pick(it); pop() }
+            is Page.Digits -> DigitsEntry(page.title, page.unit, page.current, page.min, page.max, page.zero) { page.pick(it); pop() }
         }
         // UI-25: at the top of the menus and lists; at the bottom of the screens that aren't one.
         val page = stack.last()
@@ -270,14 +270,15 @@ private fun LazyListScope.formatRows(f: MatchSetup, push: (Page) -> Unit, set: (
     // SET-8: the timers' names as they are now.
     val stoppage = AppState.saved.stoppageLabel
     val brk = AppState.saved.breakLabel
-    fun minutes(title: String, range: IntProgression, current: Int, pick: (Int) -> Unit) =
-        push(Page.Picker(title, range.map { it to "$it min" }, current / 60) { pick(it * 60) })
+    // UI-8: minutes and team size on the two-digit entry, in the phone settings' ranges, as the Garmin's.
+    fun minutes(title: String, min: Int, max: Int, current: Int, zero: String? = null, pick: (Int) -> Unit) =
+        push(Page.Digits(title, "Minutes, $min to $max", current / 60, min, max, zero) { pick(it * 60) })
     item { MenuRow("Periods", "${f.numPeriods}") { push(Page.Picker("Periods", listOf(1 to "1", 2 to "2", 3 to "3", 4 to "4"), f.numPeriods) { v -> set { it.copy(numPeriods = v) } }) } }
-    item { MenuRow("Period length", "${f.periodSec / 60} min") { minutes("Period length", 5..60 step 5, f.periodSec) { v -> set { it.copy(periodSec = v) } } } }
+    item { MenuRow("Period length", "${f.periodSec / 60} min") { minutes("Period length", 1, 60, f.periodSec) { v -> set { it.copy(periodSec = v) } } } }
     // SET-16: one period's break is only before extra time.
     val breakName = when (f.numPeriods) { 2 -> "Half-time"; 1 -> "Break before ET"; else -> "Between periods" }
-    item { MenuRow(breakName, "${f.halftimeSec / 60} min") { minutes(breakName, 0..30 step 5, f.halftimeSec) { v -> set { it.copy(halftimeSec = v) } } } }
-    item { MenuRow("Team size", "${f.teamSize}") { push(Page.Picker("Team size", (11 downTo 4).map { it to "$it" }, f.teamSize) { v -> set { it.copy(teamSize = v) } }) } }
+    item { MenuRow(breakName, if (f.halftimeSec == 0) "No break" else "${f.halftimeSec / 60} min") { minutes(breakName, 0, 30, f.halftimeSec, "No break") { v -> set { it.copy(halftimeSec = v) } } } }
+    item { MenuRow("Team size", "${f.teamSize}") { push(Page.Digits("Team size", "Players, 1 to 11", f.teamSize, 1, 11) { v -> set { it.copy(teamSize = v) } }) } }
     // TMR-15: the clock that stops, with stoppage tracking going with it (so its row is left out), and whether goals and cards stop it.
     item {
         MenuRow("Clock", if (f.stoppingClock) "Stops" else "Runs on") {
@@ -294,7 +295,7 @@ private fun LazyListScope.formatRows(f: MatchSetup, push: (Page) -> Unit, set: (
     item { ToggleRow("Extra time", f.extraTime, if (f.extraTime) "On" else "Off") { v -> set { it.copy(extraTime = v) } } }
     if (f.extraTime) {
         item { MenuRow("ET periods", "${f.etPeriods}") { push(Page.Picker("ET periods", listOf(1 to "1", 2 to "2"), f.etPeriods) { v -> set { it.copy(etPeriods = v) } }) } }
-        item { MenuRow("ET period length", "${f.etPeriodSec / 60} min") { minutes("ET period length", 5..30 step 5, f.etPeriodSec) { v -> set { it.copy(etPeriodSec = v) } } } }
+        item { MenuRow("ET period length", "${f.etPeriodSec / 60} min") { minutes("ET period length", 1, 30, f.etPeriodSec) { v -> set { it.copy(etPeriodSec = v) } } } }
         // ET-6.
         item { ToggleRow("Golden goal", f.goldenGoal, if (f.goldenGoal) "First ET goal wins" else "Off") { v -> set { it.copy(goldenGoal = v) } } }
     }
@@ -432,7 +433,7 @@ private fun PlayedPage(created: Long, push: (Page) -> Unit, pop: () -> Unit) {
         // Removing one that hasn't reached LawFive loses it for good, so it says so.
         ConfirmScreen(
             if (h.sent) "Remove from watch?" else "Not sent to LawFive", if (h.sent) "It stays on LawFive" else "Remove it anyway? It will be lost",
-            yes = "Remove", danger = true, onYes = { removing = false; AppState.removeFinished(created); pop() }, onNo = { removing = false },
+            danger = true, onYes = { removing = false; AppState.removeFinished(created); pop() }, onNo = { removing = false },
         )
         return
     }
@@ -687,7 +688,7 @@ private fun AboutPage() {
         return
     }
     if (confirming) {
-        ConfirmScreen("Reset LawFive?", "Erases matches, history and the link. Settings stay.", yes = "Reset", danger = true,
+        ConfirmScreen("Reset LawFive?", "Erases matches, history and the link. Settings stay.", danger = true,
             onYes = { confirming = false; AppState.reset { activity?.finishAndRemoveTask() } }, onNo = { confirming = false })
         return
     }

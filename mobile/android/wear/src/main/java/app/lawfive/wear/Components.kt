@@ -282,14 +282,14 @@ fun PillButton(label: String, color: Color = C.start, textColor: Color = Color.W
     }
 }
 
-/** UI-7. */
+/** UI-7: the question, a gray detail, then Yes (green, or red for what can't be taken back) over a gray No. */
 @Composable
-fun ConfirmScreen(question: String, detail: String? = null, yes: String = "Yes", danger: Boolean = false, onYes: () -> Unit, onNo: () -> Unit) {
+fun ConfirmScreen(question: String, detail: String? = null, danger: Boolean = false, onYes: () -> Unit, onNo: () -> Unit) {
     Column(Modifier.fillMaxSize().background(Color.Black).padding(horizontal = 20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         T(question, 18.sp, weight = FontWeight.SemiBold)
         if (detail != null) T(detail, 13.sp, C.dim, FontWeight.Normal, Modifier.padding(top = 4.dp))
         Spacer(Modifier.height(14.dp))
-        PillButton(yes, if (danger) C.red else C.start, onClick = onYes)
+        PillButton("Yes", if (danger) C.red else C.start, onClick = onYes)
         Spacer(Modifier.height(6.dp))
         PillButton("No", C.row, onClick = onNo)
     }

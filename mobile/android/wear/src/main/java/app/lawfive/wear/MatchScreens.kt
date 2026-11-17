@@ -86,7 +86,8 @@ private sealed interface Overlay {
      */
     data class AdjustMinutes(val added: Boolean, val captured: Int, val minutes: Int = minOf(captured / 60, 99)) : Overlay
     data class AdjustSeconds(val added: Boolean, val captured: Int, val minutes: Int) : Overlay
-    data class Confirm(val question: String, val detail: String?, val yes: String, val danger: Boolean, val action: () -> Unit) : Overlay
+    /** UI-7: Yes over No; [danger] makes Yes red. */
+    data class Confirm(val question: String, val detail: String?, val danger: Boolean, val action: () -> Unit) : Overlay
     data object Events : Overlay
     data object Coin : Overlay
     data object Abandon : Overlay
@@ -226,13 +227,15 @@ fun MatchFlow(button: SharedFlow<Unit>) {
                 }
             }
             is Overlay.Number -> {
-                BackHandler { overlay = null }
-                NumberEntry(numberTitle(o.type, match.teamName(o.team)), o.type, onDone = { player ->
+                val done = { player: Int? ->
                     val second = record(context, o.type, o.team, player)
                     val next = if (second && player != null) Overlay.SecondYellow(o.team, player, o.type == EVENT_SIN_BIN) else null
                     // EVT-14: a card's reason before the send-off screen; goals and injuries never ask.
                     overlay = if (o.type == EVENT_YELLOW || o.type == EVENT_SIN_BIN || o.type == EVENT_RED) reasonOr(o.team, o.type == EVENT_RED, next) else next
-                })
+                }
+                // EVT-3, WCH-9: dismissing it records the event with no number, as on Garmin.
+                BackHandler { done(null) }
+                NumberEntry(numberTitle(o.type, match.teamName(o.team)), o.type, onDone = done)
             }
             is Overlay.Reason -> {
                 // EVT-14: the card is already recorded; No reason or Back gives it none.
@@ -267,7 +270,7 @@ fun MatchFlow(button: SharedFlow<Unit>) {
                         val change = entered - o.captured
                         // Nothing changed: back to the match, with nothing recorded.
                         overlay = if (change == 0) null else Overlay.Confirm(
-                            "${if (o.added) "Added time" else "Clock"} ${formatChange(change)}?", "To ${formatClock(entered * 1000L)}", "Adjust", false,
+                            "${if (o.added) "Added time" else "Clock"} ${formatChange(change)}?", "To ${formatClock(entered * 1000L)}", false,
                         ) {
                             val at = System.currentTimeMillis()
                             AppState.changeMatch { if (o.added) adjustAdded(change, at) else adjustClock(change, at) }
@@ -289,7 +292,7 @@ fun MatchFlow(button: SharedFlow<Unit>) {
             }
             is Overlay.Confirm -> {
                 BackHandler { overlay = null }
-                ConfirmScreen(o.question, o.detail, o.yes, o.danger, onYes = { o.action(); overlay = null }, onNo = { overlay = null })
+                ConfirmScreen(o.question, o.detail, o.danger, onYes = { o.action(); overlay = null }, onNo = { overlay = null })
             }
             Overlay.Coin -> {
                 BackHandler { overlay = Overlay.GameMenu }
@@ -302,7 +305,7 @@ fun MatchFlow(button: SharedFlow<Unit>) {
                         item {
                             MenuRow(label) {
                                 val score = "${match.score[0]}-${match.score[1]}"
-                                overlay = Overlay.Confirm("Abandon match?", "$label, $score stands", "Abandon", true) {
+                                overlay = Overlay.Confirm("Abandon match?", "$label, $score stands", true) {
                                     AppState.changeMatch { abandon(System.currentTimeMillis(), reason) }
                                 }
                             }
@@ -904,7 +907,7 @@ private fun DecideScreen(m: Match, open: (Overlay) -> Unit) {
         if (m.canPenalties) item { MenuRow("Penalties", fill = if (recommended == Decision.Penalties) C.start else null) { AppState.changeMatch { choosePenalties() } } }
         item {
             MenuRow("End match", fill = if (recommended == Decision.EndMatch) C.start else null) {
-                open(Overlay.Confirm("End match?", null, "End match", false) { AppState.changeMatch { finish(System.currentTimeMillis()) } })
+                open(Overlay.Confirm("End match?", null, false) { AppState.changeMatch { finish(System.currentTimeMillis()) } })
             }
         }
     }
@@ -1022,14 +1025,14 @@ private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> 
     }
     val n = m.setup.numPeriods
     val endLabel = if (m.periodEndsMatch) "End match" else "End ${periodName(m.period, n, m.setup.etPeriods)}"
-    val endPeriod = { open(Overlay.Confirm("$endLabel?", null, endLabel, false) { AppState.changeMatch { endPeriod(System.currentTimeMillis()) } }) }
-    val endMatch = { open(Overlay.Confirm("End match?", null, "End match", false) { AppState.changeMatch { finish(System.currentTimeMillis()) } }) }
+    val endPeriod = { open(Overlay.Confirm("$endLabel?", null, false) { AppState.changeMatch { endPeriod(System.currentTimeMillis()) } }) }
+    val endMatch = { open(Overlay.Confirm("End match?", null, false) { AppState.changeMatch { finish(System.currentTimeMillis()) } }) }
     val undoRow: LazyListScope.() -> Unit = {
         // INP-6: only this period's; with none, no row.
         m.lastUndoableEvent()?.let { last ->
             item {
                 MenuRow("Undo last event", describe(last, m)) {
-                    open(Overlay.Confirm("Undo?", describe(last, m), "Undo", true) {
+                    open(Overlay.Confirm("Undo?", describe(last, m), false) {
                         val at = System.currentTimeMillis()
                         AppState.changeMatch { undoLastEvent(at) }
                     })
@@ -1074,7 +1077,7 @@ private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> 
             val kickoffOf = if (m.isExtraTime) "ET1 kickoff" else "First kickoff"
             item {
                 MenuRow("Change kickoff", "$kickoffOf: ${m.teamName(m.firstKickoff)}") {
-                    open(Overlay.Confirm("Change kickoff?", "$kickoffOf to ${m.teamName(1 - m.firstKickoff)}", "Change", false) { AppState.changeMatch { swapKickoff() } })
+                    open(Overlay.Confirm("Change kickoff?", "$kickoffOf to ${m.teamName(1 - m.firstKickoff)}", false) { AppState.changeMatch { swapKickoff() } })
                 }
             }
             // PRE-8, only on a watch with a compass (WCH-10).
@@ -1082,7 +1085,7 @@ private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> 
             if (m.period == 0) {
                 item {
                     MenuRow("Restart match", "Back to kickoff") {
-                        open(Overlay.Confirm("Restart match?", "Clock and events are cleared", "Restart", true) { AppState.changeMatch { restart() } })
+                        open(Overlay.Confirm("Restart match?", "Clock and events are cleared", true) { AppState.changeMatch { restart() } })
                     }
                 }
             }
@@ -1132,40 +1135,57 @@ private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> 
         if (m.phase == Phase.Break || m.phase == Phase.NextKickoff || m.phase == Phase.Decide || m.phase == Phase.Penalties || m.phase == Phase.Golden) {
             item { MenuRow("End match", onClick = endMatch) }
         } else if (m.phase != Phase.Done) {
-            item { MenuRow("Cancel match") { open(Overlay.Confirm("Cancel match?", "Nothing is saved", "Cancel match", true) { AppState.clearMatch() }) } }
+            item { MenuRow("Cancel match") { open(Overlay.Confirm("Cancel match?", "Nothing is saved", true) { AppState.clearMatch() }) } }
         }
         if (m.phase == Phase.Break || m.phase == Phase.NextKickoff || m.phase == Phase.Decide || m.phase == Phase.Penalties) abandonRow()
     }
 }
 
-/** UI-8: two digits; tap the top or bottom of one to change it, or turn the crown. */
+/** UI-8, EVT-3: the player number: 00 is No number, and OK or No number takes two taps (EVT-9). */
 @Composable
 private fun NumberEntry(title: String, type: String, onDone: (Int?) -> Unit) {
-    var tens by remember { mutableStateOf(0) }
-    var ones by remember { mutableStateOf(0) }
-    DigitsLayout(title, "Player number", when (type) { EVENT_YELLOW, EVENT_SIN_BIN -> C.yellow; EVENT_RED -> C.red; else -> null }, tens, ones, { tens = it }, { ones = it }) {
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            PillButton("None", C.row, width = 62.dp) { onDone(null) }
-            // EVT-3: 00 is no number, as None is.
-            PillButton("OK", width = 62.dp) { onDone((tens * 10 + ones).takeIf { it > 0 }) }
+    val card = when (type) { EVENT_YELLOW, EVENT_SIN_BIN -> C.yellow; EVENT_RED -> C.red; else -> null }
+    DigitsEntry(title, "Player number", 0, 1, 99, zero = "No number", twoTaps = true, swatch = card) { onDone(it.takeIf { n -> n > 0 }) }
+}
+
+/**
+ * UI-8, TMR-14: two digits for a value from [min] to [max], starting at [start], with one pill under them: a green
+ * OK, dimmed (and doing nothing) outside the range, or the gray [zero] ("No number", "No break") at 00 where that
+ * means something. [twoTaps] (EVT-9): the first tap turns it white with "Tap again", and a second within 3 s confirms;
+ * changing a digit, or 3 s, disarms it.
+ */
+@Composable
+internal fun DigitsEntry(
+    title: String, unit: String, start: Int, min: Int = 0, max: Int = 99, zero: String? = null, twoTaps: Boolean = false, swatch: Color? = null,
+    onDone: (Int) -> Unit,
+) {
+    var tens by remember { mutableStateOf(start / 10 % 10) }
+    var ones by remember { mutableStateOf(start % 10) }
+    var armed by remember { mutableStateOf(false) }
+    LaunchedEffect(armed) {
+        if (armed) {
+            delay(ARM_MS)
+            armed = false
+        }
+    }
+    val value = tens * 10 + ones
+    val atZero = value == 0 && zero != null
+    val enabled = value in min..max || atZero
+    DigitsLayout(title, unit, swatch, tens, ones, { tens = it; armed = false }, { ones = it; armed = false }) {
+        val label = if (armed) "Tap again" else if (atZero) zero!! else "OK"
+        val color = if (armed) Color.White else if (atZero) C.row else if (enabled) C.start else C.start.copy(alpha = 0.3f)
+        PillButton(label, color, if (armed) Color.Black else if (enabled) Color.White else C.dim, width = 120.dp) {
+            when {
+                !enabled -> Unit
+                twoTaps && !armed -> armed = true
+                else -> { armed = false; onDone(value) }
+            }
         }
     }
 }
 
-/**
- * UI-8, TMR-14: two digits for a value from [min] to [max], starting at [start], with a green OK, dimmed (and doing
- * nothing) outside them. 00 is a real value here, so there's no None. EVT-12's sin bin length uses it too.
- */
-@Composable
-internal fun DigitsEntry(title: String, unit: String, start: Int, min: Int = 0, max: Int = 99, onDone: (Int) -> Unit) {
-    var tens by remember { mutableStateOf(start / 10 % 10) }
-    var ones by remember { mutableStateOf(start % 10) }
-    val value = tens * 10 + ones
-    DigitsLayout(title, unit, null, tens, ones, { tens = it }, { ones = it }) {
-        if (value in min..max) PillButton("OK", width = 96.dp) { onDone(value) }
-        else PillButton("OK", C.start.copy(alpha = 0.3f), C.dim, width = 96.dp) {}
-    }
-}
+/** EVT-9: how long a tap on the pill stays armed. */
+private const val ARM_MS = 3000L
 
 @Composable
 private fun DigitsLayout(

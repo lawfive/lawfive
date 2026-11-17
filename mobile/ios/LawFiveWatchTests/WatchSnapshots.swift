@@ -33,7 +33,7 @@ final class WatchSnapshots: XCTestCase {
         let folder = URL(fileURLWithPath: ProcessInfo.processInfo.environment["LAWFIVE_SNAPSHOTS"]!)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         let bounds = WKInterfaceDeviceBounds.current
-        let renderer = ImageRenderer(content: view.frame(width: bounds.width, height: bounds.height * screens, alignment: .top).background(.black).environment(\.colorScheme, .dark))
+        let renderer = ImageRenderer(content: view.frame(width: bounds.width, height: bounds.height * screens, alignment: screens > 1 ? .top : .center).background(.black).environment(\.colorScheme, .dark))
         renderer.scale = 2
         let image = try XCTUnwrap(renderer.cgImage, "ImageRenderer drew nothing")
         let url = folder.appending(path: "\(name).png") as CFURL

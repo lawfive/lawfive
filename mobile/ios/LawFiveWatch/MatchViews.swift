@@ -20,7 +20,8 @@ private enum Overlay {
     case secondYellow(team: Int, player: Int, sinBin: Bool)
     /// EVT-14: the card's reason, from the cautions' or the send-offs' codes; then a second yellow's or sin bin's red screen.
     case reason(sendOff: Bool, second: SecondCard?)
-    case confirm(question: String, detail: String?, yes: String, danger: Bool, action: () -> Void)
+    /// UI-7: Yes over No; `danger` makes Yes red.
+    case confirm(question: String, detail: String?, danger: Bool, action: () -> Void)
     case events
     case coin
     case direction
@@ -58,28 +59,22 @@ struct MatchFlow: View {
                 case .officialRole(let team, let red): back { officialRoleMenu(match, team, red: red) }
                 case .number(let team, let type):
                     back {
-                        NumberEntry(title: title(type, match.teamName(team)), type: type) { player in
-                            let second = record(type, team, player)
-                            let red = second && player != nil ? SecondCard(team: team, player: player!, sinBin: type == EventType.sinBin) : nil
-                            // EVT-14: with Card reasons on, the card's reason comes next, before a send-off's red screen.
-                            if state.saved.cardReasons == true && [EventType.yellow, EventType.red, EventType.sinBin].contains(type) {
-                                overlay = .reason(sendOff: type == EventType.red, second: red)
-                            } else {
-                                overlay = afterReason(red)
-                            }
+                        // UI-8, EVT-3: 00 is No number, and the pill takes two taps (EVT-9).
+                        NumberEntry(title: title(type, match.teamName(team)), type: type, minValue: 1, zero: "No number", twoTaps: true) { player in
+                            numberDone(team, type, player)
                         }
                     }
                 case .adjustMinutes(let added, let captured, let minutes):
                     back {
                         NumberEntry(title: added ? "Added time" : "Adjust clock", unit: added ? "Minutes" : adjustUnit("Minutes", match),
-                                    start: minutes, none: nil) { entered in
+                                    start: minutes) { entered in
                             overlay = .adjustSeconds(added: added, captured: captured, minutes: entered ?? 0)
                         }
                     }
                 case .adjustSeconds(let added, let captured, let minutes):
                     back {
                         NumberEntry(title: added ? "Added time" : "Adjust clock", unit: added ? "Seconds" : adjustUnit("Seconds", match),
-                                    start: captured % 60, maxValue: 59, none: nil) { entered in
+                                    start: captured % 60, maxValue: 59) { entered in
                             adjusted(added: added, captured: captured, to: minutes * 60 + (entered ?? 0))
                         }
                     }
@@ -98,8 +93,8 @@ struct MatchFlow: View {
                     .buttonStyle(TapOnly())
                     .ignoresSafeArea()
                     .onAppear { Haptics.sendOff() }
-                case .confirm(let question, let detail, let yes, let danger, let action):
-                    ConfirmScreen(question: question, detail: detail, yes: yes, danger: danger, onYes: {
+                case .confirm(let question, let detail, let danger, let action):
+                    ConfirmScreen(question: question, detail: detail, danger: danger, onYes: {
                         action()
                         overlay = nil
                     }, onNo: { overlay = nil })
@@ -118,7 +113,24 @@ struct MatchFlow: View {
     /// WCH-9: a swipe right leaves an overlay, as the X does; the match screen has its own swipes.
     private var swipeBack: some Gesture {
         DragGesture(minimumDistance: 22).onEnded { drag in
-            if drag.translation.width > abs(drag.translation.height) { overlay = backTarget }
+            if drag.translation.width > abs(drag.translation.height) { goBack() }
+        }
+    }
+
+    /// Back, by the X or a swipe right. EVT-3, WCH-9: leaving the player number records the event with no number, as on Garmin.
+    private func goBack() {
+        if case .number(let team, let type) = overlay { numberDone(team, type, nil) } else { overlay = backTarget }
+    }
+
+    /// The player number entered, or none (00, or leaving it): the event is recorded, then its reason or a send-off's screen.
+    private func numberDone(_ team: Int, _ type: String, _ player: Int?) {
+        let second = record(type, team, player)
+        let red = second && player != nil ? SecondCard(team: team, player: player!, sinBin: type == EventType.sinBin) : nil
+        // EVT-14: with Card reasons on, the card's reason comes next, before a send-off's red screen.
+        if state.saved.cardReasons == true && [EventType.yellow, EventType.red, EventType.sinBin].contains(type) {
+            overlay = .reason(sendOff: type == EventType.red, second: red)
+        } else {
+            overlay = afterReason(red)
         }
     }
 
@@ -140,7 +152,7 @@ struct MatchFlow: View {
             content()
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button { overlay = backTarget } label: { Image(systemName: "xmark") }
+                        Button { goBack() } label: { Image(systemName: "xmark") }
                             .accessibilityLabel("Back")
                     }
                 }
@@ -234,7 +246,7 @@ struct MatchFlow: View {
             overlay = nil
             return
         }
-        overlay = .confirm(question: "\(added ? "Added time" : "Clock") \(formatChange(change))?", detail: "To \(formatClock(Int64(value) * 1000))", yes: "Adjust", danger: false) {
+        overlay = .confirm(question: "\(added ? "Added time" : "Clock") \(formatChange(change))?", detail: "To \(formatClock(Int64(value) * 1000))", danger: false) {
             state.changeMatch { m in
                 if added { m.adjustAdded(change, now: nowMs()) } else { m.adjustClock(change, now: nowMs()) }
             }
@@ -357,7 +369,7 @@ struct MatchFlow: View {
             VStack(spacing: 5) {
                 ForEach(Array(abandonReasonNames.enumerated()), id: \.offset) { reason, label in
                     MenuRow(label: label) {
-                        overlay = .confirm(question: "Abandon match?", detail: "\(label), \(match.score[0])-\(match.score[1]) stands", yes: "Abandon", danger: true) {
+                        overlay = .confirm(question: "Abandon match?", detail: "\(label), \(match.score[0])-\(match.score[1]) stands", danger: true) {
                             state.changeMatch { $0.abandon(nowMs(), reason: reason) }
                         }
                     }
@@ -848,7 +860,7 @@ private struct DecideScreen: View {
                 if match.canExtraTime { MenuRow(label: "Extra time", fill: recommended == .extraTime ? C.start : nil) { state.changeMatch { $0.chooseExtraTime(nowMs()) } } }
                 if match.canPenalties { MenuRow(label: "Penalties", fill: recommended == .penalties ? C.start : nil) { state.changeMatch { $0.choosePenalties() } } }
                 MenuRow(label: "End match", fill: recommended == .endMatch ? C.start : nil) {
-                    open(.confirm(question: "End match?", detail: nil, yes: "End match", danger: false) { state.changeMatch { $0.finish(nowMs()) } })
+                    open(.confirm(question: "End match?", detail: nil, danger: false) { state.changeMatch { $0.finish(nowMs()) } })
                 }
             }
             .padding(.horizontal, 6)
@@ -984,7 +996,7 @@ private struct GameMenu: View {
         let now = nowMs()
         // INP-3: spelled out, as the row has room ("End first half"; Garmin keeps "End 1st half" on its narrow rows).
         let endLabel = m.periodEndsMatch ? "End match" : "End \(periodName(m.period, m.setup.numPeriods, etPeriods: m.setup.etPeriods))"
-        let endPeriod = { open(.confirm(question: "\(endLabel)?", detail: nil, yes: endLabel, danger: false) { state.changeMatch { $0.endPeriod(nowMs()) } }) }
+        let endPeriod = { open(.confirm(question: "\(endLabel)?", detail: nil, danger: false) { state.changeMatch { $0.endPeriod(nowMs()) } }) }
         ScrollView {
             VStack(spacing: 5) {
                 if m.phase == .running {
@@ -1026,14 +1038,14 @@ private struct GameMenu: View {
                     // PRE-3: named as the first kickoff (or ET1's), not the current period's, which can be the other team.
                     let kickoffOf = m.isExtraTime ? "ET1 kickoff" : "First kickoff"
                     MenuRow(label: "Change kickoff", sub: "\(kickoffOf): \(m.teamName(m.firstKickoff))") {
-                        open(.confirm(question: "Change kickoff?", detail: "\(kickoffOf) to \(m.teamName(1 - m.firstKickoff))", yes: "Change", danger: false) { state.changeMatch { $0.swapKickoff() } })
+                        open(.confirm(question: "Change kickoff?", detail: "\(kickoffOf) to \(m.teamName(1 - m.firstKickoff))", danger: false) { state.changeMatch { $0.swapKickoff() } })
                     }
                     if m.canRecordDirection && Compass.available {
                         MenuRow(label: "Kickoff direction", sub: m.hasDirection ? "Saved" : "Face the goal") { open(.direction) }
                     }
                     if m.period == 0 {
                         MenuRow(label: "Restart match", sub: "Back to kickoff") {
-                            open(.confirm(question: "Restart match?", detail: "Clock and events are cleared", yes: "Restart", danger: true) { state.changeMatch { $0.restart() } })
+                            open(.confirm(question: "Restart match?", detail: "Clock and events are cleared", danger: true) { state.changeMatch { $0.restart() } })
                         }
                     }
                     // TMR-13: for a lightning or weather delay, after which play carries on.
@@ -1080,9 +1092,9 @@ private struct GameMenu: View {
                     }
                     undoRow(m)
                     if [.breakTime, .nextKickoff, .decide, .penalties, .golden].contains(m.phase) {
-                        MenuRow(label: "End match") { open(.confirm(question: "End match?", detail: nil, yes: "End match", danger: false) { state.changeMatch { $0.finish(nowMs()) } }) }
+                        MenuRow(label: "End match") { open(.confirm(question: "End match?", detail: nil, danger: false) { state.changeMatch { $0.finish(nowMs()) } }) }
                     } else if m.phase != .done {
-                        MenuRow(label: "Cancel match") { open(.confirm(question: "Cancel match?", detail: "Nothing is saved", yes: "Cancel match", danger: true) { state.clearMatch() }) }
+                        MenuRow(label: "Cancel match") { open(.confirm(question: "Cancel match?", detail: "Nothing is saved", danger: true) { state.clearMatch() }) }
                     }
                     // EVT-11: once it's under way, and last, as it can't be taken back.
                     if [.breakTime, .nextKickoff, .decide, .penalties].contains(m.phase) {
@@ -1098,14 +1110,15 @@ private struct GameMenu: View {
     @ViewBuilder private func undoRow(_ m: Match) -> some View {
         if let last = m.lastUndoableEvent {
             MenuRow(label: "Undo last event", sub: describe(last, m)) {
-                open(.confirm(question: "Undo?", detail: describe(last, m), yes: "Undo", danger: true) { state.changeMatch { $0.undoLastEvent(nowMs()) } })
+                open(.confirm(question: "Undo?", detail: describe(last, m), danger: false) { state.changeMatch { $0.undoLastEvent(nowMs()) } })
             }
         }
     }
 }
 
 /// UI-8: two digits; the one being set has a white outline. Turning the Digital Crown changes it, as do the arrows above
-/// and below either digit; tapping a digit (or its arrows) makes it the one being set.
+/// and below either digit; tapping a digit (or its arrows) makes it the one being set. One pill under them: a green OK,
+/// dimmed outside the range, or the gray `zero` ("No number", "No break") at 00 where that means something.
 struct NumberEntry: View {
     let title: String
     let type: String
@@ -1113,24 +1126,33 @@ struct NumberEntry: View {
     /// OK is dimmed above it (TMR-14's seconds: 59), and below minValue (EVT-12's sin bin length: 1 to 20 minutes).
     let maxValue: Int
     let minValue: Int
-    /// The gray pill for no number; nil where 00 is a value (TMR-14), so OK stands alone.
-    let none: String?
+    /// What 00 means, on the gray pill; nil where 00 is just a value (TMR-14) or outside the range.
+    let zero: String?
+    /// EVT-9: the first tap turns the pill white with "Tap again", and a second within 3 s confirms; changing a digit,
+    /// or 3 s, disarms it.
+    let twoTaps: Bool
+    /// The value; nil for 00 with a `zero`.
     let done: (Int?) -> Void
     @State private var tens: Int
     @State private var ones: Int
     /// 0 for the tens, 1 for the ones.
     @State private var active = 0
     @State private var crown: Double
+    @State private var armed = false
     @FocusState private var focused: Bool
 
-    init(title: String, type: String = "", unit: String = "Player number", start: Int = 0, minValue: Int = 0, maxValue: Int = 99, none: String? = "None", done: @escaping (Int?) -> Void) {
-        (self.title, self.type, self.unit, self.minValue, self.maxValue, self.none, self.done) = (title, type, unit, minValue, maxValue, none, done)
+    init(title: String, type: String = "", unit: String = "Player number", start: Int = 0, minValue: Int = 0, maxValue: Int = 99, zero: String? = nil,
+         twoTaps: Bool = false, done: @escaping (Int?) -> Void) {
+        (self.title, self.type, self.unit, self.minValue, self.maxValue, self.zero, self.twoTaps, self.done) = (title, type, unit, minValue, maxValue, zero, twoTaps, done)
         _tens = State(initialValue: start / 10 % 10)
         _ones = State(initialValue: start % 10)
         _crown = State(initialValue: Double(start / 10 % 10))
     }
 
     var body: some View {
+        let value = tens * 10 + ones
+        let atZero = value == 0 && zero != nil
+        let enabled = (minValue...maxValue).contains(value) || atZero
         VStack(spacing: 2) {
             HStack(spacing: 4) {
                 if type == EventType.yellow || type == EventType.red || type == EventType.sinBin {
@@ -1143,15 +1165,19 @@ struct NumberEntry: View {
                 digit($tens, 0)
                 digit($ones, 1)
             }
-            HStack(spacing: 5) {
-                if let none { PillButton(label: none, color: C.row) { done(nil) } }
-                let value = tens * 10 + ones
-                // EVT-3: for a player, 00 is no number, as None is.
-                let outside = value > maxValue || value < minValue
-                PillButton(label: "OK") { done(none != nil && value == 0 ? nil : value) }
-                    .disabled(outside)
-                    .opacity(outside ? 0.4 : 1)
+            PillButton(label: armed ? "Tap again" : atZero ? zero! : "OK", color: armed ? .white : atZero ? C.row : C.start, textColor: armed ? .black : .white, width: 120) {
+                if !enabled { return }
+                if twoTaps && !armed {
+                    armed = true
+                } else {
+                    armed = false
+                    done(atZero ? nil : value)
+                }
             }
+            .frame(width: 120)
+            .disabled(!enabled)
+            .opacity(enabled ? 1 : 0.4)
+            .accessibilityLabel(armed ? "Tap again" : atZero ? zero! : "OK")
             .padding(.top, 2)
         }
         // The crown turns the digit being set, round from 9 to 0, a click a step.
@@ -1161,6 +1187,13 @@ struct NumberEntry: View {
         .onChange(of: crown) { _, value in
             let digit = ((Int(value.rounded()) % 10) + 10) % 10
             if active == 0 { tens = digit } else { ones = digit }
+        }
+        // EVT-9: any other input disarms it, as do 3 seconds.
+        .onChange(of: value) { armed = false }
+        .task(id: armed) {
+            guard armed else { return }
+            try? await Task.sleep(for: .seconds(3))
+            if !Task.isCancelled { armed = false }
         }
         .onAppear { focused = true }
     }

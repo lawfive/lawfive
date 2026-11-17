@@ -49,7 +49,7 @@ What the referee records during a match: goals, cards, sin bins, injuries, stopp
 
 ## Status
 
-Everything above is built on all three watches and in Try a match, except that Wear OS and Apple Watch have no Tap again (EVT-9) and a separate None beside the number's OK (EVT-3, UI-8); the [watch catch-up plan](../plans/watch-catch-up.md) covers both.
+Everything above is built on all three watches and in Try a match.
 
 Not built yet:
 

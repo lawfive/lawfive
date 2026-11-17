@@ -16,6 +16,12 @@ final class WatchFlow: XCTestCase {
         found.tap()
     }
 
+    /// UI-8, EVT-9: the player number's pill, OK or No number, takes two taps: the first arms it ("Tap again").
+    private func confirmNumber(_ label: String = "OK", file: StaticString = #filePath, line: UInt = #line) {
+        tap(label, file: file, line: line)
+        tap("Tap again", file: file, line: line)
+    }
+
     private func see(_ text: String, file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5), "\(text) isn't there: \(app.debugDescription)", file: file, line: line)
     }
@@ -44,14 +50,16 @@ final class WatchFlow: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         row.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.5)).press(forDuration: 0.05, thenDragTo: row.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)))
         see("1H")
-        XCTAssertFalse(app.buttons["OK"].exists)
+        XCTAssertFalse(app.buttons["No number"].exists)
 
-        // From the player number too, recording nothing.
+        // From the player number too, recording the card with no number (EVT-3), as on Garmin.
         swipeUpForAway()
         tap("Yellow card")
-        XCTAssertTrue(app.buttons["OK"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["No number"].waitForExistence(timeout: 5))
         swipe(CGVector(dx: 0.1, dy: 0.5), CGVector(dx: 0.9, dy: 0.5))
         see("1H")
+        swipeForMenu()
+        XCTAssertTrue(app.buttons["Undo last event, Yellow AWY"].waitForExistence(timeout: 5), "recorded with no number")
     }
 
     // INP-10: with sideways team swipes, right opens home, left away, up the game menu, and down nothing.
@@ -104,7 +112,7 @@ final class WatchFlow: XCTestCase {
         let end = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'End first half'")).firstMatch
         XCTAssertTrue(end.waitForExistence(timeout: 5))
         end.tap()
-        tap("End first half")
+        tap("Yes")
         tap("End half-time")
         see("AWY attacks")
     }
@@ -121,6 +129,39 @@ final class WatchFlow: XCTestCase {
         shot("decide menu")
         tap("Extra time, 2×15'")
         see("BREAK")
+    }
+
+    // UI-8, SET-9: Create match's minutes and team size on the two digits, in the phone settings' ranges: 2 × 32 can be
+    // set, No break at 00, and a team of one.
+    func testCreateMatchOnTheDigits() {
+        continueAfterFailure = false
+        app.launchArguments = ["-reset", "1", "-noWorkout", "1"]
+        app.launch()
+        tap("New match, Quick · 2×45' · HT 15'")
+        tap("Custom, Choose the format")
+        tap("Period length, 45 min")
+        see("Minutes, 1 to 60")
+        tap("Tens down")
+        for _ in 0..<3 { tap("Ones down") }
+        shot("period length")
+        tap("OK")
+        XCTAssertTrue(app.buttons["Period length, 32 min"].waitForExistence(timeout: 5), app.debugDescription)
+        tap("Half-time, 15 min")
+        see("Minutes, 0 to 30")
+        tap("Tens down")
+        for _ in 0..<5 { tap("Ones down") }
+        XCTAssertTrue(app.buttons["No break"].waitForExistence(timeout: 5), "00 is no break")
+        shot("no break")
+        tap("No break")
+        XCTAssertTrue(app.buttons["Half-time, No break"].waitForExistence(timeout: 5), app.debugDescription)
+        tap("Team size, 11")
+        see("Players, 1 to 11")
+        tap("Tens up")
+        XCTAssertFalse(app.buttons["OK"].isEnabled, "21 is too many")
+        tap("Tens down")
+        tap("Tens down")
+        tap("OK")
+        XCTAssertTrue(app.buttons["Team size, 1"].waitForExistence(timeout: 5), app.debugDescription)
     }
 
     // PRE-8, WCH-10: a watch with no compass doesn't offer it. A simulator has none.
@@ -152,7 +193,7 @@ final class WatchFlow: XCTestCase {
         abandon.tap()
         tap("Lightning")
         see("Abandon match?")
-        tap("Abandon")
+        tap("Yes")
         see("ABANDONED")
     }
 
@@ -182,7 +223,7 @@ final class WatchFlow: XCTestCase {
         tap("Injury")
         see("Injury AWY")
         shot("injury number")
-        tap("None")
+        confirmNumber("No number")
         see("1H")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Undo last event, Injury AWY"].waitForExistence(timeout: 5))
@@ -214,7 +255,7 @@ final class WatchFlow: XCTestCase {
         tap("OK")
         see("Clock +1:00?")
         shot("adjust confirm")
-        tap("Adjust")
+        tap("Yes")
         see("1H")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Undo last event, Clock +1:00"].waitForExistence(timeout: 5))
@@ -266,12 +307,12 @@ final class WatchFlow: XCTestCase {
         swipeUpForAway()
         XCTAssertFalse(app.buttons["Goal"].waitForExistence(timeout: 2), "no goals while suspended")
         tap("Yellow card")
-        tap("None")
+        confirmNumber("No number")
         see("LIGHTNING")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Undo last event, Yellow AWY"].waitForExistence(timeout: 5))
         tap("Undo last event, Yellow AWY")
-        tap("Undo")
+        tap("Yes")
         see("LIGHTNING")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Resume match"].waitForExistence(timeout: 5))
@@ -308,7 +349,7 @@ final class WatchFlow: XCTestCase {
         row.tap()
         see("Sin bin HOM")
         for _ in 0..<4 { tap("Ones up") }
-        tap("OK")
+        confirmNumber()
         // HOM #4 already has one (from -sinbins with -begin): a send-off.
         see("Second sin bin")
         see("#4 HOM")
@@ -374,7 +415,7 @@ final class WatchFlow: XCTestCase {
         swipeDownForHome()
         tap("Yellow card")
         for _ in 0..<4 { tap("Ones up") }
-        tap("OK")
+        confirmNumber()
         let none = app.buttons["No reason"]
         XCTAssertTrue(none.waitForExistence(timeout: 5), "the Reason list")
         XCTAssertTrue(app.buttons["UB, Unsporting behavior"].exists)
@@ -392,7 +433,7 @@ final class WatchFlow: XCTestCase {
         swipeDownForHome()
         tap("Yellow card")
         for _ in 0..<4 { tap("Ones up") }
-        tap("OK")
+        confirmNumber()
         tap("No reason")
         see("Second yellow")
         app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
@@ -401,7 +442,7 @@ final class WatchFlow: XCTestCase {
         // A send-off's codes; Back gives none.
         swipeUpForAway()
         tap("Red card")
-        tap("None")
+        confirmNumber("No number")
         XCTAssertTrue(app.buttons["SFP, Serious foul play"].waitForExistence(timeout: 5), "the send-offs' codes")
         XCTAssertFalse(app.buttons["UB, Unsporting behavior"].exists)
         app.buttons["Back"].firstMatch.tap()
@@ -481,7 +522,7 @@ final class WatchFlow: XCTestCase {
         let cancel = app.buttons["Cancel match"]
         for _ in 0..<6 where !cancel.isHittable { app.swipeUp() }
         cancel.tap()
-        tap("Cancel match")
+        tap("Yes")
 
         tap("New match, Quick · 2×45' · HT 15'")
         // SET-13: the last match was Quick match's format, so New match doesn't offer it twice; Create match still does.
@@ -503,7 +544,7 @@ final class WatchFlow: XCTestCase {
         shot("about")
         tap("Reset LawFive, Erase everything here")
         see("Reset LawFive?")
-        tap("Reset")
+        tap("Yes")
         tap("New match, Quick · 2×45' · HT 15'")
         XCTAssertTrue(app.buttons["Quick match, 2×45' · HT 15'"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Same as last'")).firstMatch.exists)
@@ -579,7 +620,7 @@ final class WatchFlow: XCTestCase {
         let cancel = app.buttons["Cancel match"]
         for _ in 0..<6 where !cancel.isHittable { app.swipeUp() }
         cancel.tap()
-        tap("Cancel match")
+        tap("Yes")
         tap("New match, Quick · 2×45' · HT 15'")
         tap("Quick match, 2×45' · HT 15'")
         see("Who kicks off?")
@@ -597,7 +638,7 @@ final class WatchFlow: XCTestCase {
         for _ in 0..<8 where !abandon.isHittable { app.swipeUp() }
         abandon.tap()
         tap("Lightning")
-        tap("Abandon")
+        tap("Yes")
         see("ABANDONED")
     }
 
@@ -671,47 +712,52 @@ final class WatchFlow: XCTestCase {
         XCTAssertEqual(app.staticTexts["Tens"].value as? String, "1", "and leaves the other")
         shot("number entry")
         tap("OK")
+        // EVT-9: the first tap only arms it, for 3 seconds, which the picture outlasts.
+        XCTAssertTrue(app.buttons["Tap again"].waitForExistence(timeout: 2))
+        shot("tap again")
+        XCTAssertTrue(app.buttons["OK"].waitForExistence(timeout: 5), "disarmed after 3 s")
+        confirmNumber()
         see("1")
 
-        // EVT-3: OK at 00 is no number, so two yellows at 00 are never a second yellow.
+        // EVT-3: No number at 00, so two yellows at 00 are never a second yellow.
         swipeUpForAway()
         tap("Yellow card")
-        tap("OK")
+        confirmNumber("No number")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Undo last event, Yellow AWY"].waitForExistence(timeout: 5), "00 records no number")
         tap("Undo last event, Yellow AWY")
-        tap("Undo")
+        tap("Yes")
 
         // A second yellow for the away team's number 1 brings up the send-off screen.
         swipeUpForAway()
         tap("Yellow card")
         tap("Ones up")
-        tap("OK")
+        confirmNumber()
         swipeUpForAway()
         tap("Yellow card")
         tap("Ones up")
-        tap("OK")
+        confirmNumber()
         see("Send off")
         app.buttons.firstMatch.tap()
 
         // Undo takes it back.
         swipeForMenu()
         tap("Undo last event, 2nd yellow AWY #1")
-        tap("Undo")
+        tap("Yes")
 
         // Half-time, the second half, the end.
         swipeForMenu()
         let endFirst = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'End first half'")).firstMatch
         XCTAssertTrue(endFirst.waitForExistence(timeout: 5))
         endFirst.tap()
-        tap("End first half")
+        tap("Yes")
         see("HALF-TIME")
 
         // EVT-7: a card at half-time, from the game menu.
         swipeForMenu()
         tap("Card for HOM")
         tap("Yellow card")
-        tap("OK")
+        confirmNumber("No number")
         see("HALF-TIME")
 
         tap("End half-time")
@@ -725,7 +771,7 @@ final class WatchFlow: XCTestCase {
         XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Undo last event'")).firstMatch.exists)
         XCTAssertTrue(end.waitForExistence(timeout: 5))
         end.tap()
-        tap("End match")
+        tap("Yes")
         see("FULL TIME")
         see("Match saved")
         tap("Done")
@@ -759,7 +805,7 @@ final class WatchFlow: XCTestCase {
         tap("Remove from watch")
         see("Not sent to LawFive")
         shot("history remove")
-        tap("Remove")
+        tap("Yes")
         XCTAssertTrue(app.staticTexts["Finished matches show here"].waitForExistence(timeout: 5))
     }
 
@@ -806,7 +852,7 @@ final class WatchFlow: XCTestCase {
         app.buttons["Back"].firstMatch.tap()
         swipeUpForAway()
         tap("Yellow card")
-        tap("OK")
+        confirmNumber("No number")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Undo last event, Yellow AWY"].waitForExistence(timeout: 5))
         shot("game menu undo")
@@ -817,7 +863,7 @@ final class WatchFlow: XCTestCase {
         first.tap()
         see("End first half?")
         shot("end first half")
-        tap("End first half")
+        tap("Yes")
         see("HALF-TIME")
         shot("half-time")
         swipeForMenu()

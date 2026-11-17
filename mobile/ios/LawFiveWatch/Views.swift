@@ -331,8 +331,11 @@ struct FormatRows: View {
     let f: MatchSetup
     let set: (@escaping (inout MatchSetup) -> Void) -> Void
 
-    private func minutes(_ title: String, _ range: StrideThrough<Int>, _ current: Int, _ pick: @escaping (Int) -> Void) -> some View {
-        NavigationLink { ChoicePage(title: title, values: range.map { ($0, "\($0) min") }, current: current / 60) { pick($0 * 60) } } label: { RowLabel(label: title, sub: "\(current / 60) min") }.buttonStyle(.plain)
+    /// UI-8: minutes on the two-digit entry, in the phone settings' range, as the Garmin's; `zero` names 00 ("No break").
+    private func minutes(_ title: String, _ range: ClosedRange<Int>, _ current: Int, zero: String? = nil, _ pick: @escaping (Int) -> Void) -> some View {
+        NavigationLink { DigitsPage(title: title, unit: "Minutes, \(range.lowerBound) to \(range.upperBound)", current: current / 60, range: range, zero: zero) { pick($0 * 60) } } label: {
+            RowLabel(label: title, sub: current == 0 && zero != nil ? zero : "\(current / 60) min")
+        }.buttonStyle(.plain)
     }
 
     var body: some View {
@@ -340,10 +343,10 @@ struct FormatRows: View {
         let stoppage = state.saved.stoppageLabel
         let brk = state.saved.breakLabel
         NavigationLink { ChoicePage(title: "Periods", values: [(1, "1"), (2, "2"), (3, "3"), (4, "4")], current: f.numPeriods) { v in set { $0.numPeriods = v } } } label: { RowLabel(label: "Periods", sub: "\(f.numPeriods)") }.buttonStyle(.plain)
-        minutes("Period length", stride(from: 5, through: 60, by: 5), f.periodSec) { v in set { $0.periodSec = v } }
+        minutes("Period length", 1...60, f.periodSec) { v in set { $0.periodSec = v } }
         // SET-16: one period's break is only before extra time.
-        minutes(f.numPeriods == 2 ? "Half-time" : f.numPeriods == 1 ? "Break before ET" : "Between periods", stride(from: 0, through: 30, by: 5), f.halftimeSec) { v in set { $0.halftimeSec = v } }
-        NavigationLink { ChoicePage(title: "Team size", values: stride(from: 11, through: 4, by: -1).map { ($0, "\($0)") }, current: f.teamSize) { v in set { $0.teamSize = v } } } label: { RowLabel(label: "Team size", sub: "\(f.teamSize)") }.buttonStyle(.plain)
+        minutes(f.numPeriods == 2 ? "Half-time" : f.numPeriods == 1 ? "Break before ET" : "Between periods", 0...30, f.halftimeSec, zero: "No break") { v in set { $0.halftimeSec = v } }
+        NavigationLink { DigitsPage(title: "Team size", unit: "Players, 1 to 11", current: f.teamSize, range: 1...11) { v in set { $0.teamSize = v } } } label: { RowLabel(label: "Team size", sub: "\(f.teamSize)") }.buttonStyle(.plain)
         // TMR-15: the clock that stops, after team size; it stops with the stoppage clock, so that's on with it and its row
         // left out, as is the break as stoppage's.
         NavigationLink {
@@ -359,7 +362,7 @@ struct FormatRows: View {
         ToggleRow(label: "Extra time", sub: f.extraTime ? "On" : "Off", on: f.extraTime) { v in set { $0.extraTime = v } }
         if f.extraTime {
             NavigationLink { ChoicePage(title: "ET periods", values: [(1, "1"), (2, "2")], current: f.etPeriods) { v in set { $0.etPeriods = v } } } label: { RowLabel(label: "ET periods", sub: "\(f.etPeriods)") }.buttonStyle(.plain)
-            minutes("ET period length", stride(from: 5, through: 30, by: 5), f.etPeriodSec) { v in set { $0.etPeriodSec = v } }
+            minutes("ET period length", 1...30, f.etPeriodSec) { v in set { $0.etPeriodSec = v } }
             // ET-6.
             ToggleRow(label: "Golden goal", sub: f.goldenGoal == true ? "First ET goal wins" : "Off", on: f.goldenGoal == true) { v in set { $0.goldenGoal = v } }
         }
@@ -377,7 +380,7 @@ struct FormatRows: View {
         // EVT-12: Sin bin in the team menu; its length, in minutes, straight after it while it's on.
         ToggleRow(label: "Sin bins", sub: f.hasSinBins ? "In the team menu" : "Off", on: f.hasSinBins) { v in set { $0.sinBins = v } }
         if f.hasSinBins {
-            NavigationLink { SinBinLengthPage(current: f.sinBinLength / 60) { v in set { $0.sinBinSec = v * 60 } } } label: {
+            NavigationLink { DigitsPage(title: "Sin bin length", unit: "Minutes, 1 to 20", current: f.sinBinLength / 60, range: 1...20) { v in set { $0.sinBinSec = v * 60 } } } label: {
                 RowLabel(label: "Sin bin length", sub: "\(f.sinBinLength / 60) min")
             }
             .buttonStyle(.plain)
@@ -385,15 +388,20 @@ struct FormatRows: View {
     }
 }
 
-/// EVT-12: the sin bin's length in minutes, 1 to 20, on the two digits (UI-8).
-private struct SinBinLengthPage: View {
+/// UI-8: a Create match value on the two digits, in its range: the minutes, the team size, and EVT-12's sin bin length.
+/// Back keeps the old value.
+private struct DigitsPage: View {
     @Environment(\.dismiss) private var dismiss
+    let title: String
+    let unit: String
     let current: Int
+    let range: ClosedRange<Int>
+    var zero: String?
     let pick: (Int) -> Void
 
     var body: some View {
-        NumberEntry(title: "Sin bin length", unit: "Minutes, 1 to 20", start: current, minValue: 1, maxValue: 20, none: nil) { entered in
-            if let entered { pick(entered) }
+        NumberEntry(title: title, unit: unit, start: current, minValue: range.lowerBound, maxValue: range.upperBound, zero: zero) { entered in
+            pick(entered ?? 0)
             dismiss()
         }
     }
@@ -522,7 +530,7 @@ struct AboutPage: View {
         if state.resetting {
             Text("Resetting…").font(.barlow(15)).foregroundStyle(C.dim)
         } else if confirming {
-            ConfirmScreen(question: "Reset LawFive?", detail: "Erases matches, history and the link. Settings stay.", yes: "Reset", danger: true, onYes: {
+            ConfirmScreen(question: "Reset LawFive?", detail: "Erases matches, history and the link. Settings stay.", danger: true, onYes: {
                 confirming = false
                 Task { await state.reset() }
             }, onNo: { confirming = false })
@@ -588,7 +596,7 @@ struct PlayedPage: View {
             if removing {
                 // Removing one that hasn't reached LawFive loses it for good, so it says so.
                 ConfirmScreen(question: h.sent ? "Remove from watch?" : "Not sent to LawFive", detail: h.sent ? "It stays on LawFive" : "Remove it anyway? It will be lost",
-                              yes: "Remove", danger: true, onYes: {
+                              danger: true, onYes: {
                     removing = false
                     state.removeFinished(created)
                     dismiss()

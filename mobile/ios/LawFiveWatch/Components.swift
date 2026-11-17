@@ -171,21 +171,28 @@ struct PillButton: View {
     }
 }
 
-/// UI-7.
+/// UI-7: the question, a gray detail, then Yes (green, or red for what can't be taken back) over a gray No.
 struct ConfirmScreen: View {
     let question: String
     var detail: String?
-    var yes = "Yes"
     var danger = false
     let onYes: () -> Void
     let onNo: () -> Void
 
     var body: some View {
+        // Centered where it fits; on the smallest watches a long question wraps and the pills scroll into view, never cut off.
+        ViewThatFits(in: .vertical) {
+            content
+            ScrollView { content }
+        }
+    }
+
+    private var content: some View {
         VStack(spacing: 6) {
-            Text(question).font(.barlow(18, .semibold)).multilineTextAlignment(.center).foregroundStyle(C.text)
-            if let detail { Text(detail).font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center) }
+            Text(question).font(.barlow(18, .semibold)).multilineTextAlignment(.center).foregroundStyle(C.text).fixedSize(horizontal: false, vertical: true)
+            if let detail { Text(detail).font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true) }
             Spacer().frame(height: 6)
-            PillButton(label: yes, color: danger ? C.red : C.start, action: onYes)
+            PillButton(label: "Yes", color: danger ? C.red : C.start, action: onYes)
             PillButton(label: "No", color: C.row, action: onNo)
         }
         .padding(.horizontal, 8)
