@@ -34,8 +34,9 @@ struct LawFiveWatchApp: App {
             }
             .environment(state)
             .onAppear { phoneLink.start(state) }
+            // WCH-13: opening syncs (UI-16); coming back from a glance doesn't.
             .onChange(of: phase, initial: true) { _, now in
-                if now == .active { state.sync() }
+                if now == .active { state.cameToFront() } else { state.leftFront() }
             }
             // UI-26.
             .onChange(of: state.offersSyncScreen, initial: true) { _, offered in
@@ -748,6 +749,12 @@ struct AccountPage: View {
     @State private var address = ""
     @State private var refused = false
 
+    /// UI-16, WCH-13: the quiet sync when the app opens; Sync now in Matches always works.
+    private var syncOnOpening: some View {
+        let on = state.saved.syncOnOpen != false
+        return ToggleRow(label: "Sync on opening", sub: on ? "When the app opens" : "Only with Sync now", on: on) { v in state.update { $0.syncOnOpen = v } }
+    }
+
     private var host: String { state.serverUrl.replacingOccurrences(of: "https://", with: "").replacingOccurrences(of: "http://", with: "") }
 
     var body: some View {
@@ -760,7 +767,11 @@ struct AccountPage: View {
         } else {
             WatchList(title: "Account") {
                 if state.linked {
-                    MenuRow(label: "Sync now", sub: state.syncLine, icon: "sync") { state.sync() }
+                    // SYNC-5, as on the Garmin watch: Sync now is in Matches (UI-16).
+                    RowLabel(label: "Last sync", sub: state.syncLine)
+                    if let waiting = state.waitingLine { RowLabel(label: "Waiting to upload", sub: waiting) }
+                    RowLabel(label: "Server", sub: host)
+                    syncOnOpening
                     MenuRow(label: "Unlink", sub: host) { confirming = true }
                 } else {
                     NavigationLink { LinkPage() } label: { RowLabel(label: "Link account", sub: "Get a code", icon: "link") }.buttonStyle(.plain)
@@ -784,6 +795,7 @@ struct AccountPage: View {
                             }
                             #endif
                         }
+                    syncOnOpening
                 }
                 // UI-17: Record track and Save to Health are in Settings itself.
             }

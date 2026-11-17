@@ -248,7 +248,7 @@ object AppState {
                 Saved(
                     quick = s.quick, faceLayout = s.faceLayout, secondClock = s.secondClock, screen = s.screen, screenAt = s.screenAt,
                     vibeFullTime = s.vibeFullTime, vibeAdded = s.vibeAdded, vibeBreak = s.vibeBreak, vibeStoppage = s.vibeStoppage, vibeSinBin = s.vibeSinBin,
-                    alertRepeatSec = s.alertRepeatSec, stoppageReminderSec = s.stoppageReminderSec,
+                    alertRepeatSec = s.alertRepeatSec, stoppageReminderSec = s.stoppageReminderSec, syncOnOpen = s.syncOnOpen,
                     tapStoppage = s.tapStoppage, cardReasons = s.cardReasons, stoppageName = s.stoppageName, breakName = s.breakName, recordTrack = s.recordTrack,
                     signOuts = s.signOuts + listOfNotNull(left),
                 )
@@ -458,6 +458,39 @@ object AppState {
     }
 
     fun deviceFlow() = server
+
+    // ---- Opening (WCH-13) ----
+
+    private var openedBefore = false
+    private var leftFrontAt: Long? = null
+
+    /**
+     * WCH-13: at the front again. Opening (starting, or back after five minutes away) syncs with Sync on opening on and
+     * no match in progress (SYNC-3); a glance doesn't, though an old link still signs out (SYNC-6).
+     */
+    fun cameToFront() {
+        val now = android.os.SystemClock.elapsedRealtime()
+        val away = leftFrontAt?.let { now - it }
+        val first = !openedBefore
+        openedBefore = true
+        leftFrontAt = null
+        val inProgress = saved.match?.let { it.phase != Phase.Done } ?: false
+        if (Opening.syncs(first, away, saved.syncOnOpen, inProgress)) sync() else sendSignOuts()
+    }
+
+    fun leftFront() {
+        if (leftFrontAt == null) leftFrontAt = android.os.SystemClock.elapsedRealtime()
+    }
+
+    /** SYNC-5: "2 matches, 1 track", or null with nothing waiting. */
+    val waitingLine: String? get() {
+        val matches = saved.outbox.size
+        val tracks = saved.tracks.size
+        return listOfNotNull(
+            if (matches == 0) null else if (matches == 1) "1 match" else "$matches matches",
+            if (tracks == 0) null else if (tracks == 1) "1 track" else "$tracks tracks",
+        ).joinToString(", ").ifEmpty { null }
+    }
 
     fun sync(done: (() -> Unit)? = null) {
         sendSignOuts()

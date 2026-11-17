@@ -86,6 +86,8 @@ data class Saved(
     val pitches: List<PitchUpload> = emptyList(),
     /** SYNC-6: links unlinked without a connection, signed out at the next chance. */
     val signOuts: List<SignOut> = emptyList(),
+    /** UI-16, WCH-13: Sync on opening, in Settings → Account. */
+    val syncOnOpen: Boolean = true,
 ) {
     /**
      * UI-21: the match screen; one saved before the choices comes from its layout and the quick format's clock.

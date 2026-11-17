@@ -197,6 +197,8 @@ struct Saved: Codable {
     var permissionsAsked: Bool?
     /// SYNC-6: links unlinked without a connection, signed out at the next chance.
     var signOuts: [SignOut]?
+    /// UI-16, WCH-13: Sync on opening, in Settings → Account; nil is on.
+    var syncOnOpen: Bool?
 
     /// SET-8: the timers' names, or their defaults when blank.
     var stoppageLabel: String { stoppageName.flatMap { $0.isEmpty ? nil : $0 } ?? "stoppage" }
@@ -841,6 +843,37 @@ final class AppState {
                 update { s in s.signOuts = (s.signOuts ?? []).filter { $0 != old } }
             }
         }
+    }
+
+    /// WCH-13: whether the app has come to the front since it started, and when it last left it.
+    private var openedBefore = false
+    private var leftFrontAt: Date?
+
+    /// WCH-13: at the front again. Opening (starting, or back after five minutes away) syncs with Sync on opening on and
+    /// no match in progress (SYNC-3); a glance doesn't, though an old link still signs out (SYNC-6).
+    func cameToFront() {
+        let away = leftFrontAt.map { Date().timeIntervalSince($0) }
+        let first = !openedBefore
+        openedBefore = true
+        leftFrontAt = nil
+        let inProgress = saved.match.map { $0.phase != .done } ?? false
+        if Opening.syncs(first: first, away: away, syncOnOpening: saved.syncOnOpen != false, matchInProgress: inProgress) {
+            sync()
+        } else {
+            sendSignOuts()
+        }
+    }
+
+    func leftFront() {
+        if leftFrontAt == nil { leftFrontAt = Date() }
+    }
+
+    /// SYNC-5: "2 matches, 1 track", or nil with nothing waiting.
+    var waitingLine: String? {
+        let matches = saved.outbox.count
+        let tracks = saved.tracks?.count ?? 0
+        let parts = [matches == 0 ? nil : matches == 1 ? "1 match" : "\(matches) matches", tracks == 0 ? nil : tracks == 1 ? "1 track" : "\(tracks) tracks"].compactMap { $0 }
+        return parts.isEmpty ? nil : parts.joined(separator: ", ")
     }
 
     /// SYNC-3; SYNC-16: canceled and postponed matches still to kick off come too, marked with their status.

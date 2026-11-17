@@ -92,7 +92,13 @@ class MainActivity : ComponentActivity() {
         AppState.resumes++
         // A match in progress goes on, whatever happened to the app (R-5), as does one warming up for its kickoff (ACT-5).
         if (AppState.match?.let(AppState::wantsService) == true) MatchService.start(this)
-        AppState.sync()
+        // WCH-13: opening syncs (UI-16); coming back from a glance doesn't.
+        AppState.cameToFront()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        AppState.leftFront()
     }
 
     /** UI-12. */

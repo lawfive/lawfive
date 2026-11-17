@@ -51,7 +51,7 @@ Linking a watch to a LawFive account and syncing with it ([ARCHITECTURE.md](../A
 ## Matches down and up
 
 - **SYNC-3** While linked, the watch keeps the account's next 10 scheduled matches (from three hours before kickoff on).
-  - They're refreshed when the app starts (unless a match is in progress), after linking, after full time, and with Sync now.
+  - They're refreshed when the app starts (unless a match is in progress, or Sync on opening is off, UI-16), after linking, after full time, and with Sync now. On Wear OS and Apple Watch, coming back to the front after 5 minutes away counts as starting (WCH-13).
   - They head the start menu, soonest first, as "STR v ROV" with the day, time (in the watch's 12- or 24-hour format) and place.
   - Starting one uses its teams, short names, colors and format, with this watch's alert and timer-name settings, and keeps the match's id so the result is linked to it.
 - **SYNC-16** **Canceled and postponed matches** still to kick off are in the watch's list too, among its 10, so one canceled after the watch last synced doesn't vanish without a word.
@@ -85,7 +85,6 @@ Linking a watch to a LawFive account and syncing with it ([ARCHITECTURE.md](../A
 Linking with a code and by the phone app, the next matches, uploads with an outbox, the Account menu, unlinking, the distance, the server built in or chosen on the watch, the watch's model, the fee and pitch corners from the watch, and what next after linking are built, through the Android app too where it's there (APP-7).
 
 Not built yet:
-- SYNC-5's Account on Wear OS and Apple Watch, which shows only Sync now and Unlink while linked (the [watch catch-up plan](../plans/watch-catch-up.md)).
 - SYNC-16 is built on the server, all three watches and both phones' Garmin relay, and checked in unit tests and the simulators; not yet on a real watch.
 - SYNC-17's check on a Garmin watch is built and checked in unit tests against a stand-in server; not yet during a real restart (R-19).
 - Background sync while the app is closed.

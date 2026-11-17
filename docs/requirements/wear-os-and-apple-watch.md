@@ -51,9 +51,13 @@ Apps for referees on Wear OS and Apple Watch, doing what the Garmin app does, by
   - Linking with a code stays.
 - **WCH-8 (Later)** A bridge through the phone app, for what only a live link to the phone can do, such as starting a match from the phone.
 
+## Syncing
+
+- **WCH-13** **Opening, on watches that sync themselves.** For Sync on opening (UI-16), the app opens when it starts or comes back to the front after 5 minutes or more away, as these watches keep an app in the background and close it on their own; a glance at the watch isn't opening. Never with a match in progress (SYNC-3): full time sends the match at once. A change made on the watch (a fee, a pitch, the match screen) syncs straight away, whatever the setting, and Sync now in Matches always works.
+
 ## Status
 
-Everything above but WCH-8 is built, played through on the Wear OS emulator and in UI tests on the Apple Watch simulator, syncing with the demo server. Recording, Mark pitch and the compass are tried with made-up readings; saving to Health Connect is unit-tested.
+Everything above but WCH-8 is built (WCH-13 checked in unit tests and on the emulator and simulator; a wrist raise and a break between matches on real watches are in R-13), played through on the Wear OS emulator and in UI tests on the Apple Watch simulator, syncing with the demo server. Recording, Mark pitch and the compass are tried with made-up readings; saving to Health Connect is unit-tested.
 
 Not built yet:
 
@@ -62,6 +66,4 @@ Not built yet:
 - The icons in a real watch's app list (seen as renderings only).
 - Behind Garmin:
   - History: on Wear OS, only the sent line and Mark pitch, with no Summary, Events, Paid toggle or Remove from watch; on both, the sent line is plain text, without when it went, the track's progress or a way to send it now (UI-17, UI-20).
-  - Account, linked, has only Sync now (with the last sync) and Unlink (with the server): not SYNC-5's last sync, what's waiting, the server or Sync on opening, and it keeps Sync now, which Garmin has only in Matches.
-  - Neither has the Sync on opening setting (UI-16).
   - The rest, and the plan to close each gap, are in the [watch catch-up plan](../plans/watch-catch-up.md).

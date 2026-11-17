@@ -43,4 +43,36 @@ final class DemoSync: XCTestCase {
         XCTAssertTrue(app.staticTexts["Not on LawFive"].waitForExistence(timeout: 5))
         shot("not on LawFive")
     }
+
+    // SYNC-5, UI-16: linked, Account has the last sync, the server, Sync on opening and Unlink, and no Sync now, which is
+    // in Matches; turning Sync on opening off says so.
+    func testAccountWhileLinked() throws {
+        try XCTSkipUnless(environment["LAWFIVE_DEMO"] != nil, "needs the demo server")
+        continueAfterFailure = false
+        app.launchArguments = try linkedArguments()
+        app.launch()
+        let matches = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Matches'")).firstMatch
+        XCTAssertTrue(matches.waitForExistence(timeout: 10))
+        matches.tap()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Sync now'")).firstMatch.waitForExistence(timeout: 5))
+        app.buttons["Back"].firstMatch.tap()
+        let settings = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Settings'")).firstMatch
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        settings.tap()
+        let account = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Account'")).firstMatch
+        XCTAssertTrue(account.waitForExistence(timeout: 5))
+        account.tap()
+        XCTAssertTrue(app.staticTexts["Last sync"].waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.staticTexts["Server"].exists)
+        XCTAssertFalse(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Sync now'")).firstMatch.exists)
+        let toggle = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Sync on opening'")).firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), app.debugDescription)
+        shot("account")
+        toggle.tap()
+        let off = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Only with Sync now'")).firstMatch
+        XCTAssertTrue(off.waitForExistence(timeout: 5) || app.staticTexts["Only with Sync now"].exists, app.debugDescription)
+        app.swipeUp()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Unlink'")).firstMatch.waitForExistence(timeout: 5))
+        shot("account, sync on opening off")
+    }
 }

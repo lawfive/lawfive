@@ -507,13 +507,20 @@ private fun AccountPage(push: (Page) -> Unit, pop: () -> Unit) {
         return
     }
     WatchList("Account") {
+        val host = AppState.serverUrl.removePrefix("https://").removePrefix("http://")
         if (AppState.linked) {
-            item { MenuRow("Sync now", syncLine(), R.drawable.ph_sync) { AppState.sync() } }
-            item { MenuRow("Unlink", AppState.serverUrl.removePrefix("https://").removePrefix("http://")) { confirming = true } }
+            // SYNC-5, as on the Garmin watch: Sync now is in Matches (UI-16).
+            item { MenuRow("Last sync", syncLine()) {} }
+            AppState.waitingLine?.let { item { MenuRow("Waiting to upload", it) {} } }
+            item { MenuRow("Server", host) {} }
         } else {
             item { MenuRow("Link account", "Get a code", R.drawable.ph_link) { push(Page.Link) } }
-            item { MenuRow("Server", AppState.serverUrl.removePrefix("https://").removePrefix("http://")) { push(Page.ServerAddress) } }
+            item { MenuRow("Server", host) { push(Page.ServerAddress) } }
         }
+        // UI-16, WCH-13: the quiet sync when the app opens; Sync now in Matches always works.
+        val on = AppState.saved.syncOnOpen
+        item { ToggleRow("Sync on opening", on, if (on) "When the app opens" else "Only with Sync now") { v -> AppState.update { it.copy(syncOnOpen = v) } } }
+        if (AppState.linked) item { MenuRow("Unlink", host) { confirming = true } }
     }
 }
 
