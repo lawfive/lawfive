@@ -41,10 +41,10 @@ Integrations use an API key, which the person makes in the website's Settings â†
 | [Calendar](calendar.md) | A private calendar feed of the user's matches, for calendar apps to subscribe to. |
 | [Stats](stats.md) | Reports on the user's games, worked out by the server so every app shows the same. |
 | [Devices](devices.md) | Where the account is signed in. |
-| [Attachments](attachments.md) | Photos on matches, venues and referees, kept by the server on its disk or in S3-compatible storage. |
+| [Attachments](attachments.md) | Photos on matches, venues and referees, and files on matches, venues and competitions: PDF, spreadsheets (XLSX, CSV), Word documents (DOCX), plain text and photos, kept by the server on its disk or in S3-compatible storage. |
 | [Export](export.md) | Everything in the account as one zip, and restoring one into an account, for backups and moving between servers. |
 | [Sharing](sharing.md) | A match's share link: an address nobody can guess that shows the match, its log and its track to anyone who has it, without signing in. |
-| [Webhooks](webhooks.md) | URLs that hear about changes to the account's records: matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import). |
+| [Webhooks](webhooks.md) | URLs that hear about changes to the account's records: matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import), and to the photos and files on them (attachment events). |
 | [API keys](api-keys.md) | Keys for scripts and integrations, made in the web app's Settings. |
 | [Watch](watch.md) | What a Garmin watch uses, shaped for its little memory: matches in the form it starts one from, and finished matches as it saved them. |
 | [Places](places.md) | Address search for placing venues on the map. |

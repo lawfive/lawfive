@@ -5,7 +5,8 @@
   "enum": [
     "match",
     "venue",
-    "referee"
+    "referee",
+    "competition"
   ],
-  "description": "The kinds of record that can have attachments."
+  "description": "The kinds of record that can have attachments: photos on matches, venues and referees (FILE-1); files on matches, venues and competitions (FILE-6)."
 }

@@ -88,6 +88,33 @@
       ],
       "additionalProperties": false
     },
+    "files": {
+      "description": "Files on matches, venues and competitions (FILE-6); servers from before files leave it out.",
+      "type": "object",
+      "properties": {
+        "added": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "updated": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "added",
+        "updated",
+        "unchanged"
+      ],
+      "additionalProperties": false
+    },
     "problems": {
       "type": "array",
       "items": {

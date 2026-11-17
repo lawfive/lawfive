@@ -10,17 +10,19 @@
       "$ref": "AttachmentRecordType.json"
     },
     "recordId": {
-      "description": "The match, venue or referee it's on.",
+      "description": "The match, venue, referee or competition it's on.",
       "$ref": "Id.json"
     },
+    "kind": {
+      "description": "Servers from before files leave it out: everything they have is a photo.",
+      "$ref": "AttachmentKind.json"
+    },
     "contentType": {
-      "type": "string",
-      "enum": [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-      ],
-      "description": "What the file is, worked out from its contents."
+      "$ref": "AttachmentContentType.json"
+    },
+    "name": {
+      "description": "A file's name (FILE-10), ending in what it really is (.pdf, .xlsx…), and the name it's downloaded with. Photos have none.",
+      "type": "string"
     },
     "size": {
       "type": "integer",
@@ -46,18 +48,22 @@
       "type": "integer",
       "minimum": -9007199254740991,
       "maximum": 9007199254740991,
-      "description": "Its place among the record's attachments, from 0. A referee's first photo is their picture."
+      "description": "Its place among the record's photos, or among its files, from 0. A referee's first photo is their picture."
     },
     "createdAt": {
       "$ref": "Timestamp.json"
     },
     "url": {
       "type": "string",
-      "description": "Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in."
+      "description": "Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in or an API key that can read the record."
     },
     "thumbUrl": {
       "type": "string",
-      "description": "A small version for lists and galleries: /v1/attachments/{id}/thumb (the file itself when none was uploaded)."
+      "description": "A small version for lists and galleries: /v1/attachments/{id}/thumb (a photo itself when none was uploaded)."
+    },
+    "hasThumb": {
+      "description": "Whether thumbUrl gives an image: false for a file other than a photo that was added without a thumbnail, which shows its kind's icon instead (FILE-12). Servers from before files leave it out, as every attachment then has one.",
+      "type": "boolean"
     }
   },
   "required": [
@@ -72,5 +78,5 @@
     "thumbUrl"
   ],
   "additionalProperties": false,
-  "description": "A photo on a match, venue or referee (FILE-1). The files are private: fetching them needs the same sign-in as the rest of the API."
+  "description": "A photo on a match, venue or referee (FILE-1), or a file on a match, venue or competition (FILE-6). They're private: fetching them needs the same sign-in as the rest of the API, or an API key that can read the record (FILE-14)."
 }

@@ -5,7 +5,7 @@ What each account may use, set by whoever runs the server: a self-hoster sharing
 ## Plans
 
 - **PLAN-1** **Plans** are named sets of limits, each with a **code** (lowercase letters, digits and hyphens, unique, made from the name and kept on renaming) to look it up by in the API and invitations. Admins manage them in Settings → Server → **Plans**; a plan in use can't be deleted. The **default** plan takes new accounts and any given no plan. A new server starts with **Standard** (`standard`): 20 API keys, 10 webhooks, and `ACCOUNT_STORAGE_LIMIT_MB`'s storage when set.
-- **PLAN-2** **What a plan limits**, each empty for no limit or 0 for none: matches, referees and venues kept; megabytes of photos and tracks (SEC-6); the largest photo (within the server's 10 MB) and the largest import or restore file (within the server's own limits); watches and phones (PLAN-7); notifications a day; API keys, and their requests a minute and a day (PLAN-8); webhooks, by number; assignor calendars (FEED-10); and address searches a day (PLAN-11). Weather isn't limited by plan: forecasts are shared by place, so `WEATHER_DAILY_LIMIT` is its only control (WX-2).
+- **PLAN-2** **What a plan limits**, each empty for no limit or 0 for none: matches, referees and venues kept; megabytes of photos, files and tracks, thumbnails included (SEC-6); the largest photo (within the server's 10 MB), the largest file on a match, venue or competition (within the server's 20 MB, FILE-9) and the largest import or restore file (within the server's own limits); watches and phones (PLAN-7); notifications a day; API keys, and their requests a minute and a day (PLAN-8); webhooks, by number; assignor calendars (FEED-10); and address searches a day (PLAN-11). Weather isn't limited by plan: forecasts are shared by place, so `WEATHER_DAILY_LIMIT` is its only control (WX-2).
 - **PLAN-3** **Every account is in one plan**, admins included, shown on its People row and changed from its menu (Change plan), optionally until a last day and then another plan (the default if none is chosen). There are no per-person exceptions: for a one-off, an admin makes a plan.
 - **PLAN-5** **Trials and plans that end.** A plan set until a day ends at midnight at the end of that day in the account's time zone (PLAN-9), and the account moves to the next plan on its own, already counting as it until the move. An invitation can carry a plan for some days, and Plans → New accounts can start every new account on a trial of another plan for some days. Each change of plan is kept (from, to, when, and why: sign-up, invitation, an admin, or the last one ending) and shown to admins, so they can see who has had a trial; trials aren't limited to one each.
 
@@ -30,8 +30,9 @@ What each account may use, set by whoever runs the server: a self-hoster sharing
 
 ## Status
 
-Everything above is built on the server, the website, Android and the iPhone.
+Everything above is built on the server, the website, Android and the iPhone, except as below.
 
 Not built yet:
+- The largest file limit, and storage named "photos, files and tracks", on the website and the phones (the server has them).
 - Checked on a real phone (R-20).
 - Assignor connections as a limit, once they exist.

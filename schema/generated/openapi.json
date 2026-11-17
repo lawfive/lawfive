@@ -92,11 +92,11 @@
     },
     {
       "name": "Attachments",
-      "description": "Photos on matches, venues and referees (FILE-1 to FILE-5), kept by the server on its disk or in S3-compatible storage. Upload the file as multipart/form-data, ideally already made smaller (the web app sends at most 2000 pixels on the longest side, as a JPEG without its location and camera details) with a thumbnail; the server keeps what it's sent. The files are private: fetch them with the same sign-in. Deleting the record deletes its attachments. Only a signed-in session can use them for now."
+      "description": "Photos on matches, venues and referees (FILE-1 to FILE-8), and files on matches, venues and competitions (FILE-6 to FILE-15): PDF, spreadsheets (XLSX, CSV), Word documents (DOCX), plain text and photos, kept by the server on its disk or in S3-compatible storage. Upload the file as multipart/form-data. Photos are best made smaller first (the web app sends at most 2000 pixels on the longest side, as a JPEG without its location and camera details) with a thumbnail; files are kept exactly as sent. The server works out what a file is from its contents, never its name, and refuses anything else (HTML, SVG, XML, scripts, archives, programs, older Office formats, and spreadsheets or documents with macros). Every file but a photo is served as a download, never shown in place. They're private: fetch them with the same sign-in, or with an API key that can reach the record: read access to its collection (venues:read for a venue's) to list and fetch, write access to add, change and delete. Deleting the record deletes its attachments."
     },
     {
       "name": "Export",
-      "description": "Everything in the account as one zip (DATA-2), and restoring one into an account (DATA-4), for backups and moving between servers. The zip has lawfive.json (what it is), README.md, records/<collection>.json (each an array of records as the API gives them), tracks/<match record id>.json, attachments.json and the photos in attachments/. Only a signed-in session can use them."
+      "description": "Everything in the account as one zip (DATA-2), and restoring one into an account (DATA-4), for backups and moving between servers. The zip has lawfive.json (what it is), README.md, records/<collection>.json (each an array of records as the API gives them), tracks/<match record id>.json, attachments.json and the photos and files in attachments/, each ending in what it is (.jpg, .pdf, .xlsx…). Only a signed-in session can use them."
     },
     {
       "name": "Sharing",
@@ -104,11 +104,11 @@
     },
     {
       "name": "Webhooks",
-      "description": "URLs that hear about changes to the account's records (HOOK-1 to HOOK-5): matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import). Each delivery is a signed JSON POST (WebhookPayload), retried up to five times over about three hours when it doesn't get a 2xx answer. Only a signed-in session can manage them."
+      "description": "URLs that hear about changes to the account's records (HOOK-1 to HOOK-5): matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import), and to the photos and files on them (attachment events, FILE-15). Each delivery is a signed JSON POST (WebhookPayload), retried up to five times over about three hours when it doesn't get a 2xx answer. Only a signed-in session can manage them."
     },
     {
       "name": "API keys",
-      "description": "Keys for scripts and integrations (KEY-1 to KEY-4), made in the web app's Settings. A key is sent like a session token, Authorization: Bearer <key>, and can use only the collections it was given (read, or read and write), plus the weather (with matches:read) and address search (with venues:write). Keys can't manage devices or other keys, and only a signed-in session can make or delete them."
+      "description": "Keys for scripts and integrations (KEY-1 to KEY-4), made in the web app's Settings. A key is sent like a session token, Authorization: Bearer <key>, and can use only the collections it was given (read, or read and write), with the photos and files on their records (FILE-14), plus the weather (with matches:read) and address search (with venues:write). Keys can't manage devices or other keys, and only a signed-in session can make or delete them."
     },
     {
       "name": "Watch",
@@ -11700,7 +11700,7 @@
           "Export"
         ],
         "summary": "Download everything",
-        "description": "Every record, track and photo in the account, as a zip (Content-Disposition: attachment). It's made as it's sent, so it starts straight away however big it is. Not with API keys.",
+        "description": "Every record, track, photo and file in the account, as a zip (Content-Disposition: attachment). It's made as it's sent, so it starts straight away however big it is. Not with API keys.",
         "responses": {
           "200": {
             "description": "The zip.",
@@ -11763,7 +11763,7 @@
           "Export"
         ],
         "summary": "Restore from an export",
-        "description": "Merges an export into the account: records keep their ids, anything missing is added, and where the account has a record too, whichever was changed last is kept. Tracks are added to match reports without one; photos the account doesn't have are added. At most 2 GB. Matches, referees and venues over the plan's limits (PLAN-4) aren't added, and problems says so. Not with API keys.",
+        "description": "Merges an export into the account: records keep their ids, anything missing is added, and where the account has a record too, whichever was changed last is kept. Tracks are added to match reports without one; photos and files the account doesn't have are added, each checked as an upload is (FILE-9), and what isn't taken is listed under problems. At most 2 GB. Matches, referees and venues over the plan's limits (PLAN-4) aren't added, and problems says so. Not with API keys.",
         "requestBody": {
           "required": true,
           "description": "A zip made by GET /v1/export",
@@ -12345,13 +12345,13 @@
           "Attachments"
         ],
         "summary": "Attachments of a kind of record",
-        "description": "In order (by record, then position). With recordId, just that record's; with first, only each record's first (a referee's picture). Not with API keys.",
+        "description": "In order (by record, then position). With recordId, just that record's; with first, only each record's first photo (a referee's picture). Only photos unless kind says otherwise, as servers had before files. API keys: need read access to the record's collection (matches:read for a match's, venues:read for a venue's, referees:read for a referee's, competitions:read for a competition's).",
         "parameters": [
           {
             "name": "recordType",
             "in": "query",
             "required": true,
-            "description": "The kinds of record that can have attachments.",
+            "description": "The kinds of record that can have attachments: photos on matches, venues and referees (FILE-1); files on matches, venues and competitions (FILE-6).",
             "schema": {
               "$ref": "#/components/schemas/AttachmentRecordType"
             }
@@ -12365,12 +12365,27 @@
             }
           },
           {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "description": "photo (when left out), file, or all of them.",
+            "schema": {
+              "description": "photo (when left out), file, or all of them.",
+              "type": "string",
+              "enum": [
+                "photo",
+                "file",
+                "all"
+              ]
+            }
+          },
+          {
             "name": "first",
             "in": "query",
             "required": false,
-            "description": "Only each record's first attachment.",
+            "description": "Only each record's first photo.",
             "schema": {
-              "description": "Only each record's first attachment.",
+              "description": "Only each record's first photo.",
               "type": "string",
               "enum": [
                 "true"
@@ -12402,7 +12417,7 @@
             }
           },
           "400": {
-            "description": "recordType or recordId isn't valid.",
+            "description": "recordType, recordId or kind isn't valid.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12422,7 +12437,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without read access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -12459,7 +12474,7 @@
           "Attachments"
         ],
         "summary": "Upload an attachment",
-        "description": "Added after the record's others. At most 30 on a record. Not with API keys.",
+        "description": "Added after the record's other photos, or its other files. At most 30 photos and 20 files on a record. A competition has files, not photos; a referee photos, not files. A file's name is cleaned (no folders, control or direction characters, at most 120 characters) and ends in what it really is (FILE-10). API keys: need write access to the record's collection (matches:write for a match's, venues:write for a venue's, referees:write for a referee's, competitions:write for a competition's).",
         "requestBody": {
           "required": true,
           "content": {
@@ -12475,12 +12490,12 @@
                       "file": {
                         "type": "string",
                         "format": "binary",
-                        "description": "required: the photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb)"
+                        "description": "required: a photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb); or a file, a PDF, XLSX, CSV, DOCX, TXT, JPEG, PNG or WebP of at most 20 MB (or the plan's attachmentMb). CSV and TXT are text in UTF-8 or Windows-1252, told apart by the name's ending"
                       },
                       "thumb": {
                         "type": "string",
                         "format": "binary",
-                        "description": "optional: a small version, at most 1 MB, for lists and galleries"
+                        "description": "optional: a small version, an image of at most 1 MB, for lists and galleries (a PDF's first page, say)"
                       }
                     },
                     "required": [
@@ -12504,7 +12519,7 @@
             }
           },
           "400": {
-            "description": "With storage ({ usedBytes, limitBytes }) when it doesn't fit the account's room (FILE-7). A field isn't valid, the file is missing, too big or not a JPEG, PNG or WebP, or the record has 30 already.",
+            "description": "With storage ({ usedBytes, limitBytes }) when it doesn't fit the account's room (FILE-7). A field isn't valid, the file is missing, too big or of a kind that isn't taken (the message says which, and what is), the kind doesn't suit the record, or the record has as many as it can.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12539,7 +12554,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without write access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -12588,7 +12603,7 @@
           "Attachments"
         ],
         "summary": "Change an attachment",
-        "description": "Its caption, or its place among the record's attachments (moving a referee's photo to 0 makes it their picture). Not with API keys.",
+        "description": "Its caption, a file's name (keeping its ending), or its place among the record's photos or files (moving a referee's photo to 0 makes it their picture). API keys: need write access to the record's collection (matches:write for a match's, venues:write for a venue's, referees:write for a referee's, competitions:write for a competition's).",
         "parameters": [
           {
             "name": "id",
@@ -12622,7 +12637,7 @@
             }
           },
           "400": {
-            "description": "The body doesn't match.",
+            "description": "The body doesn't match, or the new name is empty once cleaned.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12657,7 +12672,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without write access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -12704,7 +12719,7 @@
           "Attachments"
         ],
         "summary": "Delete an attachment",
-        "description": "With its files, for good. Not with API keys.",
+        "description": "With its files, for good. API keys: need write access to the record's collection (matches:write for a match's, venues:write for a venue's, referees:write for a referee's, competitions:write for a competition's).",
         "parameters": [
           {
             "name": "id",
@@ -12748,7 +12763,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without write access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -12797,7 +12812,7 @@
           "Attachments"
         ],
         "summary": "Replace an attachment's file",
-        "description": "A photo cropped or turned by the app, in place of the old one (FILE-8): it keeps its id, place and caption, and the old files are deleted. Its url and thumbUrl change, so a kept copy of the old one isn't shown. Not with API keys.",
+        "description": "A photo cropped or turned by the app, in place of the old one (FILE-8), or a new version of a file: it keeps its id, place, caption and name (with the new file's ending), and the old files are deleted. Its url and thumbUrl change, so a kept copy of the old one isn't shown. API keys: need write access to the record's collection (matches:write for a match's, venues:write for a venue's, referees:write for a referee's, competitions:write for a competition's).",
         "parameters": [
           {
             "name": "id",
@@ -12834,12 +12849,12 @@
                       "file": {
                         "type": "string",
                         "format": "binary",
-                        "description": "required: the photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb)"
+                        "description": "required: for a photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb); for a file, anything an upload takes"
                       },
                       "thumb": {
                         "type": "string",
                         "format": "binary",
-                        "description": "optional: a small version, at most 1 MB"
+                        "description": "optional: a small version, an image of at most 1 MB"
                       }
                     },
                     "required": [
@@ -12863,7 +12878,7 @@
             }
           },
           "400": {
-            "description": "With storage ({ usedBytes, limitBytes }) when a bigger file doesn't fit the account's room (FILE-7). The file is missing, too big or not a JPEG, PNG or WebP.",
+            "description": "With storage ({ usedBytes, limitBytes }) when a bigger file doesn't fit the account's room (FILE-7). The file is missing, too big or of a kind that isn't taken.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12898,7 +12913,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without write access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -12945,7 +12960,7 @@
           "Attachments"
         ],
         "summary": "An attachment's file",
-        "description": "As uploaded. A file at an address never changes, so it can be kept (Cache-Control: private, immutable); replacing it (FILE-8) gives the attachment new addresses, with ?v=. Not with API keys.",
+        "description": "As uploaded, with its checked type, X-Content-Type-Options: nosniff and a sandboxing Content-Security-Policy. Every file but a photo is a download (Content-Disposition: attachment, with its name in ASCII and as filename* in UTF-8), never shown in place (FILE-11); a photo is shown in place, or a download with download=1. A file at an address never changes, so it can be kept (Cache-Control: private, immutable); replacing it (FILE-8) gives the attachment new addresses, with ?v=. API keys: need read access to the record's collection (matches:read for a match's, venues:read for a venue's, referees:read for a referee's, competitions:read for a competition's).",
         "parameters": [
           {
             "name": "id",
@@ -12955,13 +12970,36 @@
             "schema": {
               "$ref": "#/components/schemas/Id"
             }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "required": false,
+            "description": "A photo as a download too, for a website at another address than the API, where browsers ignore a link's download attribute.",
+            "schema": {
+              "description": "A photo as a download too, for a website at another address than the API, where browsers ignore a link's download attribute.",
+              "type": "string",
+              "enum": [
+                "1"
+              ]
+            }
+          },
+          {
+            "name": "v",
+            "in": "query",
+            "required": false,
+            "description": "The version in a replaced file's address; ignored.",
+            "schema": {
+              "description": "The version in a replaced file's address; ignored.",
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "The image.",
+            "description": "The file.",
             "content": {
-              "image/*": {
+              "application/octet-stream": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
@@ -12980,7 +13018,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without read access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -13029,7 +13067,7 @@
           "Attachments"
         ],
         "summary": "An attachment's thumbnail",
-        "description": "The small version, or the file itself when none was uploaded. Not with API keys.",
+        "description": "The small version, always an image; for a photo with none, the photo itself. API keys: need read access to the record's collection (matches:read for a match's, venues:read for a venue's, referees:read for a referee's, competitions:read for a competition's).",
         "parameters": [
           {
             "name": "id",
@@ -13038,6 +13076,16 @@
             "description": "UUID made by the device that created the record.",
             "schema": {
               "$ref": "#/components/schemas/Id"
+            }
+          },
+          {
+            "name": "v",
+            "in": "query",
+            "required": false,
+            "description": "The version in a replaced file's address; ignored.",
+            "schema": {
+              "description": "The version in a replaced file's address; ignored.",
+              "type": "string"
             }
           }
         ],
@@ -13064,7 +13112,7 @@
             }
           },
           "403": {
-            "description": "An API key: this needs signing in; or the account is waiting for approval (USR-4).",
+            "description": "An API key without read access to the record's collection; or the account is waiting for approval (USR-4).",
             "content": {
               "application/json": {
                 "schema": {
@@ -13074,7 +13122,7 @@
             }
           },
           "404": {
-            "description": "Not found, or not this user's.",
+            "description": "Not found, not this user's, or a file other than a photo added without a thumbnail (hasThumb is false).",
             "content": {
               "application/json": {
                 "schema": {
@@ -20443,7 +20491,7 @@
           },
           "event": {
             "type": "string",
-            "description": "<topic>.<created|updated|deleted>"
+            "description": "<topic>.<created|updated|deleted> for a record; attachment.<created|updated|deleted> for a photo or file on a record of the topic (FILE-15)."
           },
           "createdAt": {
             "description": "When the change was made.",
@@ -20459,7 +20507,7 @@
               "type": "string"
             },
             "additionalProperties": {},
-            "description": "The record as stored (as GET returns it); for deleted, its id, version and deletedAt."
+            "description": "The record as stored (as GET returns it); for deleted, its id, version and deletedAt. For an attachment event, the Attachment as the API gives it (as it was, for deleted), without the file: fetch its url with an API key."
           }
         },
         "required": [
@@ -20535,6 +20583,33 @@
             "additionalProperties": false
           },
           "photos": {
+            "type": "object",
+            "properties": {
+              "added": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "updated": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "unchanged": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "added",
+              "updated",
+              "unchanged"
+            ],
+            "additionalProperties": false
+          },
+          "files": {
+            "description": "Files on matches, venues and competitions (FILE-6); servers from before files leave it out.",
             "type": "object",
             "properties": {
               "added": {
@@ -20643,9 +20718,34 @@
         "enum": [
           "match",
           "venue",
-          "referee"
+          "referee",
+          "competition"
         ],
-        "description": "The kinds of record that can have attachments."
+        "description": "The kinds of record that can have attachments: photos on matches, venues and referees (FILE-1); files on matches, venues and competitions (FILE-6)."
+      },
+      "AttachmentKind": {
+        "$id": "#/components/schemas/AttachmentKind",
+        "type": "string",
+        "enum": [
+          "photo",
+          "file"
+        ],
+        "description": "A photo, in its record's photo grid (FILE-1), or a file, in its Files list (FILE-6): a document, or a photo kept as a file."
+      },
+      "AttachmentContentType": {
+        "$id": "#/components/schemas/AttachmentContentType",
+        "type": "string",
+        "enum": [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "application/pdf",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "text/csv",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "text/plain"
+        ],
+        "description": "What a file is, worked out from its contents, never its name (FILE-9): a JPEG, PNG or WebP photo, a PDF, an Excel spreadsheet (.xlsx) or CSV, a Word document (.docx), or plain text. Photos are always JPEG, PNG or WebP."
       },
       "Attachment": {
         "$id": "#/components/schemas/Attachment",
@@ -20658,17 +20758,19 @@
             "$ref": "#/components/schemas/AttachmentRecordType"
           },
           "recordId": {
-            "description": "The match, venue or referee it's on.",
+            "description": "The match, venue, referee or competition it's on.",
             "$ref": "#/components/schemas/Id"
           },
+          "kind": {
+            "description": "Servers from before files leave it out: everything they have is a photo.",
+            "$ref": "#/components/schemas/AttachmentKind"
+          },
           "contentType": {
-            "type": "string",
-            "enum": [
-              "image/jpeg",
-              "image/png",
-              "image/webp"
-            ],
-            "description": "What the file is, worked out from its contents."
+            "$ref": "#/components/schemas/AttachmentContentType"
+          },
+          "name": {
+            "description": "A file's name (FILE-10), ending in what it really is (.pdf, .xlsx…), and the name it's downloaded with. Photos have none.",
+            "type": "string"
           },
           "size": {
             "type": "integer",
@@ -20694,18 +20796,22 @@
             "type": "integer",
             "minimum": -9007199254740991,
             "maximum": 9007199254740991,
-            "description": "Its place among the record's attachments, from 0. A referee's first photo is their picture."
+            "description": "Its place among the record's photos, or among its files, from 0. A referee's first photo is their picture."
           },
           "createdAt": {
             "$ref": "#/components/schemas/Timestamp"
           },
           "url": {
             "type": "string",
-            "description": "Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in."
+            "description": "Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in or an API key that can read the record."
           },
           "thumbUrl": {
             "type": "string",
-            "description": "A small version for lists and galleries: /v1/attachments/{id}/thumb (the file itself when none was uploaded)."
+            "description": "A small version for lists and galleries: /v1/attachments/{id}/thumb (a photo itself when none was uploaded)."
+          },
+          "hasThumb": {
+            "description": "Whether thumbUrl gives an image: false for a file other than a photo that was added without a thumbnail, which shows its kind's icon instead (FILE-12). Servers from before files leave it out, as every attachment then has one.",
+            "type": "boolean"
           }
         },
         "required": [
@@ -20720,7 +20826,7 @@
           "thumbUrl"
         ],
         "additionalProperties": false,
-        "description": "A photo on a match, venue or referee (FILE-1). The files are private: fetching them needs the same sign-in as the rest of the API."
+        "description": "A photo on a match, venue or referee (FILE-1), or a file on a match, venue or competition (FILE-6). They're private: fetching them needs the same sign-in as the rest of the API, or an API key that can read the record (FILE-14)."
       },
       "AttachmentUpload": {
         "$id": "#/components/schemas/AttachmentUpload",
@@ -20731,6 +20837,15 @@
           },
           "recordId": {
             "$ref": "#/components/schemas/Id"
+          },
+          "kind": {
+            "description": "photo or file. Left out: a photo when it's a JPEG, PNG or WebP on a match, venue or referee; otherwise a file.",
+            "$ref": "#/components/schemas/AttachmentKind"
+          },
+          "name": {
+            "description": "A file's name; the file part's own name when left out. It's cleaned, and its ending set to what the file is (FILE-10).",
+            "type": "string",
+            "maxLength": 500
           },
           "caption": {
             "type": "string",
@@ -20753,7 +20868,7 @@
           "recordId"
         ],
         "additionalProperties": false,
-        "description": "The form fields of an upload (multipart/form-data), beside the files: file (a JPEG, PNG or WebP of at most 10 MB) and, optionally, thumb (a small version, at most 1 MB)."
+        "description": "The form fields of an upload (multipart/form-data), beside the files: file (a photo, a JPEG, PNG or WebP of at most 10 MB; or a file, a PDF, XLSX, CSV, DOCX, TXT or photo of at most 20 MB) and, optionally, thumb (a small version, an image of at most 1 MB)."
       },
       "AttachmentChange": {
         "$id": "#/components/schemas/AttachmentChange",
@@ -20771,8 +20886,13 @@
               }
             ]
           },
+          "name": {
+            "description": "A file's new name (FILE-10): cleaned as an upload's is, and keeping its ending.",
+            "type": "string",
+            "maxLength": 500
+          },
           "position": {
-            "description": "Move it to this place among the record's attachments (0 is first; a larger number moves it to the end).",
+            "description": "Move it to this place among the record's photos, or its files (0 is first; a larger number moves it to the end).",
             "type": "integer",
             "minimum": 0,
             "maximum": 9007199254740991
@@ -22512,7 +22632,7 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 9007199254740991,
-            "description": "Photos and tracks on this account."
+            "description": "Photos, files and tracks on this account, thumbnails included."
           },
           "limitBytes": {
             "description": "How much it may keep (SEC-6); absent when this server sets no limit.",
@@ -22549,13 +22669,19 @@
             "maximum": 1000000000
           },
           "storageMb": {
-            "description": "Megabytes of photos and tracks (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.",
+            "description": "Megabytes of photos, files and tracks, thumbnails included (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.",
             "type": "integer",
             "minimum": 0,
             "maximum": 1000000000
           },
           "photoMb": {
             "description": "The largest photo, in megabytes; the server's own most, 10 MB, still applies. Left out: no limit; 0: none at all.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000000
+          },
+          "attachmentMb": {
+            "description": "The largest file on a match, venue or competition (FILE-9), in megabytes; the server's own most, 20 MB, still applies. Left out: no limit; 0: none at all.",
             "type": "integer",
             "minimum": 0,
             "maximum": 1000000000
@@ -23015,6 +23141,7 @@
               "venues",
               "storageMb",
               "photoMb",
+              "attachmentMb",
               "fileMb",
               "devices",
               "pushPerDay",

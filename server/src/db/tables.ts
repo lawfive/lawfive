@@ -363,15 +363,22 @@ export const matchShare = pgTable("match_share", {
     createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
 }, (t) => [uniqueIndex("match_share_match").on(t.userId, t.matchId)]);
 
-// Attachments (FILE-1 to FILE-5): photos on matches, venues and referees. The files themselves are
-// in the file store (storage.ts), under the user's id, so an account's files can all be found.
+// Attachments (FILE-1 to FILE-15): photos on matches, venues and referees, and files on matches,
+// venues and competitions. The files themselves are in the file store (storage.ts), under the
+// user's id, so an account's files can all be found.
 export const attachment = pgTable("attachment", {
     id: uuid("id").primaryKey(),
     userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
     recordType: text("record_type").notNull(),
     recordId: uuid("record_id").notNull(),
+    /** photo, in the record's photo grid, or file, in its Files list (FILE-6). */
+    kind: text("kind").notNull().default("photo"),
     contentType: text("content_type").notNull(),
+    /** A file's name, cleaned and ending in what it is (FILE-10); photos have none. */
+    name: text("name"),
     size: integer("size").notNull(),
+    /** The thumbnail's size, which counts against the account's room too (SEC-6); none for one kept before it was counted. */
+    thumbSize: integer("thumb_size"),
     width: integer("width"),
     height: integer("height"),
     caption: text("caption"),

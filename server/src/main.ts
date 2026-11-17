@@ -41,13 +41,13 @@ const weatherOptions = (): WeatherOptions | undefined => {
 };
 const weather = new Weather(db, weatherOptions());
 weather.start();
-// Uploaded photos (FILE-4). If the folder can't be written to, the server runs without them.
+// Uploaded photos and files (FILE-4). If the folder can't be written to, the server runs without them.
 let files: FileStore | undefined;
 try {
     files = config.s3Url ? s3Store(parseS3Url(config.s3Url)) : await diskStore(config.uploadsDir);
-    console.log(`Photos are kept in ${files.where}`);
+    console.log(`Photos and files are kept in ${files.where}`);
 } catch (e) {
-    console.error(`Photos are switched off: ${(e as Error).message}`);
+    console.error(`Photos and files are switched off: ${(e as Error).message}`);
 }
 const webRoot = process.env.WEB_ROOT ?? new URL("../../web/dist", import.meta.url).pathname;
 const mail = settings.mail();

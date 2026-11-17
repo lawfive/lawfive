@@ -3,7 +3,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { relative } from "node:path";
-import { NameChange, findEndpoint, scopesAllow } from "@lawfive/schema";
+import { NameChange, attachmentCollections, findEndpoint, scopesAllow } from "@lawfive/schema";
 import { openApiDocument } from "@lawfive/schema/generate";
 import { type Context, Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
@@ -55,7 +55,7 @@ export interface AppOptions {
     access?: AccessSettings;
     /** Webhooks (HOOK-4): whether they may reach private addresses, and how often retries go out. */
     webhooks?: WebhookOptions;
-    /** Where uploaded photos are kept (FILE-4); without one, there are no attachments. */
+    /** Where uploaded photos and files are kept (FILE-4); without one, there are no attachments. */
     files?: FileStore;
     /** This build's version (VER-1), for GET /v1/meta and the watch. */
     version?: ServerVersion;
@@ -330,8 +330,16 @@ export function createApp(db: Db, auth: Auth, options: AppOptions = {}) {
             if ("error" in found) {
                 return c.json({ error: found.error }, 401);
             }
-            const need = findEndpoint(c.req.method, c.req.path)?.keyScope;
-            if (!need || !scopesAllow(found.key.scopes, need)) {
+            const endpoint = findEndpoint(c.req.method, c.req.path);
+            const need = endpoint?.keyScope;
+            // FILE-14: attachments need their record's collection, which the attachments' own
+            // endpoints check once they know the record; a key with none of those goes no further.
+            const byRecord = endpoint?.keyScopeByRecord;
+            if (byRecord) {
+                if (!Object.values(attachmentCollections).some((collection) => scopesAllow(found.key.scopes, `${collection}:${byRecord}`))) {
+                    return c.json({ error: `this API key needs ${byRecord} access to the record's collection (${[...new Set(Object.values(attachmentCollections))].join(", ")})` }, 403);
+                }
+            } else if (!need || !scopesAllow(found.key.scopes, need)) {
                 return c.json({ error: need ? `this API key needs ${need}` : "API keys can't use this; sign in instead" }, 403);
             }
             // PLAN-8: all the account's keys together, a minute and a day.

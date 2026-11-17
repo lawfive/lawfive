@@ -1,7 +1,8 @@
 import { count, eq, sql } from "drizzle-orm";
 import { type Db, tables } from "./db/index.ts";
 
-// SEC-6: how much of the server an account takes up. Only photos and tracks a person adds count:
+// SEC-6: how much of the server an account takes up. Only photos, files (with their thumbnails) and
+// tracks a person adds count:
 // a match recorded on a watch, and its track, are never refused, as they can't be recorded again.
 
 /** Far more than anyone refereeing could make; it stops a script filling the database. */
@@ -12,7 +13,7 @@ export type StorageLimit = (userId: string) => Promise<number | undefined>;
 
 export async function filesUsed(db: Db, userId: string): Promise<number> {
     const { attachment, matchTrack } = tables;
-    const [photos] = await db.select({ bytes: sql<number>`coalesce(sum(${attachment.size}), 0)::bigint` }).from(attachment).where(eq(attachment.userId, userId));
+    const [photos] = await db.select({ bytes: sql<number>`coalesce(sum(${attachment.size} + coalesce(${attachment.thumbSize}, 0)), 0)::bigint` }).from(attachment).where(eq(attachment.userId, userId));
     const [tracks] = await db.select({ bytes: sql<number>`coalesce(sum(octet_length(${matchTrack.data})), 0)::bigint` }).from(matchTrack).where(eq(matchTrack.userId, userId));
     return Number(photos.bytes) + Number(tracks.bytes);
 }
@@ -23,7 +24,7 @@ export async function noRoomFor(db: Db, userId: string, adding: number, limit: S
     if (most === undefined || (await filesUsed(db, userId)) + adding <= most) {
         return undefined;
     }
-    return "Your account's storage is full. Delete some photos or tracks, or ask an admin of this server for a plan with more room.";
+    return "Your account's storage is full. Delete some photos, files or tracks, or ask an admin of this server for a plan with more room.";
 }
 
 /** Whether a limit is set and the account already has more records than anyone should. */

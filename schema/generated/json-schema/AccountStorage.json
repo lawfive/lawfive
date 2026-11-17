@@ -7,7 +7,7 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 9007199254740991,
-      "description": "Photos and tracks on this account."
+      "description": "Photos, files and tracks on this account, thumbnails included."
     },
     "limitBytes": {
       "description": "How much it may keep (SEC-6); absent when this server sets no limit.",

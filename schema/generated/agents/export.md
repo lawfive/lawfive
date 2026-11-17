@@ -1,6 +1,6 @@
 # Export
 
-Everything in the account as one zip, and restoring one into an account, for backups and moving between servers. The zip has lawfive.json (what it is), README.md, records/<collection>.json (each an array of records as the API gives them), tracks/<match record id>.json, attachments.json and the photos in attachments/. Only a signed-in session can use them.
+Everything in the account as one zip, and restoring one into an account, for backups and moving between servers. The zip has lawfive.json (what it is), README.md, records/<collection>.json (each an array of records as the API gives them), tracks/<match record id>.json, attachments.json and the photos and files in attachments/, each ending in what it is (.jpg, .pdf, .xlsx…). Only a signed-in session can use them.
 
 [The overview](overview.md) covers the address, signing in, API keys and errors.
 
@@ -8,7 +8,7 @@ Everything in the account as one zip, and restoring one into an account, for bac
 
 ### GET /v1/export
 
-**Download everything.** Every record, track and photo in the account, as a zip (Content-Disposition: attachment). It's made as it's sent, so it starts straight away however big it is. Not with API keys.
+**Download everything.** Every record, track, photo and file in the account, as a zip (Content-Disposition: attachment). It's made as it's sent, so it starts straight away however big it is. Not with API keys.
 
 | Answer | Body | When |
 |---|---|---|
@@ -20,7 +20,7 @@ Everything in the account as one zip, and restoring one into an account, for bac
 
 ### POST /v1/restore
 
-**Restore from an export.** Merges an export into the account: records keep their ids, anything missing is added, and where the account has a record too, whichever was changed last is kept. Tracks are added to match reports without one; photos the account doesn't have are added. At most 2 GB. Matches, referees and venues over the plan's limits aren't added, and problems says so. Not with API keys.
+**Restore from an export.** Merges an export into the account: records keep their ids, anything missing is added, and where the account has a record too, whichever was changed last is kept. Tracks are added to match reports without one; photos and files the account doesn't have are added, each checked as an upload is, and what isn't taken is listed under problems. At most 2 GB. Matches, referees and venues over the plan's limits aren't added, and problems says so. Not with API keys.
 
 **Body:** A zip made by GET /v1/export (application/zip)
 
@@ -53,4 +53,5 @@ What restoring an export did. Records the account already has a newer copy of ar
 | `records` | {} | By collection: matches, venues, referees… |
 | `tracks` | { added: integer, updated: integer, unchanged: integer } |  |
 | `photos` | { added: integer, updated: integer, unchanged: integer } |  |
+| `files` (optional) | { added: integer, updated: integer, unchanged: integer } | Files on matches, venues and competitions; servers from before files leave it out. |
 | `problems` | string[] | What couldn't be restored and why, at most 50. |

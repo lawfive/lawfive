@@ -20,8 +20,8 @@ export function checkAnswer(method: string, url: string, status: number, body: u
     assert.ok(answer, `${where} isn't a described answer`);
     if (answer.text !== undefined) {
         assert.equal(body, answer.text, where);
-    } else if (answer.image || answer.zip) {
-        assert.ok(body instanceof Uint8Array && body.byteLength > 0, `${where}: ${answer.zip ? "a zip" : "an image"}`);
+    } else if (answer.image || answer.zip || answer.file) {
+        assert.ok(body instanceof Uint8Array && body.byteLength > 0, `${where}: ${answer.zip ? "a zip" : answer.file ? "a file" : "an image"}`);
     } else if (answer.csv || answer.calendar) {
         assert.equal(typeof body, "string", `${where}: ${answer.csv ? "CSV" : "iCalendar"}`);
     } else if (answer.body) {

@@ -19,7 +19,8 @@ Keys for scripts and integrations, such as another app adding and updating match
   - Weather and stats need matches read; stats then hold only what the key can read (STAT-4).
   - Address search needs venues read and write.
   - Sync (`/v1/changes`) includes only the areas it can read.
-  - Keys can't manage devices, keys or webhooks, reach photos and files (FILE-6), act as a watch, or sign in, so a leaked key can't take over the account.
+  - Photos and files go with the area of the record they're on: read to list and fetch them, write to add, change and delete them (FILE-14).
+  - Keys can't manage devices, keys or webhooks, act as a watch, or sign in, so a leaked key can't take over the account.
   - A new endpoint is closed to keys until its description gives a scope.
 - **KEY-4** An unknown, deleted or expired key gets 401 saying which. Keys aren't devices and don't appear in the Devices list.
 

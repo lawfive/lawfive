@@ -9,6 +9,15 @@
     "recordId": {
       "$ref": "Id.json"
     },
+    "kind": {
+      "description": "photo or file. Left out: a photo when it's a JPEG, PNG or WebP on a match, venue or referee; otherwise a file.",
+      "$ref": "AttachmentKind.json"
+    },
+    "name": {
+      "description": "A file's name; the file part's own name when left out. It's cleaned, and its ending set to what the file is (FILE-10).",
+      "type": "string",
+      "maxLength": 500
+    },
     "caption": {
       "type": "string",
       "maxLength": 500
@@ -30,5 +39,5 @@
     "recordId"
   ],
   "additionalProperties": false,
-  "description": "The form fields of an upload (multipart/form-data), beside the files: file (a JPEG, PNG or WebP of at most 10 MB) and, optionally, thumb (a small version, at most 1 MB)."
+  "description": "The form fields of an upload (multipart/form-data), beside the files: file (a photo, a JPEG, PNG or WebP of at most 10 MB; or a file, a PDF, XLSX, CSV, DOCX, TXT or photo of at most 20 MB) and, optionally, thumb (a small version, an image of at most 1 MB)."
 }

@@ -30,6 +30,8 @@ export interface EndpointResponse {
     calendar?: true;
     /** An image body instead (JPEG, PNG or WebP). */
     image?: true;
+    /** An attachment's file instead, of any type an attachment can be (AttachmentContentType). */
+    file?: true;
     /** A zip file instead (application/zip). */
     zip?: true;
     headers?: Record<string, string>;
@@ -48,6 +50,11 @@ export interface Endpoint {
     capability?: string;
     /** What an API key needs to use it ("matches:write"; "*:read" for any read); none when keys can't (KEY-3). */
     keyScope?: string;
+    /**
+     * Instead of keyScope, for attachments (FILE-14): read or write access to the collection of the
+     * record it's on (venues:read for a venue's files), which the server checks once it knows the record.
+     */
+    keyScopeByRecord?: "read" | "write";
     params?: z.ZodObject;
     query?: z.ZodObject;
     body?: z.ZodType;
@@ -74,11 +81,11 @@ export const groups: Record<string, string> = {
     Calendar: "A private calendar feed of the user's matches (CAL-1 to CAL-5), for calendar apps to subscribe to.",
     Stats: "Reports on the user's games (STAT-1 to STAT-4), worked out by the server so every app shows the same.",
     Devices: "Where the account is signed in.",
-    Attachments: "Photos on matches, venues and referees (FILE-1 to FILE-5), kept by the server on its disk or in S3-compatible storage. Upload the file as multipart/form-data, ideally already made smaller (the web app sends at most 2000 pixels on the longest side, as a JPEG without its location and camera details) with a thumbnail; the server keeps what it's sent. The files are private: fetch them with the same sign-in. Deleting the record deletes its attachments. Only a signed-in session can use them for now.",
-    Export: "Everything in the account as one zip (DATA-2), and restoring one into an account (DATA-4), for backups and moving between servers. The zip has lawfive.json (what it is), README.md, records/<collection>.json (each an array of records as the API gives them), tracks/<match record id>.json, attachments.json and the photos in attachments/. Only a signed-in session can use them.",
+    Attachments: "Photos on matches, venues and referees (FILE-1 to FILE-8), and files on matches, venues and competitions (FILE-6 to FILE-15): PDF, spreadsheets (XLSX, CSV), Word documents (DOCX), plain text and photos, kept by the server on its disk or in S3-compatible storage. Upload the file as multipart/form-data. Photos are best made smaller first (the web app sends at most 2000 pixels on the longest side, as a JPEG without its location and camera details) with a thumbnail; files are kept exactly as sent. The server works out what a file is from its contents, never its name, and refuses anything else (HTML, SVG, XML, scripts, archives, programs, older Office formats, and spreadsheets or documents with macros). Every file but a photo is served as a download, never shown in place. They're private: fetch them with the same sign-in, or with an API key that can reach the record: read access to its collection (venues:read for a venue's) to list and fetch, write access to add, change and delete. Deleting the record deletes its attachments.",
+    Export: "Everything in the account as one zip (DATA-2), and restoring one into an account (DATA-4), for backups and moving between servers. The zip has lawfive.json (what it is), README.md, records/<collection>.json (each an array of records as the API gives them), tracks/<match record id>.json, attachments.json and the photos and files in attachments/, each ending in what it is (.jpg, .pdf, .xlsx…). Only a signed-in session can use them.",
     Sharing: "A match's share link (DATA-7): an address nobody can guess that shows the match, its log and its track to anyone who has it, without signing in. Never the notes, fee, crew, contacts, player names or photos.",
-    Webhooks: "URLs that hear about changes to the account's records (HOOK-1 to HOOK-5): matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import). Each delivery is a signed JSON POST (WebhookPayload), retried up to five times over about three hours when it doesn't get a 2xx answer. Only a signed-in session can manage them.",
-    "API keys": "Keys for scripts and integrations (KEY-1 to KEY-4), made in the web app's Settings. A key is sent like a session token, Authorization: Bearer <key>, and can use only the collections it was given (read, or read and write), plus the weather (with matches:read) and address search (with venues:write). Keys can't manage devices or other keys, and only a signed-in session can make or delete them.",
+    Webhooks: "URLs that hear about changes to the account's records (HOOK-1 to HOOK-5): matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import), and to the photos and files on them (attachment events, FILE-15). Each delivery is a signed JSON POST (WebhookPayload), retried up to five times over about three hours when it doesn't get a 2xx answer. Only a signed-in session can manage them.",
+    "API keys": "Keys for scripts and integrations (KEY-1 to KEY-4), made in the web app's Settings. A key is sent like a session token, Authorization: Bearer <key>, and can use only the collections it was given (read, or read and write), with the photos and files on their records (FILE-14), plus the weather (with matches:read) and address search (with venues:write). Keys can't manage devices or other keys, and only a signed-in session can make or delete them.",
     Watch: "What a Garmin watch uses, shaped for its little memory: matches in the form it starts one from, and finished matches as it saved them.",
     Places: "Address search for placing venues on the map.",
     Quiz: "The Laws of the Game quiz's questions (QUIZ-1).",
@@ -103,7 +110,7 @@ export function responsesOf(e: Endpoint): Record<number, EndpointResponse> {
         ...e.responses,
         ...limits,
         401: e.responses[401] ?? { description: "Not signed in, the session has ended, or the API key is unknown or has expired.", body: ApiError },
-        403: e.responses[403] ?? { description: `${e.keyScope ? `An API key without ${e.keyScope}` : "An API key: this needs signing in"}; or the account is waiting for approval (USR-4).`, body: ApiError },
+        403: e.responses[403] ?? { description: `${e.keyScope ? `An API key without ${e.keyScope}` : e.keyScopeByRecord ? `An API key without ${e.keyScopeByRecord} access to the record's collection` : "An API key: this needs signing in"}; or the account is waiting for approval (USR-4).`, body: ApiError },
     };
 }
 
@@ -1018,12 +1025,12 @@ export const endpoints: Endpoint[] = [
 
     {
         method: "get", path: "/v1/export", group: "Export", summary: "Download everything",
-        description: "Every record, track and photo in the account, as a zip (Content-Disposition: attachment). It's made as it's sent, so it starts straight away however big it is.",
+        description: "Every record, track, photo and file in the account, as a zip (Content-Disposition: attachment). It's made as it's sent, so it starts straight away however big it is.",
         responses: { 200: { description: "The zip.", zip: true } },
     },
     {
         method: "post", path: "/v1/restore", group: "Export", summary: "Restore from an export",
-        description: "Merges an export into the account: records keep their ids, anything missing is added, and where the account has a record too, whichever was changed last is kept. Tracks are added to match reports without one; photos the account doesn't have are added. At most 2 GB. Matches, referees and venues over the plan's limits (PLAN-4) aren't added, and problems says so.",
+        description: "Merges an export into the account: records keep their ids, anything missing is added, and where the account has a record too, whichever was changed last is kept. Tracks are added to match reports without one; photos and files the account doesn't have are added, each checked as an upload is (FILE-9), and what isn't taken is listed under problems. At most 2 GB. Matches, referees and venues over the plan's limits (PLAN-4) aren't added, and problems says so.",
         file: { contentType: "application/zip", description: "A zip made by GET /v1/export" },
         responses: {
             200: { description: "Restored.", body: RestoreResult },
@@ -1062,64 +1069,70 @@ export const endpoints: Endpoint[] = [
     },
 
     {
-        method: "get", path: "/v1/attachments", group: "Attachments", summary: "Attachments of a kind of record",
-        description: "In order (by record, then position). With recordId, just that record's; with first, only each record's first (a referee's picture).",
+        method: "get", path: "/v1/attachments", group: "Attachments", keyScopeByRecord: "read", summary: "Attachments of a kind of record",
+        description: "In order (by record, then position). With recordId, just that record's; with first, only each record's first photo (a referee's picture). Only photos unless kind says otherwise, as servers had before files.",
         query: z.object({
             recordType: AttachmentRecordType,
             recordId: Id.optional(),
-            first: z.enum(["true"]).optional().describe("Only each record's first attachment."),
+            kind: z.enum(["photo", "file", "all"]).optional().describe("photo (when left out), file, or all of them."),
+            first: z.enum(["true"]).optional().describe("Only each record's first photo."),
         }),
-        responses: { 200: { description: "The attachments.", body: z.object({ attachments: z.array(Attachment) }) }, 400: jsonError("recordType or recordId isn't valid.") },
+        responses: { 200: { description: "The attachments.", body: z.object({ attachments: z.array(Attachment) }) }, 400: jsonError("recordType, recordId or kind isn't valid.") },
     },
     {
-        method: "post", path: "/v1/attachments", group: "Attachments", summary: "Upload an attachment",
-        description: "Added after the record's others. At most 30 on a record.",
-        form: { fields: AttachmentUpload, files: { file: "required: the photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb)", thumb: "optional: a small version, at most 1 MB, for lists and galleries" } },
+        method: "post", path: "/v1/attachments", group: "Attachments", keyScopeByRecord: "write", summary: "Upload an attachment",
+        description: "Added after the record's other photos, or its other files. At most 30 photos and 20 files on a record. A competition has files, not photos; a referee photos, not files. A file's name is cleaned (no folders, control or direction characters, at most 120 characters) and ends in what it really is (FILE-10).",
+        form: { fields: AttachmentUpload, files: { file: "required: a photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb); or a file, a PDF, XLSX, CSV, DOCX, TXT, JPEG, PNG or WebP of at most 20 MB (or the plan's attachmentMb). CSV and TXT are text in UTF-8 or Windows-1252, told apart by the name's ending", thumb: "optional: a small version, an image of at most 1 MB, for lists and galleries (a PDF's first page, say)" } },
         responses: {
             201: { description: "Uploaded.", body: Attachment },
-            400: { description: "With storage ({ usedBytes, limitBytes }) when it doesn't fit the account's room (FILE-7). A field isn't valid, the file is missing, too big or not a JPEG, PNG or WebP, or the record has 30 already.", body: ValidationError.partial({ issues: true }) },
+            400: { description: "With storage ({ usedBytes, limitBytes }) when it doesn't fit the account's room (FILE-7). A field isn't valid, the file is missing, too big or of a kind that isn't taken (the message says which, and what is), the kind doesn't suit the record, or the record has as many as it can.", body: ValidationError.partial({ issues: true }) },
             404: jsonError("No such record: save it first."),
         },
     },
     {
-        method: "put", path: "/v1/attachments/{id}", group: "Attachments", summary: "Change an attachment",
-        description: "Its caption, or its place among the record's attachments (moving a referee's photo to 0 makes it their picture).",
+        method: "put", path: "/v1/attachments/{id}", group: "Attachments", keyScopeByRecord: "write", summary: "Change an attachment",
+        description: "Its caption, a file's name (keeping its ending), or its place among the record's photos or files (moving a referee's photo to 0 makes it their picture).",
         params: idParam,
         body: AttachmentChange,
         responses: {
             200: { description: "Changed.", body: Attachment },
-            400: { description: "The body doesn't match.", body: ValidationError.partial({ issues: true }) },
+            400: { description: "The body doesn't match, or the new name is empty once cleaned.", body: ValidationError.partial({ issues: true }) },
             404: jsonError("Not found, or not this user's."),
         },
     },
     {
-        method: "put", path: "/v1/attachments/{id}/file", group: "Attachments", summary: "Replace an attachment's file",
-        description: "A photo cropped or turned by the app, in place of the old one (FILE-8): it keeps its id, place and caption, and the old files are deleted. Its url and thumbUrl change, so a kept copy of the old one isn't shown.",
+        method: "put", path: "/v1/attachments/{id}/file", group: "Attachments", keyScopeByRecord: "write", summary: "Replace an attachment's file",
+        description: "A photo cropped or turned by the app, in place of the old one (FILE-8), or a new version of a file: it keeps its id, place, caption and name (with the new file's ending), and the old files are deleted. Its url and thumbUrl change, so a kept copy of the old one isn't shown.",
         params: idParam,
-        form: { fields: z.object({ width: z.string().optional().describe("The new width in pixels."), height: z.string().optional() }), files: { file: "required: the photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb)", thumb: "optional: a small version, at most 1 MB" } },
+        form: { fields: z.object({ width: z.string().optional().describe("The new width in pixels."), height: z.string().optional() }), files: { file: "required: for a photo, a JPEG, PNG or WebP of at most 10 MB (or the plan's photoMb); for a file, anything an upload takes", thumb: "optional: a small version, an image of at most 1 MB" } },
         responses: {
             200: { description: "Replaced.", body: Attachment },
-            400: { description: "With storage ({ usedBytes, limitBytes }) when a bigger file doesn't fit the account's room (FILE-7). The file is missing, too big or not a JPEG, PNG or WebP.", body: ValidationError.partial({ issues: true }) },
+            400: { description: "With storage ({ usedBytes, limitBytes }) when a bigger file doesn't fit the account's room (FILE-7). The file is missing, too big or of a kind that isn't taken.", body: ValidationError.partial({ issues: true }) },
             404: jsonError("Not found, or not this user's."),
         },
     },
     {
-        method: "delete", path: "/v1/attachments/{id}", group: "Attachments", summary: "Delete an attachment",
+        method: "delete", path: "/v1/attachments/{id}", group: "Attachments", keyScopeByRecord: "write", summary: "Delete an attachment",
         description: "With its files, for good.",
         params: idParam,
         responses: { 200: { description: "Deleted.", body: z.object({ ok: z.literal(true) }) }, 404: jsonError("Not found, or not this user's.") },
     },
     {
-        method: "get", path: "/v1/attachments/{id}/file", group: "Attachments", summary: "An attachment's file",
-        description: "As uploaded. A file at an address never changes, so it can be kept (Cache-Control: private, immutable); replacing it (FILE-8) gives the attachment new addresses, with ?v=.",
+        method: "get", path: "/v1/attachments/{id}/file", group: "Attachments", keyScopeByRecord: "read", summary: "An attachment's file",
+        description: "As uploaded, with its checked type, X-Content-Type-Options: nosniff and a sandboxing Content-Security-Policy. Every file but a photo is a download (Content-Disposition: attachment, with its name in ASCII and as filename* in UTF-8), never shown in place (FILE-11); a photo is shown in place, or a download with download=1. A file at an address never changes, so it can be kept (Cache-Control: private, immutable); replacing it (FILE-8) gives the attachment new addresses, with ?v=.",
         params: idParam,
-        responses: { 200: { description: "The image.", image: true }, 404: jsonError("Not found, or not this user's.") },
+        query: z.object({
+            download: z.enum(["1"]).optional().describe("A photo as a download too, for a website at another address than the API, where browsers ignore a link's download attribute."),
+            v: z.string().optional().describe("The version in a replaced file's address; ignored."),
+        }),
+        responses: { 200: { description: "The file.", file: true }, 404: jsonError("Not found, or not this user's.") },
     },
     {
-        method: "get", path: "/v1/attachments/{id}/thumb", group: "Attachments", summary: "An attachment's thumbnail",
-        description: "The small version, or the file itself when none was uploaded.",
+        method: "get", path: "/v1/attachments/{id}/thumb", group: "Attachments", keyScopeByRecord: "read", summary: "An attachment's thumbnail",
+        description: "The small version, always an image; for a photo with none, the photo itself.",
         params: idParam,
-        responses: { 200: { description: "The image.", image: true }, 404: jsonError("Not found, or not this user's.") },
+        query: z.object({ v: z.string().optional().describe("The version in a replaced file's address; ignored.") }),
+        responses: { 200: { description: "The image.", image: true }, 404: jsonError("Not found, not this user's, or a file other than a photo added without a thumbnail (hasThumb is false).") },
     },
 
     {

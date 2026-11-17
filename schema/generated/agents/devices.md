@@ -138,7 +138,7 @@ The signed-in account's plan, when it ends, and what it's using.
 
 | Field | Type | Description |
 |---|---|---|
-| `usedBytes` | integer | Photos and tracks on this account. |
+| `usedBytes` | integer | Photos, files and tracks on this account, thumbnails included. |
 | `limitBytes` (optional) | integer | How much it may keep; absent when this server sets no limit. |
 
 ### ApiError
@@ -206,8 +206,9 @@ What a plan allows.
 | `matches` (optional) | integer | Matches kept, not counting deleted ones; matches recorded on a watch are never refused. Left out: no limit; 0: none at all. |
 | `referees` (optional) | integer | Referees kept. Left out: no limit; 0: none at all. |
 | `venues` (optional) | integer | Venues kept. Left out: no limit; 0: none at all. |
-| `storageMb` (optional) | integer | Megabytes of photos and tracks; a track recorded on a watch is never refused. Left out: no limit; 0: none at all. |
+| `storageMb` (optional) | integer | Megabytes of photos, files and tracks, thumbnails included; a track recorded on a watch is never refused. Left out: no limit; 0: none at all. |
 | `photoMb` (optional) | integer | The largest photo, in megabytes; the server's own most, 10 MB, still applies. Left out: no limit; 0: none at all. |
+| `attachmentMb` (optional) | integer | The largest file on a match, venue or competition, in megabytes; the server's own most, 20 MB, still applies. Left out: no limit; 0: none at all. |
 | `fileMb` (optional) | integer | The largest file brought in (an import or a restore), in megabytes; the server's own most for each (5 MB and 2 GB) still applies. Left out: no limit; 0: none at all. |
 | `devices` (optional) | integer | Watches and phones signed in at once; browsers don't count. Left out: no limit; 0: none at all. |
 | `pushPerDay` (optional) | integer | Phone notifications a day (from midnight UTC), across all the account's phones. Left out: no limit; 0: none at all. |

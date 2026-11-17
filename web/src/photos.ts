@@ -8,7 +8,8 @@ import { ApiError, request, type AccountStorage } from "./api.ts";
 // then kept by the server.
 
 export type Attachment = z.infer<typeof schema.Attachment>;
-export type PhotoOwner = z.infer<typeof schema.AttachmentRecordType>;
+/** The records that have photos (FILE-1); competitions have files alone (FILE-6). */
+export type PhotoOwner = Exclude<z.infer<typeof schema.AttachmentRecordType>, "competition">;
 
 /** The longest side of an uploaded photo and of its thumbnail, in pixels. */
 const fullEdge = 2000;

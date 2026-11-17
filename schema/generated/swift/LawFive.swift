@@ -141,7 +141,7 @@ enum AccountStatus {
 }
 
 struct AccountStorage: Codable, Hashable, Sendable {
-    /// Photos and tracks on this account.
+    /// Photos, files and tracks on this account, thumbnails included.
     var usedBytes: Int
     /// How much it may keep (SEC-6); absent when this server sets no limit.
     var limitBytes: Int? = nil
@@ -340,49 +340,81 @@ enum AssignorSystem {
     static let all = [arbiter, assignr, horizon, reftown, gotsport, spordle, other]
 }
 
-/// A photo on a match, venue or referee (FILE-1). The files are private: fetching them needs the same sign-in as the rest of the API.
+/// A photo on a match, venue or referee (FILE-1), or a file on a match, venue or competition (FILE-6). They're private: fetching them needs the same sign-in as the rest of the API, or an API key that can read the record (FILE-14).
 struct Attachment: Codable, Hashable, Sendable {
     var id: Id
     var recordType: String
-    /// The match, venue or referee it's on.
+    /// The match, venue, referee or competition it's on.
     var recordId: Id
-    /// What the file is, worked out from its contents.
+    /// Servers from before files leave it out: everything they have is a photo.
+    var kind: String? = nil
     var contentType: String
+    /// A file's name (FILE-10), ending in what it really is (.pdf, .xlsx…), and the name it's downloaded with. Photos have none.
+    var name: String? = nil
     /// The file's size in bytes.
     var size: Int
     /// Its width in pixels, when the upload gave it.
     var width: Int? = nil
     var height: Int? = nil
     var caption: String? = nil
-    /// Its place among the record's attachments, from 0. A referee's first photo is their picture.
+    /// Its place among the record's photos, or among its files, from 0. A referee's first photo is their picture.
     var position: Int
     var createdAt: Timestamp
-    /// Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in.
+    /// Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in or an API key that can read the record.
     var url: String
-    /// A small version for lists and galleries: /v1/attachments/{id}/thumb (the file itself when none was uploaded).
+    /// A small version for lists and galleries: /v1/attachments/{id}/thumb (a photo itself when none was uploaded).
     var thumbUrl: String
+    /// Whether thumbUrl gives an image: false for a file other than a photo that was added without a thumbnail, which shows its kind's icon instead (FILE-12). Servers from before files leave it out, as every attachment then has one.
+    var hasThumb: Bool? = nil
 }
 
 /// What to change about an attachment; leave out what stays the same.
 struct AttachmentChange: Codable, Hashable, Sendable {
     /// The new caption; null or an empty string removes it.
     var caption: String? = nil
-    /// Move it to this place among the record's attachments (0 is first; a larger number moves it to the end).
+    /// A file's new name (FILE-10): cleaned as an upload's is, and keeping its ending.
+    var name: String? = nil
+    /// Move it to this place among the record's photos, or its files (0 is first; a larger number moves it to the end).
     var position: Int? = nil
 }
 
-/// The kinds of record that can have attachments.
+/// What a file is, worked out from its contents, never its name (FILE-9): a JPEG, PNG or WebP photo, a PDF, an Excel spreadsheet (.xlsx) or CSV, a Word document (.docx), or plain text. Photos are always JPEG, PNG or WebP.
+enum AttachmentContentType {
+    static let imageJpeg = "image/jpeg"
+    static let imagePng = "image/png"
+    static let imageWebp = "image/webp"
+    static let applicationPdf = "application/pdf"
+    static let applicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    static let textCsv = "text/csv"
+    static let applicationVndOpenxmlformatsOfficedocumentWordprocessingmlDocument = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    static let textPlain = "text/plain"
+    static let all = [imageJpeg, imagePng, imageWebp, applicationPdf, applicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet, textCsv, applicationVndOpenxmlformatsOfficedocumentWordprocessingmlDocument, textPlain]
+}
+
+/// A photo, in its record's photo grid (FILE-1), or a file, in its Files list (FILE-6): a document, or a photo kept as a file.
+enum AttachmentKind {
+    static let photo = "photo"
+    static let file = "file"
+    static let all = [photo, file]
+}
+
+/// The kinds of record that can have attachments: photos on matches, venues and referees (FILE-1); files on matches, venues and competitions (FILE-6).
 enum AttachmentRecordType {
     static let match = "match"
     static let venue = "venue"
     static let referee = "referee"
-    static let all = [match, venue, referee]
+    static let competition = "competition"
+    static let all = [match, venue, referee, competition]
 }
 
-/// The form fields of an upload (multipart/form-data), beside the files: file (a JPEG, PNG or WebP of at most 10 MB) and, optionally, thumb (a small version, at most 1 MB).
+/// The form fields of an upload (multipart/form-data), beside the files: file (a photo, a JPEG, PNG or WebP of at most 10 MB; or a file, a PDF, XLSX, CSV, DOCX, TXT or photo of at most 20 MB) and, optionally, thumb (a small version, an image of at most 1 MB).
 struct AttachmentUpload: Codable, Hashable, Sendable {
     var recordType: String
     var recordId: Id
+    /// photo or file. Left out: a photo when it's a JPEG, PNG or WebP on a match, venue or referee; otherwise a file.
+    var kind: String? = nil
+    /// A file's name; the file part's own name when left out. It's cleaned, and its ending set to what the file is (FILE-10).
+    var name: String? = nil
     var caption: String? = nil
     /// The image's width in pixels.
     var width: Int? = nil
@@ -1854,10 +1886,12 @@ struct PlanLimits: Codable, Hashable, Sendable {
     var referees: Int? = nil
     /// Venues kept. Left out: no limit; 0: none at all.
     var venues: Int? = nil
-    /// Megabytes of photos and tracks (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.
+    /// Megabytes of photos, files and tracks, thumbnails included (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.
     var storageMb: Int? = nil
     /// The largest photo, in megabytes; the server's own most, 10 MB, still applies. Left out: no limit; 0: none at all.
     var photoMb: Int? = nil
+    /// The largest file on a match, venue or competition (FILE-9), in megabytes; the server's own most, 20 MB, still applies. Left out: no limit; 0: none at all.
+    var attachmentMb: Int? = nil
     /// The largest file brought in (an import or a restore), in megabytes; the server's own most for each (5 MB and 2 GB) still applies. Left out: no limit; 0: none at all.
     var fileMb: Int? = nil
     /// Watches and phones signed in at once (PLAN-7); browsers don't count. Left out: no limit; 0: none at all.
@@ -2140,12 +2174,21 @@ struct RestoreResultPhotos: Codable, Hashable, Sendable {
     var unchanged: Int
 }
 
+/// Files on matches, venues and competitions (FILE-6); servers from before files leave it out.
+struct RestoreResultFiles: Codable, Hashable, Sendable {
+    var added: Int
+    var updated: Int
+    var unchanged: Int
+}
+
 /// What restoring an export did (DATA-4). Records the account already has a newer copy of are unchanged; running it again adds nothing.
 struct RestoreResult: Codable, Hashable, Sendable {
     /// By collection: matches, venues, referees…
     var records: [String: RestoreResultRecordsValue]
     var tracks: RestoreResultTracks
     var photos: RestoreResultPhotos
+    /// Files on matches, venues and competitions (FILE-6); servers from before files leave it out.
+    var files: RestoreResultFiles? = nil
     /// What couldn't be restored and why, at most 50.
     var problems: [String]
 }
@@ -3529,13 +3572,13 @@ struct WebhookInput: Codable, Hashable, Sendable {
 struct WebhookPayload: Codable, Hashable, Sendable {
     /// The delivery's id; the same on every retry, so a receiver can ignore one it has had.
     var id: Id
-    /// <topic>.<created|updated|deleted>
+    /// <topic>.<created|updated|deleted> for a record; attachment.<created|updated|deleted> for a photo or file on a record of the topic (FILE-15).
     var event: String
     /// When the change was made.
     var createdAt: Timestamp
     /// true for Send test; data is then an example.
     var test: Bool? = nil
-    /// The record as stored (as GET returns it); for deleted, its id, version and deletedAt.
+    /// The record as stored (as GET returns it); for deleted, its id, version and deletedAt. For an attachment event, the Attachment as the API gives it (as it was, for deleted), without the file: fetch its url with an API key.
     var data: [String: JSONValue]
 }
 

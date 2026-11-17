@@ -1,5 +1,5 @@
-import { type CollectionName, MatchTrack, type RestoreResult, collections } from "@lawfive/schema";
-import { and, eq, isNull } from "drizzle-orm";
+import { type CollectionName, Id, MatchTrack, type RestoreResult, collections } from "@lawfive/schema";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { Zip, ZipDeflate, ZipPassThrough, strToU8 } from "fflate";
 import { Hono } from "hono";
 import { randomUUID } from "node:crypto";
@@ -11,7 +11,8 @@ import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { gunzipSync } from "node:zlib";
 import type { z } from "zod";
-import { fileStoreOf, imageType } from "./attachments.ts";
+import { fileStoreOf, mostOnARecord, restorable } from "./attachments.ts";
+import { type ContentType, endings, imageType } from "./fileTypes.ts";
 import { type Db, tables } from "./db/index.ts";
 import { saveRecord, toRecord, uniqueViolation } from "./records.ts";
 import { saveTrack } from "./tracks.ts";
@@ -33,7 +34,6 @@ const format = "lawfive-export";
 const maxRestoreBytes = 2 * 1024 * 1024 * 1024;
 /** Restored in this order, so what a match points at is there before it. */
 const order: CollectionName[] = ["settings", "venues", "competitions", "referees", "match-templates", "matches", "match-records"];
-const extensions: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 
 const readme = `# A LawFive export
 
@@ -46,8 +46,10 @@ keeps the newer copy of anything the account already has.
   (matches, match-records, venues, referees, competitions, match-templates, settings). The API
   reference describes every field: https://lawfive.dev
 - \`tracks/<match record id>.json\`: GPS and heart rate for a match report, in LawFive's track format.
-- \`attachments.json\`: the photos on matches, venues and referees, with captions and order;
-  the files are in \`attachments/\`, with \`.thumb\` beside the small versions.
+- \`attachments.json\`: the photos on matches, venues and referees, and the files on matches,
+  venues and competitions, with names, captions and order; the files themselves are in
+  \`attachments/\`, each ending in what it is (\`.jpg\`, \`.pdf\`, \`.xlsx\`…), with \`.thumb\`
+  beside the small versions.
 
 Not included: API keys, webhooks, the calendar feed's address, linked watches and share links,
 which are made again where they're needed.
@@ -65,7 +67,8 @@ export function backupApi(db: Db, storageLimit?: StorageLimit) {
     async function* entriesFor(userId: string): AsyncGenerator<Entry> {
         const [account] = await db.select({ name: user.name, email: user.email }).from(user).where(eq(user.id, userId));
         const rows = await db.select().from(records).where(and(eq(records.userId, userId), isNull(records.deletedAt)));
-        const photos = await db.select().from(attachment).where(eq(attachment.userId, userId));
+        const attached = await db.select().from(attachment).where(eq(attachment.userId, userId));
+        const fileName = (a: typeof attached[number]) => `attachments/${a.id}.${endings[a.contentType as ContentType] ?? "bin"}`;
         yield { name: "lawfive.json", data: json({ format, version: 1, exportedAt: new Date().toISOString(), account }) };
         yield { name: "README.md", data: strToU8(readme) };
         for (const [collection, { type }] of Object.entries(collections)) {
@@ -80,18 +83,18 @@ export function backupApi(db: Db, storageLimit?: StorageLimit) {
         }
         yield {
             name: "attachments.json",
-            data: json(photos.map((a) => ({
-                id: a.id, recordType: a.recordType, recordId: a.recordId, contentType: a.contentType, size: a.size,
+            data: json(attached.map((a) => ({
+                id: a.id, recordType: a.recordType, recordId: a.recordId, kind: a.kind, contentType: a.contentType, name: a.name ?? undefined, size: a.size,
                 width: a.width ?? undefined, height: a.height ?? undefined, caption: a.caption ?? undefined, position: a.position,
-                createdAt: a.createdAt.toISOString(), file: `attachments/${a.id}.${extensions[a.contentType]}`,
+                createdAt: a.createdAt.toISOString(), file: fileName(a),
                 ...(a.thumbKey ? { thumb: `attachments/${a.id}.thumb.jpg` } : {}),
             }))),
         };
         const store = fileStoreOf(db);
-        for (const a of store ? photos : []) {
+        for (const a of store ? attached : []) {
             const file = await store!.get(a.fileKey);
             if (file) {
-                yield { name: `attachments/${a.id}.${extensions[a.contentType]}`, data: file, store: true };
+                yield { name: fileName(a), data: file, store: true };
             }
             const thumb = a.thumbKey ? await store!.get(a.thumbKey) : undefined;
             if (thumb) {
@@ -124,8 +127,8 @@ export function backupApi(db: Db, storageLimit?: StorageLimit) {
                     return;
                 }
                 const { name, data, store } = next.value;
-                // Photos are already compressed; everything else is text.
-                const file = store ? new ZipPassThrough(name) : new ZipDeflate(name, { level: 6 });
+                // Photos and Office files are already compressed; everything else is text, or a PDF that may well squeeze.
+                const file = store && !/\.(pdf|csv|txt)$/.test(name) ? new ZipPassThrough(name) : new ZipDeflate(name, { level: 6 });
                 zip.add(file);
                 file.push(data, true);
             },
@@ -189,7 +192,7 @@ export function backupApi(db: Db, storageLimit?: StorageLimit) {
     });
 
     async function restore(userId: string, read: (name: string) => Promise<Uint8Array | undefined>): Promise<Result> {
-        const result: Result = { records: {}, tracks: { added: 0, updated: 0, unchanged: 0 }, photos: { added: 0, updated: 0, unchanged: 0 }, problems: [] };
+        const result: Result = { records: {}, tracks: { added: 0, updated: 0, unchanged: 0 }, photos: { added: 0, updated: 0, unchanged: 0 }, files: { added: 0, updated: 0, unchanged: 0 }, problems: [] };
         const problem = (text: string) => result.problems.length < 50 && result.problems.push(text);
         const parse = async (name: string) => {
             const data = await read(name);
@@ -286,55 +289,70 @@ export function backupApi(db: Db, storageLimit?: StorageLimit) {
             result.tracks.added++;
         }
 
-        // Photos the account doesn't have, on records it does.
+        // Photos and files the account doesn't have, on records it does, each checked as an upload is (FILE-9).
         const store = fileStoreOf(db);
-        const photos = await parse("attachments.json");
-        for (const p of Array.isArray(photos) ? photos as Record<string, unknown>[] : []) {
+        const attached = await parse("attachments.json");
+        for (const p of Array.isArray(attached) ? attached as Record<string, unknown>[] : []) {
             if (!store) {
-                problem("This server keeps no photos, so the export's photos weren't restored");
+                problem("This server keeps no photos or files, so the export's weren't restored");
                 break;
             }
             const recordType = String(p.recordType);
             const recordId = String(p.recordId);
-            const [mine] = typeof p.id === "string" ? await db.select({ id: attachment.id, userId: attachment.userId }).from(attachment).where(eq(attachment.id, p.id)) : [];
+            // Exports from before files have only photos.
+            const kind = p.kind === "file" ? "file" : "photo";
+            const counts = kind === "file" ? result.files! : result.photos;
+            const what = kind === "file" ? `The file ${typeof p.name === "string" ? `"${p.name.slice(0, 120)}" ` : ""}on ${recordType} ${recordId}` : `A photo on ${recordType} ${recordId}`;
+            const [mine] = typeof p.id === "string" && Id.safeParse(p.id).success ? await db.select({ id: attachment.id, userId: attachment.userId }).from(attachment).where(eq(attachment.id, p.id)) : [];
             const created = Date.parse(String(p.createdAt));
-            // Already here: by its id, or (restored before under a new id) the same photo on the same record.
-            const [same] = Number.isFinite(created) ? await db.select({ id: attachment.id }).from(attachment).where(and(
+            // Already here: by its id, or (restored before under a new id) the same one on the same record.
+            const [same] = Number.isFinite(created) && Id.safeParse(recordId).success ? await db.select({ id: attachment.id }).from(attachment).where(and(
                 eq(attachment.userId, userId), eq(attachment.recordType, recordType), eq(attachment.recordId, recordId),
                 eq(attachment.createdAt, new Date(created)), eq(attachment.size, Number(p.size)),
             )) : [];
             if (mine?.userId === userId || same) {
-                result.photos.unchanged++;
+                counts.unchanged++;
                 continue;
             }
-            const [record] = await db.select({ id: records.id }).from(records)
-                .where(and(eq(records.userId, userId), eq(records.type, recordType), eq(records.id, recordId), isNull(records.deletedAt)));
+            const [record] = Id.safeParse(recordId).success ? await db.select({ id: records.id }).from(records)
+                .where(and(eq(records.userId, userId), eq(records.type, recordType), eq(records.id, recordId), isNull(records.deletedAt))) : [];
             const file = typeof p.file === "string" ? await read(p.file) : undefined;
-            const contentType = file && imageType(file);
-            if (!record || !file || !contentType) {
-                problem(`A photo on ${recordType} ${recordId} couldn't be restored`);
+            if (!record || !file) {
+                problem(`${what} couldn't be restored`);
                 continue;
             }
-            if (await noRoomFor(db, userId, file.byteLength, storageLimit)) {
-                problem(`A photo on ${recordType} ${recordId} wasn't restored: this account's storage is full`);
+            const checked = await restorable(kind, recordType, file, typeof p.name === "string" ? p.name : "");
+            if ("refused" in checked) {
+                problem(`${what} wasn't restored: ${checked.refused.replace(/^\w/, (ch) => ch.toLowerCase())}`);
+                continue;
+            }
+            const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(attachment)
+                .where(and(eq(attachment.userId, userId), eq(attachment.recordType, recordType), eq(attachment.recordId, recordId), eq(attachment.kind, kind)));
+            if (count >= mostOnARecord[kind]) {
+                problem(`${what} wasn't restored: the ${recordType} has ${mostOnARecord[kind]} ${kind}s already`);
                 continue;
             }
             const thumb = typeof p.thumb === "string" ? await read(p.thumb) : undefined;
-            // Its id, unless another account on this server has a photo with it.
-            const id = mine ? randomUUID() : String(p.id);
+            const thumbType = thumb && thumb.byteLength <= 1024 * 1024 ? imageType(thumb) : undefined;
+            if (await noRoomFor(db, userId, file.byteLength + (thumbType ? thumb!.byteLength : 0), storageLimit)) {
+                problem(`${what} wasn't restored: this account's storage is full`);
+                continue;
+            }
+            // Its id, unless another account on this server has an attachment with it.
+            const id = mine || typeof p.id !== "string" || !Id.safeParse(p.id).success ? randomUUID() : p.id;
             const fileKey = `${userId}/${id}`;
-            await store.put(fileKey, file, contentType);
-            const thumbKey = thumb && imageType(thumb) ? `${fileKey}.thumb` : undefined;
-            if (thumb && thumbKey) {
-                await store.put(thumbKey, thumb, imageType(thumb)!);
+            await store.put(fileKey, file, checked.contentType);
+            const thumbKey = thumbType ? `${fileKey}.thumb` : undefined;
+            if (thumb && thumbType && thumbKey) {
+                await store.put(thumbKey, thumb, thumbType);
             }
             await db.insert(attachment).values({
-                id, userId, recordType, recordId, contentType, size: file.byteLength,
+                id, userId, recordType, recordId, kind, contentType: checked.contentType, name: checked.name, size: file.byteLength, thumbSize: thumbType ? thumb!.byteLength : undefined,
                 width: typeof p.width === "number" ? p.width : undefined, height: typeof p.height === "number" ? p.height : undefined,
                 caption: typeof p.caption === "string" ? p.caption : undefined, position: typeof p.position === "number" ? p.position : 0,
                 fileKey, thumbKey, createdAt: Number.isFinite(created) ? new Date(created) : new Date(),
             });
-            result.photos.added++;
+            counts.added++;
         }
         return result;
     }

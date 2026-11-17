@@ -24,6 +24,7 @@ Start with the overview, then fetch only the pages the job needs. Every page is 
 - [Sync](https://lawfive.dev/agents/sync.md): Everything that changed since a device last looked.
 - [Import](https://lawfive.dev/agents/import.md): Adding and updating matches from a spreadsheet, CSV or JSON file.
 - [Stats](https://lawfive.dev/agents/stats.md): Reports on the user's games, worked out by the server so every app shows the same.
+- [Attachments](https://lawfive.dev/agents/attachments.md): Photos on matches, venues and referees, and files on matches, venues and competitions: PDF, spreadsheets (XLSX, CSV), Word documents (DOCX), plain text and photos, kept by the server on its disk or in S3-compatible storage.
 - [Places](https://lawfive.dev/agents/places.md): Address search for placing venues on the map.
 - [Weather](https://lawfive.dev/agents/weather.md): Forecasts for the user's matches, and the weather finished matches were played in.
 
@@ -37,10 +38,9 @@ Start with the overview, then fetch only the pages the job needs. Every page is 
 - [Assignor calendars](https://lawfive.dev/agents/assignor-calendars.md): An assignor system's private calendar link (ArbiterSports, Assignr, HorizonWebRef, RefTown and others give each official one), which the server reads every 30 minutes into the account's matches through the import: new games added, moved ones changed, ones gone before kickoff canceled.
 - [Calendar](https://lawfive.dev/agents/calendar.md): A private calendar feed of the user's matches, for calendar apps to subscribe to.
 - [Devices](https://lawfive.dev/agents/devices.md): Where the account is signed in.
-- [Attachments](https://lawfive.dev/agents/attachments.md): Photos on matches, venues and referees, kept by the server on its disk or in S3-compatible storage.
 - [Export](https://lawfive.dev/agents/export.md): Everything in the account as one zip, and restoring one into an account, for backups and moving between servers.
 - [Sharing](https://lawfive.dev/agents/sharing.md): A match's share link: an address nobody can guess that shows the match, its log and its track to anyone who has it, without signing in.
-- [Webhooks](https://lawfive.dev/agents/webhooks.md): URLs that hear about changes to the account's records: matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import).
+- [Webhooks](https://lawfive.dev/agents/webhooks.md): URLs that hear about changes to the account's records: matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import), and to the photos and files on them (attachment events).
 - [API keys](https://lawfive.dev/agents/api-keys.md): Keys for scripts and integrations, made in the web app's Settings.
 - [Watch](https://lawfive.dev/agents/watch.md): What a Garmin watch uses, shaped for its little memory: matches in the form it starts one from, and finished matches as it saved them.
 - [Quiz](https://lawfive.dev/agents/quiz.md): The Laws of the Game quiz's questions.

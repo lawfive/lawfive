@@ -13,7 +13,7 @@ import { migrationsFolder, tables } from "../src/db/index.ts";
 import { diskStore } from "../src/storage.ts";
 import { checkAnswer } from "./contract.ts";
 
-// Download everything and restore (DATA-2, DATA-4): an account's records, tracks and photos as a
+// Download everything and restore (DATA-2, DATA-4): an account's records, tracks, photos and files as a
 // zip, and merged back into an account, the newer copy of each record winning.
 
 const publicUrl = "http://localhost:3000";
@@ -27,6 +27,7 @@ const pg = new PGlite();
 const db = drizzle(pg, { schema: tables });
 let app: ReturnType<typeof createApp>;
 const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 16, 74, 70, 73, 70, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0xff, 0xd9]);
+const pdf = new TextEncoder().encode("%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\n%%EOF\n");
 
 async function call(method: string, path: string, token: string, body?: unknown) {
     const raw = body instanceof Uint8Array || body instanceof FormData;
@@ -82,6 +83,12 @@ describe("download everything and restore", () => {
         form.set("caption", "Headshot");
         form.set("file", new Blob([jpeg]), "photo.jpg");
         assert.equal((await call("POST", "/v1/attachments", alice, form)).status, 201);
+        // FILE-6: and a file on the venue, which comes out with its name and real ending.
+        const doc = new FormData();
+        doc.set("recordType", "venue");
+        doc.set("recordId", venue.id);
+        doc.set("file", new Blob([pdf]), "Field map.pdf");
+        assert.equal((await call("POST", "/v1/attachments", alice, doc)).status, 201);
 
         const res = await call("GET", "/v1/export", alice);
         assert.equal(res.status, 200);
@@ -95,9 +102,12 @@ describe("download everything and restore", () => {
         assert.deepEqual(text("records/venues.json").map((v: { id: string }) => v.id), [venue.id]);
         assert.equal(text("records/matches.json")[0].home.name, match.home.name);
         assert.equal(text(`tracks/${record.id}.json`).source.kind, track.source.kind);
-        const [photo] = text("attachments.json");
+        const [photo, file] = text("attachments.json").sort((a: { kind: string }, b: { kind: string }) => b.kind.localeCompare(a.kind));
         assert.equal(photo.caption, "Headshot");
         assert.deepEqual(files[photo.file], jpeg);
+        assert.deepEqual([file.kind, file.name, file.contentType], ["file", "Field map.pdf", "application/pdf"]);
+        assert.match(file.file, /^attachments\/[0-9a-f-]{36}\.pdf$/);
+        assert.deepEqual(files[file.file], pdf);
     });
 
     test("restoring into another account adds everything", async () => {
@@ -108,7 +118,11 @@ describe("download everything and restore", () => {
         assert.deepEqual(res.body.records["match-records"], { added: 1, updated: 0, unchanged: 0 });
         assert.deepEqual(res.body.tracks, { added: 1, updated: 0, unchanged: 0 });
         assert.deepEqual(res.body.photos, { added: 1, updated: 0, unchanged: 0 });
+        assert.deepEqual(res.body.files, { added: 1, updated: 0, unchanged: 0 });
         assert.deepEqual(res.body.problems, []);
+        const [map] = (await call("GET", `/v1/attachments?recordType=venue&recordId=${venue.id}&kind=file`, bob)).body.attachments;
+        assert.equal(map.name, "Field map.pdf");
+        assert.deepEqual((await call("GET", map.url, bob)).body, pdf);
         assert.equal((await call("GET", `/v1/matches/${match.id}`, bob)).body.home.name, match.home.name, "ids kept");
         const photos = await call("GET", `/v1/attachments?recordType=referee&recordId=${referee.id}`, bob);
         assert.equal(photos.body.attachments[0].caption, "Headshot");
@@ -121,6 +135,7 @@ describe("download everything and restore", () => {
         assert.deepEqual(again.body.records.venues, { added: 0, updated: 0, unchanged: 1 });
         assert.deepEqual(again.body.tracks, { added: 0, updated: 0, unchanged: 1 });
         assert.deepEqual(again.body.photos, { added: 0, updated: 0, unchanged: 1 });
+        assert.deepEqual(again.body.files, { added: 0, updated: 0, unchanged: 1 });
 
         // Alice changes her venue after the export; restoring the old export keeps her change.
         const current = (await call("GET", `/v1/venues/${venue.id}`, alice)).body;
@@ -133,6 +148,25 @@ describe("download everything and restore", () => {
         const v = (await call("GET", `/v1/venues/${venue.id}`, bob)).body;
         assert.equal((await call("DELETE", `/v1/venues/${venue.id}?version=${v.version}`, bob)).status, 200);
         assert.equal((await call("POST", "/v1/restore", bob, zip)).body.records.venues.unchanged, 1);
+    });
+
+    test("a file restore wouldn't take as an upload is skipped, and listed under problems (FILE-9)", async () => {
+        const files = unzipSync(zip);
+        const listed = JSON.parse(new TextDecoder().decode(files["attachments.json"]));
+        const file = listed.find((a: { kind: string }) => a.kind === "file");
+        // Someone's changed the export: a web page where the PDF was, and a renamed program.
+        files[file.file] = strToU8("<!doctype html><script>alert(1)</script>");
+        listed.push({ ...file, id: "7e8f9012-3456-4789-8abc-def012345678", name: "setup.pdf", file: "attachments/setup.pdf" });
+        files["attachments/setup.pdf"] = new Uint8Array([0x4d, 0x5a, 0x90, 0, 3, 0, 0, 0]);
+        files["attachments.json"] = strToU8(JSON.stringify(listed));
+        const carol = await signUp("carol@example.com");
+        const res = await call("POST", "/v1/restore", carol, zipSync(files));
+        assert.equal(res.status, 200);
+        assert.deepEqual(res.body.files, { added: 0, updated: 0, unchanged: 0 });
+        assert.deepEqual(res.body.photos, { added: 1, updated: 0, unchanged: 0 });
+        assert.equal(res.body.problems.length, 2);
+        assert.match(res.body.problems[0], /^The file "Field map.pdf" on venue .* wasn't restored: web pages, SVG and XML/);
+        assert.match(res.body.problems[1], /wasn't restored: programs aren't taken/);
     });
 
     test("anything else is refused", async () => {

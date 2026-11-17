@@ -64,7 +64,7 @@ object AccountStatus {
 
 @Serializable
 data class AccountStorage(
-    /** Photos and tracks on this account. */
+    /** Photos, files and tracks on this account, thumbnails included. */
     val usedBytes: Long,
     /** How much it may keep (SEC-6); absent when this server sets no limit. */
     val limitBytes: Long? = null,
@@ -279,28 +279,33 @@ object AssignorSystem {
     val all = listOf(ARBITER, ASSIGNR, HORIZON, REFTOWN, GOTSPORT, SPORDLE, OTHER)
 }
 
-/** A photo on a match, venue or referee (FILE-1). The files are private: fetching them needs the same sign-in as the rest of the API. */
+/** A photo on a match, venue or referee (FILE-1), or a file on a match, venue or competition (FILE-6). They're private: fetching them needs the same sign-in as the rest of the API, or an API key that can read the record (FILE-14). */
 @Serializable
 data class Attachment(
     val id: Id,
     val recordType: String,
-    /** The match, venue or referee it's on. */
+    /** The match, venue, referee or competition it's on. */
     val recordId: Id,
-    /** What the file is, worked out from its contents. */
+    /** Servers from before files leave it out: everything they have is a photo. */
+    val kind: String? = null,
     val contentType: String,
+    /** A file's name (FILE-10), ending in what it really is (.pdf, .xlsx…), and the name it's downloaded with. Photos have none. */
+    val name: String? = null,
     /** The file's size in bytes. */
     val size: Long,
     /** Its width in pixels, when the upload gave it. */
     val width: Long? = null,
     val height: Long? = null,
     val caption: String? = null,
-    /** Its place among the record's attachments, from 0. A referee's first photo is their picture. */
+    /** Its place among the record's photos, or among its files, from 0. A referee's first photo is their picture. */
     val position: Long,
     val createdAt: Timestamp,
-    /** Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in. */
+    /** Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in or an API key that can read the record. */
     val url: String,
-    /** A small version for lists and galleries: /v1/attachments/{id}/thumb (the file itself when none was uploaded). */
+    /** A small version for lists and galleries: /v1/attachments/{id}/thumb (a photo itself when none was uploaded). */
     val thumbUrl: String,
+    /** Whether thumbUrl gives an image: false for a file other than a photo that was added without a thumbnail, which shows its kind's icon instead (FILE-12). Servers from before files leave it out, as every attachment then has one. */
+    val hasThumb: Boolean? = null,
 )
 
 /** What to change about an attachment; leave out what stays the same. */
@@ -308,23 +313,50 @@ data class Attachment(
 data class AttachmentChange(
     /** The new caption; null or an empty string removes it. */
     val caption: String? = null,
-    /** Move it to this place among the record's attachments (0 is first; a larger number moves it to the end). */
+    /** A file's new name (FILE-10): cleaned as an upload's is, and keeping its ending. */
+    val name: String? = null,
+    /** Move it to this place among the record's photos, or its files (0 is first; a larger number moves it to the end). */
     val position: Long? = null,
 )
 
-/** The kinds of record that can have attachments. */
+/** What a file is, worked out from its contents, never its name (FILE-9): a JPEG, PNG or WebP photo, a PDF, an Excel spreadsheet (.xlsx) or CSV, a Word document (.docx), or plain text. Photos are always JPEG, PNG or WebP. */
+object AttachmentContentType {
+    const val IMAGE_JPEG = "image/jpeg"
+    const val IMAGE_PNG = "image/png"
+    const val IMAGE_WEBP = "image/webp"
+    const val APPLICATION_PDF = "application/pdf"
+    const val APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    const val TEXT_CSV = "text/csv"
+    const val APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    const val TEXT_PLAIN = "text/plain"
+    val all = listOf(IMAGE_JPEG, IMAGE_PNG, IMAGE_WEBP, APPLICATION_PDF, APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET, TEXT_CSV, APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT, TEXT_PLAIN)
+}
+
+/** A photo, in its record's photo grid (FILE-1), or a file, in its Files list (FILE-6): a document, or a photo kept as a file. */
+object AttachmentKind {
+    const val PHOTO = "photo"
+    const val FILE = "file"
+    val all = listOf(PHOTO, FILE)
+}
+
+/** The kinds of record that can have attachments: photos on matches, venues and referees (FILE-1); files on matches, venues and competitions (FILE-6). */
 object AttachmentRecordType {
     const val MATCH = "match"
     const val VENUE = "venue"
     const val REFEREE = "referee"
-    val all = listOf(MATCH, VENUE, REFEREE)
+    const val COMPETITION = "competition"
+    val all = listOf(MATCH, VENUE, REFEREE, COMPETITION)
 }
 
-/** The form fields of an upload (multipart/form-data), beside the files: file (a JPEG, PNG or WebP of at most 10 MB) and, optionally, thumb (a small version, at most 1 MB). */
+/** The form fields of an upload (multipart/form-data), beside the files: file (a photo, a JPEG, PNG or WebP of at most 10 MB; or a file, a PDF, XLSX, CSV, DOCX, TXT or photo of at most 20 MB) and, optionally, thumb (a small version, an image of at most 1 MB). */
 @Serializable
 data class AttachmentUpload(
     val recordType: String,
     val recordId: Id,
+    /** photo or file. Left out: a photo when it's a JPEG, PNG or WebP on a match, venue or referee; otherwise a file. */
+    val kind: String? = null,
+    /** A file's name; the file part's own name when left out. It's cleaned, and its ending set to what the file is (FILE-10). */
+    val name: String? = null,
     val caption: String? = null,
     /** The image's width in pixels. */
     val width: Int? = null,
@@ -1808,10 +1840,12 @@ data class PlanLimits(
     val referees: Int? = null,
     /** Venues kept. Left out: no limit; 0: none at all. */
     val venues: Int? = null,
-    /** Megabytes of photos and tracks (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all. */
+    /** Megabytes of photos, files and tracks, thumbnails included (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all. */
     val storageMb: Int? = null,
     /** The largest photo, in megabytes; the server's own most, 10 MB, still applies. Left out: no limit; 0: none at all. */
     val photoMb: Int? = null,
+    /** The largest file on a match, venue or competition (FILE-9), in megabytes; the server's own most, 20 MB, still applies. Left out: no limit; 0: none at all. */
+    val attachmentMb: Int? = null,
     /** The largest file brought in (an import or a restore), in megabytes; the server's own most for each (5 MB and 2 GB) still applies. Left out: no limit; 0: none at all. */
     val fileMb: Int? = null,
     /** Watches and phones signed in at once (PLAN-7); browsers don't count. Left out: no limit; 0: none at all. */
@@ -2121,6 +2155,14 @@ data class RestoreResultPhotos(
     val unchanged: Long,
 )
 
+/** Files on matches, venues and competitions (FILE-6); servers from before files leave it out. */
+@Serializable
+data class RestoreResultFiles(
+    val added: Long,
+    val updated: Long,
+    val unchanged: Long,
+)
+
 /** What restoring an export did (DATA-4). Records the account already has a newer copy of are unchanged; running it again adds nothing. */
 @Serializable
 data class RestoreResult(
@@ -2128,6 +2170,8 @@ data class RestoreResult(
     val records: Map<String, RestoreResultRecordsValue>,
     val tracks: RestoreResultTracks,
     val photos: RestoreResultPhotos,
+    /** Files on matches, venues and competitions (FILE-6); servers from before files leave it out. */
+    val files: RestoreResultFiles? = null,
     /** What couldn't be restored and why, at most 50. */
     val problems: List<String>,
 )
@@ -3613,13 +3657,13 @@ data class WebhookInput(
 data class WebhookPayload(
     /** The delivery's id; the same on every retry, so a receiver can ignore one it has had. */
     val id: Id,
-    /** <topic>.<created|updated|deleted> */
+    /** <topic>.<created|updated|deleted> for a record; attachment.<created|updated|deleted> for a photo or file on a record of the topic (FILE-15). */
     val event: String,
     /** When the change was made. */
     val createdAt: Timestamp,
     /** true for Send test; data is then an example. */
     val test: Boolean? = null,
-    /** The record as stored (as GET returns it); for deleted, its id, version and deletedAt. */
+    /** The record as stored (as GET returns it); for deleted, its id, version and deletedAt. For an attachment event, the Attachment as the API gives it (as it was, for deleted), without the file: fetch its url with an API key. */
     val data: Map<String, JsonElement>,
 )
 

@@ -41,7 +41,7 @@ services:
       WEATHER_API_KEY: ${WEATHER_API_KEY:-}
       WEATHER_DAILY_LIMIT: ${WEATHER_DAILY_LIMIT:-}
     volumes:
-      # Uploaded photos, unless S3_URL is set.
+      # Uploaded photos and files, unless S3_URL is set.
       - uploads:/data/uploads
     depends_on:
       db:

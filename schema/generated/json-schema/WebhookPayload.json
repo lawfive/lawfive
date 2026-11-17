@@ -9,7 +9,7 @@
     },
     "event": {
       "type": "string",
-      "description": "<topic>.<created|updated|deleted>"
+      "description": "<topic>.<created|updated|deleted> for a record; attachment.<created|updated|deleted> for a photo or file on a record of the topic (FILE-15)."
     },
     "createdAt": {
       "description": "When the change was made.",
@@ -25,7 +25,7 @@
         "type": "string"
       },
       "additionalProperties": {},
-      "description": "The record as stored (as GET returns it); for deleted, its id, version and deletedAt."
+      "description": "The record as stored (as GET returns it); for deleted, its id, version and deletedAt. For an attachment event, the Attachment as the API gives it (as it was, for deleted), without the file: fetch its url with an API key."
     }
   },
   "required": [

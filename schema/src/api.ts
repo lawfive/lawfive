@@ -241,10 +241,10 @@ export const WebhookDelivery = z
 export const WebhookPayload = z
     .object({
         id: Id.describe("The delivery's id; the same on every retry, so a receiver can ignore one it has had."),
-        event: z.string().describe("<topic>.<created|updated|deleted>"),
+        event: z.string().describe("<topic>.<created|updated|deleted> for a record; attachment.<created|updated|deleted> for a photo or file on a record of the topic (FILE-15)."),
         createdAt: Timestamp.describe("When the change was made."),
         test: z.boolean().optional().describe("true for Send test; data is then an example."),
-        data: z.record(z.string(), z.unknown()).describe("The record as stored (as GET returns it); for deleted, its id, version and deletedAt."),
+        data: z.record(z.string(), z.unknown()).describe("The record as stored (as GET returns it); for deleted, its id, version and deletedAt. For an attachment event, the Attachment as the API gives it (as it was, for deleted), without the file: fetch its url with an API key."),
     })
     .meta({ id: "WebhookPayload", description: "What each delivery POSTs, as JSON. It's signed: X-LawFive-Signature is t=<unix seconds>,v1=<hex HMAC-SHA256 of \"<t>.<body>\" with the webhook's secret>." });
 
@@ -257,6 +257,7 @@ export const RestoreResult = z
         records: z.record(z.string(), RestoreCount).describe("By collection: matches, venues, referees…"),
         tracks: RestoreCount,
         photos: RestoreCount,
+        files: RestoreCount.optional().describe("Files on matches, venues and competitions (FILE-6); servers from before files leave it out."),
         problems: z.array(z.string()).describe("What couldn't be restored and why, at most 50."),
     })
     .meta({ id: "RestoreResult", description: "What restoring an export did (DATA-4). Records the account already has a newer copy of are unchanged; running it again adds nothing." });
@@ -282,43 +283,67 @@ export const SharedMatch = z
     })
     .meta({ id: "SharedMatch", description: "What a match's share link shows (DATA-7): never its notes, fee, crew, contacts, player names or photos." });
 
-// Attachments (FILE-1 to FILE-5): photos on matches, venues and referees, kept by the server.
+// Attachments (FILE-1 to FILE-15): photos on matches, venues and referees, and files on matches,
+// venues and competitions, kept by the server.
 
 export const AttachmentRecordType = z
-    .enum(["match", "venue", "referee"])
-    .meta({ id: "AttachmentRecordType", description: "The kinds of record that can have attachments." });
+    .enum(["match", "venue", "referee", "competition"])
+    .meta({ id: "AttachmentRecordType", description: "The kinds of record that can have attachments: photos on matches, venues and referees (FILE-1); files on matches, venues and competitions (FILE-6)." });
+
+/** The collection whose access an API key needs to reach a record's attachments (FILE-14). */
+export const attachmentCollections: Record<z.infer<typeof AttachmentRecordType>, CollectionName> = {
+    match: "matches", venue: "venues", referee: "referees", competition: "competitions",
+};
+
+export const AttachmentKind = z
+    .enum(["photo", "file"])
+    .meta({ id: "AttachmentKind", description: "A photo, in its record's photo grid (FILE-1), or a file, in its Files list (FILE-6): a document, or a photo kept as a file." });
+
+export const AttachmentContentType = z
+    .enum([
+        "image/jpeg", "image/png", "image/webp", "application/pdf",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain",
+    ])
+    .meta({ id: "AttachmentContentType", description: "What a file is, worked out from its contents, never its name (FILE-9): a JPEG, PNG or WebP photo, a PDF, an Excel spreadsheet (.xlsx) or CSV, a Word document (.docx), or plain text. Photos are always JPEG, PNG or WebP." });
 
 export const Attachment = z
     .object({
         id: Id,
         recordType: AttachmentRecordType,
-        recordId: Id.describe("The match, venue or referee it's on."),
-        contentType: z.enum(["image/jpeg", "image/png", "image/webp"]).describe("What the file is, worked out from its contents."),
+        recordId: Id.describe("The match, venue, referee or competition it's on."),
+        kind: AttachmentKind.optional().describe("Servers from before files leave it out: everything they have is a photo."),
+        contentType: AttachmentContentType,
+        name: z.string().optional().describe("A file's name (FILE-10), ending in what it really is (.pdf, .xlsx…), and the name it's downloaded with. Photos have none."),
         size: z.int().describe("The file's size in bytes."),
         width: z.int().optional().describe("Its width in pixels, when the upload gave it."),
         height: z.int().optional(),
         caption: z.string().optional(),
-        position: z.int().describe("Its place among the record's attachments, from 0. A referee's first photo is their picture."),
+        position: z.int().describe("Its place among the record's photos, or among its files, from 0. A referee's first photo is their picture."),
         createdAt: Timestamp,
-        url: z.string().describe("Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in."),
-        thumbUrl: z.string().describe("A small version for lists and galleries: /v1/attachments/{id}/thumb (the file itself when none was uploaded)."),
+        url: z.string().describe("Where to fetch the file: /v1/attachments/{id}/file, with the same sign-in or an API key that can read the record."),
+        thumbUrl: z.string().describe("A small version for lists and galleries: /v1/attachments/{id}/thumb (a photo itself when none was uploaded)."),
+        hasThumb: z.boolean().optional().describe("Whether thumbUrl gives an image: false for a file other than a photo that was added without a thumbnail, which shows its kind's icon instead (FILE-12). Servers from before files leave it out, as every attachment then has one."),
     })
-    .meta({ id: "Attachment", description: "A photo on a match, venue or referee (FILE-1). The files are private: fetching them needs the same sign-in as the rest of the API." });
+    .meta({ id: "Attachment", description: "A photo on a match, venue or referee (FILE-1), or a file on a match, venue or competition (FILE-6). They're private: fetching them needs the same sign-in as the rest of the API, or an API key that can read the record (FILE-14)." });
 
 export const AttachmentUpload = z
     .object({
         recordType: AttachmentRecordType,
         recordId: Id,
+        kind: AttachmentKind.optional().describe("photo or file. Left out: a photo when it's a JPEG, PNG or WebP on a match, venue or referee; otherwise a file."),
+        name: z.string().max(500).optional().describe("A file's name; the file part's own name when left out. It's cleaned, and its ending set to what the file is (FILE-10)."),
         caption: z.string().max(500).optional(),
         width: z.coerce.number().pipe(z.int().min(1).max(20_000)).optional().describe("The image's width in pixels."),
         height: z.coerce.number().pipe(z.int().min(1).max(20_000)).optional(),
     })
-    .meta({ id: "AttachmentUpload", description: "The form fields of an upload (multipart/form-data), beside the files: file (a JPEG, PNG or WebP of at most 10 MB) and, optionally, thumb (a small version, at most 1 MB)." });
+    .meta({ id: "AttachmentUpload", description: "The form fields of an upload (multipart/form-data), beside the files: file (a photo, a JPEG, PNG or WebP of at most 10 MB; or a file, a PDF, XLSX, CSV, DOCX, TXT or photo of at most 20 MB) and, optionally, thumb (a small version, an image of at most 1 MB)." });
 
 export const AttachmentChange = z
     .object({
         caption: z.string().max(500).nullable().optional().describe("The new caption; null or an empty string removes it."),
-        position: z.int().min(0).optional().describe("Move it to this place among the record's attachments (0 is first; a larger number moves it to the end)."),
+        name: z.string().max(500).optional().describe("A file's new name (FILE-10): cleaned as an upload's is, and keeping its ending."),
+        position: z.int().min(0).optional().describe("Move it to this place among the record's photos, or its files (0 is first; a larger number moves it to the end)."),
     })
     .meta({ id: "AttachmentChange", description: "What to change about an attachment; leave out what stays the same." });
 
@@ -678,7 +703,7 @@ export const MatchOnWatch = z
 
 export const AccountStorage = z
     .object({
-        usedBytes: z.number().int().nonnegative().describe("Photos and tracks on this account."),
+        usedBytes: z.number().int().nonnegative().describe("Photos, files and tracks on this account, thumbnails included."),
         limitBytes: z.number().int().positive().optional().describe("How much it may keep (SEC-6); absent when this server sets no limit."),
     })
     .meta({ id: "AccountStorage" });
@@ -692,8 +717,9 @@ export const PlanLimits = z
         matches: allowed("Matches kept, not counting deleted ones; matches recorded on a watch are never refused."),
         referees: allowed("Referees kept."),
         venues: allowed("Venues kept."),
-        storageMb: allowed("Megabytes of photos and tracks (SEC-6); a track recorded on a watch is never refused."),
+        storageMb: allowed("Megabytes of photos, files and tracks, thumbnails included (SEC-6); a track recorded on a watch is never refused."),
         photoMb: allowed("The largest photo, in megabytes; the server's own most, 10 MB, still applies."),
+        attachmentMb: allowed("The largest file on a match, venue or competition (FILE-9), in megabytes; the server's own most, 20 MB, still applies."),
         fileMb: allowed("The largest file brought in (an import or a restore), in megabytes; the server's own most for each (5 MB and 2 GB) still applies."),
         devices: allowed("Watches and phones signed in at once (PLAN-7); browsers don't count."),
         pushPerDay: allowed("Phone notifications a day (from midnight UTC), across all the account's phones (PLAN-8)."),

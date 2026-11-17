@@ -37,4 +37,4 @@ async function syncOnce() {
 await syncOnce();
 ```
 
-Run `syncOnce` on a timer, or when a webhook says something changed. A record changed several times appears once, as it is now. Tracks and photos aren't in this feed: a match report's track has its own endpoints.
+Run `syncOnce` on a timer, or when a webhook says something changed. A record changed several times appears once, as it is now. Tracks, photos and files aren't in this feed: a match report's track has its own endpoints, and a record's photos and files are listed with `GET /v1/attachments` (a webhook's attachment events say when they change).

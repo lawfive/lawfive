@@ -13,9 +13,9 @@ Saving matches on the watch, and getting an account's records out of LawFive: th
 
 ## Getting everything out
 
-- **DATA-2** **Download everything**, in Settings → Account: one zip of all the account's records as JSON (matches, match reports, venues, referees, competitions, templates, settings), with the tracks and photos and a short README of the format.
+- **DATA-2** **Download everything**, in Settings → Account: one zip of all the account's records as JSON (matches, match reports, venues, referees, competitions, templates, settings), with the tracks, photos and files (each ending in what it is, with its name in `attachments.json`) and a short README of the format.
 - **DATA-4** **Restore from a LawFive export**, beside Download everything, merges the zip into the account.
-  - Records keep their ids. Anything missing is added; where a record is in both, the one changed last is kept. Tracks and photos come too.
+  - Records keep their ids. Anything missing is added; where a record is in both, the one changed last is kept. Tracks, photos and files come too, each photo and file checked as an upload is (FILE-9); what isn't taken is left out and listed under problems.
   - It says what it added, updated and left alone, and running it twice changes nothing more.
   - One restore runs at a time.
 - **DATA-5** **Matches as a spreadsheet** (CSV or XLSX), from the match list as narrowed by its tab, search and tag, with the columns Import uses (IMP).

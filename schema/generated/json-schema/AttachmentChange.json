@@ -15,8 +15,13 @@
         }
       ]
     },
+    "name": {
+      "description": "A file's new name (FILE-10): cleaned as an upload's is, and keeping its ending.",
+      "type": "string",
+      "maxLength": 500
+    },
     "position": {
-      "description": "Move it to this place among the record's attachments (0 is first; a larger number moves it to the end).",
+      "description": "Move it to this place among the record's photos, or its files (0 is first; a larger number moves it to the end).",
       "type": "integer",
       "minimum": 0,
       "maximum": 9007199254740991

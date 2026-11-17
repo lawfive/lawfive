@@ -1,0 +1,10 @@
+{
+  "$id": "AttachmentKind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "string",
+  "enum": [
+    "photo",
+    "file"
+  ],
+  "description": "A photo, in its record's photo grid (FILE-1), or a file, in its Files list (FILE-6): a document, or a photo kept as a file."
+}

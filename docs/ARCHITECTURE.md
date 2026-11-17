@@ -86,14 +86,14 @@ Rules:
 | Quiz | Questions are files in `schema/quiz/`, served at `GET /v1/quiz`; each app works out an attempt with the same rules and saves nothing ([quiz](requirements/quiz.md)). |
 | Stats | Worked out by the server on request (`GET /v1/stats`, and `GET /v1/stats/games.csv`). Which games match a filter is one function in `schema/src/stats.ts`, used by the web app's match list too, so a chart's count and the list it opens agree ([stats](requirements/stats.md)). |
 | Position and heart rate | Every source is converted into LawFive's track format before upload, and the server works out the figures, so they're the same whichever watch recorded them. Sources: the watch apps' own recording; imported RefSix, FIT, GPX and TCX files; later Strava, Health Connect and Apple Health. Heatmaps need the pitch's position, found from the track, marked by hand, or from corners walked on the watch ([tracks](requirements/tracks.md)). |
-| Photos | Attachments on matches, venues and referees, kept in a folder or any S3-compatible bucket and served through the API ([photos](requirements/photos.md)). |
+| Photos and files | Attachments: photos on matches, venues and referees, and files (PDF, spreadsheets, Word documents, text) on matches, venues and competitions, kept in a folder or any S3-compatible bucket and served through the API, files only as downloads ([photos and files](requirements/photos.md)). |
 | Integrations | [API keys](requirements/api-keys.md) per area, signed [webhooks](requirements/webhooks.md), [importing](requirements/importing.md) matches from files, downloading or restoring a whole account ([data export](requirements/data-export.md)), and [API descriptions for agents](requirements/agent-descriptions.md). |
 | Plans and limits | Named sets of limits per account, set by admins and checked by the server where things are added ([plans and limits](requirements/plans-and-limits.md)). |
 | Duplicates and merging | Found and previewed by the server only; the website and both phones show what it answers ([merging](requirements/merging.md)). |
 
 ## Open source and self-hosting
 
-**What self-hosters run:** the server's Docker image and Postgres, behind HTTPS with a valid certificate, set up by one `compose.yaml` (built from source, or a published image when `LAWFIVE_IMAGE` is set). Photos go in a Docker volume or any S3-compatible bucket. Email is optional, through any SMTP server.
+**What self-hosters run:** the server's Docker image and Postgres, behind HTTPS with a valid certificate, set up by one `compose.yaml` (built from source, or a published image when `LAWFIVE_IMAGE` is set). Photos and files go in a Docker volume or any S3-compatible bucket. Email is optional, through any SMTP server.
 
 **What needs the project's own services:**
 
@@ -182,7 +182,7 @@ Still to do:
   - [Mileage](plans/mileage.md) from home to the pitch.
   - [Accounts](plans/accounts.md): signing in with Google or Apple, confirming email addresses, and ending other sessions on a password reset.
   - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
-  - [Files on venues, competitions and more](plans/attachments.md) (FILE-6).
+  - [Files on venues, competitions and more](plans/attachments.md) (FILE-6, FILE-9 to FILE-15): agreed and being built, the server first.
   - [Rosters and substitutions](plans/rosters.md) (EVT-13), with reading team sheets and care for minors' data.
 - **The stores:** Connect IQ (in the store), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
 - **The paid hosted service,** once there is something worth paying for (A-4).

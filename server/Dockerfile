@@ -36,7 +36,7 @@ COPY server/src server/src
 COPY server/drizzle server/drizzle
 COPY --from=web /app/web/dist web/dist
 
-# Uploaded photos (FILE-4), unless S3_URL puts them in a bucket: mount a volume here to keep them.
+# Uploaded photos and files (FILE-4), unless S3_URL puts them in a bucket: mount a volume here to keep them.
 RUN mkdir -p /data/uploads && chown node:node /data/uploads
 ENV NODE_ENV=production PORT=3000 UPLOADS_DIR=/data/uploads
 # VER-1: the version (tools/version.sh server), passed in by CI: --build-arg LAWFIVE_VERSION=... --build-arg LAWFIVE_COMMIT=...

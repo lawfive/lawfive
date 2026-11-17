@@ -1,6 +1,6 @@
 # Webhooks
 
-URLs that hear about changes to the account's records: matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import). Each delivery is a signed JSON POST (WebhookPayload), retried up to five times over about three hours when it doesn't get a 2xx answer. Only a signed-in session can manage them.
+URLs that hear about changes to the account's records: matches, match reports, venues, referees, competitions and templates, however they were made (the web app, the API, a watch, an import), and to the photos and files on them (attachment events). Each delivery is a signed JSON POST (WebhookPayload), retried up to five times over about three hours when it doesn't get a 2xx answer. Only a signed-in session can manage them.
 
 [The overview](overview.md) covers the address, signing in, API keys and errors.
 
@@ -137,7 +137,7 @@ An ApiError; over a plan's limit, it says which.
 | Field | Type | Description |
 |---|---|---|
 | `error` | string |  |
-| `limit` (optional) | "matches" \| "referees" \| "venues" \| "storageMb" \| "photoMb" \| "fileMb" \| "devices" \| "pushPerDay" \| "apiKeys" \| "apiCallsPerMinute" \| "apiCallsPerDay" \| "webhooks" \| "assignorCalendars" \| "addressSearchesPerDay" | The plan's limit that was reached. |
+| `limit` (optional) | "matches" \| "referees" \| "venues" \| "storageMb" \| "photoMb" \| "attachmentMb" \| "fileMb" \| "devices" \| "pushPerDay" \| "apiKeys" \| "apiCallsPerMinute" \| "apiCallsPerDay" \| "webhooks" \| "assignorCalendars" \| "addressSearchesPerDay" | The plan's limit that was reached. |
 | `allowed` (optional) | integer | What the plan allows of it. |
 
 ### ValidationIssue
@@ -196,10 +196,10 @@ What each delivery POSTs, as JSON. It's signed: X-LawFive-Signature is t=<unix s
 | Field | Type | Description |
 |---|---|---|
 | `id` | [Id](data-model.md#id) | The delivery's id; the same on every retry, so a receiver can ignore one it has had. |
-| `event` | string | <topic>.<created\|updated\|deleted> |
+| `event` | string | <topic>.<created\|updated\|deleted> for a record; attachment.<created\|updated\|deleted> for a photo or file on a record of the topic. |
 | `createdAt` | [Timestamp](data-model.md#timestamp) | When the change was made. |
 | `test` (optional) | boolean | true for Send test; data is then an example. |
-| `data` | {} | The record as stored (as GET returns it); for deleted, its id, version and deletedAt. |
+| `data` | {} | The record as stored (as GET returns it); for deleted, its id, version and deletedAt. For an attachment event, the Attachment as the API gives it (as it was, for deleted), without the file: fetch its url with an API key. |
 
 ### WebhookTopic
 

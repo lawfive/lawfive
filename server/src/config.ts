@@ -31,7 +31,7 @@ export interface Config {
     pushRelayUrl?: string;
     /** PUSH-7: the key the relay asks of this server (RELAY_KEY), for a server it gives one; unset for self-hosted servers. */
     relayKey?: string;
-    /** Where uploaded photos go (FILE-4): an S3-compatible bucket when S3_URL is set, else this folder (UPLOADS_DIR). */
+    /** Where uploaded photos and files go (FILE-4): an S3-compatible bucket when S3_URL is set, else this folder (UPLOADS_DIR). */
     uploadsDir: string;
     s3Url?: string;
     /** VER-1: this build's version and commit, from the image (LAWFIVE_VERSION, LAWFIVE_COMMIT) or git. */

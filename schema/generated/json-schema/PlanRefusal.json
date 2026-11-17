@@ -15,6 +15,7 @@
         "venues",
         "storageMb",
         "photoMb",
+        "attachmentMb",
         "fileMb",
         "devices",
         "pushPerDay",

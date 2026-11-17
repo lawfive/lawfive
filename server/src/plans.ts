@@ -209,7 +209,7 @@ export class Plans {
     }
 
     /** The largest photo or file the account may send: the plan's, within the server's own most. */
-    async largest(userId: string, limit: "photoMb" | "fileMb", serverMost: number): Promise<number> {
+    async largest(userId: string, limit: "photoMb" | "attachmentMb" | "fileMb", serverMost: number): Promise<number> {
         const most = (await this.limits(userId))[limit];
         return most === undefined ? serverMost : Math.min(most * mb, serverMost);
     }

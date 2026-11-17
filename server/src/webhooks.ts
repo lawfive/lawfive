@@ -13,8 +13,9 @@ import { plansOf } from "./plans.ts";
 import { onRecordWrite, toRecord, type RecordWrite } from "./records.ts";
 
 // Webhooks (HOOK-1 to HOOK-5): URLs that hear about changes to the user's records. Every committed
-// write (records.ts) queues a delivery for each of the user's webhooks on that topic; a delivery is
-// a signed JSON POST, retried with growing waits until it gets a 2xx answer or has had five tries.
+// write (records.ts), and every change to a record's photos and files (attachments.ts, FILE-15),
+// queues a delivery for each of the user's webhooks on that topic; a delivery is a signed JSON
+// POST, retried with growing waits until it gets a 2xx answer or has had five tries.
 // schema/src/endpoints.ts describes the endpoints.
 //
 //   GET    /v1/webhooks                    the user's webhooks
@@ -164,6 +165,14 @@ function payloadData(write: Pick<RecordWrite, "action" | "row">): Record<string,
     return write.action === "deleted" ? { id: record.id, version: record.version, deletedAt: record.deletedAt } : record;
 }
 
+type Announcer = (userId: string, topic: string, action: "created" | "updated" | "deleted", attachment: Record<string, unknown>) => void;
+const announcers = new WeakMap<Db, Announcer>();
+
+/** Tells the webhooks on a record's topic that a photo or file on it was added, changed or deleted (FILE-15). */
+export function attachmentEvent(db: Db, ...event: Parameters<Announcer>) {
+    announcers.get(db)?.(...event);
+}
+
 /** Example records for Send test, when the account has none of the topic. */
 const examples: Record<Topic, Record<string, unknown>> = {
     match: { id: "00000000-0000-4000-8000-000000000001", status: "scheduled", kickoff: "2026-11-07T09:00:00-08:00", home: { name: "Strikers U12", alias: "STR" }, away: { name: "Rovers U12", alias: "ROV" }, role: "referee" },
@@ -243,28 +252,35 @@ export function webhooksApi(db: Db, options: WebhookOptions = {}) {
         await db.delete(webhookDelivery).where(and(eq(webhookDelivery.webhookId, webhookId), notInArray(webhookDelivery.id, keep)));
     }
 
+    /** Queues a delivery of an event for each of the account's active webhooks on its topic, and sends what's due. */
+    async function queue(userId: string, topic: string, event: string, data: Record<string, unknown>) {
+        const hooks = await db.select().from(webhook)
+            .where(and(eq(webhook.userId, userId), eq(webhook.active, true), sql`${webhook.topics} ? ${topic}`));
+        if (!hooks.length) {
+            return;
+        }
+        const now = new Date();
+        await db.insert(webhookDelivery).values(hooks.map((h) => {
+            // The delivery's id is in its payload too, so a receiver can tell a retry from a new change.
+            const id = randomUUID();
+            return { id, webhookId: h.id, event, status: "pending", attempts: 0, test: false, nextAttemptAt: now, createdAt: now, payload: { id, event, createdAt: now.toISOString(), data } };
+        }));
+        await Promise.all(hooks.map((h) => prune(h.id)));
+        await sendDue();
+    }
+
     // HOOK-1: every committed change to a record queues a delivery for each webhook on its topic.
     onRecordWrite(db, (write) => {
         if (!(WebhookTopic.options as string[]).includes(write.type)) {
             return;
         }
-        void (async () => {
-            const hooks = await db.select().from(webhook)
-                .where(and(eq(webhook.userId, write.userId), eq(webhook.active, true), sql`${webhook.topics} ? ${write.type}`));
-            if (!hooks.length) {
-                return;
-            }
-            const event = `${write.type}.${write.action}`;
-            const now = new Date();
-            const data = payloadData(write);
-            await db.insert(webhookDelivery).values(hooks.map((h) => {
-                // The delivery's id is in its payload too, so a receiver can tell a retry from a new change.
-                const id = randomUUID();
-                return { id, webhookId: h.id, event, status: "pending", attempts: 0, test: false, nextAttemptAt: now, createdAt: now, payload: { id, event, createdAt: now.toISOString(), data } };
-            }));
-            await Promise.all(hooks.map((h) => prune(h.id)));
-            await sendDue();
-        })().catch((e) => console.error("webhook", e));
+        void queue(write.userId, write.type, `${write.type}.${write.action}`, payloadData(write)).catch((e) => console.error("webhook", e));
+    });
+    // FILE-15: and a photo or file added, changed or deleted, on its record's topic, without the file.
+    announcers.set(db, (userId, topic, action, attachment) => {
+        if ((WebhookTopic.options as string[]).includes(topic)) {
+            void queue(userId, topic, `attachment.${action}`, attachment).catch((e) => console.error("webhook", e));
+        }
     });
     if (options.retryEveryMs !== 0) {
         setInterval(() => void sendDue().catch((e) => console.error("webhook", e)), options.retryEveryMs ?? 30_000).unref();

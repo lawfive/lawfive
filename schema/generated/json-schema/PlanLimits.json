@@ -22,13 +22,19 @@
       "maximum": 1000000000
     },
     "storageMb": {
-      "description": "Megabytes of photos and tracks (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.",
+      "description": "Megabytes of photos, files and tracks, thumbnails included (SEC-6); a track recorded on a watch is never refused. Left out: no limit; 0: none at all.",
       "type": "integer",
       "minimum": 0,
       "maximum": 1000000000
     },
     "photoMb": {
       "description": "The largest photo, in megabytes; the server's own most, 10 MB, still applies. Left out: no limit; 0: none at all.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000000
+    },
+    "attachmentMb": {
+      "description": "The largest file on a match, venue or competition (FILE-9), in megabytes; the server's own most, 20 MB, still applies. Left out: no limit; 0: none at all.",
       "type": "integer",
       "minimum": 0,
       "maximum": 1000000000

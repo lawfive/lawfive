@@ -135,6 +135,7 @@ function keyNote(e: Endpoint): string | undefined {
     }
     return e.keyScope === "*:read" ? "API keys: any read scope; only those collections are included."
         : e.keyScope ? `API keys: need ${e.keyScope}.`
+        : e.keyScopeByRecord ? `API keys: need ${e.keyScopeByRecord} access to the record's collection (${Object.entries(api.attachmentCollections).map(([type, collection]) => `${collection}:${e.keyScopeByRecord} for a ${type}'s`).join(", ")}).`
         : "Not with API keys.";
 }
 
@@ -167,6 +168,7 @@ function paths(schemaOf: (s: z.ZodType) => Json) {
             ...(r.calendar ? { content: { "text/calendar": { schema: { type: "string" } } } } : {}),
             ...(r.image ? { content: { "image/*": { schema: { type: "string", format: "binary" } } } } : {}),
             ...(r.zip ? { content: { "application/zip": { schema: { type: "string", format: "binary" } } } } : {}),
+            ...(r.file ? { content: { "application/octet-stream": { schema: { type: "string", format: "binary" } } } } : {}),
         }]));
         const params = parameters(e, schemaOf);
         const description = [e.description, e.capability && `Only when GET /v1/meta lists the ${e.capability} capability.`, keyNote(e)].filter(Boolean).join(" ");
@@ -268,7 +270,7 @@ function endpointLines(e: Endpoint, schemaOf: (s: z.ZodType) => Json, link: Type
     line("| Answer | Body | When |");
     line("|---|---|---|");
     for (const [status, r] of Object.entries(responsesOf(e))) {
-        const body = r.text ? `\`${r.text}\` (text)` : r.csv ? "CSV" : r.calendar ? "iCalendar" : r.image ? "An image" : r.zip ? "A zip file" : r.body ? typeName(schemaOf(r.body), link) : "";
+        const body = r.text ? `\`${r.text}\` (text)` : r.csv ? "CSV" : r.calendar ? "iCalendar" : r.image ? "An image" : r.file ? "The file, as its own type" : r.zip ? "A zip file" : r.body ? typeName(schemaOf(r.body), link) : "";
         const headers = r.headers ? ` Header: ${Object.keys(r.headers).map((h) => `\`${h}\``).join(", ")}.` : "";
         line(`| ${status} | ${cell(body)} | ${cell(r.description + headers)} |`);
     }
@@ -493,7 +495,7 @@ function agentFiles(schemaOf: (s: z.ZodType) => Json, components: Record<string,
     /** Whether an integration can use a group: something in it takes an API key, or none of it needs signing in. */
     const forKeys = (g: string) => {
         const list = endpoints.filter((e) => e.group === g);
-        return list.some((e) => e.keyScope) || list.every((e) => e.signedIn === false);
+        return list.some((e) => e.keyScope || e.keyScopeByRecord) || list.every((e) => e.signedIn === false);
     };
     const reference = (keys: boolean) => groupNames.filter((g) => forKeys(g) === keys).map((g) => `- [${g}](${url(`${slug(g)}.md`)}): ${firstSentence(groups[g])}`);
     files[`${dir}/llms.txt`] = page([

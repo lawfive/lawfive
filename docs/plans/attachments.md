@@ -1,6 +1,6 @@
 # Plan: files on venues, competitions and more
 
-**Status:** Proposed, not built. The model: the attachments that hold photos today also hold documents (PDF, spreadsheets, CSV, Word and plain text), on matches, venues and competitions, kept by the same file store, private to their owner, always downloaded rather than shown in the browser, and reachable with API keys through the scope of the record they're on. Its requirements are drafted under [Proposed requirements](#proposed-requirements), to move into [photos.md](../requirements/photos.md) when it's built.
+**Status:** Being built. Agreed: its requirements are in [photos.md](../requirements/photos.md) (FILE-6, FILE-9 to FILE-15) and the agreed ones it changes. Built: step 1, the schema and the server. Next: step 2, the website; then the phones, then docs and policy.
 
 ## In short
 
@@ -59,7 +59,7 @@ A file keeps the **name it was added with**, cleaned: no folders, no control or 
 
 ### Previews
 
-- **Photos and PDFs** get a thumbnail made by the app that adds them: the first page, on the phones, by the system's own renderer (Android's `PdfRenderer`, the iPhone's PDFKit). A PDF added on the website has no thumbnail and shows its icon, to keep the website free of a PDF library (see the open questions).
+- **Photos and PDFs** get a thumbnail made by the app that adds them: the first page, on the phones, by the system's own renderer (Android's `PdfRenderer`, the iPhone's PDFKit). A PDF added on the website has no thumbnail and shows its icon, to keep the website free of a PDF library.
 - **Everything else** shows a Phosphor icon for its kind (`FilePdf`, `FileXls`, `FileCsv`, `FileDoc`, `FileText`), with its name, kind and size ("Field map · PDF · 1.2 MB").
 - **CSV and text** can be looked at on the website and the phones: the first 200 lines as text in JetBrains Mono, never as HTML.
 
@@ -86,32 +86,6 @@ The same Files card, from the phone's files (and the camera for a photo).
 - **Download everything** puts files in `attachments/` with their real endings and names in `attachments.json`; **Restore** checks each as an upload is checked, and skips what isn't taken, listing it under problems.
 - **Deleting** a competition takes its files, as a match, venue or referee does; merging venues or matches moves them (DUP-3).
 - **Self-hosted:** the same store (`UPLOADS_DIR` or `S3_URL`), the same switch: without it, there are neither photos nor files. Nothing new to set.
-
-## Proposed requirements
-
-Drafts, in **FILE**:
-
-- **FILE-6** (replacing the Later one) **Files** on matches, venues and competitions: a list under Photos (competitions have Files alone), with Add files, Download, Rename and Delete; a competition's files also show, read-only, on its matches. Up to 20 a record.
-- **FILE-9** **What a file can be:** PDF, XLSX, CSV, DOCX, TXT and the photo types, checked from the file itself; macros, older Office formats, HTML, SVG, XML, scripts, archives and programs refused, by name. Up to 20 MB, or the plan's largest file.
-- **FILE-10** **A file's name** is the one it was added with, cleaned (no folders, control or direction characters; at most 120 characters; the ending set to what it is), and can be changed.
-- **FILE-11** **Every file but a photo is downloaded, never shown in place**, with its name, its checked type, `nosniff` and a sandboxing policy; a photo is a download with `?download=1`.
-- **FILE-12** **Previews:** a first-page thumbnail for PDFs added on the phones, an icon and the name, kind and size for the rest; CSV and text shown as text.
-- **FILE-13** **On the phones**, a PDF opens in the app, other files on the iPhone in Quick Look and on Android with Open with; Share for all. The files for the next 3 days' matches (their own, their venue's, their competition's) are kept on the phone, as is any marked **Keep on this phone**, in at most 200 MB, removed on signing out.
-- **FILE-14** **API keys** reach attachments with the access of the record they're on (read to list and fetch, write to add, change and delete).
-- **FILE-15** **Webhooks** get `attachment.created`, `.updated` and `.deleted` on the record's topic, without the file.
-
-And changes to agreed ones: FILE-1, FILE-2 and FILE-3 (photos among other files; files private as photos are), PLAN-2 (largest file; storage of photos, files and tracks; thumbnails counted), KEY-3 (attachments by their record's scope), HOOK-2 (the attachment events), DATA-2 and DATA-4 (files in the zip and restored), a new WEB requirement for the competition page (and its APP and IOS counterparts), and the photo endpoints' description ("Only a signed-in session can use them for now" goes).
-
-## Open questions
-
-1. **Which records get files?** (a) Matches, venues and competitions; (b) those and referees; (c) those and the account itself ("my documents": a referee's badge, the Laws as a PDF). **Recommend (a):** a referee's documents are someone else's, and the account's own can come later if asked for.
-2. **One card or two on matches and venues?** (a) Photos as they are, Files under them; (b) one **Photos and files** card. **Recommend (a):** the photo grid works well for photos and a list suits documents; a competition has Files alone.
-3. **Which kinds?** (a) PDF, XLSX, CSV, DOCX, TXT and photos; (b) PDF and photos only; (c) also ODS/ODT, and the older `.xls` and `.doc`. **Recommend (a):** what leagues send, without the formats that carry macros.
-4. **How big, and how many?** (a) 20 MB a file and 20 a record; (b) 10 MB as photos; (c) 50 MB. **Recommend (a):** a scanned rule book fits, and the request limit (SEC-3, 32 MB) holds.
-5. **PDFs on the website:** (a) downloads only, with the thumbnail when a phone made one; (b) a PDF viewer in the website (pdf.js, about 1 MB, loaded only when opened), making thumbnails on upload too; (c) shown in the browser's own viewer at the server's address. **Recommend (a) now, (b) if asked for:** (c) means showing a user's file in place at the address that holds the sign-in, which nothing else does.
-6. **Offline copies on the phones:** (a) the next 3 days' matches' files automatically, plus Keep on this phone; (b) only Keep on this phone; (c) none, signal needed as for photos. **Recommend (a):** the parking map is wanted exactly where signal is worst; 200 MB at most, cleared after the match.
-7. **Virus scanning:** (a) none, as files are private to the account that added them and always downloaded; (b) an optional scanner self-hosters can point at (ClamAV). **Recommend (a)** for now, as the files go only back to their owner.
-8. **Webhook events:** (a) attachment events on the record's topic, without the file; (b) none until asked for. **Recommend (a):** it's small, and integrations that add files will want to see others' changes.
 
 ## The work, in order
 
