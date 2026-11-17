@@ -113,4 +113,3 @@ Not built yet:
 
 - UI-14's icon checked on a real AMOLED watch and a real MIP one.
 - The kits (UI-10, UI-11) checked on real watches (R-6).
-- On Apple Watch, the screens after the team and official menus keep the system's plain titles rather than a lone kit.

@@ -230,6 +230,36 @@ final class WatchFlow: XCTestCase {
         shot("game menu undo injury")
     }
 
+    // UI-6, UI-10: the goal type's list is titled with the team's lone kit, as the team menu is.
+    func testGoalTypes() {
+        continueAfterFailure = false
+        app.launchArguments = ["-reset", "1", "-noWorkout", "1"]
+        app.launch()
+        tap("Settings, Not linked")
+        tap("Quick match, 2×45' · HT 15'")
+        let toggle = app.buttons["Goal types, Off"]
+        for _ in 0..<6 where !(toggle.exists && toggle.isHittable) { app.swipeUp() }
+        toggle.tap()
+        XCTAssertTrue(app.buttons["Goal types, DFK, penalty, own goal"].waitForExistence(timeout: 5))
+        app.buttons["Back"].firstMatch.tap()
+        app.buttons["Back"].firstMatch.tap()
+        tap("New match, Quick · 2×45' · HT 15'")
+        tap("Quick match, 2×45' · HT 15'")
+        tap("HOM")
+        tap("Start")
+        see("1H")
+        swipeDownForHome()
+        tap("Goal")
+        see("Goal HOM")
+        XCTAssertTrue(app.buttons["Direct free kick"].exists)
+        shot("goal type")
+        tap("Penalty")
+        confirmNumber("No number")
+        see("1H")
+        swipeForMenu()
+        XCTAssertTrue(app.buttons["Undo last event, Penalty goal HOM"].waitForExistence(timeout: 5), app.debugDescription)
+    }
+
     // TMR-14: Adjust clock and Adjust added time in the game menu during play: the minutes, then the seconds, the change to
     // confirm, and Undo naming it; Back from the seconds goes to the minutes, and from the minutes to the match.
     func testAdjustingTheClock() {

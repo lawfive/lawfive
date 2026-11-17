@@ -19,7 +19,7 @@ private enum Overlay {
     /// EVT-5; EVT-12: a second sin bin is a send-off too.
     case secondYellow(team: Int, player: Int, sinBin: Bool)
     /// EVT-14: the card's reason, from the cautions' or the send-offs' codes; then a second yellow's or sin bin's red screen.
-    case reason(sendOff: Bool, second: SecondCard?)
+    case reason(team: Int, sendOff: Bool, second: SecondCard?)
     /// UI-7: Yes over No; `danger` makes Yes red.
     case confirm(question: String, detail: String?, danger: Bool, action: () -> Void)
     case events
@@ -98,7 +98,7 @@ struct MatchFlow: View {
                         action()
                         overlay = nil
                     }, onNo: { overlay = nil })
-                case .reason(let sendOff, let second): back { reasonMenu(match, sendOff: sendOff, second: second) }
+                case .reason(let team, let sendOff, let second): back { reasonMenu(match, team, sendOff: sendOff, second: second) }
                 case .events: back { eventsList(match) }
                 case .coin: back { CoinToss() }
                 case .direction: back { DirectionScreen(match: match) { overlay = nil } }
@@ -128,7 +128,7 @@ struct MatchFlow: View {
         let red = second && player != nil ? SecondCard(team: team, player: player!, sinBin: type == EventType.sinBin) : nil
         // EVT-14: with Card reasons on, the card's reason comes next, before a send-off's red screen.
         if state.saved.cardReasons == true && [EventType.yellow, EventType.red, EventType.sinBin].contains(type) {
-            overlay = .reason(sendOff: type == EventType.red, second: red)
+            overlay = .reason(team: team, sendOff: type == EventType.red, second: red)
         } else {
             overlay = afterReason(red)
         }
@@ -143,7 +143,7 @@ struct MatchFlow: View {
         // TMR-14: from the seconds back to the minutes, as entered.
         if case .adjustSeconds(let added, let captured, let minutes) = overlay { return .adjustMinutes(added: added, captured: captured, minutes: minutes) }
         // EVT-14: Back is No reason: the card stands, and a send-off's red screen still comes.
-        if case .reason(_, let second) = overlay { return afterReason(second) }
+        if case .reason(_, _, let second) = overlay { return afterReason(second) }
         return nil
     }
 
@@ -299,28 +299,27 @@ struct MatchFlow: View {
     private func officialMenu(_ match: Match, _ team: Int) -> some View {
         ScrollView {
             VStack(spacing: 5) {
-                Kit(name: match.teamName(team), color: match.teamColor(team), size: 15, home: team == home)
+                kitTitle(match, team, "Official \(match.teamName(team))")
                 MenuRow(label: "Yellow card", fill: C.yellow, textColor: .black) { overlay = .officialRole(team: team, red: false) }
                 MenuRow(label: "Red card", fill: C.red, textColor: .white) { overlay = .officialRole(team: team, red: true) }
             }
         }
-        .navigationTitle("Official")
     }
 
     /// EVT-15: who it was for, in place of a player's number.
     private func officialRoleMenu(_ match: Match, _ team: Int, red: Bool) -> some View {
         ScrollView {
             VStack(spacing: 5) {
+                kitTitle(match, team, "\(red ? "Red" : "Yellow") \(match.teamName(team))")
                 ForEach(Array(officialRoles.enumerated()), id: \.offset) { role, label in
                     MenuRow(label: label) {
                         state.changeMatch { $0.addOfficialCard(red: red, team: team, role: role, now: nowMs()) }
                         Haptics.tick()
-                        overlay = state.saved.cardReasons == true ? .reason(sendOff: red, second: nil) : nil
+                        overlay = state.saved.cardReasons == true ? .reason(team: team, sendOff: red, second: nil) : nil
                     }
                 }
             }
         }
-        .navigationTitle("\(red ? "Red" : "Yellow") \(match.teamName(team))")
     }
 
     /// EVT-14: what comes after the reason: the red screen for a second yellow or sin bin, else the match.
@@ -329,9 +328,10 @@ struct MatchFlow: View {
     }
 
     /// EVT-14: the card is recorded; its reason is chosen from the match's scheme, No reason first (Back is the same).
-    private func reasonMenu(_ match: Match, sendOff: Bool, second: SecondCard?) -> some View {
+    private func reasonMenu(_ match: Match, _ team: Int, sendOff: Bool, second: SecondCard?) -> some View {
         ScrollView {
             VStack(spacing: 5) {
+                kitTitle(match, team, "Reason")
                 MenuRow(label: "No reason") { overlay = afterReason(second) }
                 ForEach(Misconduct.codes(Misconduct.scheme(match.misconductScheme), sendOff: sendOff), id: \.code) { code, meaning in
                     MenuRow(label: code, sub: meaning) {
@@ -342,12 +342,12 @@ struct MatchFlow: View {
                 }
             }
         }
-        .navigationTitle("Reason")
     }
 
     private func goalTypeMenu(_ match: Match, _ team: Int) -> some View {
         ScrollView {
             VStack(spacing: 5) {
+                kitTitle(match, team, "Goal \(match.teamName(team))")
                 ForEach([(EventType.goal, "Goal"), (EventType.dfkGoal, "Direct free kick"), (EventType.penGoal, "Penalty"), (EventType.ownGoal, "Own goal")], id: \.0) { type, label in
                     MenuRow(label: label) {
                         if match.setup.goalScorers && type != EventType.ownGoal {
@@ -360,7 +360,12 @@ struct MatchFlow: View {
                 }
             }
         }
-        .navigationTitle("Goal")
+    }
+
+    /// UI-6, UI-10: the screens after the team menu are titled with the team's lone kit, the word in it, as Wear OS's, in
+    /// place of the system's plain title.
+    private func kitTitle(_ match: Match, _ team: Int, _ title: String) -> some View {
+        Kit(name: title, color: match.teamColor(team), size: 15, home: team == home)
     }
 
     /// EVT-11: why, then Yes or No.
