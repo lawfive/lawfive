@@ -1,0 +1,46 @@
+{
+  "attachments": [
+    {
+      "id": "00000009-0000-4000-8000-000000000003",
+      "recordType": "competition",
+      "recordId": "00000003-0000-4000-8000-000000000001",
+      "kind": "file",
+      "contentType": "application/pdf",
+      "name": "BYL rules 2026-27.pdf",
+      "size": 1012,
+      "position": 0,
+      "createdAt": "2026-09-10T16:00:00.000Z",
+      "url": "/v1/attachments/00000009-0000-4000-8000-000000000003/file",
+      "thumbUrl": "/v1/attachments/00000009-0000-4000-8000-000000000003/thumb",
+      "hasThumb": false
+    },
+    {
+      "id": "00000009-0000-4000-8000-000000000004",
+      "recordType": "competition",
+      "recordId": "00000003-0000-4000-8000-000000000001",
+      "kind": "file",
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "name": "Fall schedule.xlsx",
+      "size": 1761,
+      "position": 1,
+      "createdAt": "2026-09-25T16:00:00.000Z",
+      "url": "/v1/attachments/00000009-0000-4000-8000-000000000004/file",
+      "thumbUrl": "/v1/attachments/00000009-0000-4000-8000-000000000004/thumb",
+      "hasThumb": false
+    },
+    {
+      "id": "00000009-0000-4000-8000-000000000005",
+      "recordType": "competition",
+      "recordId": "00000003-0000-4000-8000-000000000001",
+      "kind": "file",
+      "contentType": "text/csv",
+      "name": "Referee contacts.csv",
+      "size": 198,
+      "position": 2,
+      "createdAt": "2026-09-25T16:00:00.000Z",
+      "url": "/v1/attachments/00000009-0000-4000-8000-000000000005/file",
+      "thumbUrl": "/v1/attachments/00000009-0000-4000-8000-000000000005/thumb",
+      "hasThumb": false
+    }
+  ]
+}

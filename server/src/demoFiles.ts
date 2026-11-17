@@ -104,8 +104,8 @@ function document(paragraphs: string[]): Uint8Array {
     });
 }
 
-/** Adds the demo's files to the records they're for; records it can't find are skipped. */
-export async function seedDemoFiles(db: Db, store: FileStore, userId: string) {
+/** Adds the demo's files to the records they're for; records it can't find are skipped. `newId` gives the phones' fixtures the same ids every run. */
+export async function seedDemoFiles(db: Db, store: FileStore, userId: string, newId: () => string = randomUUID) {
     const { records, attachment } = tables;
     const named = async (type: string, name: string) =>
         (await db.select({ id: records.id }).from(records).where(and(eq(records.userId, userId), eq(records.type, type), sql`${records.data}->>'name' = ${name}`)))[0]?.id;
@@ -146,7 +146,7 @@ export async function seedDemoFiles(db: Db, store: FileStore, userId: string) {
         if (!f.recordId) {
             continue;
         }
-        const id = randomUUID();
+        const id = newId();
         const fileKey = `${userId}/${id}`;
         const thumbKey = f.thumb ? `${fileKey}.thumb` : undefined;
         await store.put(fileKey, f.data, f.contentType);

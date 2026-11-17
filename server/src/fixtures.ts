@@ -1,12 +1,16 @@
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { mock } from "node:test";
 import { createApp } from "./app.ts";
 import { createAuth } from "./auth.ts";
 import { migrationsFolder, tables } from "./db/index.ts";
 import { type NewId, demoForecasts, linkDemoWatch, seedDemo, seedPlayedWeather } from "./demoData.ts";
+import { seedDemoFiles } from "./demoFiles.ts";
+import { diskStore } from "./storage.ts";
 import { Weather } from "./weather/service.ts";
 
 // The phones' snapshot tests draw their screens from these: the demo account's data (demoData.ts)
@@ -24,7 +28,7 @@ const demoAccount = { name: "Alex Morgan", email: "demo@lawfive.dev", password: 
 const newAccount = { name: "Jamie Park", email: "new@lawfive.dev", password: "lawfive-new-account" };
 
 /** Each kind's ids start with its own number, then count: 00000007-0000-4000-8000-000000000001 is the first match. */
-const idKinds = ["settings", "matchTemplate", "competition", "venue", "pitch", "referee", "match", "matchRecord"];
+const idKinds = ["settings", "matchTemplate", "competition", "venue", "pitch", "referee", "match", "matchRecord", "attachment"];
 
 function stableIds(): NewId {
     const counts = new Map<string, number>();
@@ -47,6 +51,9 @@ export const fixtureSources: Record<string, { method: "get"; path: string }> = {
     "demo/track.json": { method: "get", path: "/v1/match-records/{id}/track" },
     "demo/devices.json": { method: "get", path: "/v1/devices" },
     "demo/devices-matches.json": { method: "get", path: "/v1/devices/matches" },
+    "demo/files-venue.json": { method: "get", path: "/v1/attachments" },
+    "demo/files-competition.json": { method: "get", path: "/v1/attachments" },
+    "demo/files-match.json": { method: "get", path: "/v1/attachments" },
     "new-account/changes.json": { method: "get", path: "/v1/changes" },
     "new-account/stats.json": { method: "get", path: "/v1/stats" },
     "new-account/weather.json": { method: "get", path: "/v1/weather" },
@@ -80,7 +87,10 @@ async function build(): Promise<Record<string, string>> {
     const access = { signUp: "open" as const, adminEmails: [], publicUrl };
     const auth = createAuth(db, { ...access, authSecret: "fixtures-secret-not-for-real-use-0123456789" });
     const weather = new Weather(db, { provider: demoForecasts, dailyLimit: 500 });
-    const app = createApp(db, auth, { access, weather });
+    // The demo's files (FILE-6) in a folder of their own, gone after; the fixtures hold their lists, not the files.
+    const uploads = mkdtempSync(join(tmpdir(), "lawfive-fixtures-"));
+    const store = await diskStore(uploads);
+    const app = createApp(db, auth, { access, weather, files: store });
 
     const signUp = async (account: typeof demoAccount) => {
         const res = await app.request("/v1/auth/sign-up/email", {
@@ -102,6 +112,8 @@ async function build(): Promise<Record<string, string>> {
     const demo = await signUp(demoAccount);
     const played = await seedDemo(db, demo.userId, stableIds());
     await seedPlayedWeather(db, demo.userId, played, weather.source);
+    const fileIds = stableIds();
+    await seedDemoFiles(db, store, demo.userId, () => fileIds("attachment"));
     // The demo's linked Venu 2 (SYNC-14), with a link of its own so its id is the same every run.
     await linkDemoWatch(db, app, demo.userId, { sessionId: "watch-link-venu2", token: "fixtures-watch-token-not-for-real-use" });
     await weather.run();
@@ -139,7 +151,12 @@ async function build(): Promise<Record<string, string>> {
     const devices = await get(demo.token, "/v1/devices");
     files["demo/devices.json"] = { devices: (devices.devices as Json[]).filter((d) => !d.current) };
     files["demo/devices-matches.json"] = await get(demo.token, "/v1/devices/matches");
+    // The files on each kind of record (FILE-6), for the phones' Files cards, kept files and a competition's page.
+    for (const recordType of ["venue", "competition", "match"]) {
+        files[`demo/files-${recordType}.json`] = await get(demo.token, `/v1/attachments?recordType=${recordType}&kind=file`);
+    }
     await pg.close();
+    rmSync(uploads, { recursive: true, force: true });
 
     const index = fixtureIndex(matches, matchReports, tracked);
     const out: Record<string, string> = { "index.json": json(index), "README.md": readme(matches, matchReports, tracked) };
@@ -226,6 +243,7 @@ in \`index.json\`.
 | \`demo/changes.json\` | \`GET /v1/changes?since=0\`: every record, as the first sync after signing in gets it (settings, match templates, competitions, venues with pitches, referees, matches, match records with their events) | \`ChangesPage\` | Matches and Get ready, a match, the match form, Venues, Referees, Competitions, Settings |
 | \`demo/stats.json\` | \`GET /v1/stats\`, no filters | \`Stats\` | Stats |
 | \`demo/weather.json\` | \`GET /v1/weather\`: forecasts for the matches coming up, and the weather kept for those played | \`{ items: [MatchWeather] }\` | Matches and Get ready, a match |
+| \`demo/files-venue.json\`, \`demo/files-competition.json\`, \`demo/files-match.json\` | \`GET /v1/attachments?recordType=…&kind=file\`: the files on the account's venues, competitions and matches (FILE-6), without the files themselves | \`{ attachments: [Attachment] }\` | a match's, a venue's and a competition's Files, kept files |
 | \`demo/track.json\` | \`GET /v1/match-records/${tracked.record.id}/track\`: the track, its figures, the pitch and the heatmap | \`{ track: MatchTrack, summary: TrackSummary, pitch: PitchOutline, heat, updatedAt }\` | a match: map, heatmap, replay, heart rate, figures |
 | \`new-account/changes.json\` | The same for an account just made: nothing yet, so the phones' own defaults apply | \`ChangesPage\` | first run, empty Matches, Settings's defaults |
 | \`new-account/stats.json\` | Stats with no games | \`Stats\` | empty Stats |

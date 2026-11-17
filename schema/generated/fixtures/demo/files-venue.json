@@ -1,0 +1,32 @@
+{
+  "attachments": [
+    {
+      "id": "00000009-0000-4000-8000-000000000001",
+      "recordType": "venue",
+      "recordId": "00000004-0000-4000-8000-000000000001",
+      "kind": "file",
+      "contentType": "application/pdf",
+      "name": "Parking and field map.pdf",
+      "size": 888,
+      "position": 0,
+      "createdAt": "2026-10-10T16:00:00.000Z",
+      "url": "/v1/attachments/00000009-0000-4000-8000-000000000001/file",
+      "thumbUrl": "/v1/attachments/00000009-0000-4000-8000-000000000001/thumb",
+      "hasThumb": true
+    },
+    {
+      "id": "00000009-0000-4000-8000-000000000002",
+      "recordType": "venue",
+      "recordId": "00000004-0000-4000-8000-000000000001",
+      "kind": "file",
+      "contentType": "text/plain",
+      "name": "Ground rules.txt",
+      "size": 317,
+      "position": 1,
+      "createdAt": "2026-10-10T16:00:00.000Z",
+      "url": "/v1/attachments/00000009-0000-4000-8000-000000000002/file",
+      "thumbUrl": "/v1/attachments/00000009-0000-4000-8000-000000000002/thumb",
+      "hasThumb": false
+    }
+  ]
+}

@@ -22,6 +22,7 @@ in `index.json`.
 | `demo/changes.json` | `GET /v1/changes?since=0`: every record, as the first sync after signing in gets it (settings, match templates, competitions, venues with pitches, referees, matches, match records with their events) | `ChangesPage` | Matches and Get ready, a match, the match form, Venues, Referees, Competitions, Settings |
 | `demo/stats.json` | `GET /v1/stats`, no filters | `Stats` | Stats |
 | `demo/weather.json` | `GET /v1/weather`: forecasts for the matches coming up, and the weather kept for those played | `{ items: [MatchWeather] }` | Matches and Get ready, a match |
+| `demo/files-venue.json`, `demo/files-competition.json`, `demo/files-match.json` | `GET /v1/attachments?recordType=…&kind=file`: the files on the account's venues, competitions and matches (FILE-6), without the files themselves | `{ attachments: [Attachment] }` | a match's, a venue's and a competition's Files, kept files |
 | `demo/track.json` | `GET /v1/match-records/00000008-0000-4000-8000-000000000001/track`: the track, its figures, the pitch and the heatmap | `{ track: MatchTrack, summary: TrackSummary, pitch: PitchOutline, heat, updatedAt }` | a match: map, heatmap, replay, heart rate, figures |
 | `new-account/changes.json` | The same for an account just made: nothing yet, so the phones' own defaults apply | `ChangesPage` | first run, empty Matches, Settings's defaults |
 | `new-account/stats.json` | Stats with no games | `Stats` | empty Stats |

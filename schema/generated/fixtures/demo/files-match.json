@@ -1,0 +1,18 @@
+{
+  "attachments": [
+    {
+      "id": "00000009-0000-4000-8000-000000000006",
+      "recordType": "match",
+      "recordId": "00000007-0000-4000-8000-000000000001",
+      "kind": "file",
+      "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "name": "Team sheet - Strikers U12.docx",
+      "size": 1037,
+      "position": 0,
+      "createdAt": "2026-11-08T16:00:00.000Z",
+      "url": "/v1/attachments/00000009-0000-4000-8000-000000000006/file",
+      "thumbUrl": "/v1/attachments/00000009-0000-4000-8000-000000000006/thumb",
+      "hasThumb": false
+    }
+  ]
+}
