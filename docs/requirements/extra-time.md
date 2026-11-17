@@ -7,7 +7,7 @@ What happens after regular time: the choice of what comes next, extra-time perio
 - **ET-1** When the last regular period ends and extra time or penalties are switched on, the watch asks what comes next: **Extra time** (if on and not yet played), **Penalties** (if on) and **End match**.
   - The screen is titled with the period just ended ("AFTER 2H"; "FULL TIME" after a match's one period, SET-16).
   - The likely choice is highlighted: extra time (or penalties without extra time) when the score is level, otherwise End match. Start/Stop takes the highlighted choice.
-  - Every choice can be tapped, and all are in the game menu, as a two-legged tie can need extra time despite an uneven score. End match asks for confirmation.
+  - Every choice can be tapped, and all are in the game menu, as a two-legged tie can need extra time despite an uneven score: Extra time (with its periods under it, "2x15'") and Penalties first, then the cards, Undo, End match and Abandon match. End match asks for confirmation.
   - After extra time, the same screen offers Penalties or End match.
   - Cards can still be given: Up/Down or swipes open the team controls.
 
@@ -40,7 +40,7 @@ What happens after regular time: the choice of what comes next, extra-time perio
 
 ## Status
 
-Everything above is built on all three watches, and the golden goal on the website and both phones too, except ET-1's choices in the game menu, which only the Garmin watch has; Wear OS, Apple Watch and Try a match have them on the screen only (the [watch catch-up plan](../plans/watch-catch-up.md)).
+Everything above is built on all three watches and in Try a match, and the golden goal on the website and both phones too.
 
 Not built yet:
 - The golden goal and extra time's kickoff direction haven't been checked on a real watch (R-6, R-13).

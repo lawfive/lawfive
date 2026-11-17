@@ -109,6 +109,20 @@ final class WatchFlow: XCTestCase {
         see("AWY attacks")
     }
 
+    // ET-1: after regular time the game menu has every choice first, as Garmin's, and Extra time goes to its break.
+    func testChoicesAfterRegularTime() {
+        continueAfterFailure = false
+        app.launchArguments = ["-reset", "1", "-noWorkout", "1", "-cup", "1", "-begin", "1", "-phase", "decide"]
+        app.launch()
+        XCTAssertTrue(app.buttons["Penalties"].waitForExistence(timeout: 5), "the decide screen")
+        swipeForMenu()
+        XCTAssertTrue(app.buttons["Extra time, 2×15'"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Penalties"].exists)
+        shot("decide menu")
+        tap("Extra time, 2×15'")
+        see("BREAK")
+    }
+
     // PRE-8, WCH-10: a watch with no compass doesn't offer it. A simulator has none.
     func testNoCompassNoMenuRow() {
         continueAfterFailure = false

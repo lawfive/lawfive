@@ -995,7 +995,8 @@ private fun FullTimeScreen(m: Match, events: () -> Unit) {
  * TMR-7), then stoppage and the break,
  * Undo (this period's events only, INP-6), the kickoff's corrections, and Restart, Suspend and Abandon last (TMR-13).
  * While suspended: Resume first, Lightning again, the cards, Undo and Abandon. Before kickoff and at the breaks: Coin
- * toss first (PRE-9), then the kickoff screen's own rows, the cards, and the way out.
+ * toss first (PRE-9), then the kickoff screen's own rows, the cards, and the way out. After regular time: Extra time and
+ * Penalties, where they're on (ET-1), then the cards, Undo, End match and Abandon.
  */
 @Composable
 private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> Unit) {
@@ -1099,6 +1100,14 @@ private fun GameMenu(m: Match, now: Long, close: () -> Unit, open: (Overlay) -> 
         when (m.phase) {
             Phase.Break -> item { MenuRow(if (m.isHalftime) "End half-time" else "End break") { act { endHalftime() } } }
             Phase.NextKickoff -> if (m.kickoffTeamOnScreen >= 0) item { MenuRow("Start ${periodName(m.period + 1, n, m.setup.etPeriods)}") { act { startNextPeriod(System.currentTimeMillis()) } } }
+            // ET-1: every choice after regular time, as Garmin's game menu has them.
+            Phase.Decide -> {
+                if (m.canExtraTime) {
+                    val length = m.setup.etPeriodSec.let { if (it % 60 == 0) "${it / 60}'" else formatClock(it * 1000L) }
+                    item { MenuRow("Extra time", "${m.setup.etPeriods}×$length") { act { chooseExtraTime(System.currentTimeMillis()) } } }
+                }
+                if (m.canPenalties) item { MenuRow("Penalties") { act { choosePenalties() } } }
+            }
             else -> Unit
         }
         // EVT-7: where people look for them, as swipes aren't obvious at a break.

@@ -145,6 +145,49 @@ test("level after regular time: the decision's recommended choice is highlighted
     assert.equal(t.match.phase, "penalties");
 });
 
+test("after regular time the game menu offers every choice first (ET-1)", () => {
+    const t = new TryMatch({ extraTime: true, penalties: true }, { watch: "wearos", swipes: "upDown", screen: defaultScreen });
+    t.tap("team:0", t0);
+    t.tap("start", t0);
+    t.match.endPeriod(at(45));
+    t.match.endHalftime();
+    t.match.startNextPeriod(at(60));
+    t.match.endPeriod(at(105));
+    assert.equal(t.match.phase, "decide");
+    t.openGameMenu(at(105));
+    assert.deepEqual(menu(t)?.rows.slice(0, 2).map((r) => [r.label, r.sub]), [["Extra time", "2×15'"], ["Penalties", undefined]]);
+    t.tap("row:0", at(105));
+    assert.equal(t.match.phase, "break", "the break before extra time");
+    // Once extra time is played, Penalties alone; and on a Garmin, its own "x".
+    const g = new TryMatch({ extraTime: true, penalties: true }, { watch: "garmin", swipes: "upDown", screen: defaultScreen });
+    g.press("up", t0);
+    g.press("start", t0);
+    g.match.endPeriod(at(45));
+    g.match.endHalftime();
+    g.match.startNextPeriod(at(60));
+    g.match.endPeriod(at(105));
+    g.openGameMenu(at(105));
+    assert.equal(menu(g)?.rows[0].sub, "2x15'");
+    g.match.chooseExtraTime(at(105));
+    for (let minute = 106; g.match.phase !== "decide" && minute < 200; minute++) {
+        if (g.match.phase === "break") {
+            g.match.endHalftime();
+        } else if (g.match.phase === "nextKickoff") {
+            // ET-7: extra time's own kickoff team.
+            g.match.selectKickoff(0);
+            g.match.startNextPeriod(at(minute));
+        } else {
+            g.match.endPeriod(at(minute + 16));
+            minute += 16;
+        }
+    }
+    assert.equal(g.match.phase, "decide", "after extra time");
+    g.openGameMenu(at(137));
+    assert.deepEqual(menu(g)?.rows.slice(0, 2).map((r) => r.label), ["Penalties", "Card for HOM"]);
+    g.press("start", at(137));
+    assert.equal(g.match.phase, "penalties");
+});
+
 test("during play the game menu leads with the period's end, and offers Undo only for this period's events (INP-3, INP-6)", () => {
     const t = new TryMatch({}, { watch: "apple", swipes: "upDown", screen: defaultScreen });
     t.tap("team:0", t0);

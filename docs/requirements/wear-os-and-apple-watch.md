@@ -64,5 +64,4 @@ Not built yet:
   - History: on Wear OS, only the sent line and Mark pitch, with no Summary, Events, Paid toggle or Remove from watch; on both, the sent line is plain text, without when it went, the track's progress or a way to send it now (UI-17, UI-20).
   - Account, linked, has only Sync now (with the last sync) and Unlink (with the server): not SYNC-5's last sync, what's waiting, the server or Sync on opening, and it keeps Sync now, which Garmin has only in Matches.
   - Wear OS has no Remind every or Repeat alerts every (both fixed at 10 seconds, VIB-1, VIB-2), and neither has the Sync on opening setting (UI-16).
-  - Extra time and Penalties aren't in the game menu after regular time (ET-1).
   - The rest, and the plan to close each gap, are in the [watch catch-up plan](../plans/watch-catch-up.md).

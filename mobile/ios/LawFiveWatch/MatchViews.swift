@@ -962,7 +962,7 @@ private struct FullTimeScreen: View {
     }
 }
 
-/// INP-3, UI-7.
+/// INP-3, UI-7; after regular time, Extra time and Penalties first, where they're on (ET-1).
 private struct GameMenu: View {
     @Environment(AppState.self) private var state
     let match: Match
@@ -1061,6 +1061,14 @@ private struct GameMenu: View {
                         MenuRow(label: m.isHalftime ? "End half-time" : "End break") { act { $0.endHalftime() } }
                     } else if m.phase == .nextKickoff && m.kickoffTeamOnScreen >= 0 {
                         MenuRow(label: "Start \(periodName(m.period + 1, m.setup.numPeriods, etPeriods: m.setup.etPeriods))") { act { $0.startNextPeriod(nowMs()) } }
+                    } else if m.phase == .decide {
+                        // ET-1: every choice after regular time, as Garmin's game menu has them.
+                        if m.canExtraTime {
+                            let sec = m.setup.etPeriodSec
+                            let length = sec % 60 == 0 ? "\(sec / 60)'" : formatClock(Int64(sec) * 1000)
+                            MenuRow(label: "Extra time", sub: "\(m.setup.etPeriods)×\(length)") { act { $0.chooseExtraTime(nowMs()) } }
+                        }
+                        if m.canPenalties { MenuRow(label: "Penalties") { act { $0.choosePenalties() } } }
                     }
                     // EVT-7: where people look for them, as swipes aren't obvious at a break.
                     if [.pre, .ready, .nextKickoff, .penalties, .breakTime, .decide].contains(m.phase) {

@@ -654,6 +654,18 @@ export class TryMatch {
             case "decide":
             case "penalties":
             case "golden":
+                // ET-1: every choice after regular time first, as on the watches, where the screen's own rows can't all
+                // be reached with a button.
+                if (m.phase === "decide") {
+                    if (m.canExtraTime) {
+                        const garmin = this.options.watch === "garmin" || this.options.watch === "venu";
+                        const length = m.setup.etPeriodSec % 60 === 0 ? `${m.setup.etPeriodSec / 60}'` : formatClock(m.setup.etPeriodSec * 1000);
+                        rows.push({ id: "decide:extraTime", label: "Extra time", sub: `${m.setup.etPeriods}${garmin ? "x" : "×"}${length}` });
+                    }
+                    if (m.canPenalties) {
+                        rows.push({ id: "decide:penalties", label: "Penalties" });
+                    }
+                }
                 rows.push({ id: "card:0", label: `Card for ${this.name(HOME)}` }, { id: "card:1", label: `Card for ${this.name(AWAY)}` });
                 if (m.lastUndoableEvent) {
                     rows.push({ id: "undo", label: "Undo last event", sub: this.describe(m.lastUndoableEvent) });
@@ -802,6 +814,9 @@ export class TryMatch {
                 return;
             case "finishNow":
                 m.finish(now);
+                return;
+            case "decide":
+                this.decide(a as "extraTime" | "penalties", now);
                 return;
             default:
         }

@@ -1,6 +1,6 @@
 # Plan: Wear OS and Apple Watch catch up with Garmin
 
-**Status:** Proposed, not built. The model: the Garmin app is the reference, and every place the Wear OS app ([mobile/android/wear/](../../mobile/android/wear/)) or the Apple Watch app ([mobile/ios/LawFiveWatch/](../../mobile/ios/LawFiveWatch/)) falls short of an agreed watch requirement is brought up to it, on both where both lack it. Almost nothing here is new behavior, so [Proposed requirements](#proposed-requirements) mostly lists the existing IDs these watches will then meet, with one new one.
+**Status:** Being built. Done: step 1 (Extra time and Penalties in the game menu). The model: the Garmin app is the reference, and every place the Wear OS app ([mobile/android/wear/](../../mobile/android/wear/)) or the Apple Watch app ([mobile/ios/LawFiveWatch/](../../mobile/ios/LawFiveWatch/)) falls short of an agreed watch requirement is brought up to it, on both where both lack it. Almost nothing here is new behavior, so [Proposed requirements](#proposed-requirements) mostly lists the existing IDs these watches will then meet, with one new one.
 
 ## In short
 
@@ -57,7 +57,7 @@ Each gap says what each watch does today and what it will do. Everything follows
 - **Both will:**
   - Have **Sync on opening** in Settings → Account, on by default, "When the app opens" or "Only with Sync now", as Garmin's.
   - Never sync on opening while a match is in progress, as SYNC-3 says; full time still sends the match at once (UI-16).
-  - Count coming to the front as opening only after the app has been away a while, so a glance at the watch isn't a sync each time ([Open questions](#open-questions)).
+  - Count coming to the front as opening only after the app has been away a while,: 5 minutes or more (WCH-13), as these watches close apps on their own, so a sync only when the app starts would rarely happen, and one on every return would be one on every glance between matches.
   - Still sync straight away after a change made on the watch (a fee marked, a pitch, the match screen), as they do now, and with Sync now.
 
 ### Account (SYNC-5, UI-17)
@@ -91,7 +91,7 @@ Each gap says what each watch does today and what it will do. Everything follows
 ### Confirmations (UI-7)
 
 - **Today, both:** the green or red pill names the action ("Restart", "Undo", "Cancel match", "Remove"), and Undo's is red.
-- **Both will have** UI-7's **Yes** over a gray **No**, red only where Garmin's is (Cancel match, Restart match, Abandon match, Unlink, Reset LawFive, Remove from watch), so Undo, End match, Change kickoff and Adjust are green. See [Open questions](#open-questions).
+- **Both will have** UI-7's **Yes** over a gray **No**, red only where Garmin's is (Cancel match, Restart match, Abandon match, Unlink, Reset LawFive, Remove from watch), so Undo, End match, Change kickoff and Adjust are green, as on Garmin and Try a match; the question above the pills names the action.
 
 ### Uploads LawFive refuses (SYNC-4)
 
@@ -121,14 +121,6 @@ When it's built, the Status lines move with it:
 - Wear OS and Apple Watch's "Behind Garmin" list goes, and the lines in the UI, EVT, ET, VIB and SYNC Status sections that say what differs on these two watches.
 - match-screen.md's line on the Apple Watch's plain titles goes.
 - TMR-15's line stays until Wear OS's stopped clock is seen on the emulator ([Checks](#checks)).
-
-## Open questions
-
-1. **Confirmation pills.** (a) UI-7's Yes and No on every watch, Undo green; (b) the action's name on the pill ("Restart", "Undo") on Wear OS and Apple Watch, written into UI-7 as theirs. *Recommend (a):* UI-7 is agreed, Garmin and Try a match already do it, and the question above the pills already names the action.
-2. **The player number's pills.** (a) UI-8's one pill, OK or No number at `00`, with EVT-9's Tap again; (b) keep None beside OK on these watches, with Tap again on OK only. *Recommend (a):* a swipe right already records no number, so None only adds a second target for a stray tap, which EVT-9 is there to stop.
-3. **Create match's minutes.** (a) The two-digit entry, as UI-8 and SET-9 say; (b) lists of every minute, scrolled with the crown. *Recommend (a):* the screen is already on both watches, it's the same on all three, and a list of 60 rows is slow to scroll with gloves.
-4. **What counts as opening (WCH-13).** (a) Coming to the front after 5 minutes away; (b) only the app starting, as Garmin's; (c) every time it comes to the front, as now, but never mid-match. *Recommend (a):* these watches close apps on their own, so (b) would rarely sync, and (c) syncs on every glance between matches.
-5. **Matches' sub-label in the start menu.** (a) UI-15's count, "3 coming up"; (b) the next match's title on all three, changing UI-15. *Recommend (a):* the title is cut off on a small round screen, and the list is a tap away.
 
 ## The work, in order
 

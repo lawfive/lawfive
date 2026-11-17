@@ -36,7 +36,7 @@ adb shell am start -n app.lawfive/app.lawfive.wear.MainActivity --es server http
 | `syncScreen` | The sync screen at `1` or `2` of 3, or `stopped` (UI-26) |
 | `format` | A Quick match format as JSON |
 | `begin` | Start a match |
-| `phase` | `golden` plays into extra time and scores (a `format` with `goldenGoal`); `et` stops at ET1's kickoff |
+| `phase` | `golden` plays into extra time and scores (a `format` with `goldenGoal`); `et` stops at ET1's kickoff; `decide` at the choice after regular time (ET-1) |
 | `ago` | Move the period's start that many seconds back |
 | `stoppage` | Start a stoppage (with `"stoppingClock":true` in `format`, the clock stands still, TMR-15) |
 | `goals` | Add some goals |

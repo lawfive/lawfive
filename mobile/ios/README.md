@@ -109,7 +109,7 @@ xcrun simctl launch <watch> app.lawfive.watchkitapp -server http://localhost:300
 | `-reset`, `-clear` | Forget everything, or the match |
 | `-token` | Link with a token |
 | `-plain`, `-cup` | A test format; `-golden` adds golden goal to `-cup` |
-| `-phase golden`, `-phase et` | Play into extra time and score (ET-6), or stop at ET1's kickoff (ET-7) |
+| `-phase golden`, `-phase et`, `-phase decide` | Play into extra time and score (ET-6), stop at ET1's kickoff (ET-7), or at the choice after regular time (ET-1) |
 | `-begin` | Start a match with some goals |
 | `-ago` | Move the period's start that many seconds back |
 | `-stoppage`, `-added <seconds>` | Start a stoppage; put that much stoppage on the period (TMR-16) |
