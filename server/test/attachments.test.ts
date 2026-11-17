@@ -399,12 +399,16 @@ describe("files", () => {
     });
 
     test("deleting a competition deletes its files", async () => {
-        const [row] = await db.select().from(tables.attachment).where(eq(tables.attachment.recordId, competition));
+        const rows = await db.select().from(tables.attachment).where(eq(tables.attachment.recordId, competition));
         const v = (await call("GET", `/v1/competitions/${competition}`, session)).body.version;
         assert.equal((await call("DELETE", `/v1/competitions/${competition}?version=${v}`, session)).status, 200);
-        await settle();
+        // The files go after the rows, in the background: wait for them rather than a fixed time.
+        const left = async () => (await Promise.all(rows.map((r) => files.get(r.fileKey)))).filter((f) => f !== undefined).length;
+        for (let tries = 0; tries < 50 && await left() > 0; tries++) {
+            await settle();
+        }
         assert.equal((await db.select().from(tables.attachment).where(eq(tables.attachment.recordId, competition))).length, 0);
-        assert.equal(await files.get(row.fileKey), undefined);
+        assert.equal(await left(), 0);
     });
 });
 
