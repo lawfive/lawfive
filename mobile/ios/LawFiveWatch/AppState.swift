@@ -135,6 +135,14 @@ extension [PlannedMatch] {
 
     /// UI-15, SYNC-16: the matches coming up, for the start menu: scheduled ones only.
     var comingUp: [PlannedMatch] { filter { !$0.calledOff } }
+
+    /// UI-15: the start menu's Matches line, as the Garmin's: "3 coming up", the last sync's problem in its place, or "Link to sync".
+    func summary(linked: Bool, problem: String?) -> String {
+        if !linked { return "Link to sync" }
+        if let problem { return problem }
+        let count = comingUp.count
+        return count == 0 ? "None yet" : "\(count) coming up"
+    }
 }
 
 /// SYNC-6: an unlinked watch's old link, kept until the server it came from has signed it out.
@@ -235,25 +243,41 @@ final class AppState {
     private(set) var saved = Saved()
     private(set) var syncing = false
     private(set) var syncProblem: String?
-    // UI-26: the sync screen: how many matches this sync is sending, how many have gone, and whether
-    // it's up. The home and full-time screens say when it may come up.
-    private(set) var syncTotal = 0
-    private(set) var syncSent = 0
+    // UI-16, UI-26: this sync's steps, as the Garmin's: the matches and track chunks it's sending (the whole way, so the
+    // ring only goes forward), how many have gone, the step going now ("Sending track", "3 of 18"), and the line for
+    // Sync now ("Sending track 3 of 18…", "Getting matches…"). The sync screen comes up for one that sends anything;
+    // the home and full-time screens say when it may.
+    private(set) var syncStepsTotal = 0
+    private(set) var syncStepsDone = 0
+    private(set) var syncMatchesSent = 0
+    private(set) var syncStepLabel = ""
+    private(set) var syncStepCount = ""
+    private(set) var syncProgress: String?
     var syncScreen = false
     var screenFree = false
     private var syncScreenShown = false
     /// Over the home or full-time screen only, never a match being played or a menu in use.
-    var offersSyncScreen: Bool { screenFree && !syncScreenShown && syncTotal > 0 && (syncing || syncProblem == nil) }
+    var offersSyncScreen: Bool { screenFree && !syncScreenShown && syncStepsTotal > 0 && (syncing || syncProblem == nil) }
+
+    private func step(_ label: String, _ number: Int, _ total: Int) {
+        syncStepLabel = label
+        syncStepCount = "\(number) of \(total)"
+        syncProgress = "\(label) \(number) of \(total)…"
+    }
 
     func openSyncScreen() {
         syncScreenShown = true
         syncScreen = true
     }
 
+    /// "1" or "2" of 3 matches, "track" (a match, then 3 of 18 chunks), or "stopped".
     func showSyncScreenForTesting(_ what: String) {
-        syncTotal = 3
-        syncSent = Int(what) ?? 1
-        syncing = (Int(what) ?? 3) < 3
+        let track = what == "track"
+        syncStepsTotal = track ? 19 : 3
+        syncStepsDone = track ? 3 : Int(what) ?? 1
+        syncMatchesSent = track ? 1 : syncStepsDone
+        if track { step("Sending track", 3, 18) } else { step("Sending match", min(syncStepsDone + 1, 3), 3) }
+        syncing = track || (Int(what) ?? 3) < 3
         syncProblem = what == "stopped" ? "Can't reach the server" : nil
         syncScreen = true
     }
@@ -911,29 +935,38 @@ final class AppState {
         guard let token = saved.token, !syncing else { return }
         syncing = true
         syncProblem = nil
-        if !saved.outbox.isEmpty {
-            syncTotal = saved.outbox.count
-            syncSent = 0
-            syncScreenShown = false
-        }
+        var matchesTotal = saved.outbox.count
+        var chunksTotal = (saved.tracks ?? []).reduce(0) { $0 + max(0, $1.count - $1.next) }
+        var chunksSent = 0
+        syncStepsTotal = matchesTotal + chunksTotal
+        syncStepsDone = 0
+        syncMatchesSent = 0
+        syncProgress = nil
+        if syncStepsTotal > 0 { syncScreenShown = false }
         let server = server
         Task {
-            defer { syncing = false }
+            defer {
+                syncing = false
+                syncProgress = nil
+            }
             do {
                 while let body = saved.outbox.first {
+                    step("Sending match", syncMatchesSent + 1, max(matchesTotal, syncMatchesSent + 1))
                     do {
                         _ = try await server.post("/v1/watch/records", token: token, body: body)
                     } catch let e as ServerRefused where e.status == 400 {
                         // SYNC-4, SYNC-17: LawFive itself can't take this one; giving it up lets the others through.
                         // History keeps it, no longer waiting ("Not on LawFive").
-                        syncTotal -= 1
+                        matchesTotal -= 1
+                        syncStepsTotal -= 1
                         update { s in
                             s.outbox.removeFirst()
                             s.outboxCreated.removeFirst()
                         }
                         continue
                     }
-                    syncSent += 1
+                    syncMatchesSent += 1
+                    syncStepsDone += 1
                     let created = saved.outboxCreated.first
                     update { s in
                         s.outbox.removeFirst()
@@ -951,6 +984,7 @@ final class AppState {
                         update { $0.tracks?.removeFirst() }
                         continue
                     }
+                    step("Sending track", chunksSent + 1, max(chunksTotal, chunksSent + 1))
                     do {
                         if let data = track.chunk(next.created, next.next) {
                             let chunk: [String: Any] = ["created": next.created, "start": next.start, "index": next.next, "count": next.count,
@@ -960,16 +994,21 @@ final class AppState {
                     } catch let e as ServerRefused where e.status == 404 {
                         // A server from before tracks, or the match was deleted: the track has nowhere to go.
                         track.delete(next.created, from: next.next, to: next.count)
+                        chunksTotal -= next.count - next.next
+                        syncStepsTotal -= next.count - next.next
                         update { $0.tracks?.removeFirst() }
                         continue
                     } catch let e as ServerRefused where e.status == 400 {
                         // A chunk the server can't take: on to the next.
                     }
+                    chunksSent += 1
+                    syncStepsDone += 1
                     track.delete(next.created, from: next.next, to: next.next + 1)
                     update { $0.tracks?[0].next += 1 }
                 }
                 // SYNC-12: after the matches, so a quick match is there to take its pitch.
                 for pitch in saved.pitches ?? [] {
+                    syncProgress = "Sending pitch…"
                     do {
                         _ = try await server.post("/v1/watch/pitch", token: token, body: try JSONEncoder().encode(pitch))
                     } catch let e as ServerRefused where e.status == 400 || e.status == 404 {
@@ -978,6 +1017,7 @@ final class AppState {
                     update { s in s.pitches?.removeAll { $0 == pitch } }
                 }
                 for fee in saved.fees {
+                    syncProgress = "Sending fee…"
                     do {
                         _ = try await server.post("/v1/watch/fee", token: token, body: try JSONEncoder().encode(fee))
                     } catch let e as ServerRefused where e.status != 401 {
@@ -1001,6 +1041,7 @@ final class AppState {
                     /// EVT-14: the account's scheme; servers from before it don't send it.
                     var misconductScheme: String?
                 }
+                syncProgress = "Getting matches…"
                 let answer = try JSONDecoder().decode(Answer.self, from: try await server.get(AppState.matchesRequest, token: token))
                 update { s in
                     s.matches = answer.matches
@@ -1024,7 +1065,8 @@ final class AppState {
     }
 
     var syncLine: String {
-        if syncing { return "Syncing…" }
+        // UI-16: each step, as the Garmin's: "Sending match 1 of 2…", "Sending track 3 of 18…", "Getting matches…".
+        if syncing { return syncProgress ?? "Syncing…" }
         if let syncProblem { return syncProblem }
         guard let at = saved.lastSync else { return "Not synced yet" }
         let minutes = (nowSeconds() - at) / 60

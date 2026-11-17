@@ -146,7 +146,8 @@ private fun plannedTitle(m: JsonObject) = m.str("title") ?: "${m.str("home")} v 
 
 private fun syncLine(): String {
     val s = AppState.saved
-    if (AppState.syncing) return "Syncing…"
+    // UI-16: each step, as the Garmin's: "Sending match 1 of 2…", "Sending track 3 of 18…", "Getting matches…".
+    if (AppState.syncing) return AppState.syncProgress ?: "Syncing…"
     AppState.syncProblem?.let { return it }
     val at = s.lastSync ?: return "Not synced yet"
     val minutes = (System.currentTimeMillis() / 1000 - at) / 60
@@ -164,14 +165,14 @@ private fun HomePage(push: (Page) -> Unit) {
     val s = AppState.saved
     WatchList("LawFive") {
         item {
-            // SYNC-16: the next scheduled match; a canceled or postponed one isn't coming up.
-            val next = coming(s.matches).firstOrNull()
-            MenuRow("Matches", if (!AppState.linked) "Link to sync" else next?.let(::plannedTitle) ?: "None coming up", R.drawable.ph_matches) {
+            // UI-15: "3 coming up" (SYNC-16: scheduled ones), the last sync's problem in its place, or "Link to sync".
+            MenuRow("Matches", matchesSummary(AppState.linked, AppState.syncProblem, s.matches), R.drawable.ph_matches) {
                 push(if (AppState.linked) Page.Matches else Page.Link)
             }
         }
         item { MenuRow("New match", "Quick · ${formatSummary(s.quick)}", R.drawable.ph_plus) { push(Page.NewMatch) } }
-        item { MenuRow("History", if (s.history.isEmpty()) "None yet" else "${s.history.size} kept", R.drawable.ph_history) { push(Page.History) } }
+        // UI-15: the last match played, as the Garmin's.
+        item { MenuRow("History", s.history.firstOrNull()?.let { "Last: ${playedTitle(it)}" } ?: "None yet", R.drawable.ph_history) { push(Page.History) } }
         item { MenuRow("Settings", if (AppState.linked) "Linked" else "Not linked", R.drawable.ph_settings) { push(Page.Settings) } }
     }
 }

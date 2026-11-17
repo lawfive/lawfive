@@ -76,6 +76,13 @@ final class WatchSnapshots: XCTestCase {
         try write("watch-start-anyway__46mm-dark-1x", ConfirmScreen(question: "Start anyway?", detail: matches[1].statusDetail, onYes: {}, onNo: {}))
     }
 
+    /// UI-26: the sync screen partway through a track, after its match.
+    func testTheSyncScreen() throws {
+        let state = AppState()
+        state.showSyncScreenForTesting("track")
+        try write("watch-sync-track__46mm-dark-1x", SyncScreen().environment(state))
+    }
+
     /// UI-10, UI-11: the kits at their hardest: the widest aliases and two-figure scores, a white kit against a black one
     /// (its gray edge), and no colors, on the score line, scores only and the kickoff's dot. On the narrowest watch, the
     /// SE's 40 mm (LAWFIVE_WATCH_SIMULATOR for tools/snapshots.sh), they must fit across.

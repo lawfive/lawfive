@@ -549,7 +549,7 @@ fun ScreenFree() {
 }
 
 /**
- * UI-26: matches on their way: a ring for how far it's got and what's going now. Swiping back leaves
+ * UI-26: matches and tracks on their way: a ring for how far it's got and what's going now ("Sending track", "3 of 18"). Swiping back leaves
  * it to carry on. It says when it's done and closes itself; if it stops, it says why.
  */
 @Composable
@@ -558,8 +558,9 @@ fun SyncScreen() {
     BackHandler(onBack = close)
     val ended = !AppState.syncing
     val problem = if (ended) AppState.syncProblem else null
-    val total = AppState.syncTotal
-    val sent = AppState.syncSent
+    val total = AppState.syncStepsTotal
+    val done = AppState.syncStepsDone
+    val sent = AppState.syncMatchesSent
     LaunchedEffect(ended, problem) {
         if (ended && problem == null) {
             delay(3000)
@@ -576,10 +577,10 @@ fun SyncScreen() {
                 At(0.47f) { T(problem, fraction(0.052f), C.dim) }
                 At(0.58f) { T("Nothing's lost: it tries again", fraction(0.05f), C.dim) }
             } else if (ended) {
-                At(0.5f) { T(if (sent == 1) "1 match sent" else "$sent matches sent", fraction(0.058f), C.dim) }
-            } else {
-                At(0.44f) { T("Sending match", fraction(0.058f), C.dim) }
-                At(0.57f) { T("${minOf(sent + 1, total)} of $total", fraction(0.095f), C.text, FontWeight.SemiBold) }
+                At(0.5f) { T(if (sent == 1) "1 match sent" else if (sent > 1) "$sent matches sent" else "Tracks sent", fraction(0.058f), C.dim) }
+            } else if (AppState.syncStepLabel.isNotEmpty()) {
+                At(0.44f) { T(AppState.syncStepLabel, fraction(0.058f), C.dim) }
+                At(0.57f) { T(AppState.syncStepCount, fraction(0.095f), C.text, FontWeight.SemiBold) }
             }
             At(0.78f) { T(if (ended) "Tap to close" else "Swipe: it keeps going", fraction(0.05f), C.dim) }
         }
@@ -588,7 +589,7 @@ fun SyncScreen() {
             val inset = thick / 2 + 2.dp.toPx()
             val box = Size(size.width - 2 * inset, size.height - 2 * inset)
             drawArc(Color(0xFF333333), 0f, 360f, false, Offset(inset, inset), box, style = Stroke(thick))
-            val fraction = if (ended && problem == null) 1f else if (total > 0) sent.toFloat() / total else 0f
+            val fraction = if (ended && problem == null) 1f else if (total > 0) done.toFloat() / total else 0f
             if (fraction > 0) drawArc(C.start, -90f, 360 * fraction, false, Offset(inset, inset), box, style = Stroke(thick))
         }
     }
@@ -992,7 +993,9 @@ private fun FullTimeScreen(m: Match, events: () -> Unit) {
         At(if (twoLines) 0.45f else 0.47f) { T("Match saved", fraction(0.072f), C.brand, FontWeight.SemiBold) }
         At(if (twoLines) 0.54f else 0.55f) {
             // SYNC-17: one LawFive refused is no longer waiting.
-            T(if (sent) "Sent to LawFive" else if (!AppState.linked) "On this watch only\nLink to send it" else if (AppState.isQueued(m.created)) "Waiting to send" else "Not on LawFive", fraction(0.052f), C.dim, lines = 2)
+            // UI-26: while it, or its track, goes, the sync's step.
+            val going = AppState.syncing && (AppState.isQueued(m.created) || AppState.saved.tracks.any { it.created == m.created })
+            T(if (going) AppState.syncProgress ?: "Syncing…" else if (sent) "Sent to LawFive" else if (!AppState.linked) "On this watch only\nLink to send it" else if (AppState.isQueued(m.created)) "Waiting to send" else "Not on LawFive", fraction(0.052f), C.dim, lines = 2)
         }
         At(0.72f) { PillButton("Done", width = maxWidth * 0.5f) { AppState.clearMatch() } }
         val eventsSize = fraction(0.058f)

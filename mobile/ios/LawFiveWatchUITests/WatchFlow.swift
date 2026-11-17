@@ -608,7 +608,7 @@ final class WatchFlow: XCTestCase {
         app.launchArguments = ["-reset", "1", "-noWorkout", "1", "-begin", "1", "-finish", "1"]
         app.launch()
         tap("Done")
-        tap("History, 1 kept")
+        tap("History, Last: HOM 1-2 AWY")
         let played = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'HOM'")).firstMatch
         XCTAssertTrue(played.waitForExistence(timeout: 5))
         played.tap()
@@ -730,9 +730,11 @@ final class WatchFlow: XCTestCase {
         see("Match saved")
         tap("Done")
 
-        // It's kept.
-        let history = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'History'")).firstMatch
-        XCTAssertTrue(history.waitForExistence(timeout: 5))
+        // It's kept, and the start menu says so (UI-15), with how to get matches unlinked.
+        let history = app.buttons["History, Last: HOM 1-0 AWY"]
+        XCTAssertTrue(history.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.buttons["Matches, Link to sync"].exists)
+        shot("start menu")
         history.tap()
         XCTAssertTrue(app.staticTexts["HOM 1-0 AWY"].waitForExistence(timeout: 5))
 

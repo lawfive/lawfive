@@ -21,6 +21,15 @@ class ComingTest {
 
     private fun ids(list: List<JsonObject>) = list.map { it.str("id") }
 
+    // UI-15: the start menu's line counts the scheduled matches, gives way to the last sync's problem, and says how to get matches unlinked.
+    @Test fun theStartMenuCountsTheMatchesComingUp() {
+        val matches = listOf(match("next", now + 3600), match("canceled", now + 1800, "cancelled"), match("later", now + 7200))
+        assertEquals("2 coming up", matchesSummary(true, null, matches))
+        assertEquals("None yet", matchesSummary(true, null, listOf(match("canceled", now + 1800, "cancelled"))))
+        assertEquals("Can't reach the server", matchesSummary(true, "Can't reach the server", matches))
+        assertEquals("Link to sync", matchesSummary(false, null, matches))
+    }
+
     @Test fun theWatchAsksForCanceledMatches() {
         assertTrue(MATCHES_PATH.startsWith("/v1/watch/matches?"))
         assertTrue(MATCHES_PATH.contains("canceled=true"))

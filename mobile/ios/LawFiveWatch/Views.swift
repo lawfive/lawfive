@@ -90,7 +90,7 @@ private struct SyncRing: Shape {
     }
 }
 
-/// UI-26: matches on their way: a ring for how far it's got and what's going now. Closing it leaves
+/// UI-26: matches and tracks on their way: a ring for how far it's got and what's going now ("Sending track", "3 of 18"). Closing it leaves
 /// it to carry on. It says when it's done and closes itself; if it stops, it says why.
 struct SyncScreen: View {
     @Environment(AppState.self) private var state
@@ -99,9 +99,9 @@ struct SyncScreen: View {
     var body: some View {
         let ended = !state.syncing
         let problem = ended ? state.syncProblem : nil
-        let total = state.syncTotal
-        let sent = state.syncSent
-        let fraction = ended && problem == nil ? 1 : total > 0 ? Double(sent) / Double(total) : 0
+        let total = state.syncStepsTotal
+        let sent = state.syncMatchesSent
+        let fraction = ended && problem == nil ? 1 : total > 0 ? Double(state.syncStepsDone) / Double(total) : 0
         GeometryReader { geo in
             let size = geo.size
             let w = size.width
@@ -116,10 +116,10 @@ struct SyncScreen: View {
                     }
                     .font(.barlow(w * 0.065)).foregroundStyle(C.dim).multilineTextAlignment(.center).padding(.horizontal, w * 0.06).at(0.5, 0.56, size)
                 } else if ended {
-                    Text(sent == 1 ? "1 match sent" : "\(sent) matches sent").font(.barlow(w * 0.075)).foregroundStyle(C.dim).at(0.5, 0.5, size)
-                } else {
-                    Text("Sending match").font(.barlow(w * 0.075)).foregroundStyle(C.dim).at(0.5, 0.45, size)
-                    Text("\(min(sent + 1, total)) of \(total)").font(.barlow(w * 0.12, .semibold)).foregroundStyle(C.text).at(0.5, 0.6, size)
+                    Text(sent == 1 ? "1 match sent" : sent > 1 ? "\(sent) matches sent" : "Tracks sent").font(.barlow(w * 0.075)).foregroundStyle(C.dim).at(0.5, 0.5, size)
+                } else if !state.syncStepLabel.isEmpty {
+                    Text(state.syncStepLabel).font(.barlow(w * 0.075)).foregroundStyle(C.dim).at(0.5, 0.45, size)
+                    Text(state.syncStepCount).font(.barlow(w * 0.12, .semibold)).foregroundStyle(C.text).at(0.5, 0.6, size)
                 }
             }
         }
@@ -142,9 +142,11 @@ struct HomePage: View {
         let s = state.saved
         WatchList(title: "LawFive") {
             // SYNC-16: the next match's line is the next scheduled one, never one canceled or postponed.
-            NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: !state.linked ? "Link to sync" : s.matches.comingUp.first?.title ?? "None coming up", icon: "matches") }.buttonStyle(.plain)
+            // UI-15: "3 coming up" (SYNC-16: scheduled ones), the last sync's problem in its place, or "Link to sync".
+            NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: s.matches.summary(linked: state.linked, problem: state.syncProblem), icon: "matches") }.buttonStyle(.plain)
             NavigationLink { NewMatchPage() } label: { RowLabel(label: "New match", sub: "Quick · \(s.quick.summary)", icon: "plus") }.buttonStyle(.plain)
-            NavigationLink { HistoryPage() } label: { RowLabel(label: "History", sub: s.history.isEmpty ? "None yet" : "\(s.history.count) kept", icon: "history") }.buttonStyle(.plain)
+            // UI-15: the last match played, as the Garmin's.
+            NavigationLink { HistoryPage() } label: { RowLabel(label: "History", sub: s.history.first.map { "Last: \(playedTitle($0))" } ?? "None yet", icon: "history") }.buttonStyle(.plain)
             NavigationLink { SettingsPage() } label: { RowLabel(label: "Settings", sub: state.linked ? "Linked" : "Not linked", icon: "settings") }.buttonStyle(.plain)
         }
     }

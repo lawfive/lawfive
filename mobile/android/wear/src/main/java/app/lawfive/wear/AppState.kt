@@ -38,20 +38,36 @@ object AppState {
         private set
     var syncProblem by mutableStateOf<String?>(null)
         private set
-    // UI-26: the sync screen: how many matches this sync is sending, how many have gone, and whether
-    // it's up. The home and full-time screens say when it may come up.
-    var syncTotal by mutableStateOf(0)
-    var syncSent by mutableStateOf(0)
+    // UI-16, UI-26: this sync's steps, as the Garmin's: the matches and track chunks it's sending (the whole way, so the
+    // ring only goes forward), how many have gone, the step going now ("Sending track", "3 of 18"), and the line for
+    // Sync now ("Sending track 3 of 18…", "Getting matches…"). The sync screen comes up for one that sends anything.
+    var syncStepsTotal by mutableStateOf(0)
+    var syncStepsDone by mutableStateOf(0)
+    var syncMatchesSent by mutableStateOf(0)
+    var syncStepLabel by mutableStateOf("")
+    var syncStepCount by mutableStateOf("")
+    var syncProgress by mutableStateOf<String?>(null)
+        private set
     var syncScreen by mutableStateOf(false)
     var screenFree by mutableStateOf(false)
     private var syncScreenShown by mutableStateOf(false)
-    /** Matches are going, or went without the screen getting a chance to say so, and it hasn't come up for this sync yet. */
-    val wantsSyncScreen get() = !syncScreenShown && syncTotal > 0 && (syncing || syncProblem == null)
+    /** Matches or tracks are going, or went without the screen getting a chance to say so, and it hasn't come up for this sync yet. */
+    val wantsSyncScreen get() = !syncScreenShown && syncStepsTotal > 0 && (syncing || syncProblem == null)
 
+    private fun step(label: String, number: Int, total: Int) {
+        syncStepLabel = label
+        syncStepCount = "$number of $total"
+        syncProgress = "$label $number of $total…"
+    }
+
+    /** "1" or "2" of 3 matches, "track" (a match, then 3 of 18 chunks), or "stopped". */
     fun showSyncScreenForTesting(what: String) {
-        syncTotal = 3
-        syncSent = what.toIntOrNull() ?: 1
-        syncing = what.toIntOrNull()?.let { it < 3 } ?: false
+        val track = what == "track"
+        syncStepsTotal = if (track) 19 else 3
+        syncStepsDone = if (track) 3 else what.toIntOrNull() ?: 1
+        syncMatchesSent = if (track) 1 else syncStepsDone
+        if (track) step("Sending track", 3, 18) else step("Sending match", minOf(syncStepsDone + 1, 3), 3)
+        syncing = track || (what.toIntOrNull()?.let { it < 3 } ?: false)
         syncProblem = if (what == "stopped") "Can't reach the server" else null
         syncScreen = true
     }
@@ -543,24 +559,30 @@ object AppState {
         if (syncing) { done?.invoke(); return }
         syncing = true
         syncProblem = null
-        if (saved.outbox.isNotEmpty()) {
-            syncTotal = saved.outbox.size
-            syncSent = 0
-            syncScreenShown = false
-        }
+        var matchesTotal = saved.outbox.size
+        var chunksTotal = saved.tracks.sumOf { maxOf(0, it.count - it.next) }
+        var chunksSent = 0
+        syncStepsTotal = matchesTotal + chunksTotal
+        syncStepsDone = 0
+        syncMatchesSent = 0
+        syncProgress = null
+        if (syncStepsTotal > 0) syncScreenShown = false
         scope.launch {
             try {
                 for (upload in saved.outbox) {
+                    step("Sending match", syncMatchesSent + 1, maxOf(matchesTotal, syncMatchesSent + 1))
                     val refused = runCatching { server.post("/v1/watch/records", token, upload) }.exceptionOrNull()
                     if (refused is ServerRefused && refused.status == 400) {
                         // SYNC-4, SYNC-17: LawFive itself can't take this one; giving it up lets the others through.
                         // History keeps it, no longer waiting ("Not on LawFive").
-                        syncTotal--
+                        matchesTotal--
+                        syncStepsTotal--
                         update { s -> s.copy(outbox = s.outbox - upload) }
                         continue
                     }
                     if (refused != null) throw refused
-                    syncSent++
+                    syncMatchesSent++
+                    syncStepsDone++
                     // UI-17: History says when it went.
                     val at = System.currentTimeMillis() / 1000
                     update { s -> s.copy(outbox = s.outbox - upload, history = s.history.map { if (it.created.toString() == upload["created"].toString()) it.copy(sent = true, sentAt = at) else it }) }
@@ -572,6 +594,7 @@ object AppState {
                         update { it.copy(tracks = it.tracks.drop(1)) }
                         continue
                     }
+                    step("Sending track", chunksSent + 1, maxOf(chunksTotal, chunksSent + 1))
                     val data = track.chunk(next.created, next.next)
                     val result = if (data == null) null else runCatching {
                         server.post("/v1/watch/tracks", token, buildJsonObject {
@@ -582,21 +605,27 @@ object AppState {
                     if (result is ServerRefused && result.status == 404) {
                         // A server from before tracks, or the match was deleted: the track has nowhere to go.
                         track.delete(next.created, next.next, next.count)
+                        chunksTotal -= next.count - next.next
+                        syncStepsTotal -= next.count - next.next
                         update { it.copy(tracks = it.tracks.drop(1)) }
                         continue
                     }
                     // A chunk the server can't take goes, so the rest can follow; anything else is tried again later.
                     if (result != null && !(result is ServerRefused && result.status == 400)) throw result
+                    chunksSent++
+                    syncStepsDone++
                     track.delete(next.created, next.next, next.next + 1)
                     update { s -> s.copy(tracks = s.tracks.mapIndexed { i, t -> if (i == 0) t.copy(next = t.next + 1) else t }) }
                 }
                 // SYNC-12: after the matches, so a quick match is there to take its pitch.
                 for (pitch in saved.pitches) {
+                    syncProgress = "Sending pitch…"
                     runCatching { server.post("/v1/watch/pitch", token, json.encodeToJsonElement(PitchUpload.serializer(), pitch)) }
                         .onFailure { if (!(it is ServerRefused && (it.status == 400 || it.status == 404))) throw it }
                     update { s -> s.copy(pitches = s.pitches - pitch) }
                 }
                 for (fee in saved.fees) {
+                    syncProgress = "Sending fee…"
                     runCatching { server.post("/v1/watch/fee", token, json.encodeToJsonElement(FeeChange.serializer(), fee)) }
                         .onFailure { if (it !is ServerRefused) throw it }
                     update { s -> s.copy(fees = s.fees - fee) }
@@ -607,6 +636,7 @@ object AppState {
                     update { it.copy(screenChange = null) }
                 }
                 // SYNC-16: canceled and postponed matches still to kick off come too, marked with their status.
+                syncProgress = "Getting matches…"
                 val answer = server.get(MATCHES_PATH, token)
                 update { s ->
                     s.copy(
@@ -629,6 +659,7 @@ object AppState {
                 syncProblem = "Can't reach the server"
             } finally {
                 syncing = false
+                syncProgress = null
                 done?.invoke()
             }
         }

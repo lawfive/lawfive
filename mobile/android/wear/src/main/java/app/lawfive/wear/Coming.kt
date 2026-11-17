@@ -30,3 +30,11 @@ fun listed(matches: List<JsonObject>, now: Long): List<JsonObject> =
 
 /** UI-15, SYNC-16: the matches coming up, scheduled ones only. */
 fun coming(matches: List<JsonObject>): List<JsonObject> = matches.filter(::scheduled)
+
+/** UI-15: the start menu's Matches line, as the Garmin's: "3 coming up", the last sync's problem in its place, or "Link to sync". */
+fun matchesSummary(linked: Boolean, problem: String?, matches: List<JsonObject>): String {
+    if (!linked) return "Link to sync"
+    if (problem != null) return problem
+    val count = coming(matches).size
+    return if (count == 0) "None yet" else "$count coming up"
+}

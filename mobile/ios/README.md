@@ -109,6 +109,7 @@ xcrun simctl launch <watch> app.lawfive.watchkitapp -server http://localhost:300
 | `-reset`, `-clear` | Forget everything, or the match |
 | `-token` | Link with a token |
 | `-refusedRecord` | A finished match whose upload LawFive refuses, first in the outbox (SYNC-17) |
+| `-syncScreen` | The sync screen at `1` or `2` of 3 matches, partway through a `track`, or `stopped` (UI-26) |
 | `-plain`, `-cup` | A test format; `-golden` adds golden goal to `-cup` |
 | `-phase golden`, `-phase et`, `-phase decide` | Play into extra time and score (ET-6), stop at ET1's kickoff (ET-7), or at the choice after regular time (ET-1) |
 | `-begin` | Start a match with some goals |

@@ -65,6 +65,11 @@ final class PlannedMatchesTests: XCTestCase {
         XCTAssertEqual(matches.comingUp.map(\.id), ["next", "later"])
         XCTAssertEqual(matches.comingUp.first?.title, "STR v ROV next")
         XCTAssertTrue([try Self.match("x", kickoff: now + 60, status: "postponed")].comingUp.isEmpty)
+        // UI-15: the start menu's line counts them, gives way to the last sync's problem, and says how to get matches unlinked.
+        XCTAssertEqual(matches.summary(linked: true, problem: nil), "2 coming up")
+        XCTAssertEqual([try Self.match("x", kickoff: now + 60, status: "postponed")].summary(linked: true, problem: nil), "None yet")
+        XCTAssertEqual(matches.summary(linked: true, problem: "Can't reach the server"), "Can't reach the server")
+        XCTAssertEqual(matches.summary(linked: false, problem: nil), "Link to sync")
     }
 
     func testStartingACanceledMatchIsAMatchLikeAnyOther() throws {
