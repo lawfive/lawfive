@@ -2,6 +2,7 @@ import { type CSSProperties, type ReactNode, useState } from "react";
 import { Link, useParams } from "react-router";
 import { type Match, type MatchEvent, type MatchRecord, type Referee, type Venue, useList, useLookup, useRecord, useSave, useSession, useTrack } from "../api.ts";
 import { AddTrack, TrackDrop } from "../components/AddTrack.tsx";
+import { Files } from "../components/Files.tsx";
 import { Photos, RefereeAvatar } from "../components/Photos.tsx";
 import { ShareMatch } from "../components/ShareMatch.tsx";
 import { TrackSection } from "../components/TrackSection.tsx";
@@ -121,7 +122,11 @@ export function MatchPage() {
                         )}
                     </div>
                     <Officials match={m} referees={referees} together={together.referees} />
-                    <div className="match-photos"><Photos recordType="match" recordId={m.id} /></div>
+                    <div className="match-photos">
+                        <Photos recordType="match" recordId={m.id} />
+                        {/* FILE-6: the match's files, with its competition's under them. */}
+                        <Files recordType="match" recordId={m.id} competition={competition} />
+                    </div>
                 </div>
 
                 {record && track.isLoading && <TrackPlaceholder />}

@@ -33,6 +33,6 @@ What each account may use, set by whoever runs the server: a self-hoster sharing
 Everything above is built on the server, the website, Android and the iPhone, except as below.
 
 Not built yet:
-- The largest file limit, and storage named "photos, files and tracks", on the website and the phones (the server has them).
+- The largest file limit, and storage named "photos, files and tracks", on the phones (the server and the website have them).
 - Checked on a real phone (R-20).
 - Assignor connections as a limit, once they exist.

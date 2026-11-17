@@ -182,7 +182,7 @@ Still to do:
   - [Mileage](plans/mileage.md) from home to the pitch.
   - [Accounts](plans/accounts.md): signing in with Google or Apple, confirming email addresses, and ending other sessions on a password reset.
   - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
-  - [Files on venues, competitions and more](plans/attachments.md) (FILE-6, FILE-9 to FILE-15): agreed and being built, the server first.
+  - [Files on venues, competitions and more](plans/attachments.md) (FILE-6, FILE-9 to FILE-15): agreed; the server and the website are built, the phones next.
   - [Rosters and substitutions](plans/rosters.md) (EVT-13), with reading team sheets and care for minors' data.
 - **The stores:** Connect IQ (in the store), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
 - **The paid hosted service,** once there is something worth paying for (A-4).

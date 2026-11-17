@@ -131,7 +131,12 @@ for (const [device, viewport] of [["desktop", { width: 1280, height: 900 }], ["p
         await page.waitForTimeout(section === "venues" ? 1500 : 0);
         await shot(section);
     }
-    await page.click(".list-row >> nth=0");
+    // WEB-34: a competition's page, with its matches and files (FILE-6), then its form.
+    await page.click(".list-row:has-text('Bay Youth League')");
+    await page.waitForSelector(".files-card .file-row");
+    await shot("competition");
+    await page.click(".page-head a.btn:has-text('Edit')");
+    await page.waitForSelector("form");
     await shot("competition-edit");
     // Duplicate referees (DUP-1): the groups, the merge dialog (closed without merging), and a referee's page.
     await page.goto(`${base}/referees/duplicates`);
@@ -253,10 +258,25 @@ for (const [device, viewport] of [["desktop", { width: 1280, height: 900 }], ["p
     await visitor.close();
     await page.goto(`${base}/venues`);
     await page.waitForSelector(".list-row");
-    await page.click(".list-row >> nth=0");
+    await page.click(".list-row:has-text('Twin Creeks Sports Complex')");
     await page.waitForSelector(".match-list");
     await page.waitForTimeout(1500);
     await shot("venue");
+    // FILE-12: a text file's first lines; a file's menu; and a file that isn't taken, said under the list (FILE-7).
+    await page.click(".file-name:text-is('Ground rules.txt')");
+    await page.waitForSelector(".file-text");
+    await shot("file-text", false);
+    await page.keyboard.press("Escape");
+    await page.click("[aria-label='More for Parking and field map.pdf']");
+    await page.waitForSelector(".menu-popover");
+    await shot("file-menu", false);
+    await page.keyboard.press("Escape");
+    await page.setInputFiles(".files-card input[type=file]", [
+        { name: "Old schedule.xls", mimeType: "application/vnd.ms-excel", buffer: Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1, 0, 0, 0, 0]) },
+        { name: "Directions.html", mimeType: "text/html", buffer: Buffer.from("<!doctype html><p>Turn left</p>") },
+    ]);
+    await page.waitForSelector(".files-card .photo-notice");
+    await page.locator(".files-card").screenshot({ path: `${out}/${device}-file-refused.png` });
     await page.click("text=Edit");
     await page.waitForSelector(".map-pin");
     await page.waitForTimeout(1500);

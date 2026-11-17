@@ -429,6 +429,51 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .photo-notice p { margin: 0; }
 .photo-notice a { color: inherit; font-weight: 600; text-decoration: underline; }
 .photos-card .photo-notice { margin: 0 18px 18px; }
+/* FILE-6, FILE-12: the Files card, a list under Photos: each file's icon or thumbnail on a tile, its
+   name and line, Download and its menu at the right; Add files a dashed row like Add photos. */
+.files-card .file-list, .files-card .files-note, .files-card .files-from { margin-inline: 18px; }
+.files-card .file-list { margin-block: 8px 18px; }
+.files-card .files-note { margin-block: 8px 18px; }
+.files-card .photo-notice { margin: 0 18px 18px; }
+.files.form-section .file-list { margin-top: 8px; }
+.file-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.file-row { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 6px 8px 8px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.file-tile { flex: none; width: 44px; height: 44px; border-radius: var(--radius); display: grid; place-items: center; overflow: hidden; background: var(--surface-2); color: var(--brand-strong); }
+.file-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.file-main { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.file-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; min-width: 0; overflow: hidden; overflow-wrap: anywhere; padding: 0; border: 0; background: none; text-align: left; font: 700 15.5px var(--font); color: var(--text); text-decoration: none; cursor: pointer; }
+.file-name:hover { color: var(--brand-strong); text-decoration: underline; text-underline-offset: 3px; }
+.file-name:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 2px; }
+.file-sub { font-size: 13px; color: var(--muted); }
+.file-main .error { margin: 0; font-size: 13px; }
+.file-actions { flex: none; display: flex; align-items: center; gap: 2px; }
+.file-actions .icon-btn { width: 40px; height: 40px; color: var(--text); }
+.file-rename { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.file-rename .input { flex: 1; min-width: 0; height: 34px; padding-block: 4px; }
+.file-pending { opacity: 0.5; }
+.file-pending .file-tile { color: var(--muted); }
+.file-placeholder { border-style: dashed; }
+.file-placeholder .file-tile { background: color-mix(in srgb, var(--text) 8%, transparent); }
+.file-placeholder .placeholder-bar { height: 10px; }
+.file-add { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 8px 14px; border: 1.5px dashed var(--border); border-radius: var(--radius); background: none; color: var(--muted); font: 600 14px var(--font); text-align: left; cursor: pointer; transition: background 150ms, color 150ms, border-color 150ms; }
+.file-add span { display: grid; gap: 1px; }
+.file-add strong { font: 800 15px var(--display); letter-spacing: 0.04em; text-transform: uppercase; color: inherit; }
+.file-add small { font-size: 12.5px; font-weight: 400; }
+.file-add:hover, .files-over .file-add { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
+.files-over .file-add { border-style: solid; }
+.files-over { outline: 2px solid var(--brand); outline-offset: -2px; }
+.files-from { margin: 4px 0 8px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.files-from a { color: var(--brand-strong); text-decoration: none; letter-spacing: 0.04em; }
+.files-from a:hover { text-decoration: underline; }
+.file-refusals { margin: 0; padding-left: 18px; display: grid; gap: 2px; }
+/* The text preview: never a page, just its lines in the monospaced font. */
+.file-modal { max-width: 920px; }
+.file-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.file-text { margin: 0; min-height: 120px; max-height: min(64vh, 600px); overflow: auto; padding: 12px 14px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--border); font: 13px/1.55 var(--mono); white-space: pre; tab-size: 4; color: var(--text); }
+.file-text-wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.file-text:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.file-text-loading { display: grid; place-items: center; height: 240px; }
+.file-viewer-note { font-size: 13px; }
 .photo-pending { cursor: default; }
 .photo-pending img { opacity: 0.45; }
 .photo-uploading { position: absolute; inset: auto 0 0; padding: 6px 8px; font-size: 12px; font-weight: 600; background: color-mix(in srgb, var(--surface) 88%, transparent); }
@@ -1041,7 +1086,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .match-body > .facts-panel { grid-area: facts; min-width: 0; }
 .match-events { grid-area: events; min-width: 0; }
 .match-body > .officials { grid-area: officials; min-width: 0; }
-.match-photos { grid-area: photos; min-width: 0; }
+.match-photos { grid-area: photos; min-width: 0; display: grid; gap: 16px; }
 .notes-after { font-size: 13.5px; margin: 12px 0 0; }
 @media (max-width: 960px) {
     .match-body, .match-body.before-result { grid-template-columns: minmax(0, 1fr); grid-template-areas: "facts" "events" "officials" "photos"; grid-template-rows: none; gap: 44px; }

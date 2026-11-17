@@ -1,6 +1,6 @@
 import {
     AppleLogoIcon, ArrowClockwiseIcon, ArrowCounterClockwiseIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArrowsLeftRightIcon, BellIcon, BellSlashIcon, ArrowsMergeIcon, BrowserIcon, CalendarBlankIcon, CalendarDotsIcon, CameraIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon, ChartBarIcon, ChatTextIcon, CheckIcon, ClipboardTextIcon, ClockClockwiseIcon, ClockIcon, CopyIcon, DeviceMobileIcon,
-    CornersInIcon, CornersOutIcon, CropIcon, DotsThreeOutlineIcon, DownloadSimpleIcon, EnvelopeSimpleIcon, ExamIcon, ExportIcon, FileArrowUpIcon, FileCodeIcon, FileTextIcon, FileCsvIcon, FileXlsIcon, FirstAidIcon, FlagIcon,
+    CornersInIcon, CornersOutIcon, CropIcon, DotsThreeOutlineIcon, DownloadSimpleIcon, EnvelopeSimpleIcon, ExamIcon, ExportIcon, FileArrowUpIcon, FileCodeIcon, FileTextIcon, FileCsvIcon, FileXlsIcon, FileDocIcon, FileImageIcon, FilePdfIcon, FilePlusIcon, FilesIcon, FileTxtIcon, EyeIcon, FirstAidIcon, FlagIcon,
     GaugeIcon, GearSixIcon, GlobeIcon, HardDrivesIcon, HourglassMediumIcon, GoogleLogoIcon, GooglePlayLogoIcon, HandTapIcon, HashIcon, IdentificationBadgeIcon, ImagesIcon, InfoIcon, KeyIcon, LinkIcon, LockOpenIcon, ListDashesIcon, MagnifyingGlassIcon, MapPinIcon, MapPinPlusIcon, MapTrifoldIcon,
     MicrosoftOutlookLogoIcon, MoneyIcon, NavigationArrowIcon, NoteIcon, PauseIcon, PencilSimpleIcon, PhoneIcon, PlayIcon, PlusIcon, QrCodeIcon, QuestionIcon, SignOutIcon, TableIcon, TagIcon, TrashIcon, TrophyIcon, UploadSimpleIcon,
     UserCheckIcon, UserCircleIcon, UserPlusIcon,
@@ -109,6 +109,14 @@ const icons = {
     csv: FileCsvIcon,
     xlsx: FileXlsIcon,
     json: FileCodeIcon,
+    // Files on a record (FILE-6, FILE-12): each kind's icon, the list, adding to it and looking at one.
+    pdf: FilePdfIcon,
+    docx: FileDocIcon,
+    txt: FileTxtIcon,
+    fileImage: FileImageIcon,
+    files: FilesIcon,
+    addFiles: FilePlusIcon,
+    look: EyeIcon,
     // Stats' sections (WEB-24): distance run, heart rate, sprints, top speed, added time, the weather and a watch's battery.
     distance: PathIcon,
     heart: HeartbeatIcon,

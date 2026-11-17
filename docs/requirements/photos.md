@@ -45,6 +45,6 @@ Photos on the records they're of, and files (documents a league sends, a ground'
 
 ## Status
 
-Photos (FILE-1 to FILE-5, FILE-7, FILE-8) are built in the server, the website and both phone apps. For files, the server and the API are built: what's taken (FILE-9), names (FILE-10), downloads (FILE-11), thumbnails kept and counted, API keys (FILE-14) and webhooks (FILE-15).
+Photos (FILE-1 to FILE-5, FILE-7, FILE-8) are built in the server, the website and both phone apps. Files are built in the server and the API (FILE-9 to FILE-11, thumbnails kept and counted, API keys FILE-14, webhooks FILE-15) and on the website: the Files card on match, venue and competition pages, From the competition on matches, the text preview, and refusals said under the list (FILE-6, FILE-7, FILE-12).
 
-Not built yet: files in the website (FILE-6, FILE-7 and FILE-12 for files) and in the phone apps (FILE-6, FILE-7 and FILE-12 for files, and FILE-13).
+Not built yet: files in the phone apps (FILE-6, FILE-7 and FILE-12 for files, and FILE-13).

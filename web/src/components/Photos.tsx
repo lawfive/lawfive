@@ -57,7 +57,7 @@ export function Photos({ recordType, recordId, inForm }: { recordType: PhotoOwne
         }
         const photoFiles = files.filter((f) => f.type.startsWith("image/"));
         const notPhotos = files.length - photoFiles.length;
-        const left: Trouble = { files: [], noRoom: 0, others: notPhotos, problem: notPhotos > 0 ? "Only photos can be added here." : undefined };
+        const left: Trouble = { files: [], noRoom: 0, others: notPhotos, problem: notPhotos > 0 ? `Only photos can be added here${recordType === "referee" ? "" : "; add other files under Files, below"}.` : undefined };
         setTrouble(undefined);
         if (full) {
             setTrouble({ ...left, files: photoFiles, noRoom: photoFiles.length });
@@ -137,7 +137,7 @@ export function Photos({ recordType, recordId, inForm }: { recordType: PhotoOwne
                         {(trouble.noRoom > 0 || trouble.others === 0) && limit !== undefined && (
                             <p>
                                 <strong>{trouble.noRoom === 0 ? "Your storage is full." : trouble.noRoom === 1 ? "This photo didn't fit." : `${trouble.noRoom} photos didn't fit.`}</strong>{" "}
-                                You've used {storageSize(used)} of {storageSize(limit)}. Delete some photos or tracks to make room{admin ? <>. <Link to="/settings/server/plans">Change the limit</Link></> : ", or ask an admin of this server for more."}
+                                You've used {storageSize(used)} of {storageSize(limit)}. Delete some photos, files or tracks to make room{admin ? <>. <Link to="/settings/server/plans">Change the limit</Link></> : ", or ask an admin of this server for more."}
                             </p>
                         )}
                         {trouble.others > 0 && <p><strong>{trouble.others === 1 ? "A photo wasn't added." : `${trouble.others} photos weren't added.`}</strong> {trouble.problem}</p>}

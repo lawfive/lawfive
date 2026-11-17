@@ -279,6 +279,8 @@ In styles.css and ui.tsx. The phones have the same components under the same nam
 - **`Photos`**: square thumbnails (6px corners), ending in a dashed **Add photos** tile that turns brand-soft on hover or drag. Uploading shows faded with "Uploading…". A referee's first photo has a "Picture" chip.
 - **Viewer**: a near-black stage that keeps its size between photos; round previous and next buttons (and arrow keys); the caption saved on blur; Move to first (Make their picture), Download, Delete.
 - **`CropPhoto`**: the frame a 2px white line with heavier corners, the photo outside 55% darker; for a referee's picture, its circle in white dashes. Turn and Reset left, Cancel and Save right.
+- **`Files`** ([Files.tsx](web/src/components/Files.tsx)): a card under Photos (a competition's only one), a list of rows (60px, 6px corners, 1px edge): a 44px tile with the file's thumbnail or its kind's Phosphor icon in `--brand-strong` (`FilePdf`, `FileXls`, `FileCsv`, `FileDoc`, `FileTxt`, `FileImage`), the name (bold, cut with …) over "PDF · 1.2 MB", then Download and a menu (Look at it, Rename, Delete) as 40px icon buttons. **Add files** is a dashed row like Add photos, with what's taken under it. Uploading rows are faded with "Uploading…". On a match, **From the competition** follows in small mono capitals, its rows read-only. Refusals are the amber notice under the list, each file with why.
+- **File viewer**: a photo on the photo viewer's stage; a CSV or text file's first 200 lines in JetBrains Mono on `--surface-2`, scrolling both ways, never laid out as a page; Download at the foot.
 - **`.drop-zone`**: dashed on `--surface-2` with an icon tile, "Drop a file here" and a primary button; brand-soft with a solid border while a file is over it.
 
 ### QR code
@@ -356,9 +358,9 @@ In styles.css and ui.tsx. The phones have the same components under the same nam
 - **Games a month** is a form guide of lamps in each game's role color; **Most with** a name strap; **the ticker** a still board strip.
 - **In detail**, on the halfway line with a small nav: The running, The fixtures and The games. **Your watches** are drawn flat in a real watch's grays with a mint ring for battery used an hour (full at 30%).
 
-### A referee's and a venue's pages
+### A referee's, a venue's and a competition's pages
 
-A venue and a referee open on their own page; Edit opens the form, whose back link names the page.
+A venue, a referee and a competition open on their own page; Edit opens the form, whose back link names the page. A competition's page has its matches down the left, and its facts and Files down the right.
 
 - **`TogetherFigures`** ([History.tsx](web/src/components/History.tsx)): a cut slab, At this venue or Working together, tagged "Since Sep 2026". Mint labels over black italic figures up to 72px with a muted line, in cells divided by board rules (two to a row narrow, an odd last one across); a referee's picture on a board tile before them; See matches → along the foot.
 - A venue's map is framed in a 3px chalk line; its pitches are tile rows. Matches together or here are match rows under a 46px heading.

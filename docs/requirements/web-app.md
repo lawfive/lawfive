@@ -84,6 +84,7 @@ How the website looks, moves and lays out its pages, beyond what each feature's 
   - Only the buttons a referee has details for show.
   - On the website each button's tooltip gives the number or address, and Call and Text show on computers too.
   - The merge and duplicate screens keep the details as text, to tell two entries apart.
+- **WEB-34** **A competition's page**, on the website and both phones, opened from the competition list: its name, with its kind, season, age group, level and organizer under it; its dates, match template, misconduct codes and notes; its matches (the next ones, then the latest, with See all); and its **Files** (FILE-6). **Edit** opens the form, whose back link names the page ("Competition · Bay Youth League U12 Boys").
 - **WEB-14** **Directions**, everywhere a place is shown (the next match, a match's venue, a venue's page, and the phones' match pages, lists and notifications): one **Directions** button opening the pitch's map position (or the venue's, or its address when neither is placed) for directions from where the referee is. It's hidden when there's nowhere to go.
   - It opens the maps app chosen in Settings, **Directions open in**: **Automatic** (Apple Maps in the iPhone app, Google Maps on the website and Android), **Google** or **Apple**, saved with the account. Nothing opens OpenStreetMap.
   - Google Maps opens its app when installed, else the browser. On Android it shows the route rather than starting navigation.
@@ -112,4 +113,5 @@ Everything above is built on the website, and on Android and the iPhone where a 
 
 Not built yet:
 
+- A competition's page (WEB-34) on the phones, which still open the competition's form.
 - Apple's color picker (WEB-19) hasn't been tried on a real iPhone.

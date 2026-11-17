@@ -12,6 +12,7 @@ import { createApp } from "./app.ts";
 import { createAuth } from "./auth.ts";
 import { Push, tellNewRisks } from "./push.ts";
 import { demoForecasts, linkDemoWatch, seedDemo, seedPlayedWeather } from "./demoData.ts";
+import { seedDemoFiles } from "./demoFiles.ts";
 import { Notices } from "./notices.ts";
 import { AssignorCalendars } from "./feeds/calendars.ts";
 import { defaultMaps } from "./config.ts";
@@ -91,8 +92,9 @@ weather.start();
 const assignorCalendars = new AssignorCalendars(db, { authSecret: demoSecret, allowPrivate: () => true, onChange: (type) => (type === "match" || type === "venue") && weather.poke() });
 assignorCalendars.start();
 
-// Photos go in a temporary folder, gone with the demo's database.
+// Photos and files go in a temporary folder, gone with the demo's database; a few files to show (FILE-6).
 const files = await diskStore(mkdtempSync(join(tmpdir(), "lawfive-demo-")));
+await seedDemoFiles(db, files, user.id);
 const app = createApp(db, auth, { access, geocoderUrl: "https://nominatim.openstreetmap.org", maps, weather, push: !!pushRelay, ...(notices ? { notices } : {}), assignorCalendars, webhooks: { allowPrivate: true }, files });
 await linkDemoWatch(db, app, user.id);
 serve({ fetch: app.fetch, port }, () => {

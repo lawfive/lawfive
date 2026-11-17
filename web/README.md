@@ -21,7 +21,7 @@ A second copy can run beside the first (for example while a watch is linked to t
 |---|---|
 | `pnpm dev` | Development server with hot reload. |
 | `pnpm build` | Type check, then build to `dist/` (the server serves it; the Docker image builds it). |
-| `pnpm test` | Type check, then the unit tests in `test/` (display rules, search, the replay, track files, tips, stats arithmetic, the match screen pictures' clocks). |
+| `pnpm test` | Type check, then the unit tests in `test/` (display rules, search, the replay, track files, tips, stats arithmetic, the match screen pictures' clocks, how files are described). |
 | `pnpm screenshots <folder> [dark]` | Signs in to the demo and saves desktop and phone screenshots of every page with your installed Google Chrome (headless). Needs both servers above. |
 | `pnpm site-screenshots` | The same for lawfive.app's pictures in `site/public/images/` ([site/README.md](../site/README.md)). |
 | `pnpm build:site` | Builds lawfive.app's playable parts (quiz, match screen setup, Try a match, replay) into `site/` (`vite.site.config.ts`). |
@@ -36,7 +36,7 @@ A second copy can run beside the first (for example while a watch is linked to t
 | `src/api.ts` | API calls and hooks: `useList`, `useRecord`, `useSave`, `useDelete`, sign-in. |
 | `src/styles.css` | All styles: the color tokens with dark mode, the stadium board on wide screens, the tab bar on phones. |
 | `src/format.ts` | Dates, minutes, team names and colors (the same contrast rule as the watch); tab titles for matches (`matchTabTitle`). |
-| `src/components/` | The shell (`Layout`, with `moreGroups` for the More menu), form fields, `Icon`, the pitch's pieces and `useTabTitle` (`ui.tsx`), `Picker`, `QuickCreate`, `VenueMap` and `useMapTiles`, the track and heatmap components, `ListTools`, `FormatFields`, `editor.tsx` (`useEditor`), `Photos`, `CropPhoto`, `ShareMatch`, `Weather`, `WatchFace`, `QrCode`, `DidYouKnow`, `Slab`, `GetReady`, `AddressLookUp`, `HttpsNotice`, `PlanNotice`, the charts (`charts.tsx`, `boardCharts.tsx`) and the merge dialogs. |
+| `src/components/` | The shell (`Layout`, with `moreGroups` for the More menu), form fields, `Icon`, the pitch's pieces and `useTabTitle` (`ui.tsx`), `Picker`, `QuickCreate`, `VenueMap` and `useMapTiles`, the track and heatmap components, `ListTools`, `FormatFields`, `editor.tsx` (`useEditor`), `Photos`, `CropPhoto`, `Files`, `ShareMatch`, `Weather`, `WatchFace`, `QrCode`, `DidYouKnow`, `Slab`, `GetReady`, `AddressLookUp`, `HttpsNotice`, `PlanNotice`, the charts (`charts.tsx`, `boardCharts.tsx`) and the merge dialogs. |
 | `src/pages/` | One file per area: matches, results, templates, venues, referees, competitions, stats, settings, server settings and people, the setup wizard (`Setup.tsx`), the HTTPS guide, link a watch, importing (`Import.tsx`), the quiz, the match screen setup, Try a match, More, sign-in and the account pages. |
 | `src/match/` | Try a match: the match rules in TypeScript (`engine.ts`, passing the shared match cases), the watch's buttons (`controller.ts`) and screens (`TryMatch.tsx`). |
 | `src/watchPreview.ts` | What the match screen setup's watch pictures show at each moment, by the watches' rules. |
@@ -45,7 +45,7 @@ A second copy can run beside the first (for example while a watch is linked to t
 | `src/matchSheet.ts`, `src/report.ts` | Matches as a spreadsheet, and the match report. |
 | `src/newMatch.ts` | Where a new match starts: the usual role and format, or its template's. |
 | `src/settings.ts` | The user's settings, with defaults from the browser's language. |
-| `src/plans.ts`, `src/merging.ts`, `src/tips.ts`, `src/weather.ts`, `src/history.ts`, `src/search.ts`, `src/photos.ts` | Plans in words; merging; Did you know; match weather; how much you've worked with each referee or venue; match search; shrinking photos before upload. |
+| `src/plans.ts`, `src/merging.ts`, `src/tips.ts`, `src/weather.ts`, `src/history.ts`, `src/search.ts`, `src/photos.ts`, `src/files.ts` | Plans in words; merging; Did you know; match weather; how much you've worked with each referee or venue; match search; shrinking photos before upload; files on records (uploading as they are, their kinds, the text preview). |
 | `src/site/` | lawfive.app's playable parts, built by `pnpm build:site` (`src/site/site.css` adds what they need on the site). |
 
 Reading an import file is the server's job (`POST /v1/import/file`).

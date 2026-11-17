@@ -159,7 +159,7 @@ function NewKey({ notices, onClose, onCreated }: { notices: boolean; onClose: ()
                             <Heading slot="title">New API key</Heading>
                             <div className="fields" style={{ gridTemplateColumns: "1fr" }}>
                                 <Field label="Name"><TextInput value={name} onChange={setName} maxLength={60} placeholder="API import" /></Field>
-                                <Field label="Access" info="Read lets it fetch; read and write also lets it add, change and delete. Leave out anything it doesn't need.">
+                                <Field label="Access" info="Read lets it fetch; read and write also lets it add, change and delete. The photos and files on a match, venue, referee or competition go with it. Leave out anything it doesn't need.">
                                     <table className="key-access">
                                         <thead>
                                             <tr><td />{levels.map(([, label]) => <th key={label} scope="col">{label}</th>)}</tr>

@@ -29,14 +29,15 @@ export const limitGroups: { title: string; limits: LimitInfo[] }[] = [
             { key: "matches", label: "Matches", usage: "matches", hint: "Matches recorded on a watch are never refused.", short: count("match", "matches") },
             { key: "referees", label: "Referees", usage: "referees", short: count("referee", "referees") },
             { key: "venues", label: "Venues", usage: "venues", short: count("venue", "venues") },
-            { key: "storageMb", label: "Photos and tracks", unit: "MB", usage: "storageMb", hint: "A track recorded on a watch is never refused.", short: (n) => `${sizeOf(n)} of photos and tracks` },
+            { key: "storageMb", label: "Photos, files and tracks", unit: "MB", usage: "storageMb", hint: "Thumbnails included. A track recorded on a watch is never refused.", short: (n) => `${sizeOf(n)} of photos, files and tracks` },
         ],
     },
     {
         title: "Uploads",
         limits: [
             { key: "photoMb", label: "Largest photo", unit: "MB", hint: "Never more than 10 MB.", short: (n) => `photos up to ${sizeOf(n)}` },
-            { key: "fileMb", label: "Largest file", unit: "MB", hint: "Imports (at most 5 MB) and restoring an export.", short: (n) => `files up to ${sizeOf(n)}` },
+            { key: "attachmentMb", label: "Largest file", unit: "MB", hint: "On a match, venue or competition. Never more than 20 MB.", short: (n) => `files up to ${sizeOf(n)}` },
+            { key: "fileMb", label: "Largest import", unit: "MB", hint: "Importing matches (at most 5 MB) and restoring an export.", short: (n) => `imports up to ${sizeOf(n)}` },
         ],
     },
     {
@@ -82,7 +83,7 @@ export function limitValue(info: LimitInfo, value: number | undefined): string {
     return info.unit ? sizeOf(value) : value.toLocaleString();
 }
 
-/** A plan's limits in a line: "50 matches · 1 GB of photos and tracks · no webhooks". */
+/** A plan's limits in a line: "50 matches · 1 GB of photos, files and tracks · no webhooks". */
 export function planSummary(limits: PlanLimits, most = 4): string {
     const set = allLimits.filter((l) => limits[l.key] !== undefined);
     if (set.length === 0) {

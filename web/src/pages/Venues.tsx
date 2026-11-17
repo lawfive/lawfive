@@ -4,6 +4,7 @@ import { type Draft, type Venue, useList } from "../api.ts";
 import { FoundPlaces, useAddressLookUp } from "../components/AddressLookUp.tsx";
 import { FormActions, useEditor } from "../components/editor.tsx";
 import { History, TogetherFigures } from "../components/History.tsx";
+import { Files } from "../components/Files.tsx";
 import { Photos } from "../components/Photos.tsx";
 import { ListTools, useListTools } from "../components/ListTools.tsx";
 import { EmptyList, Fact, Field, Icon, Loading, MapPlaceholder, PageHead, TagInput, Tags, TextInput, tagsOf, TextArea, useBackTo } from "../components/ui.tsx";
@@ -150,6 +151,7 @@ export function VenuePage() {
                         </dl>
                     )}
                     <Photos recordType="venue" recordId={v.id} />
+                    <Files recordType="venue" recordId={v.id} />
                 </div>
             </div>
         </>
@@ -288,6 +290,7 @@ export function VenueEdit() {
                     </div>
                 </section>
                 <Photos recordType="venue" recordId={editor.isNew ? undefined : v.id} inForm />
+                <Files recordType="venue" recordId={editor.isNew ? undefined : v.id} inForm />
                 <FormActions editor={editor} deleteLabel="Delete venue" onCancel={() => navigate(editor.isNew ? "/venues" : `/venues/${v.id}`, { state })} onDelete={() => editor.remove("/venues")} />
             </form>
         </>

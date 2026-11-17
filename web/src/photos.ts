@@ -39,6 +39,16 @@ async function shrink(image: ImageBitmap, edge: number, quality: number): Promis
 /** FILE-7: known not to fit before it's sent, once the server has refused another. */
 export class NoRoomForPhoto extends Error {}
 
+/** A photo's thumbnail alone, for one kept as a file as it is (FILE-6). */
+export async function thumbnailOf(file: File): Promise<Blob> {
+    const image = await createImageBitmap(file, { imageOrientation: "from-image" });
+    try {
+        return (await shrink(image, thumbEdge, 0.8)).blob;
+    } finally {
+        image.close();
+    }
+}
+
 /**
  * Uploads a photo: made smaller, with a thumbnail, as a JPEG with nothing but the picture in it.
  * With `room`, one bigger than that isn't sent.
@@ -143,14 +153,14 @@ export function useRefereePictures() {
     return new Map((pictures.data ?? []).map((a) => [a.recordId, a]));
 }
 
-/** Changing and deleting a photo; every list of photos is fetched again afterwards. */
+/** Changing and deleting a photo or file; every list of them is fetched again afterwards. */
 export function usePhotoChanges() {
     const client = useQueryClient();
     const refresh = () => Promise.all([client.invalidateQueries({ queryKey: ["attachments"] }), client.invalidateQueries({ queryKey: ["account-storage"] })]);
     return {
         refresh,
         change: useMutation({
-            mutationFn: ({ id, ...change }: { id: string; caption?: string | null; position?: number }) => request<Attachment>("PUT", `/attachments/${id}`, change),
+            mutationFn: ({ id, ...change }: { id: string; caption?: string | null; name?: string; position?: number }) => request<Attachment>("PUT", `/attachments/${id}`, change),
             onSuccess: refresh,
         }),
         remove: useMutation({

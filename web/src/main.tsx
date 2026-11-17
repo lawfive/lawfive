@@ -5,7 +5,7 @@ import { Navigate, Route, RouterProvider, Routes, createBrowserRouter } from "re
 import { ApiError, showSignedOut, useSession } from "./api.ts";
 import { Layout } from "./components/Layout.tsx";
 import { Loading } from "./components/ui.tsx";
-import { CompetitionEdit, Competitions } from "./pages/Competitions.tsx";
+import { CompetitionEdit, CompetitionPage, Competitions } from "./pages/Competitions.tsx";
 import { MatchEdit } from "./pages/MatchEdit.tsx";
 import { ResultEdit } from "./pages/ResultEdit.tsx";
 import { MatchPage } from "./pages/MatchPage.tsx";
@@ -122,7 +122,8 @@ function App() {
                 <Route path="referees/:id/edit" element={<RefereeEdit />} />
                 <Route path="competitions" element={<Competitions />} />
                 <Route path="competitions/new" element={<CompetitionEdit />} />
-                <Route path="competitions/:id" element={<CompetitionEdit />} />
+                <Route path="competitions/:id" element={<CompetitionPage />} />
+                <Route path="competitions/:id/edit" element={<CompetitionEdit />} />
                 <Route path="stats" element={<Stats />} />
                 <Route path="quiz" element={<Quiz />} />
                 <Route path="settings" element={<Settings />} />
