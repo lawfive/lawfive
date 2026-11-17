@@ -1,6 +1,6 @@
 import {
     type DuplicateGroups, type DuplicateMember, type LikelyDuplicates, type MatchCount, NotTheSame, RefereeMerge, RefereeMergeDraft, type RefereeMergePreview,
-    VenueMerge, VenueMergeDraft, type VenueMergePreview, collections, normaliseName, scopesAllow,
+    VenueMerge, VenueMergeDraft, type VenueMergePreview, collections, isGame, normaliseName, scopesAllow,
 } from "@lawfive/schema";
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { Hono } from "hono";
@@ -73,14 +73,14 @@ interface Mergeable {
 const uniqueBy = <T>(items: T[], key: (item: T) => string) => items.filter((item, i) => items.findIndex((other) => key(other) === key(item)) === i);
 const present = (values: unknown[]) => values.filter((v): v is string => typeof v === "string" && v.length > 0);
 
-/** Matches as one count: played (and the latest), and coming up. */
+/** Matches as one count: played (and the latest), and coming up. STAT-16: played is the games, as Stats counts them. */
 function countMatches(matches: Match[], at: (m: Match) => boolean): Count {
     const count: Count = { played: 0, upcoming: 0 };
     for (const m of matches) {
         if (!at(m)) {
             continue;
         }
-        if (m.status === "played") {
+        if (isGame(m)) {
             count.played++;
             if (m.kickoff && (!count.last || new Date(m.kickoff) > new Date(count.last))) {
                 count.last = m.kickoff;

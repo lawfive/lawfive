@@ -118,6 +118,22 @@ describe("POST /v1/referees/{id}/merge", () => {
         assert.deepEqual(added.crew, [{ role: "ar1", refereeId: john }]);
     });
 
+    test("an abandoned game counts as played, and a canceled match not at all (STAT-16)", async () => {
+        const kim = crypto.randomUUID();
+        const kimToo = crypto.randomUUID();
+        await call("PUT", `/v1/referees/${kim}`, { name: "Kim Park" });
+        await call("PUT", `/v1/referees/${kimToo}`, { name: "Park, Kim" });
+        const game = (status: string, day: number, refereeId: string) => call("PUT", `/v1/matches/${crypto.randomUUID()}`, {
+            status, kickoff: `2026-09-${String(day).padStart(2, "0")}T17:00:00Z`, format: defaultFormat,
+            home: { name: "Home" }, away: { name: "Away" }, role: "referee", crew: [{ role: "ar1", refereeId }],
+        });
+        await game("played", 1, kim);
+        await game("abandoned", 2, kimToo);
+        await game("canceled", 3, kimToo);
+        const preview = (await call("POST", `/v1/referees/${kim}/merge/preview`, { from: [kimToo] })).body;
+        assert.deepEqual(preview.together, { played: 2, upcoming: 0, last: "2026-09-02T17:00:00Z" });
+    });
+
     test("an API key needs matches:write as well", async () => {
         const key = (await call("POST", "/v1/api-keys", { name: "Referees only", scopes: ["referees:write"] })).body.key;
         assert.equal((await call("POST", `/v1/referees/${john}/merge`, { from: [sam], name: "John Doe" }, key)).status, 403);

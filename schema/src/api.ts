@@ -366,7 +366,7 @@ export const ServerMeta = z
         openApiUrl: z.string().optional().describe("Where this server describes its own API as OpenAPI (AGT-3); missing on servers from before it."),
         version: z.string().optional().describe("The server's version (VER-1): the day of its last change, \"2026.10.30\" (\"2026.10.30.2\" for a second change that day), or \"dev\" when run from a checkout without git. Missing on servers from before it."),
         commit: z.string().optional().describe("The commit it was built from, \"f5de635\"."),
-        capabilities: z.array(z.string()).describe("What this server offers: accounts, records, changes, tracks and stats (missing on servers from before them), devices, link, watch, people, invites, calendar and import, then email, geocode, push, notices (with push, from servers that tell phones what integrations did, NOTE-1) and weather when they're switched on; merging, from servers that find duplicates and preview merges for the apps (DUP-11); plans, from servers with plans and the account's time zone (PLAN-6, PLAN-9); assignor-calendars, from servers that read assignors' calendar links (FEED-1). Ignore names you don't know."),
+        capabilities: z.array(z.string()).describe("What this server offers: accounts, records, quiz (QUIZ-1), changes, tracks and stats (missing on servers from before them), devices, link, watch, people, invites, calendar and import, then email, geocode, push, notices (with push, from servers that tell phones what integrations did, NOTE-1), weather and attachments (photos and files, FILE-1) when they're switched on; merging, from servers that find duplicates and preview merges for the apps (DUP-11); plans, from servers with plans and the account's time zone (PLAN-6, PLAN-9); assignor-calendars, from servers that read assignors' calendar links (FEED-1). Ignore names you don't know."),
         maps: z.object({
             style: z.object({
                 url: z.string().describe("A MapLibre style for the map (vector tiles)."),
@@ -1087,9 +1087,9 @@ export const RefereeMergeResult = z
 
 export const MatchCount = z
     .object({
-        played: z.int(),
+        played: z.int().describe("Games: matches played or abandoned, with a kickoff (STAT-16)."),
         upcoming: z.int().describe("Scheduled matches."),
-        last: Timestamp.optional().describe("The latest played match's kickoff."),
+        last: Timestamp.optional().describe("The latest game's kickoff."),
     })
     .meta({ id: "MatchCount", description: "How many matches a venue or referee has, or several as if merged." });
 

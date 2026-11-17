@@ -6,7 +6,8 @@
     "played": {
       "type": "integer",
       "minimum": -9007199254740991,
-      "maximum": 9007199254740991
+      "maximum": 9007199254740991,
+      "description": "Games: matches played or abandoned, with a kickoff (STAT-16)."
     },
     "upcoming": {
       "type": "integer",
@@ -15,7 +16,7 @@
       "description": "Scheduled matches."
     },
     "last": {
-      "description": "The latest played match's kickoff.",
+      "description": "The latest game's kickoff.",
       "$ref": "Timestamp.json"
     }
   },
