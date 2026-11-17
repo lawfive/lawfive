@@ -57,11 +57,10 @@ Apps for referees on Wear OS and Apple Watch, doing what the Garmin app does, by
 
 ## Status
 
-Everything above but WCH-8 is built (WCH-13 checked in unit tests and on the emulator and simulator; a wrist raise and a break between matches on real watches are in R-13), played through on the Wear OS emulator and in UI tests on the Apple Watch simulator, syncing with the demo server. Recording, Mark pitch and the compass are tried with made-up readings; saving to Health Connect is unit-tested.
+Everything above but WCH-8 is built (WCH-13 checked in unit tests and on the emulator and simulator; a wrist raise and a break between matches on real watches are in R-13), played through on the Wear OS emulator and in UI tests on the Apple Watch simulator, syncing with the demo server. They do what the Garmin app does, except where a requirement says these watches differ. Recording, Mark pitch and the compass are tried with made-up readings; saving to Health Connect is unit-tested.
 
 Not built yet:
 
 - Recording, Mark pitch (WCH-7) and the compass (WCH-10) on real watches (R-13); Health Connect from a real phone.
 - Linking the Apple Watch from the iPhone (WCH-12) on hardware (R-6, R-13).
 - The icons in a real watch's app list (seen as renderings only).
-- Behind Garmin: what's left, and the plan to close each gap, are in the [watch catch-up plan](../plans/watch-catch-up.md).

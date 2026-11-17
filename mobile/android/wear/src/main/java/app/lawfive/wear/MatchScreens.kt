@@ -702,7 +702,8 @@ private fun RunningScreen(m: Match, now: Long) {
         // UI-23: square screens have no ring; they show the time instead.
         val edge = if (w.edge == EDGE_RING && !round) EDGE_TIME else w.edge
         val (clock, added) = m.clockDisplay(now)
-        // TMR-15: a stopping clock standing still is shown in the stoppage's orange.
+        // TMR-15: a stopping clock standing still is shown in the stoppage's orange, the second clock with it, as on the
+        // Apple Watch and in DESIGN.md.
         val tint = if (m.clockStopped) C.stoppage else C.text
         if (edge == EDGE_RING) PeriodRing(m, now)
         if (w.names) {
@@ -718,7 +719,7 @@ private fun RunningScreen(m: Match, now: Long) {
                 val size = fraction(if (clock.length > 5) 0.145f else 0.175f)
                 At(0.50f, 0.27f) { T(clock, size, tint, figure = true, lines = 1) }
                 At(0.50f) { Divider(maxHeight * 0.16f) }
-                At(0.50f, 0.73f) { T(m.secondClockText(now), size, figure = true, lines = 1) }
+                At(0.50f, 0.73f) { T(m.secondClockText(now), size, tint, figure = true, lines = 1) }
             }
             // Scores only: the largest clock that fits, leaving room for a stacked second clock.
             !w.names -> At(0.50f) { T(clock, fraction(if (clock.length > 5) 0.28f else if (w.clocks == CLOCKS_STACKED) 0.3f else 0.33f), tint, figure = true, lines = 1) }
@@ -727,7 +728,7 @@ private fun RunningScreen(m: Match, now: Long) {
         if (added != null) {
             At(0.69f) { T(added, fraction(0.09f), C.stoppage, FontWeight.SemiBold) }
         } else if (w.clocks == CLOCKS_STACKED) {
-            At(0.69f) { T(m.secondClockText(now), fraction(0.1f), C.dim, FontWeight.SemiBold) }
+            At(0.69f) { T(m.secondClockText(now), fraction(0.1f), if (m.clockStopped) C.stoppage else C.dim, FontWeight.SemiBold) }
         }
         TimerPills(m, now)
         if (edge == EDGE_TIME) TimeOfDay(bottom = true)

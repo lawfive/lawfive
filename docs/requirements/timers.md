@@ -66,5 +66,3 @@ The match clock, the stoppage clock and the break clock on the watch. Everything
 ## Status
 
 Everything above is built on all three watches and in Try a match.
-
-Not built yet: Wear OS's stopped clock (TMR-15) hasn't been seen in an emulator.
