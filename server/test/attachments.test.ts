@@ -95,6 +95,9 @@ describe("attachments", () => {
         const made = await call("POST", "/v1/attachments", session, upload("referee", referee, jpeg, { thumb: png, caption: " At the final ", width: "2000", height: "1500" }));
         assert.equal(made.status, 201);
         first = made.body;
+        // FILE-6: the phones offer files only on a server that says it takes them.
+        const capabilities = (await call("GET", "/v1/meta", session)).body.capabilities;
+        assert.ok(capabilities.includes("attachments") && capabilities.includes("files"));
         assert.equal(made.body.contentType, "image/jpeg");
         assert.equal(made.body.size, jpeg.byteLength);
         assert.equal(made.body.caption, "At the final");

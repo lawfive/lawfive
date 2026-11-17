@@ -156,7 +156,7 @@ export function createApp(db: Db, auth: Auth, options: AppOptions = {}) {
             ...(options.version ?? {}),
             capabilities: [
                 "accounts", "records", "quiz", "changes", "tracks", "stats", "devices", "link", "watch", "people", "invites", "calendar", "import", "merging", "plans", "assignor-calendars",
-                ...(options.push ? ["push"] : []), ...(options.notices ? ["notices"] : []), ...(options.files ? ["attachments"] : []), ...(access.mailer ? ["email"] : []), ...(geocoder ? ["geocode"] : []), ...(weatherOn ? ["weather"] : []),
+                ...(options.push ? ["push"] : []), ...(options.notices ? ["notices"] : []), ...(options.files ? ["attachments", "files"] : []), ...(access.mailer ? ["email"] : []), ...(geocoder ? ["geocode"] : []), ...(weatherOn ? ["weather"] : []),
             ],
             maps: maps(),
             ...(geocoder ? { geocoder: { url: geocoder } } : {}),

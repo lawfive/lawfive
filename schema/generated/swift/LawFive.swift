@@ -2254,7 +2254,7 @@ struct ServerMeta: Codable, Hashable, Sendable {
     var version: String? = nil
     /// The commit it was built from, "f5de635".
     var commit: String? = nil
-    /// What this server offers: accounts, records, quiz (QUIZ-1), changes, tracks and stats (missing on servers from before them), devices, link, watch, people, invites, calendar and import, then email, geocode, push, notices (with push, from servers that tell phones what integrations did, NOTE-1), weather and attachments (photos and files, FILE-1) when they're switched on; merging, from servers that find duplicates and preview merges for the apps (DUP-11); plans, from servers with plans and the account's time zone (PLAN-6, PLAN-9); assignor-calendars, from servers that read assignors' calendar links (FEED-1). Ignore names you don't know.
+    /// What this server offers: accounts, records, quiz (QUIZ-1), changes, tracks and stats (missing on servers from before them), devices, link, watch, people, invites, calendar and import, then email, geocode, push, notices (with push, from servers that tell phones what integrations did, NOTE-1), weather and attachments (photos and files, FILE-1) when they're switched on, with files from servers that take files on matches, venues and competitions (FILE-6), which apps check before offering them; merging, from servers that find duplicates and preview merges for the apps (DUP-11); plans, from servers with plans and the account's time zone (PLAN-6, PLAN-9); assignor-calendars, from servers that read assignors' calendar links (FEED-1). Ignore names you don't know.
     var capabilities: [String]
     var maps: ServerMetaMaps
     /// The address search service behind GET /v1/geocode, to credit it.
