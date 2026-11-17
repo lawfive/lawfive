@@ -220,7 +220,7 @@ const kickoffFormats = new Map<string, Intl.DateTimeFormat>();
  * Whether a match counts as a game: played or abandoned, with a kickoff (STAT-1). STAT-16: the one
  * rule for every count of games, Stats' and the match list's "played" alike.
  */
-export function isGame(match: Match): boolean {
+export function isGame(match: { status?: string; kickoff?: string }): boolean {
     return (match.status === "played" || match.status === "abandoned") && match.kickoff !== undefined;
 }
 

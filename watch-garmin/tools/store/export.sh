@@ -36,4 +36,5 @@ fi
 echo "Version $version${beta:+, beta app ID $id}"
 
 "$sdk/bin/monkeyc" -e -r -f "$src/monkey.jungle" -y "$key" -o "$out/$name.iq" -l 3
-echo "Built $out/$name.iq. Upload it at https://apps.garmin.com/developer/upload${beta:+ with Beta App ticked}."
+echo "Built $out/$name.iq. To update an app already in the dashboard (https://apps.garmin.com/developer/dashboard),"
+echo "open it there and upload a new version; for a new app, use https://apps.garmin.com/developer/upload${beta:+ with Beta App ticked}."
