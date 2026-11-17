@@ -37,6 +37,7 @@ import app.lawfive.data.quizVerdict
 import app.lawfive.ui.LocalGraph
 import app.lawfive.ui.LocalNav
 import app.lawfive.ui.screens.Attempt
+import app.lawfive.ui.screens.CompetitionScreen
 import app.lawfive.ui.screens.Kept
 import app.lawfive.ui.screens.LicenseScreen
 import app.lawfive.ui.screens.LicenseTextsScreen
@@ -47,6 +48,7 @@ import app.lawfive.ui.screens.MatchesScreen
 import app.lawfive.ui.screens.QuizScreen
 import app.lawfive.ui.screens.SettingsScreen
 import app.lawfive.ui.screens.StatsScreen
+import app.lawfive.ui.screens.VenueScreen
 import app.lawfive.ui.theme.LawFiveTheme
 import app.lawfive.ui.theme.colors
 import com.github.takahirom.roborazzi.captureScreenRoboImage
@@ -55,6 +57,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.After
@@ -132,6 +135,11 @@ class ScreenSnapshots {
         snap("match-played", wait = "Where you went") { MatchScreen(ids["withTrack"]!!.jsonPrimitive.content) }
         // WEB-24: a canceled match, its status red on the board as its chip is on the row.
         snap("match-canceled", wait = "forfeited") { MatchScreen(ids["canceled"]!!.jsonPrimitive.content) }
+        // FILE-6, FILE-13: the next match's files, its competition's under them, kept on the phone for it.
+        snap("match-files", wait = "From the competition") { MatchScreen(ids["next"]!!.jsonPrimitive.content) }
+        // WEB-34: a competition's page, with its matches and files; and a venue's, with its files under its photos.
+        snap("competition", wait = "Fall schedule") { CompetitionScreen(demoFile("competition")["recordId"]!!.jsonPrimitive.content) }
+        snap("venue", wait = "Ground rules") { VenueScreen(demoFile("venue")["recordId"]!!.jsonPrimitive.content) }
         // APP-6: with this phone's reminders on, so their times show; off again for the screens after.
         snap("settings", wait = "Where you're signed in", setup = { runBlocking { graph.reminders.save(ReminderSettings(enabled = true)) } }) { SettingsScreen() }
         runBlocking { graph.reminders.save(ReminderSettings()) }
@@ -179,7 +187,13 @@ class ScreenSnapshots {
         graph.weather.refresh(force = true)
         graph.weather.refresh(past = true, force = true)
         graph.onWatch.refresh()
+        // FILE-13: the next 3 days' matches' files, as after a sync with signal.
+        graph.keptFiles.refresh(graph.records.matches.first())
     }
+
+    /** The first of the demo's files on a kind of record (the fixtures' files-<kind>.json). */
+    private fun demoFile(recordType: String) =
+        Json.parseToJsonElement(fixture("demo/files-$recordType.json")).jsonObject["attachments"]!!.jsonArray.first().jsonObject
 
     /**
      * Draws a screen in every variant: once in a very tall window to find how far its content goes,

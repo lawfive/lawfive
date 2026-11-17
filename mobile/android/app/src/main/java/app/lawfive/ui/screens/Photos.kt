@@ -133,7 +133,7 @@ internal fun shrink(original: Bitmap, edge: Int, quality: Int): Triple<ByteArray
     return Triple(out.toByteArray(), bitmap.width, bitmap.height)
 }
 
-private fun readPhoto(context: Context, uri: Uri): Bitmap {
+internal fun readPhoto(context: Context, uri: Uri): Bitmap {
     val resolver = context.contentResolver
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     resolver.openInputStream(uri)!!.use { BitmapFactory.decodeStream(it, null, bounds) }

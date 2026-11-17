@@ -74,8 +74,9 @@ import app.lawfive.ui.instantOf
 import app.lawfive.ui.theme.colors
 import java.time.ZoneId
 
-// A venue's and a referee's own pages (APP-4): what there is to know at a glance, with Edit for
-// the form (VenueEditScreen, RefereeEditScreen), as a match has its page and its edit.
+// A venue's, a referee's and a competition's own pages (APP-4, WEB-34): what there is to know at a
+// glance, with Edit for the form (VenueEditScreen, RefereeEditScreen, CompetitionEditScreen), as a
+// match has its page and its edit.
 
 /** A venue: its map, Directions, pitches, tags and notes, the matches there, and photos. */
 @Composable
@@ -141,6 +142,8 @@ fun VenueScreen(id: String) {
         rows.matches = rows.count
         row(rows) { MatchesWith("Matches here", here, "No matches here yet.") }
         row(rows) { Gap(16); PhotosSection("venue", id) }
+        // FILE-6: the venue's files, its parking map and field layout, under its photos.
+        row(rows) { FilesSection("venue", id) }
     }
 }
 
@@ -195,6 +198,62 @@ fun RefereeScreen(id: String) {
         rows.matches = rows.count
         row(rows) { MatchesWith("Matches together", together, "No matches together yet.") }
         row(rows) { Gap(16); PhotosSection("referee", id) }
+    }
+}
+
+/** WEB-34: a competition: what it is, its dates, template, codes and notes, its matches, and its files (FILE-6). */
+@Composable
+fun CompetitionScreen(id: String) {
+    val graph = LocalGraph.current
+    val nav = LocalNav.current
+    val competition by remember(id) { graph.records.one(Collections.COMPETITIONS, id, app.lawfive.schema.Competition.serializer()) }.collectAsStateWithLifecycle(null)
+    val matches by graph.records.matches.collectAsStateWithLifecycle(emptyList())
+    val templates by graph.records.templates.collectAsStateWithLifecycle(emptyList())
+    val c = competition
+    if (c == null) {
+        Screen("Competition", back = "Competitions") { item { LoadingPitch() } }
+        return
+    }
+    val template = templates.firstOrNull { it.id == c.templateId }
+    val sub = listOfNotNull(competitionTypeName(c.type), c.season, c.ageGroup, c.level, c.organiser).joinToString(" · ").ifEmpty { null }
+    Screen(c.name, sub = sub, back = "Competitions", label = "Competition · ${c.name}", actions = { IconAction(Ph.Edit, "Edit") { nav.navigate("competition/$id/edit") } }) {
+        val facts = listOfNotNull(
+            describeDates(c.startDate?.toString(), c.endDate?.toString())?.let { Fact(Ph.Calendar, "Dates", it) },
+            template?.let { Fact(Ph.Templates, "Match template", "${it.name} · ${app.lawfive.ui.describeFormat(it.format)}", wide = true) },
+            c.misconductScheme?.let { s -> misconductSchemes.firstOrNull { it.first == s }?.let { Fact(Ph.Report, "Misconduct codes", it.second) } },
+            c.notes?.let { Fact(Ph.Note, "Notes", it, wide = true) },
+        )
+        if (facts.isNotEmpty()) {
+            item { SectionTitle("Details") }
+            item { FactsCard(facts) }
+        }
+        item { MatchesWith("Matches", matches.filter { it.competitionId == id }, "No matches in this competition yet.") }
+        item { FilesSection("competition", id) }
+    }
+}
+
+/** A competition's kind, as the form names it. */
+fun competitionTypeName(type: String) = type.replaceFirstChar { it.uppercase() }
+
+/** The misconduct code schemes, by id, as the website names them. */
+val misconductSchemes = listOf("ifab" to "Laws of the Game", "ussf" to "United States", "fa" to "England")
+
+/** "Nov 14 – 15, 2026": when a competition runs, from its first and last days, as the website's. */
+fun describeDates(start: String?, end: String?): String? {
+    fun day(d: String) = runCatching { java.time.LocalDate.parse(d) }.getOrNull()
+    val first = start?.let(::day)
+    val last = end?.let(::day)
+    val full = java.time.format.DateTimeFormatter.ofPattern("MMM d, yyyy", java.util.Locale.US)
+    return when {
+        first != null && last != null -> when {
+            first == last -> first.format(full)
+            first.year != last.year -> "${first.format(full)} – ${last.format(full)}"
+            first.month != last.month -> "${first.format(java.time.format.DateTimeFormatter.ofPattern("MMM d", java.util.Locale.US))} – ${last.format(full)}"
+            else -> "${first.format(java.time.format.DateTimeFormatter.ofPattern("MMM d", java.util.Locale.US))} – ${last.dayOfMonth}, ${last.year}"
+        }
+        first != null -> "From ${first.format(full)}"
+        last != null -> "Until ${last.format(full)}"
+        else -> null
     }
 }
 

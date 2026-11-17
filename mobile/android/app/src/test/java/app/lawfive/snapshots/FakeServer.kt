@@ -80,12 +80,34 @@ class FakeServer(private val now: String) : AutoCloseable {
             // SYNC-14: what's on the demo's watch.
             path == "/v1/devices/matches" -> if (account == "demo") ok(fixture("demo/devices-matches.json")) else ok("""{"matches":[]}""")
             path == "/v1/assignor-calendars" -> ok("""{"calendars":[]}""")
-            path == "/v1/attachments" -> ok("""{"attachments":[]}""")
+            // FILE-6: the demo's files on its venues, competitions and matches; no photos.
+            path == "/v1/attachments" -> ok(attachments(account, request))
+            // A file's bytes, as long as it says, for keeping (FILE-13); its contents aren't drawn.
+            path.startsWith("/v1/attachments/") && path.endsWith("/file") -> demoFiles(account).firstOrNull { "${it["url"]!!.jsonPrimitive.content}" == path }
+                ?.let { file(it["size"]!!.jsonPrimitive.content.toInt()) } ?: notFound(request)
             // The quiz built in is the server's own (schema/quiz); the plan, storage and calendar feed
             // aren't in the fixtures, so those screens show what a server without them would.
             else -> notFound(request)
         }
     }
+
+    /** Every file of the account's (the demo's three lists), as the API gives them. */
+    private fun demoFiles(account: String): List<JsonObject> =
+        if (account != "demo") emptyList()
+        else listOf("venue", "competition", "match").flatMap { Json.parseToJsonElement(fixture("demo/files-$it.json")).jsonObject["attachments"]!!.jsonArray.map { a -> a.jsonObject } }
+
+    /** GET /v1/attachments: a record's files with kind=file (or all), none of its photos (the fixtures have none). */
+    private fun attachments(account: String, request: RecordedRequest): String {
+        val type = request.url.queryParameter("recordType")
+        val id = request.url.queryParameter("recordId")
+        val kind = request.url.queryParameter("kind")
+        val found = if (kind != "file" && kind != "all") emptyList()
+            else demoFiles(account).filter { it["recordType"]!!.jsonPrimitive.content == type && (id == null || it["recordId"]!!.jsonPrimitive.content == id) }
+        return buildJsonObject { put("attachments", JsonArray(found)) }.toString()
+    }
+
+    private fun file(size: Int) = MockResponse.Builder()
+        .code(200).addHeader("Content-Type", "application/octet-stream").addHeader("LawFive-Version", "1").body(okio.Buffer().write(ByteArray(size) { 'x'.code.toByte() })).build()
 
     /** As the demo server describes itself, with weather on. The maps aren't drawn (LocalInspectionMode). */
     private fun meta() = buildJsonObject {
@@ -96,7 +118,7 @@ class FakeServer(private val now: String) : AutoCloseable {
         put("version", "2026.11.09")
         put("capabilities", JsonArray(listOf(
             "accounts", "records", "quiz", "changes", "tracks", "stats", "devices", "link", "watch", "people", "invites",
-            "calendar", "import", "merging", "plans", "assignor-calendars", "weather",
+            "calendar", "import", "merging", "plans", "assignor-calendars", "weather", "attachments", "files",
         ).map(::JsonPrimitive)))
         put("maps", buildJsonObject {
             put("tileUrl", "https://tiles.invalid/{z}/{x}/{y}.png")

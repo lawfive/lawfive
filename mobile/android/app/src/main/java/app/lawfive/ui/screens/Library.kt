@@ -258,6 +258,7 @@ fun VenueEditScreen(id: String?) {
         }
         if (id != null) {
             item { app.lawfive.ui.components.Gap(16); PhotosSection("venue", recordId) }
+            item { FilesSection("venue", recordId) }
         }
     }
     forgetting?.let { pitchId ->
@@ -408,7 +409,7 @@ fun CompetitionsScreen() {
                 if (loadedcompetitions == null) LoadingPitch() else if (competitions.isEmpty()) EmptyState(EmptyPicture.Bracket, "No competitions yet", "Keep each league or cup together, and let it set the format of its matches.") { PrimaryButton("Add a competition", { nav.navigate("competition/new") }, icon = Ph.Plus) }
                 competitions.sortedBy { it.name.lowercase() }.forEachIndexed { i, c ->
                     ListRow(c.name, listOfNotNull(c.type.replaceFirstChar { it.uppercase() }, c.season, c.organiser).joinToString(" · "),
-                        leading = { Avatar(icon = Ph.Competitions) }, divider = i > 0, onClick = { nav.navigate("competition/${c.id}") })
+                        leading = { Avatar(icon = Ph.Competitions) }, divider = i > 0, onClick = { nav.navigate("competition/${c.id}") }, trailing = { app.lawfive.ui.components.PhIcon(Ph.Next, tint = colors.muted) })
                 }
             }
         }
@@ -424,7 +425,7 @@ fun CompetitionEditScreen(id: String?) {
         .collectAsStateWithLifecycle(null)
     val templates by graph.records.templates.collectAsStateWithLifecycle(emptyList())
     if (id != null && saved == null) {
-        Screen("Competition", back = "Competitions") { item { LoadingPitch() } }
+        Screen("Edit competition", back = "Competitions") { item { LoadingPitch() } }
         return
     }
     var name by rememberSaveable(saved?.id) { mutableStateOf(saved?.name ?: "") }
@@ -439,7 +440,8 @@ fun CompetitionEditScreen(id: String?) {
     UnsavedChanges(state != start) // APP-18
     var deleting by remember { mutableStateOf(false) }
     val recordId = remember(saved?.id) { saved?.id ?: newId() }
-    Screen(if (id == null) "New competition" else saved!!.name, back = "Competitions",
+    // WEB-34: editing comes from the competition's page, whose name its back link gives, and goes back to it.
+    Screen(if (id == null) "New competition" else "Edit competition", back = "Competitions",
         bottomBar = {
             FormActions(
                 canSave = name.isNotBlank(),
@@ -475,7 +477,8 @@ fun CompetitionEditScreen(id: String?) {
     if (deleting) {
         Confirm("Delete competition?", "${saved?.name} goes from LawFive, on every device.", "Delete", onConfirm = {
             deleting = false
-            scope.launch { graph.records.delete(Collections.COMPETITIONS, recordId); nav.popBackStack() }
+            // Past its own page, which has gone too.
+            scope.launch { graph.records.delete(Collections.COMPETITIONS, recordId); nav.popBackStack("competitions", false) }
         }, onDismiss = { deleting = false })
     }
 }

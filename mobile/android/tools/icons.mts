@@ -36,6 +36,10 @@ const icons: Record<string, string> = {
     help: "Question",
     // EVT-12: a sin bin's card, the time off, as the website's.
     hourglass: "HourglassMedium",
+    // Files on a record (FILE-6, FILE-12, FILE-13): each kind's icon, as the website's, adding them, opening one in
+    // another app, and keeping one on the phone.
+    pdf: "FilePdf", xlsx: "FileXls", csv: "FileCsv", docx: "FileDoc", txt: "FileTxt", fileImage: "FileImage",
+    addFiles: "FilePlus", openWith: "ArrowSquareOut", keep: "PushPin", keepOff: "PushPinSlash",
 };
 
 // WCH-6: the ones the Wear OS app uses, written to wear/src/main/res/drawable too, in Phosphor's bold weight

@@ -88,6 +88,8 @@ class AppGraph(private val context: Context) {
     val merging = app.lawfive.data.Merging(api)
     /** Which matches are on which watch (SYNC-14), kept for when there's no signal. */
     val onWatch = app.lawfive.data.OnWatchStore(api, File(context.filesDir, "on-watch.json"))
+    /** Files kept on the phone for the next 3 days' matches and with Keep on this phone (FILE-13). */
+    val keptFiles = app.lawfive.data.KeptFiles(File(context.filesDir, "kept-files"), File(context.cacheDir, "files"), api)
 
     /** A notification tapped: the match to open once the app is showing (PUSH-5, APP-6). */
     val pendingMatch = MutableStateFlow<String?>(null)
@@ -136,6 +138,7 @@ class AppGraph(private val context: Context) {
             watch.relay.refresh()
             onWatch.refresh()
             weather.refresh()
+            runCatching { keptFiles.refresh(records.matches.first()) }
             runCatching { push.refresh() }
             runCatching { health.saveNew() }
         }
@@ -319,6 +322,7 @@ class AppGraph(private val context: Context) {
         weather.clear()
         stats.clear()
         onWatch.clear()
+        keptFiles.clear()
         health.forget()
         fromWatch.clear()
         records.forgetDefaults()
@@ -334,6 +338,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             graph.reminders.afterSync()
             graph.watch.relay.refresh()
             graph.onWatch.refresh()
+            runCatching { graph.keptFiles.refresh(graph.records.matches.first()) }
             runCatching { graph.push.refresh() }
             runCatching { graph.health.saveNew() }
             Result.success()

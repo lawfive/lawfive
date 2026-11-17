@@ -344,6 +344,8 @@ fun MatchScreen(id: String) {
             }
         }
         item { androidx.compose.foundation.layout.Spacer(Modifier.padding(top = 8.dp)); PhotosSection("match", m.id) }
+        // FILE-6: the match's files, with its competition's under them.
+        item { FilesSection("match", m.id, competition) }
     }
     val original = record?.original
     if (reverting && record != null && original != null) {

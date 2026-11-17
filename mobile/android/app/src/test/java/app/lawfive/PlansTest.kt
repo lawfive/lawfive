@@ -24,13 +24,13 @@ class PlansTest {
         assertEquals(
             listOf(
                 PlanLine("Matches", "40", "of 50", 0.8),
-                PlanLine("Photos and tracks", "512.5 MB", "of 2 GB", 512.5 / 2048),
+                PlanLine("Photos, files and tracks", "512.5 MB", "of 2 GB", 512.5 / 2048),
                 PlanLine("API requests a minute", "120", "at most", null),
                 PlanLine("Webhooks", "0", "of none", 1.0),
             ),
             lines,
         )
-        assertEquals(listOf(PlanLine("Photos and tracks", "512.5 MB", null, null)), planLines(plan(PlanLimits())))
+        assertEquals(listOf(PlanLine("Photos, files and tracks", "512.5 MB", null, null)), planLines(plan(PlanLimits())))
     }
 
     @Test

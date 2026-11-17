@@ -103,7 +103,7 @@ class DataTest {
         assertFalse(nearly.full)
         assertEquals("5.9 MB of 6 MB used", app.lawfive.data.storageUsedLine(nearly))
         assertEquals("3 photos didn't fit.", app.lawfive.data.noRoomTitle(3))
-        assertEquals("You've used 5.9 MB of 6 MB. Delete some photos or tracks to make room.", app.lawfive.data.noRoomText(nearly, admin = true))
+        assertEquals("You've used 5.9 MB of 6 MB. Delete some photos, files or tracks to make room.", app.lawfive.data.noRoomText(nearly, admin = true))
         assertTrue(app.lawfive.data.noRoomText(nearly, admin = false).endsWith("or ask an admin of this server for more."))
         assertFalse(app.lawfive.data.AccountStorage(100 * mb, null).nearlyFull)
     }

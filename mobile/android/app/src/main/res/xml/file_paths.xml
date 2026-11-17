@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Where the camera saves a photo before it's made smaller and uploaded (APP-5). -->
+<!-- Where the camera saves a photo before it's made smaller and uploaded (APP-5); and files on records,
+     kept (FILE-13) or opened, handed to another app with Open with or Share. -->
 <paths>
     <cache-path name="camera" path="camera/" />
+    <cache-path name="opened" path="files/" />
+    <files-path name="kept" path="kept-files/" />
 </paths>

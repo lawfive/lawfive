@@ -190,7 +190,8 @@ private fun SignedIn() {
                 composable("quiz") { app.lawfive.ui.screens.QuizScreen() }
                 composable("competitions") { CompetitionsScreen() }
                 composable("competition/new") { CompetitionEditScreen(null) }
-                composable("competition/{id}") { CompetitionEditScreen(it.arguments!!.getString("id")!!) }
+                composable("competition/{id}") { app.lawfive.ui.screens.CompetitionScreen(it.arguments!!.getString("id")!!) }
+                composable("competition/{id}/edit") { CompetitionEditScreen(it.arguments!!.getString("id")!!) }
                 composable("templates") { TemplatesScreen() }
                 composable("template/new") { TemplateEditScreen(null) }
                 composable("template/{id}") { TemplateEditScreen(it.arguments!!.getString("id")!!) }

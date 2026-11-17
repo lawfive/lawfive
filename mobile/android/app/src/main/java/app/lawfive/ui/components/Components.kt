@@ -86,6 +86,8 @@ enum class Ph(@DrawableRes val res: Int) {
     Tag(R.drawable.ph_tag), Hash(R.drawable.ph_hash), Note(R.drawable.ph_note), Role(R.drawable.ph_role), Message(R.drawable.ph_message),
     Assignor(R.drawable.ph_assignor), Palette(R.drawable.ph_palette), Crop(R.drawable.ph_crop), Turn(R.drawable.ph_turn),
     Distance(R.drawable.ph_distance), Heart(R.drawable.ph_heart), Sprint(R.drawable.ph_sprint), Speed(R.drawable.ph_speed), Open(R.drawable.ph_open),
+    Pdf(R.drawable.ph_pdf), Xlsx(R.drawable.ph_xlsx), Csv(R.drawable.ph_csv), Docx(R.drawable.ph_docx), Txt(R.drawable.ph_txt), FileImage(R.drawable.ph_file_image),
+    AddFiles(R.drawable.ph_add_files), OpenWith(R.drawable.ph_open_with), Keep(R.drawable.ph_keep), KeepOff(R.drawable.ph_keep_off),
 }
 
 @Composable

@@ -539,9 +539,28 @@ private fun YourData(plan: AccountPlan?, storage: String?, onDelete: () -> Unit)
         onClick = { openWebsite(context, graph.session.current.server, "/settings#data") }, trailing = { PhIcon(Ph.Link, tint = colors.muted) })
     ListRow("Import matches", "From a spreadsheet or JSON file", leading = { Avatar(icon = Ph.Matches) }, onClick = { nav.navigate("import") }, trailing = { PhIcon(Ph.Next, tint = colors.muted) })
     if (plan != null) PlanRows(plan)
-    else storage?.let { ListRow("Photos and tracks", it, leading = { Avatar(icon = Ph.Photos) }) }
+    else storage?.let { ListRow("Photos, files and tracks", it, leading = { Avatar(icon = Ph.Photos) }) }
+    KeptFilesRows()
     // APP-21.
     ListRow("Delete your account", "Your matches, venues, referees, tracks and everything else, for good.", leading = { Avatar(icon = Ph.Trash, background = colors.surface2, foreground = colors.red) }, onClick = onDelete)
+}
+
+/** FILE-13: how much is kept on this phone for a ground without signal, with Remove kept files. */
+@Composable
+private fun KeptFilesRows() {
+    val graph = LocalGraph.current
+    val scope = rememberCoroutineScope()
+    val kept by graph.keptFiles.state.collectAsStateWithLifecycle()
+    ListRow(
+        "Files kept on this phone",
+        if (kept.count == 0) "None yet. The files of the next 3 days' matches are kept here when there's signal, and any you keep, so they open without it."
+        else "${app.lawfive.data.fileSize(kept.bytes)} in ${if (kept.count == 1) "1 file" else "${kept.count} files"}: the next 3 days' matches' and any you keep, at most 200 MB.",
+        leading = { Avatar(icon = Ph.Keep) },
+    )
+    if (kept.count > 0) {
+        ListRow("Remove kept files", "The next 3 days' matches' come back when there's signal.", leading = { Avatar(icon = Ph.Trash) },
+            onClick = { scope.launch { graph.keptFiles.removeAll() } })
+    }
 }
 
 /** USR-10: your name, with the same rule as signing up. */
