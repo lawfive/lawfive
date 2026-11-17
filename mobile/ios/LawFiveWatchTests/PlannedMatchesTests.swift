@@ -72,6 +72,21 @@ final class PlannedMatchesTests: XCTestCase {
         XCTAssertEqual(matches.summary(linked: false, problem: nil), "Link to sync")
     }
 
+    /// UI-19: a downloaded match's details, labeled, in the Garmin's order, the crew one row each; empty ones left out.
+    func testADownloadedMatchsDetailsAreLabeledRows() throws {
+        var m = try Self.match("a", kickoff: now + 3600)
+        m.name = "Bay Youth League U12 Boys"
+        m.weather = ""
+        m.notes = "Moved to the far pitch."
+        m.crew = [["AR1", "Sam Rivera"], ["AR2", "Club linesman"], ["broken"]]
+        XCTAssertEqual(m.details.map { "\($0.0): \($0.1)" }, [
+            "Match: Bay Youth League U12 Boys", "Your role: Referee", "Venue: Twin Creeks, Field 3", "AR1: Sam Rivera", "AR2: Club linesman",
+            "Notes: Moved to the far pitch.",
+        ])
+        // A server from before the crew sends none.
+        XCTAssertNil(try Self.match("b", kickoff: nil).crew)
+    }
+
     func testStartingACanceledMatchIsAMatchLikeAnyOther() throws {
         let canceled = try Self.match("b", kickoff: now + 3600, status: "cancelled")
         let scheduled = try Self.match("b", kickoff: now + 3600)

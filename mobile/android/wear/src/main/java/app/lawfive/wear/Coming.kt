@@ -1,6 +1,9 @@
 package app.lawfive.wear
 
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 // The downloaded matches (SYNC-3) and, among them, canceled and postponed ones still to kick off (SYNC-16): listed
 // in Matches, marked, until their kickoff, but never counted or offered as coming up. No Android here, for the tests.
@@ -37,4 +40,13 @@ fun matchesSummary(linked: Boolean, problem: String?, matches: List<JsonObject>)
     if (problem != null) return problem
     val count = coming(matches).size
     return if (count == 0) "None yet" else "$count coming up"
+}
+
+/** UI-19: a downloaded match's details as labeled rows: the match, your role, the venue, the crew ("AR1", "Sam Ortiz"), the forecast and the notes. */
+fun plannedDetails(m: JsonObject): List<Pair<String, String>> {
+    val crew = (m["crew"] as? JsonArray)?.mapNotNull { (it as? JsonArray)?.takeIf { o -> o.size == 2 } }
+        ?.mapNotNull { o -> (o[0] as? JsonPrimitive)?.contentOrNull?.let { role -> (o[1] as? JsonPrimitive)?.contentOrNull?.let { name -> role to name } } } ?: emptyList()
+    return (listOf("Match" to m.str("name"), "Your role" to m.str("role"), "Venue" to m.str("where")) + crew +
+        listOf("Forecast" to m.str("weather"), "Notes" to m.str("notes")))
+        .mapNotNull { (label, value) -> value?.takeIf { it.isNotBlank() }?.let { label to it } }
 }

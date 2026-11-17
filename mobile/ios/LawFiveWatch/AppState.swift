@@ -73,6 +73,8 @@ struct PlannedMatch: Codable, Identifiable {
     var weather: String?
     var fee: Fee?
     var notes: String?
+    /// UI-19: the other officials, [role, name]: ["AR1", "Sam Ortiz"]; servers from before it don't send it.
+    var crew: [[String]]?
     var home: String
     var away: String
     var homeName: String
@@ -110,6 +112,15 @@ struct PlannedMatch: Codable, Identifiable {
 
     /// SYNC-16: canceled or postponed, so listed until its kickoff but never counted or offered as coming up.
     var calledOff: Bool { status != nil }
+    /// UI-19: its details as labeled rows, in the Garmin's order: the match, your role, the venue, the crew, the
+    /// forecast and the notes.
+    var details: [(String, String)] {
+        let crewRows = (crew ?? []).compactMap { $0.count == 2 ? ($0[0], $0[1]) : nil }
+        let rows: [(String, String?)] = [("Match", name), ("Your role", role), ("Venue", `where`)] + crewRows.map { ($0.0, Optional($0.1)) }
+            + [("Forecast", weather), ("Notes", notes)]
+        return rows.compactMap { label, value in value.flatMap { $0.isEmpty ? nil : (label, $0) } }
+    }
+
     /// SYNC-16: what the list shows in place of its day, time and place.
     var statusWord: String? { status.map { $0 == "postponed" ? "Postponed" : "Canceled" } }
     /// SYNC-16: the detail under "Start anyway?".
@@ -789,6 +800,11 @@ final class AppState {
                                  corners: corners.map { [Int(($0[0] * 1_000_000).rounded()), Int(($0[1] * 1_000_000).rounded())] }, at: nowSeconds())
         update { s in s.pitches = (s.pitches ?? []).filter { $0.matchId != upload.matchId || $0.created != upload.created } + [upload] }
         sync()
+    }
+
+    /// TRK-13: the corners marked for a planned match, or for a quick one by when it started, still to send; 0 for none.
+    func pitchCorners(matchId: String?, created: Int64?) -> Int {
+        (saved.pitches ?? []).first { matchId != nil ? $0.matchId == matchId : $0.matchId == nil && $0.created == created }?.corners.count ?? 0
     }
 
     // MARK: Fees (SYNC-11)

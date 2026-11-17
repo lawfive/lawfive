@@ -30,6 +30,25 @@ class ComingTest {
         assertEquals("Link to sync", matchesSummary(false, null, matches))
     }
 
+    // UI-19: a downloaded match's details, labeled, in the Garmin's order, the crew one row each; empty ones left out.
+    @Test fun aDownloadedMatchsDetailsAreLabeledRows() {
+        val m = JsonObject(match("a", now).toMutableMap().apply {
+            put("name", JsonPrimitive("Bay Youth League U12 Boys")); put("role", JsonPrimitive("Referee"))
+            put("where", JsonPrimitive("Twin Creeks, Field 3")); put("weather", JsonPrimitive(""))
+            put("notes", JsonPrimitive("Moved to the far pitch."))
+            put("crew", kotlinx.serialization.json.JsonArray(listOf(
+                kotlinx.serialization.json.JsonArray(listOf(JsonPrimitive("AR1"), JsonPrimitive("Sam Rivera"))),
+                kotlinx.serialization.json.JsonArray(listOf(JsonPrimitive("AR2"), JsonPrimitive("Club linesman"))),
+            )))
+        })
+        assertEquals(
+            listOf("Match" to "Bay Youth League U12 Boys", "Your role" to "Referee", "Venue" to "Twin Creeks, Field 3",
+                "AR1" to "Sam Rivera", "AR2" to "Club linesman", "Notes" to "Moved to the far pitch."),
+            plannedDetails(m),
+        )
+        assertEquals(emptyList<Pair<String, String>>(), plannedDetails(match("b", now)))
+    }
+
     @Test fun theWatchAsksForCanceledMatches() {
         assertTrue(MATCHES_PATH.startsWith("/v1/watch/matches?"))
         assertTrue(MATCHES_PATH.contains("canceled=true"))

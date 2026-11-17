@@ -459,6 +459,10 @@ object AppState {
         sync()
     }
 
+    /** TRK-13: the corners marked for a planned match, or for a quick one by when it started, still to send; 0 for none. */
+    fun pitchCorners(matchId: String?, created: Long?): Int =
+        saved.pitches.firstOrNull { if (matchId != null) it.matchId == matchId else it.matchId == null && it.created == created }?.corners?.size ?: 0
+
     // ---- Fees (SYNC-11) ----
 
     fun markPaid(matchId: String, paid: Boolean) {

@@ -28,11 +28,12 @@ final class WatchSnapshots: XCTestCase {
         try? FileManager.default.copyItem(at: aside, to: saved)
     }
 
-    private func write<V: View>(_ name: String, _ view: V) throws {
+    /// `screens`: how many screens tall, for a list drawn whole.
+    private func write<V: View>(_ name: String, _ view: V, screens: CGFloat = 1) throws {
         let folder = URL(fileURLWithPath: ProcessInfo.processInfo.environment["LAWFIVE_SNAPSHOTS"]!)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         let bounds = WKInterfaceDeviceBounds.current
-        let renderer = ImageRenderer(content: view.frame(width: bounds.width, height: bounds.height).background(.black).environment(\.colorScheme, .dark))
+        let renderer = ImageRenderer(content: view.frame(width: bounds.width, height: bounds.height * screens, alignment: .top).background(.black).environment(\.colorScheme, .dark))
         renderer.scale = 2
         let image = try XCTUnwrap(renderer.cgImage, "ImageRenderer drew nothing")
         let url = folder.appending(path: "\(name).png") as CFURL
@@ -74,6 +75,26 @@ final class WatchSnapshots: XCTestCase {
         }.padding(.horizontal, 4))
         try write("watch-planned-canceled__46mm-dark-1x", VStack(spacing: 5) { PlannedDetails(m: matches[1]) {} }.padding(.horizontal, 4).environment(state))
         try write("watch-start-anyway__46mm-dark-1x", ConfirmScreen(question: "Start anyway?", detail: matches[1].statusDetail, onYes: {}, onNo: {}))
+    }
+
+    /// UI-19: a downloaded match's screen, the rows as the list stacks them (ImageRenderer leaves the list out): Start match,
+    /// the fee, the details with the crew and the notes in full, then Mark pitch with corners waiting to go (TRK-13).
+    func testADownloadedMatch() throws {
+        let state = AppState()
+        var m = try PlannedMatchesTests.match("next", kickoff: nowSeconds() + 3600)
+        m.name = "Bay Youth League U12 Boys"
+        m.weather = "61° rain"
+        m.fee = PlannedMatch.Fee(text: "$40", paid: false)
+        m.crew = [["AR1", "Sam Rivera"], ["AR2", "Club linesman"]]
+        m.notes = "Moved to the far pitch. Parking is behind the gym; the gate code is with the club secretary."
+        state.update { s in
+            s.matches = [m]
+            s.pitches = nil
+        }
+        state.queuePitch(matchId: m.id, created: nil, corners: [[37.4, -122.1], [37.401, -122.1], [37.401, -122.101]])
+        let size = Int(WKInterfaceDeviceBounds.current.width)
+        try write("watch-planned-details__\(size)pt", VStack(spacing: 5) { PlannedDetails(m: m) {} }.padding(.horizontal, 4).environment(state), screens: 3)
+        state.update { $0.pitches = nil }
     }
 
     /// UI-26: the sync screen partway through a track, after its match.

@@ -257,15 +257,22 @@ struct PlannedDetails: View {
             Text(word).font(.barlow(15, .semibold)).foregroundStyle(C.calledOff).padding(.vertical, 2)
         }
         MenuRow(label: "Start match", sub: m.setup.summary, icon: "play", action: start)
-        // TRK-13: walking the pitch before the match.
-        NavigationLink { PitchView(matchId: m.id, created: nil) } label: { RowLabel(label: "Mark pitch", sub: "Walk its corners", icon: "flag") }.buttonStyle(.plain)
         if let fee = m.fee {
             ToggleRow(label: "Fee \(fee.text)", sub: fee.paid ? "Paid" : "Not paid yet", on: fee.paid) { state.markPaid(m.id, paid: $0) }
         }
-        ForEach([m.where, m.name, m.role, m.weather, m.notes].compactMap { $0 }, id: \.self) { line in
-            Text(line).font(.barlow(13, .regular)).foregroundStyle(C.dim).multilineTextAlignment(.center)
+        // UI-19: its details, a labeled row each, in the Garmin's order, the notes in full.
+        ForEach(Array(m.details.enumerated()), id: \.offset) { _, row in
+            RowLabel(label: row.0, sub: row.1, subLines: row.0 == "Notes" ? 40 : 3)
         }
+        // TRK-13: walking the pitch before the match.
+        NavigationLink { PitchView(matchId: m.id, created: nil) } label: { RowLabel(label: "Mark pitch", sub: pitchLine(state, matchId: m.id, created: nil), icon: "flag", subLines: 2) }.buttonStyle(.plain)
     }
+}
+
+/// TRK-13: Mark pitch's line, as the Garmin's: the corners waiting to go, or what to do.
+@MainActor func pitchLine(_ state: AppState, matchId: String?, created: Int64?) -> String {
+    let corners = state.pitchCorners(matchId: matchId, created: created)
+    return corners > 0 ? "\(corners) corners marked, to send" : "Walk its corners"
 }
 
 /// SET-4, SET-9, UI-16.
@@ -607,7 +614,7 @@ struct PlayedPage: View {
                     if let fee = h.fee, let id = h.matchId {
                         ToggleRow(label: "Fee \(fee.text)", sub: fee.paid ? "Paid" : "Not paid yet", on: fee.paid) { state.markPaid(id, paid: $0) }
                     }
-                    NavigationLink { PitchView(matchId: h.matchId, created: h.created) } label: { RowLabel(label: "Mark pitch", sub: "Walk its corners", icon: "flag") }.buttonStyle(.plain)
+                    NavigationLink { PitchView(matchId: h.matchId, created: h.created) } label: { RowLabel(label: "Mark pitch", sub: pitchLine(state, matchId: h.matchId, created: h.created), icon: "flag", subLines: 2) }.buttonStyle(.plain)
                     MenuRow(label: "Remove from watch") { removing = true }
                 }
             }

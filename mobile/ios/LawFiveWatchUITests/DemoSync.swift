@@ -113,4 +113,26 @@ final class DemoSync: XCTestCase {
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Unlink'")).firstMatch.waitForExistence(timeout: 5))
         shot("account, sync on opening off")
     }
+
+    // UI-19: the demo's next match: Start match, the fee, its details labeled one row each, with the crew, and Mark pitch.
+    func testADownloadedMatch() throws {
+        try XCTSkipUnless(environment["LAWFIVE_DEMO"] != nil, "needs the demo server")
+        continueAfterFailure = false
+        app.launchArguments = try linkedArguments()
+        app.launch()
+        let matches = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Matches'")).firstMatch
+        XCTAssertTrue(matches.waitForExistence(timeout: 10))
+        matches.tap()
+        let next = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'STR v ROV'")).firstMatch
+        XCTAssertTrue(next.waitForExistence(timeout: 10), app.debugDescription)
+        next.tap()
+        XCTAssertTrue(app.staticTexts["Your role"].waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.staticTexts["AR1"].exists && app.staticTexts["Sam Rivera"].exists, app.debugDescription)
+        shot("downloaded match")
+        app.swipeUp()
+        shot("downloaded match, further")
+        app.swipeUp()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Mark pitch'")).firstMatch.waitForExistence(timeout: 5))
+        shot("downloaded match, end")
+    }
 }

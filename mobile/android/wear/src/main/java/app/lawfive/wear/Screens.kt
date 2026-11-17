@@ -236,16 +236,18 @@ private fun PlannedPage(id: String, push: (Page) -> Unit) {
         // SYNC-16: what happened to it, in red under its title, as this page shows no day or time.
         offLabel(m)?.let { item { T(it, 13.sp, C.offRed, FontWeight.SemiBold, Modifier.padding(bottom = 2.dp)) } }
         item { MenuRow("Start match", formatSummary(setupOf(m)), R.drawable.ph_play) { if (off != null) confirming = true else AppState.beginMatch(setupOf(m)) } }
-        // TRK-13: walking the pitch before the match.
-        item { MenuRow("Mark pitch", "Walk its corners", R.drawable.ph_flag) { push(Page.Pitch(id, null)) } }
         (m["fee"] as? JsonObject)?.let { fee ->
             item { ToggleRow("Fee ${fee.str("text") ?: ""}", fee.bool("paid") == true, if (fee.bool("paid") == true) "Paid" else "Not paid yet") { paid -> AppState.markPaid(id, paid) } }
         }
-        listOf(m.str("where"), m.str("name"), m.str("role"), m.str("weather"), m.str("notes")).filterNotNull().forEach { line ->
-            item { T(line, 13.sp, C.dim, FontWeight.Normal, Modifier.padding(horizontal = 8.dp, vertical = 1.dp)) }
-        }
+        // UI-19: its details, a labeled row each, in the Garmin's order, the notes in full.
+        plannedDetails(m).forEach { (label, value) -> item { MenuRow(label, value, subLines = if (label == "Notes") 40 else 3) {} } }
+        // TRK-13: walking the pitch before the match.
+        item { MenuRow("Mark pitch", pitchLine(id, null), R.drawable.ph_flag, subLines = 2) { push(Page.Pitch(id, null)) } }
     }
 }
+
+/** TRK-13: Mark pitch's line, as the Garmin's: the corners waiting to go, or what to do. */
+private fun pitchLine(matchId: String?, created: Long?) = AppState.pitchCorners(matchId, created).let { if (it > 0) "$it corners marked, to send" else "Walk its corners" }
 
 /** SET-4, SET-9, UI-16. */
 @Composable
@@ -456,7 +458,7 @@ private fun PlayedPage(created: Long, push: (Page) -> Unit, pop: () -> Unit) {
         if (fee != null && id != null) {
             item { ToggleRow("Fee ${fee.text}", fee.paid, if (fee.paid) "Paid" else "Not paid yet") { paid -> AppState.markPaid(id, paid) } }
         }
-        item { MenuRow("Mark pitch", "Walk its corners", R.drawable.ph_flag) { push(Page.Pitch(h.matchId, h.created)) } }
+        item { MenuRow("Mark pitch", pitchLine(h.matchId, h.created), R.drawable.ph_flag, subLines = 2) { push(Page.Pitch(h.matchId, h.created)) } }
         item { MenuRow("Remove from watch") { removing = true } }
     }
 }

@@ -107,7 +107,7 @@ How the watch app looks: the running screen and the choices it's built from, the
 
 ## Status
 
-Everything above is built on the Garmin watch, with the setup's pictures, moments and Play through on the website and both phones, and the running screen in Try a match. Wear OS and Apple Watch have it too, but differ in the confirmations (UI-7), the number entry (UI-8) and a downloaded match's screen (UI-19); the [watch catch-up plan](../plans/watch-catch-up.md) lists each gap.
+Everything above is built on the Garmin watch, with the setup's pictures, moments and Play through on the website and both phones, and the running screen in Try a match. Wear OS and Apple Watch have it too, but differ in the confirmations (UI-7) and the number entry (UI-8); the [watch catch-up plan](../plans/watch-catch-up.md) lists each gap.
 
 Not built yet:
 
