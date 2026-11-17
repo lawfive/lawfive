@@ -44,8 +44,8 @@ Waiting accounts are at the top of **People**, with **Approve** and **Decline**.
 
 What each account may use is set by **plans**, in Settings → Server → **Plans**. A plan is a name, a short code (such as `free` or `pro`, kept when the plan is renamed) and a set of limits. Leave a limit empty for no limit, or set it to 0 to allow none at all:
 
-- matches, referees and venues kept, and megabytes of photos and tracks;
-- the largest photo, and the largest file brought in (an import or restoring an export);
+- matches, referees and venues kept, and megabytes of photos, files and tracks (thumbnails included);
+- the largest photo, the largest file on a match, venue or competition (never more than 20 MB), and the largest import (an import or restoring an export);
 - watches and phones signed in at once (browsers don't count);
 - phone notifications a day;
 - API keys, their requests a minute and a day (all of an account's keys together), webhooks, and assignor calendars (calendar links from ArbiterSports and other assignor systems, each read every 30 minutes);

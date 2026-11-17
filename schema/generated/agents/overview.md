@@ -23,6 +23,7 @@ Integrations use an API key, which the person makes in the website's Settings â†
 | Page | What it covers |
 |---|---|
 | [The data model](data-model.md) | The records and every type they're made of |
+| [Download a record's files](guide-download-files.md) | Fetch the files on a venue, a competition or a match (a parking map, the league's rules, a team sheet), with their names. The key needs read access to the record's collection: `venues:read` for a venue's files, `competitions:read` for a competition's, `matches:read` for a match's. |
 | [Keep a copy up to date](guide-keep-in-sync.md) | Follow every change with `GET /v1/changes`, deletions included, without missing any. The key needs read access to each collection you want; the others are left out. |
 | [Read matches with their venues and officials](guide-read-matches.md) | List someone's upcoming matches, with the names a match only refers to by id. The key needs `matches:read`, `venues:read` and `referees:read`. |
 | [Receive changes as they happen](guide-receive-webhooks.md) | Check that a webhook delivery is really from LawFive, then act on it once. The person makes the webhook in the website's Settings â†’ Webhooks, chooses its topics and gets its `whsec_...` secret once. |

@@ -1,6 +1,6 @@
 # Plan: files on venues, competitions and more
 
-**Status:** Being built. Agreed: its requirements are in [photos.md](../requirements/photos.md) (FILE-6, FILE-9 to FILE-15) and the agreed ones it changes. Built: step 1, the schema and the server; step 2, the website; and step 3, the phones (Android and the iPhone), checked in their snapshots and unit tests, not yet on real phones. Next: step 4, docs and policy.
+**Status:** Being built. Agreed: its requirements are in [photos.md](../requirements/photos.md) (FILE-6, FILE-9 to FILE-15) and the agreed ones it changes. Built: step 1, the schema and the server; step 2, the website; and step 3, the phones (Android and the iPhone), checked in their snapshots and unit tests, not yet on real phones. Step 4, docs and policy: lawfive.app's pages, lawfive.dev's (storage, backups, plans) and an API guide for downloading a record's files are written; the privacy policy's line for files is drafted and waits for sign-off. The privacy manifests and the stores' answers need no change: photos and other user content are already declared, and keeping files uses no API that needs a reason.
 
 ## In short
 

@@ -25,8 +25,8 @@ The server needs these before it can read its database or tell who the admins ar
 | `DATABASE_URL` | The database, when running outside Compose. Compose sets this itself. |
 | `ADMIN_EMAILS` | Admins by email, comma-separated. |
 | `PORT` | Where port 3000 is published. Use `127.0.0.1:3000` behind a proxy on the same machine. Outside Docker, the port the server listens on. |
-| `UPLOADS_DIR` | Where photos are kept, when running outside Docker. In Docker it's the `uploads` volume, at `/data/uploads`. |
-| `S3_URL` | An S3-compatible bucket for photos, instead of a folder. |
+| `UPLOADS_DIR` | Where photos and files are kept, when running outside Docker. In Docker it's the `uploads` volume, at `/data/uploads`. |
+| `S3_URL` | An S3-compatible bucket for photos and files, instead of a folder. |
 
 These are in the environment too, and aren't in Settings → Server:
 
@@ -38,7 +38,7 @@ These are in the environment too, and aren't in Settings → Server:
 | `TRUSTED_IP_HEADER` | The header a second proxy puts the visitor's address in, such as `CF-Connecting-IP`. Read only from a proxy in `TRUSTED_PROXIES`. |
 | `PUSH_RELAY_URL` | Where notifications to phones go, `https://push.lawfive.app` by default. `off` stops them. |
 | `RELAY_KEY` | Only for a server the push relay has given a key (the hosted service). Leave it unset. |
-| `ACCOUNT_STORAGE_LIMIT_MB` | Megabytes of photos and tracks for a new server's first plan; after that, [plans](/run/people/#plans-and-limits) set it. No limit by default. |
+| `ACCOUNT_STORAGE_LIMIT_MB` | Megabytes of photos, files and tracks for a new server's first plan; after that, [plans](/run/people/#plans-and-limits) set it. No limit by default. |
 
 ## Also in Settings → Server
 

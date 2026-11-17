@@ -14,7 +14,7 @@ A LawFive server is one Docker image and a Postgres database. `compose.yaml` run
 You can also add these later:
 
 - **An SMTP server**, to email invitations and password resets. Without one, admins copy the links and send them themselves.
-- **An S3-compatible bucket**, to keep photos outside the Docker volume.
+- **An S3-compatible bucket**, to keep photos and files outside the Docker volume.
 - **A map provider key**, for satellite imagery when placing pitches.
 
 These are all covered in [Email, maps and weather](/run/services/).
@@ -29,7 +29,7 @@ LawFive is light. Measured on a running server with a few accounts:
 | Postgres | about 50 MB | its image, about 430 MB, and the database, from about 65 MB |
 | A reverse proxy such as Caddy | about 20 MB | its image, about 90 MB |
 
-A machine with 1 GB of memory and one CPU is plenty, with a few GB of disk free. Photos are what grow as people use it, and [plans](/run/people/#plans-and-limits) limit how much each account can keep.
+A machine with 1 GB of memory and one CPU is plenty, with a few GB of disk free. Photos and files are what grow as people use it, and [plans](/run/people/#plans-and-limits) limit how much each account can keep.
 
 ## What your server talks to
 

@@ -1,9 +1,9 @@
 ---
 title: Email, maps and weather
-description: Set up email, photo storage, maps, address search and weather on a LawFive server.
+description: Set up email, storage for photos and files, maps, address search and weather on a LawFive server.
 ---
 
-All of these except photo storage can be set under **Settings → Server**. See [how settings work](/run/settings/).
+All of these except storage for photos and files can be set under **Settings → Server**. See [how settings work](/run/settings/).
 
 ## Email
 
@@ -18,9 +18,9 @@ MAIL_FROM=LawFive <lawfive@example.com>
 
 Use `smtp://` on port 587 for STARTTLS, or `smtps://` on port 465. **Send a test email** in Settings → Server sends to you through the saved settings, and shows the SMTP server's own words if it fails.
 
-## Photo storage
+## Storage for photos and files
 
-Photos go in the server's `uploads` volume by default. To use an S3-compatible bucket instead (AWS S3, Cloudflare R2, Backblaze B2, MinIO), set `S3_URL`:
+Photos, and files on matches, venues and competitions (PDFs, spreadsheets, Word documents, text), go in the server's `uploads` volume by default. Files need nothing more than photos do. Without anywhere to keep them, the server starts without photos or files, says so in its log, and the apps leave them out. To use an S3-compatible bucket instead (AWS S3, Cloudflare R2, Backblaze B2, MinIO), set `S3_URL`:
 
 ```ini title=".env"
 S3_URL=https://ACCESS_KEY:SECRET@s3.us-east-1.amazonaws.com/my-lawfive-photos

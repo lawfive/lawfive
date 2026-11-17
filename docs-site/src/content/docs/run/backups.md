@@ -3,7 +3,7 @@ title: Backups
 description: Back up and restore a self-hosted LawFive server.
 ---
 
-A server keeps its data in two places: the Postgres database, and the photos. Back up both, together, and keep `.env`, since `AUTH_SECRET` is what unlocks secrets saved in the web app.
+A server keeps its data in two places: the Postgres database, and the uploads (photos and files). Back up both, together, and keep `.env`, since `AUTH_SECRET` is what unlocks secrets saved in the web app.
 
 ## Back up the server
 
@@ -15,7 +15,7 @@ Run these from the folder with `compose.yaml`.
 docker compose exec -T db pg_dump -U lawfive lawfive | gzip > lawfive-db.sql.gz
 ```
 
-**The photos**, unless they're in an S3 bucket, in which case back up the bucket instead:
+**The uploads** (photos and files), unless they're in an S3 bucket, in which case back up the bucket instead:
 
 ```sh
 docker compose run --rm --no-deps --entrypoint "" -v "$PWD:/backup" server \
@@ -48,7 +48,7 @@ Try a restore on a spare machine at least once, so you know your backups work be
 
 Anyone can keep their own copy, whichever server they're on. **Settings → Account** has:
 
-- **Download everything:** a zip of the account's records as JSON, with its tracks and photos, and a short README of the format.
+- **Download everything:** a zip of the account's records as JSON, with its tracks, photos and files, and a short README of the format.
 - **Restore from an export:** merges a zip into the account. Records keep their ids, and where a record is in both, the one changed last is kept. Running it twice changes nothing more.
 
 This also moves an account from one server to another.

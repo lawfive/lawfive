@@ -12,7 +12,7 @@ description: The parts of LawFive, and how data moves between them.
 | Shared contract (`schema/`) | The data model and every endpoint ([the API reference](/api/reference/)). It generates JSON Schema, OpenAPI, Kotlin and Swift, and the shared match cases every watch runs, Garmin's in Monkey C. |
 | [Server](/contribute/server-web/) | The source of truth: accounts, the API, the web app's files, and background jobs for weather, webhooks, notifications and reading assignor calendars. |
 | [Web app](/contribute/server-web/) | Management: matches, reports, stats, people and settings. |
-| Phone apps ([Android](/contribute/android/), [iPhone](/contribute/iphone/)) | Match day: an offline copy of your matches, reminders, photos, and the bridge to a Garmin watch. |
+| Phone apps ([Android](/contribute/android/), [iPhone](/contribute/iphone/)) | Match day: an offline copy of your matches, reminders, photos, files kept for the next days' matches, and the bridge to a Garmin watch. |
 | Watch apps ([Garmin](/contribute/garmin/), [Wear OS](/contribute/android/#wear-os), [Apple Watch](/contribute/iphone/#apple-watch)) | Run the match. They hold only upcoming matches and the records of matches played, until those are confirmed as uploaded. |
 
 ## Sync

@@ -2,12 +2,15 @@ import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
 import { before, describe, test } from "node:test";
 import { createApp } from "../src/app.ts";
 import { createAuth } from "../src/auth.ts";
 import { migrationsFolder, tables } from "../src/db/index.ts";
+import { diskStore } from "../src/storage.ts";
 import { signature } from "../src/webhooks.ts";
 import { checkAnswer } from "./contract.ts";
 
@@ -17,7 +20,8 @@ import { checkAnswer } from "./contract.ts";
 const publicUrl = "http://localhost:3000";
 const pg = new PGlite();
 const db = drizzle(pg, { schema: tables });
-const app = createApp(db, createAuth(db, { authSecret: "test-secret-that-is-at-least-32-characters", publicUrl, signUp: "open" }), { version: { version: "2030.1.2", commit: "abc1234" } });
+const files = await diskStore(mkdtempSync(join(tmpdir(), "lawfive-guides-")));
+const app = createApp(db, createAuth(db, { authSecret: "test-secret-that-is-at-least-32-characters", publicUrl, signUp: "open" }), { version: { version: "2030.1.2", commit: "abc1234" }, files });
 const AsyncFunction = (async () => {}).constructor as new (...args: string[]) => (...args: unknown[]) => Promise<any>;
 
 async function call(method: string, path: string, token?: string, body?: unknown) {
@@ -107,6 +111,23 @@ describe("worked examples", () => {
         assert.equal(saved.status, 200);
         assert.equal(saved.body.outlook, "Fixed on the retry");
         assert.equal(saved.body.notes, "Someone else's change", "kept what they saved");
+    });
+
+    test("download a record's files, on just the record's read access", async () => {
+        const pdf = new TextEncoder().encode("%PDF-1.7\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n");
+        const form = new FormData();
+        form.set("recordType", "venue");
+        form.set("recordId", ids.venue);
+        form.set("kind", "file");
+        form.set("file", new Blob([pdf]), "Parking map.pdf");
+        const added = await app.request("/v1/attachments", { method: "POST", headers: { origin: publicUrl, authorization: `Bearer ${session}` }, body: form });
+        assert.equal(added.status, 201);
+        const { filesOf } = await guide("download-files", "{ filesOf }")(await keyFor("venues:read"));
+        const got = await filesOf("venue", ids.venue);
+        assert.deepEqual(got.map((f: { name: string; type: string }) => [f.name, f.type]), [["Parking map.pdf", "application/pdf"]]);
+        assert.deepEqual([...got[0].bytes], [...pdf]);
+        const other = (await guide("download-files", "{ filesOf }")(await keyFor("matches:read"))).filesOf;
+        await assert.rejects(other("venue", ids.venue), /403/);
     });
 
     test("receive webhooks: a good signature acts once, and a bad or old one is refused", async () => {
