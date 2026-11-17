@@ -69,7 +69,7 @@ final class FilesTests: XCTestCase {
         XCTAssertFalse(keepsFilesFor(match(nil), now: now))
     }
 
-    func testIn200MBWithThoseKeptOnPurposeFirstAndTheOldestMatchsGoingFirst() {
+    func testIn200MBWithThoseKeptOnPurposeFirstThenTheSoonestMatchs() {
         let mb = 1 << 20
         let soon = instantOf("2026-11-10T16:00:00Z")!
         let later = instantOf("2026-11-12T16:00:00Z")!
@@ -78,7 +78,8 @@ final class FilesTests: XCTestCase {
         let forLater = file("later", size: 100 * mb)
         let shared = file("shared", size: 10 * mb)
         let plan = planKeeping(pinned: [pinned], wanted: [WantedFile(file: forSoon, kickoff: soon), WantedFile(file: forLater, kickoff: later), WantedFile(file: shared, kickoff: soon), WantedFile(file: shared, kickoff: later)])
-        XCTAssertEqual(plan.map(\.id), ["pinned", "later", "shared"])
+        // The soon match's two, then the later one's doesn't fit.
+        XCTAssertEqual(plan.map(\.id), ["pinned", "soon", "shared"])
         XCTAssertLessThanOrEqual(plan.reduce(0) { $0 + $1.size }, keepBudget)
         XCTAssertEqual(planKeeping(pinned: [pinned], wanted: [WantedFile(file: forSoon, kickoff: soon)]).map(\.id), ["pinned", "soon"])
     }

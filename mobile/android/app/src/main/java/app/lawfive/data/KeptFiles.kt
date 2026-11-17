@@ -20,7 +20,7 @@ import java.time.Instant
 // FILE-13: files kept on the phone for a ground without signal. The files of every match in the
 // next 3 days (its own, its venue's and its competition's) are fetched when there's signal and
 // kept until the match is over, and Keep on this phone keeps any file until it's turned off; at
-// most 200 MB, the oldest match's going first. They're in the app's own storage, left out of the
+// most 200 MB, the soonest match's kept first. They're in the app's own storage, left out of the
 // phone's backups (backup_rules.xml, data_extraction_rules.xml), and go on signing out. Each
 // record's list of files at the last look is kept too, so its Files card shows them without signal.
 
@@ -44,8 +44,8 @@ data class WantedFile(val file: Attachment, val kickoff: Instant)
 
 /**
  * What to keep, in at most `budget` bytes: the files kept with Keep on this phone first, then the
- * matches', latest match first, so that when there isn't room the oldest match's go first. A file
- * wanted for several matches counts for the latest.
+ * matches', soonest match first, so that when there isn't room the latest match's are left off and
+ * the ground you're heading to next has its files. A file wanted for several matches counts for the soonest.
  */
 fun planKeeping(pinned: List<Attachment>, wanted: List<WantedFile>, budget: Long = KEEP_BUDGET): List<Attachment> {
     val chosen = LinkedHashMap<String, Attachment>()
@@ -57,7 +57,7 @@ fun planKeeping(pinned: List<Attachment>, wanted: List<WantedFile>, budget: Long
         }
     }
     pinned.forEach(::take)
-    wanted.groupBy { it.file.id }.values.map { all -> all.maxBy { it.kickoff } }.sortedByDescending { it.kickoff }.forEach { take(it.file) }
+    wanted.groupBy { it.file.id }.values.map { all -> all.minBy { it.kickoff } }.sortedBy { it.kickoff }.forEach { take(it.file) }
     return chosen.values.toList()
 }
 

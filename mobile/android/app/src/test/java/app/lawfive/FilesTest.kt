@@ -95,7 +95,7 @@ class FilesTest {
         assertFalse(keepsFilesFor(match(null), now))
     }
 
-    @Test fun `in at most 200 MB, with those kept on purpose first and the oldest match's going first`() {
+    @Test fun `in at most 200 MB, with those kept on purpose first, then the soonest match's`() {
         val mb = 1L shl 20
         val soon = Instant.parse("2026-11-10T16:00:00Z")
         val later = Instant.parse("2026-11-12T16:00:00Z")
@@ -104,8 +104,8 @@ class FilesTest {
         val forLater = file("later", size = 100 * mb)
         val shared = file("shared", size = 10 * mb)
         val plan = planKeeping(listOf(pinned), listOf(WantedFile(forSoon, soon), WantedFile(forLater, later), WantedFile(shared, soon), WantedFile(shared, later)))
-        // The later match's two, then the soon one's doesn't fit.
-        assertEquals(listOf("pinned", "later", "shared"), plan.map { it.id })
+        // The soon match's two, then the later one's doesn't fit.
+        assertEquals(listOf("pinned", "soon", "shared"), plan.map { it.id })
         assertTrue(plan.sumOf { it.size } <= KEEP_BUDGET)
         assertEquals(listOf("pinned", "soon"), planKeeping(listOf(pinned), listOf(WantedFile(forSoon, soon))).map { it.id })
     }

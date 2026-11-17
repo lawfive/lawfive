@@ -72,7 +72,7 @@ A **Files** card under Photos on the match and venue pages, and on a new **compe
 The same Files card, from the phone's files (and the camera for a photo).
 
 - **Opening:** a PDF opens in the app, page by page, with zoom (`PdfRenderer` on Android, PDFKit on the iPhone); other kinds open on the iPhone in Quick Look and on Android with **Open with** (an app that can show it, through the `FileProvider`). **Share** sends the file to another app.
-- **Kept on the phone:** the files of the venue, the competition and the match itself, for every match in the **next 3 days**, are fetched when the phone has signal and kept until the match is over, so a parking map opens at a ground without signal. **Keep on this phone** on any file keeps it until turned off. Kept files stay in the app's own storage (left out of backups) and are removed on signing out, in at most 200 MB, the oldest match's first. Settings shows how much is kept, with **Remove kept files**.
+- **Kept on the phone:** the files of the venue, the competition and the match itself, for every match in the **next 3 days**, are fetched when the phone has signal and kept until the match is over, so a parking map opens at a ground without signal. **Keep on this phone** on any file keeps it until turned off. Kept files stay in the app's own storage (left out of backups) and are removed on signing out, in at most 200 MB, the soonest match's kept first (the latest match's are left off first). Settings shows how much is kept, with **Remove kept files**.
 - **Without signal**, a file that isn't kept says "Opens when there's signal."
 
 ### API keys and webhooks

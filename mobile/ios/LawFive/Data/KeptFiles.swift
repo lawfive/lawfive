@@ -137,8 +137,8 @@ struct WantedFile {
 }
 
 /// What to keep, in at most `budget` bytes: the files kept with Keep on this phone first, then the
-/// matches', latest match first, so that when there isn't room the oldest match's go first. A file
-/// wanted for several matches counts for the latest.
+/// matches', soonest match first, so that when there isn't room the latest match's are left off and
+/// the ground you're heading to next has its files. A file wanted for several matches counts for the soonest.
 func planKeeping(pinned: [Attachment], wanted: [WantedFile], budget: Int = keepBudget) -> [Attachment] {
     var chosen: [Attachment] = []
     var used = 0
@@ -148,22 +148,22 @@ func planKeeping(pinned: [Attachment], wanted: [WantedFile], budget: Int = keepB
         used += a.size
     }
     pinned.forEach(take)
-    var latest: [String: WantedFile] = [:]
+    var soonest: [String: WantedFile] = [:]
     var order: [String] = []
     for w in wanted {
-        if let had = latest[w.file.id] {
-            if w.kickoff > had.kickoff { latest[w.file.id] = w }
+        if let had = soonest[w.file.id] {
+            if w.kickoff < had.kickoff { soonest[w.file.id] = w }
         } else {
-            latest[w.file.id] = w
+            soonest[w.file.id] = w
             order.append(w.file.id)
         }
     }
     // Stable: ties keep the order they were wanted in.
     let sorted = order.enumerated().sorted { a, b in
-        let ka = latest[a.element]!.kickoff, kb = latest[b.element]!.kickoff
-        return ka != kb ? ka > kb : a.offset < b.offset
+        let ka = soonest[a.element]!.kickoff, kb = soonest[b.element]!.kickoff
+        return ka != kb ? ka < kb : a.offset < b.offset
     }
-    for (_, id) in sorted { take(latest[id]!.file) }
+    for (_, id) in sorted { take(soonest[id]!.file) }
     return chosen
 }
 
@@ -186,7 +186,7 @@ struct KeptIndex: Codable {
 
 /// The files kept on the phone (FILE-13): the files of every match in the next 3 days (its own, its
 /// venue's and its competition's), fetched when there's signal and kept until the match is over, and
-/// any kept with Keep on this phone until it's turned off; at most 200 MB, the oldest match's going
+/// any kept with Keep on this phone until it's turned off; at most 200 MB, the soonest match's kept
 /// first. In Application Support's kept-files, left out of the phone's backups, and gone on signing
 /// out. Each record's list of files at the last look is kept too, so its Files card shows them without signal.
 @MainActor

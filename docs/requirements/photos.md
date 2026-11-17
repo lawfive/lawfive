@@ -32,7 +32,8 @@ Photos on the records they're of, and files (documents a league sends, a ground'
 - **FILE-12** **Previews:** photos, and PDFs added on the phones, have a thumbnail made by the app that adds them (a PDF's first page); other files show their kind's icon. CSV and text files can be looked at in the apps: the first 200 lines, as text in the monospaced font, never as a page.
 - **FILE-13** **On the phones**, a PDF opens in the app, page by page, with zoom; other files open on the iPhone in Quick Look and on Android with **Open with**; **Share** sends any file to another app.
   - The files of the next 3 days' matches (their own, their venue's and their competition's) are kept on the phone, fetched when there's signal and kept until the match is over (three hours after kickoff, or when it's canceled), so a parking map opens at a ground without signal. Each record's list of files at the last look is kept too, so its Files card shows them without signal. **Keep on this phone** keeps any file until it's turned off.
-  - Kept files stay in the app's own storage, left out of the phone's backups, in at most 200 MB (the oldest match's go first), and are removed on signing out. Settings shows how much is kept, with **Remove kept files**.
+  - Kept files stay in the app's own storage, left out of the phone's backups, in at most 200 MB, and are removed on signing out. Settings shows how much is kept, with **Remove kept files**.
+  - When there isn't room, the files kept with **Keep on this phone** come first, then the soonest match's, so the ground you're heading to next has its files; the latest match's are left off first. A file for several matches counts for the soonest.
   - Without signal, a file that isn't kept says "Opens when there's signal."
 
 ## Storage and privacy
