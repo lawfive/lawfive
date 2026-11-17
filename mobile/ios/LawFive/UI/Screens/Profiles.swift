@@ -121,7 +121,8 @@ struct CompetitionScreen: View {
             Page(c.name, sub: sub, large: false) {
                 let facts = [
                     describeDates(c.startDate, c.endDate).map { Fact(icon: .calendar, label: "Dates", value: $0) },
-                    template.map { Fact(icon: .templates, label: "Match template", value: "\($0.name) · \(describeFormat($0.format))", wide: true) },
+                    // WEB-34: the template's name, its format under it, as the website shows it (a name often says the format in short).
+                    template.map { Fact(icon: .templates, label: "Match template", value: $0.name, wide: true, lines: [FactLine(text: $0.name), FactLine(text: describeFormat($0.format), tone: .plain)]) },
                     c.misconductScheme.flatMap { s in misconductSchemes.first { $0.0 == s } }.map { Fact(icon: .report, label: "Misconduct codes", value: $0.1) },
                     c.notes.map { Fact(icon: .note, label: "Notes", value: $0, wide: true) },
                 ].compactMap { $0 }

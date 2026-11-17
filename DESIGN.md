@@ -249,7 +249,7 @@ In styles.css and ui.tsx. The phones have the same components under the same nam
 
 ### Rows and tiles
 
-- **Facts** (`dl.facts`, `Fact`): cells divided by hairlines on a panel, each a muted icon, a small mono label and the value.
+- **Facts** (`dl.facts`, `Fact`): cells divided by hairlines on a panel, each a muted icon, a small mono label and the value; a value of two lines has the second muted and regular weight (`.fact-lines`; a competition's match template, its name with its format under it).
 - **Tile rows** (`.tile-rows`): on the grass, 8px apart, at least 60px high, 4px corners. A 64px board tile with what identifies the row in black italic (REF, AR1; a pitch's number), then a chalk panel with the name (18px extra-bold) and a muted line. At night the tile has a 1px edge.
 - **Choice tiles** (`.quiz-level`, `.quiz-count`, `.scheme`): outlined on the panel, names in black italic; the chosen one lit on the board with a hard drop (a mint edge at night). Step progress bars are square segments.
 - **List rows**: an avatar, a title, a muted line, meta at the right (under the text on phones).

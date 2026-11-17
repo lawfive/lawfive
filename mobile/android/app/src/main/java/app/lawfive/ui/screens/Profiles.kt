@@ -54,7 +54,9 @@ import app.lawfive.schema.Referee
 import app.lawfive.schema.Venue
 import app.lawfive.ui.LocalGraph
 import app.lawfive.ui.LocalNav
+import app.lawfive.ui.components.ChipTone
 import app.lawfive.ui.components.Fact
+import app.lawfive.ui.components.FactLine
 import app.lawfive.ui.components.FactsCard
 import app.lawfive.ui.components.Gap
 import app.lawfive.ui.components.IconAction
@@ -219,7 +221,8 @@ fun CompetitionScreen(id: String) {
     Screen(c.name, sub = sub, back = "Competitions", label = "Competition · ${c.name}", actions = { IconAction(Ph.Edit, "Edit") { nav.navigate("competition/$id/edit") } }) {
         val facts = listOfNotNull(
             describeDates(c.startDate?.toString(), c.endDate?.toString())?.let { Fact(Ph.Calendar, "Dates", it) },
-            template?.let { Fact(Ph.Templates, "Match template", "${it.name} · ${app.lawfive.ui.describeFormat(it.format)}", wide = true) },
+            // WEB-34: the template's name, its format under it, as the website shows it (a name often says the format in short).
+            template?.let { Fact(Ph.Templates, "Match template", it.name, wide = true, lines = listOf(FactLine(it.name), FactLine(app.lawfive.ui.describeFormat(it.format), ChipTone.Plain))) },
             c.misconductScheme?.let { s -> misconductSchemes.firstOrNull { it.first == s }?.let { Fact(Ph.Report, "Misconduct codes", it.second) } },
             c.notes?.let { Fact(Ph.Note, "Notes", it, wide = true) },
         )

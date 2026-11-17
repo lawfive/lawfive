@@ -92,7 +92,8 @@ export function CompetitionPage() {
                     {(dates || template || scheme || c.notes) && (
                         <dl className="facts" style={{ gridTemplateColumns: "1fr", margin: 0 }}>
                             {dates && <Fact icon="calendar" label="Dates">{dates}</Fact>}
-                            {template && <Fact icon="templates" label="Match template">{template.name} <span className="muted">· {describeFormat(template.format)}</span></Fact>}
+                            {/* WEB-34: the template's name, its format under it, as the templates list shows them (a name often says the format in short). */}
+                            {template && <Fact icon="templates" label="Match template"><span className="fact-lines">{template.name}<span className="muted">{describeFormat(template.format)}</span></span></Fact>}
                             {scheme && <Fact icon="report" label="Misconduct codes">{scheme}</Fact>}
                             {c.notes && <Fact icon="note" label="Notes"><span className="notes-text">{c.notes}</span></Fact>}
                         </dl>
