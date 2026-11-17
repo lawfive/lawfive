@@ -87,4 +87,4 @@ Everything above is built, on the website, both phones and the API.
 
 Not built yet:
 
-- Importing straight from assignor systems' APIs (A-3 in [ARCHITECTURE.md](../ARCHITECTURE.md)). Their calendar links are covered in [assignor-calendars.md](assignor-calendars.md).
+- Importing straight from assignor systems' APIs, proposed in the [assignor integrations plan](../plans/assignor-integrations.md). Their calendar links are covered in [assignor-calendars.md](assignor-calendars.md).

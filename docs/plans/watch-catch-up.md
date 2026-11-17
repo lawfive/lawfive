@@ -118,12 +118,8 @@ New, in [wear-os-and-apple-watch.md](../requirements/wear-os-and-apple-watch.md)
 
 When it's built, the Status lines move with it:
 
-- Wear OS and Apple Watch's "Behind Garmin" list goes. Its lines on Remind every, Repeat alerts every and the menu's order are already untrue for the Apple Watch; its History line is untrue for the Apple Watch but for sending now.
+- Wear OS and Apple Watch's "Behind Garmin" list goes, and the lines in the UI, EVT, ET, VIB and SYNC Status sections that say what differs on these two watches.
 - match-screen.md's line on the Apple Watch's plain titles goes.
-- WCH-7 says Record track and Save to Health are in Settings → Account on the Apple Watch, and SYNC-5 lists Record track in Account; on all three watches they're in Settings itself.
-- VIB-5 says Garmin's Sin bin over is in the phone settings; it's in the watch's Alerts too.
-- UI-7 names only Cancel match and Restart match as red; Abandon, Unlink, Reset and Remove are red on every watch.
-- UI-17's Account lists Sync now, which SYNC-5 and UI-16 put in Matches; UI-17 changes to match.
 - TMR-15's line stays until Wear OS's stopped clock is seen on the emulator ([Checks](#checks)).
 
 ## Open questions

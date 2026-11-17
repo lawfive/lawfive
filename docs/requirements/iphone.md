@@ -61,7 +61,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 
 ## Status
 
-Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds up for internal TestFlight testing. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair. What of IOS-14 a simulator has shown is in R-18.
+Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds up for internal TestFlight testing. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair. What of IOS-14 a simulator and an iPad running it from TestFlight have shown is in R-18.
 
 Not built yet:
 
@@ -70,4 +70,4 @@ Not built yet:
 - Proving IOS-9 on hardware, and then turning it on in App Store builds.
 - Linking the Apple Watch (WCH-12) on hardware (R-6, R-13).
 - The App Store listing (IOS-10, IOS-11).
-- Notifications from the server (IOS-14) on a real iPhone, through TestFlight: arriving while it's locked or asleep, the words written in time, Directions, and a canceled match's reminders going (R-18).
+- Notifications from the server (IOS-14): a canceled match's reminders going, and on a real iPhone the words written in time on a slow connection (R-18).

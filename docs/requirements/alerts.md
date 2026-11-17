@@ -22,7 +22,7 @@ The watch's vibrations during a match (full time, added time, stoppage reminders
 
 ## Settings and silencing
 
-- **VIB-5** Each alert can be turned on or off in settings: Settings → Alerts on the watch (full time is "End of each period"), though on Garmin Sin bin over is in the phone settings. Garmin's phone settings also set the repeat interval ("Repeat full-time and break alerts every (seconds)"). The lightning countdown's vibration (TMR-13) follows the break alert's switch.
+- **VIB-5** Each alert can be turned on or off in settings: Settings → Alerts on the watch (full time is "End of each period"), and on Garmin in the phone settings too. Alerts also sets how often they repeat, **Remind every** (VIB-2) and **Repeat alerts every** (VIB-1, VIB-4, VIB-7, VIB-8), which Garmin's phone settings set too ("Repeat full-time and break alerts every (seconds)"). The lightning countdown's vibration (TMR-13) follows the break alert's switch.
 - **VIB-6** **Silencing.** Pressing any button acknowledges a repeating alert, and that press only silences it, so the referee can't trigger an action by accident. The exceptions:
   - While a halfway break is due, Start/Stop starts the break (TMR-7) rather than only silencing.
   - Back (and Menu) silences the alert and opens the game menu in the same press, as opening a menu does nothing by itself. This is on Garmin and Wear OS; Apple Watch has no Back button the app handles, and its swipe to the game menu doesn't silence an alert.
@@ -31,7 +31,7 @@ The watch's vibrations during a match (full time, added time, stoppage reminders
 
 ## Status
 
-Everything above is built on all three watches and in Try a match.
+Everything above is built on all three watches and in Try a match, except Remind every and Repeat alerts every on Wear OS, which repeats every 10 seconds (the [watch catch-up plan](../plans/watch-catch-up.md)).
 
 Not built yet:
 - Full time's one vibration or repeat (VIB-1) has been checked only by the shared cases and tests, not on a real watch.

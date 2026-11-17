@@ -75,13 +75,14 @@ Linking a watch to a LawFive account and syncing with it ([ARCHITECTURE.md](../A
 
 ## The Account menu
 
-- **SYNC-5** **Settings → Account**, while linked, shows when it last synced (or the last problem: "Phone not connected", "Couldn't reach server"), how many matches and tracks are waiting to upload, the server, **Record track** (TRK-7), **Sync on opening** (UI-16) and **Unlink**. **Sync now** is in Matches (UI-16).
+- **SYNC-5** **Settings → Account**, while linked, shows when it last synced (or the last problem: "Phone not connected", "Couldn't reach server"), how many matches and tracks are waiting to upload, the server, **Sync on opening** (UI-16) and **Unlink**. **Sync now** is in Matches (UI-16), and **Record track** in Settings (TRK-7, UI-17).
 
 ## Status
 
 Linking with a code and by the phone app, the next matches, uploads with an outbox, the Account menu, unlinking, the distance, the server built in or chosen on the watch, the watch's model, the fee and pitch corners from the watch, and what next after linking are built, through the Android app too where it's there (APP-7).
 
 Not built yet:
+- SYNC-5's Account on Wear OS and Apple Watch, which shows only Sync now and Unlink while linked (the [watch catch-up plan](../plans/watch-catch-up.md)).
 - SYNC-16 is built on the server, all three watches and both phones' Garmin relay, and checked in unit tests and the simulators; not yet on a real watch.
 - Background sync while the app is closed.
 - SYNC-14 is on the server only: the match pages, and the phones' fetching ahead and offline copy, are still to come.

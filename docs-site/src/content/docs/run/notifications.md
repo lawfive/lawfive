@@ -52,7 +52,7 @@ These limits are comfortable for a server with a few referees. If yours needs mo
 
 ## Testing it
 
-As an admin, turn on **Tell me about weather risks** in the Android app, then choose **Send a test notification** under **Settings → Server** on the website. It goes to your own phones. If it doesn't arrive, the page says why.
+As an admin, turn on **Tell me about weather risks** in the Android or iPhone app, then choose **Send a test notification** under **Settings → Server** on the website. It goes to your own phones. If it doesn't arrive, the page says why.
 
 ## Turning it off
 

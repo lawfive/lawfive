@@ -9,7 +9,8 @@ import { describeCount, useWorkedTogether } from "../history.ts";
 import { searchAndSort } from "../search.ts";
 import { newId } from "../ids.ts";
 
-// Competitions: one per competition per season (A-6), with an optional misconduct scheme (A-8).
+// Competitions: one per competition per season (the data model in ARCHITECTURE.md), with an optional misconduct
+// scheme for the cards' reasons (EVT-14).
 
 const types: [Competition["type"], string][] = [["league", "League"], ["tournament", "Tournament"], ["cup", "Cup"], ["friendly", "Friendly"]];
 const schemes: [string, string][] = [["ifab", "Laws of the Game"], ["ussf", "United States"], ["fa", "England"]];

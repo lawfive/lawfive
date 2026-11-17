@@ -43,7 +43,15 @@ Not in this plan: a match the server refuses with 409 (it stays queued and stops
 
 - **Garmin's documentation** for `makeWebRequest` says the callback's `responseCode` is "the server response code or a BLE_\* error type", and its `data` is "the content if the request was successful, or `null`". It lists the negative codes: -400 for a body that doesn't fit the response type, -401 for headers it doesn't accept, -1002 for an unexpected content type, -300 for a timeout and so on.
 - **The forums** agree that a 4xx or 5xx reaches the callback with its status and `null` data. Several developers report that an error whose body isn't JSON (a plain-text 403, an empty 401) comes back as -400 instead of its status, at least in the simulator; one reports a plain 404 arriving as 404 with `null`. Garmin staff have said the simulator is more lenient than the devices about content types. Nobody reports an error's JSON body arriving.
-- **How sure:** fairly sure (the official text and every report point the same way) that a direct request's error body never reaches the watch, so `fromServer` is false for every direct error, but it isn't proven for both Garmin Connect apps (Android and iPhone) on a real watch. A proxy's 404 may arrive as 404 or as -400 depending on its body and the phone; the fix must be right either way. The plan's first step checks it.
+- **Measured on a real watch** (step 1, done): a Venu 2 through Garmin Connect on Android (a Pixel), with the JSON response type the watch uses, against a test server:
+
+  | The server answered | The callback got |
+  |---|---|
+  | 404 with LawFive's JSON error; 400 with a JSON error; 401 with Better Auth's `{ message, code }` | the status **and the body**, as a dictionary |
+  | 404 as plain text (Traefik's "404 page not found"); 502 and 503 as HTML | -400, `null` |
+  | 401 with no body | 401, `null` (Garmin Connect sent each 401 request twice) |
+
+  So the documentation and the forums were wrong for this path: going direct, `fromServer` sees LawFive's errors, and a proxy's error never arrives as a 404 at all. The simulator answers the same way. `"ñüé".toUpper()` gives `ÑÜÉ` on the watch, so no capitals table is needed. Not yet checked: Garmin Connect on an iPhone.
 
 ## Proposed behavior
 
@@ -62,6 +70,8 @@ Not in this plan: a match the server refuses with 409 (it stays queued and stops
 `pnpm generate` writes `schema/short-names.json` into `watch-garmin/source/ShortNameCases.mc` as a `(:debug)` function returning the cases, with `monkeyC()` from `matchCasesGenerate.ts`. A test in `MatchTests.mc` runs every case through `Settings.shortNames`. `tools/test-watches.sh` adds the file to the generated files it checks are current, and the `about` line names Garmin's copy.
 
 ### What counts as LawFive refusing a request
+
+*After step 1:* on Android the first sign below is enough, as LawFive's errors arrive with their body and a proxy's arrive as -400. The fix narrows to the fee, screen and pitch requiring `fromServer` like the match and track do, and the sign-out queue accepting Better Auth's error shape. The `/v1/meta` check stays as the fallback for the iPhone's Garmin Connect, only if it turns out to drop error bodies.
 
 One rule for every request the watch sends, direct or through the phone. A refusal is a 400 or 404 (what each request does with one is unchanged: a match or a track chunk skipped, a track dropped, a fee, screen or pitch change dropped) that comes with a sign it's LawFive's:
 
@@ -113,7 +123,7 @@ Changes to agreed requirements, and one new one:
 
 ## The work, in order
 
-1. **What Garmin Connect passes on** (half a day): a test server answering 404 with LawFive's JSON, 404 with Traefik's plain text, an empty 401 and a 502, called from the simulator and from a real watch through Garmin Connect on Android and on an iPhone; note each `(code, data)`. And `"ñü".toUpper()` on the watch. The results go in R-19 and decide the capitals table.
+1. **What Garmin Connect passes on** (half a day; done on Android, above): a test server answering 404 with LawFive's JSON, 404 with Traefik's plain text, an empty 401 and a 502, called from the simulator and from a real watch through Garmin Connect on Android and on an iPhone; note each `(code, data)`. And `"ñü".toUpper()` on the watch. The results go in R-19 and decide the capitals table.
 2. **Short names** (half a day to a day): `Settings.shortNames` and the letter test; `plannedTitle` and `matchSetup` through it; `ShortNameCases.mc` from `pnpm generate`; the test in `MatchTests.mc` in place of `testTeamAlias`; `test-watches.sh`; the settings' titles. Strict build, unit tests, all 46 release builds; the New match row in the simulator on `fr965` and `venu3`.
 3. **Refusals** (a day): one function in `Sync.mc` that takes `(code, data)` and either acts, or runs the `/v1/meta` check and the second send; `onUploaded`, `onTrackSent`, `onFeeSent`, `onScreenSent`, `onPitchSent` and the sign-out queue through it (and `fail()`'s 401, if question 1 says so); tests in `MatchTests.mc` for each outcome (JSON error, meta not LawFive, refused twice, accepted on the second send); a sync against the demo server with the server stopped behind a proxy.
 4. **Requirements and docs** (an hour): SET-5 and the Status, SYNC-17 and the lines that point at it, R-19, R-6, `MATCH_CONFIG.md`, the Garmin README's settings table, CONTRIBUTING.md's SET-5 row, `short-names.json`'s `about`.

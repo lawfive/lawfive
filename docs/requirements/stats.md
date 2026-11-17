@@ -63,10 +63,9 @@ The website's Stats takes the broadcast stats package's look (WEB-24). Charts us
 
 ## Status
 
-Everything above is built on the website, Android and the iPhone, except STAT-16's single distance average.
+Everything above is built on the website, Android and the iPhone.
 
 Not built yet:
-- STAT-16's one distance average on the server, and the counts and distance using it.
 - Checked on real phones (R-12).
 - Your watches' battery figures from real watches, and the Apple Watch's hardware identifier read on a real one (R-13).
 - Busiest times turned with a very wide range of kickoff hours.

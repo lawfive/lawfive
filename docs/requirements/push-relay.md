@@ -42,8 +42,8 @@ The push relay at `push.lawfive.app` ([relay/](../../relay/), [ARCHITECTURE.md](
 
 The relay is live with its limits, controls and keys (the hosted server sends with its key); the server's sending, new weather risks, the admin's test notification, and the phones' settings and notifications, opening their match when tapped, are built.
 
-The iPhone's settings and notifications (IOS-14) are built and checked on a simulator.
+The iPhone's settings and notifications (IOS-14) are built and checked on a simulator. Both phones' notifications have arrived on real devices while locked and asleep (R-18).
 
 Not built yet:
 - Telling a server's admin in the website when a limit is reached.
-- Notifications checked on a real phone (R-18).
+- The daily limits checked in production, and on an iPhone, a canceled match's reminders going and the words written in time on a slow connection (R-18).

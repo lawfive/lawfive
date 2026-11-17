@@ -67,7 +67,7 @@ How the watch app looks: the running screen and the choices it's built from, the
   - Every row is a dark band, so rows look tappable; on button watches the focused row is brighter with a white outline. Yellow card and Red card rows are yellow and red; labels are left-aligned.
   - No Cancel row. On Wear OS and Apple Watch a swipe right goes back, never tapping the row under it. Back from the player number goes straight to the match.
   - Every other menu is the watch's system menu, so it looks like the watch's own.
-- **UI-7** **Confirmations**: a short question ("Restart match?"), maybe a smaller gray detail ("Clock and events are cleared"; for Undo, the event), then a **Yes** pill (green, or red for Cancel match and Restart match) over a gray **No**. Yes and No, not Confirm and Cancel, because under "Cancel match?" a Cancel pill would read as the action. Yes is highlighted first; Start/Stop presses the highlighted pill, Up/Down or a swipe moves it, Back cancels, a tap presses a pill.
+- **UI-7** **Confirmations**: a short question ("Restart match?"), maybe a smaller gray detail ("Clock and events are cleared"; for Undo, the event), then a **Yes** pill (green, or red for Cancel match, Restart match, Abandon match, Reset LawFive, Unlink and Remove from watch) over a gray **No**. Yes and No, not Confirm and Cancel, because under "Cancel match?" a Cancel pill would read as the action. Yes is highlighted first; Start/Stop presses the highlighted pill, Up/Down or a swipe moves it, Back cancels, a tap presses a pill.
 - **UI-8** **The two-digit entry screen**, for player numbers and Create match's minutes and team size (SET-9): a title ("Goal HOM", with a small card for cards; "Period length") and a unit ("Player number", "Minutes", "Players").
   - Each digit has its own dark box; the active one is brighter, with a white outline and up/down arrows.
   - The bottom pill is a green **OK**, or a gray **No number** or **No break** at `00` where zero means that.
@@ -82,7 +82,7 @@ How the watch app looks: the running screen and the choices it's built from, the
 - **UI-16** **Matches** lists **Sync now** (with the last sync, or each step: "Sending match 1 of 2…", "Sending track 3 of 18…", "Getting matches…"), then the downloaded matches, soonest first and highlighted, updated in place. **New match** offers the planned match (set in the phone settings), **Quick match**, **Same as last** (starting straight away, once a match has been played, and left out when it's the same as Quick match) and **Custom** (SET-9). The watch syncs quietly on opening unless **Sync on opening** is off; finished matches are always sent at full time.
 - **UI-19** **A downloaded match opens its own screen**: **Start match**, with the match's format under it in Quick match's words ("2×45' · HT 15'", "1×20'" for one period; on Garmin after the kickoff's day and time, "Sat 9:00 · 2x45' · HT 15'"); **Fee** ("Fee $25", only with a fee) as a Paid toggle (SYNC-11), one per match, with no icon on Garmin; then its details one row each (name or competition, your role, venue and pitch, the crew, the forecast, the notes in full); then **Mark pitch** (TRK-13).
 - **UI-17** **Settings**:
-  - **Account**: the last sync, anything waiting, the server, Sync on opening, Sync now and Unlink, or Link account. On Wear OS and Apple Watch an unlinked watch's Account starts with Link account and Server, so the server is seen before getting a code.
+  - **Account**: the last sync, anything waiting, the server, Sync on opening and Unlink, or Link account (SYNC-5; Sync now is in Matches, UI-16). On Wear OS and Apple Watch an unlinked watch's Account starts with Link account and Server, so the server is seen before getting a code.
   - **Alerts**: "End of each period" (VIB-1), added time used up (VIB-7), breaks, stoppage vibrations, and how often reminders and alerts repeat.
   - **Controls**: Tap for stoppage (INP-4), Card reasons (EVT-14), Touch lock on five-button Garmins and Apple Watch (INP-12).
   - **Record track**; on Apple Watch with Save to Health; on Wear OS saying what's missing without permission.
@@ -107,7 +107,7 @@ How the watch app looks: the running screen and the choices it's built from, the
 
 ## Status
 
-Everything above is built on all three watches, with the setup's pictures, moments and Play through on the website and both phones, and the running screen in Try a match.
+Everything above is built on the Garmin watch, with the setup's pictures, moments and Play through on the website and both phones, and the running screen in Try a match. Wear OS and Apple Watch have it too, but differ in the confirmations (UI-7), the number entry (UI-8), the start menu's sub-labels (UI-15), Sync on opening and the sync's steps (UI-16, UI-26), History (UI-17, UI-20) and a downloaded match's screen (UI-19); the [watch catch-up plan](../plans/watch-catch-up.md) lists each gap.
 
 Not built yet:
 

@@ -1,6 +1,6 @@
 # API keys (KEY)
 
-Keys for scripts and integrations, such as importing matches from another app, made in the website's Settings. Matches are imported through the public API with a key rather than a built-in importer. The API reference is [schema/generated/API.md](../../schema/generated/API.md).
+Keys for scripts and integrations, such as another app adding and updating matches, made in the website's Settings under For developers (the phones leave them to the website, APP-8). Importing a file of matches doesn't need one: the website and both phones do it themselves ([importing](importing.md)), and a key imports through the same endpoints (IMP-8). The API reference is [schema/generated/API.md](../../schema/generated/API.md).
 
 ## Making and managing keys
 
@@ -19,7 +19,7 @@ Keys for scripts and integrations, such as importing matches from another app, m
   - Weather and stats need matches read; stats then hold only what the key can read (STAT-4).
   - Address search needs venues read and write.
   - Sync (`/v1/changes`) includes only the areas it can read.
-  - Keys can't manage devices or keys, act as a watch, or sign in, so a leaked key can't take over the account.
+  - Keys can't manage devices, keys or webhooks, reach photos and files (FILE-6), act as a watch, or sign in, so a leaked key can't take over the account.
   - A new endpoint is closed to keys until its description gives a scope.
 - **KEY-4** An unknown, deleted or expired key gets 401 saying which. Keys aren't devices and don't appear in the Devices list.
 

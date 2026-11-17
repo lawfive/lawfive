@@ -40,7 +40,7 @@ What happens after regular time: the choice of what comes next, extra-time perio
 
 ## Status
 
-Everything above is built on all three watches, and the golden goal on the website and both phones too.
+Everything above is built on all three watches, and the golden goal on the website and both phones too, except ET-1's choices in the game menu, which only the Garmin watch has; Wear OS, Apple Watch and Try a match have them on the screen only (the [watch catch-up plan](../plans/watch-catch-up.md)).
 
 Not built yet:
 - The golden goal and extra time's kickoff direction haven't been checked on a real watch (R-6, R-13).

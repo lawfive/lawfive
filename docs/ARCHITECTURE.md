@@ -100,7 +100,7 @@ Rules:
 | Need | Why it can't simply be self-hosted | Approach |
 |---|---|---|
 | Push notifications | Only the app's publisher can send pushes to the store apps | Self-hosted servers send through the project's push relay ([relay/](../relay/)), free within its limits ([push relay](requirements/push-relay.md)). |
-| Sign in with Apple or Google | Tied to the apps' registration with Apple and Google | Self-hosted servers use email and password, or their own single sign-on (OIDC). The hosted service can add Apple and Google sign-in. |
+| Sign in with Apple or Google | Tied to the apps' registration with Apple and Google | Servers use email and password; single sign-on (OIDC) for self-hosters isn't built. Apple and Google sign-in, on the hosted service and on servers with their own keys, is proposed in [plans/accounts.md](plans/accounts.md). |
 | Store builds of the apps | Signed with the project's keys | Everyone uses the same store apps; anyone can also build them from source. |
 
 **The hosted service** runs the same published image behind Caddy and Cloudflare. Encrypted nightly backups are kept 21 days and logs 30, so the privacy policy's 30 days holds. Its settings and secrets stay on the server, never in the repo.
@@ -175,7 +175,7 @@ Still to do:
 
 - **Real devices:** the open checks on Garmin and Android (R-6); the iPhone, Wear OS and Apple Watch on real hardware, including tracks and pitch marking on the watches (R-12, R-13).
 - **The iPhone's Garmin bridge** proven over Bluetooth (IOS-9).
-- **Server notifications** on a real Android phone (R-18), and built on the iPhone.
+- **Server notifications:** the last checks on real phones (R-18).
 - **More track sources:** Strava, Health Connect and Apple Health (TRK-12), as a proposal in [plans/health-integrations.md](plans/health-integrations.md).
 - **The watches' match screens** in the website's look ([DESIGN.md](../DESIGN.md)).
 - **Proposals in [plans/](plans/):**
@@ -186,7 +186,7 @@ Still to do:
   - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
   - [Files on venues, competitions and more](plans/attachments.md) (FILE-6).
   - [Rosters and substitutions](plans/rosters.md) (EVT-13), with reading team sheets and care for minors' data.
-- **The stores:** Connect IQ (starting with a private beta), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
+- **The stores:** Connect IQ (in the store), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
 - **The paid hosted service,** once there is something worth paying for (A-4).
 
 **For the stores and a public launch:**
@@ -194,7 +194,6 @@ Still to do:
 - A trademark search and filing for LawFive (avoiding FIFA and IFAB marks), so forks can run but not under the name.
 - If the hosted service offers Google sign-in on iOS, it must offer Sign in with Apple too.
 - Health and location data bring extra store review and GDPR duties, and some youth referees are minors.
-- Before the repo is public: a last check for personal details, contribution guidelines, and moving the repo to the `lawfive` GitHub organization (which renames the image, so the compose files and docs follow).
 
 ## Open questions
 

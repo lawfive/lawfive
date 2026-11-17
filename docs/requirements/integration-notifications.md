@@ -26,7 +26,7 @@ A phone notification when an app with an API key, such as an assignor's, adds a 
 
 ## Status
 
-The server's notices, the website's option on API keys and its warning when no phone will hear (NOTE-5), and the phones' setting and wording are built (the iPhone's as IOS-14), and a key's changes have reached an Android emulator through the live relay as one notification.
+The server's notices, the website's option on API keys and its warning when no phone will hear (NOTE-5), and the phones' setting and wording are built (the iPhone's as IOS-14), and a key's changes have reached an Android emulator through the live relay as one notification. On real devices, a Pixel and an iPad running the iPhone app from TestFlight, locked and asleep, have received an integration's change (R-18).
 
 Not built yet:
-- A notification on a real phone, asleep (R-18), the iPhone's through TestFlight.
+- On an iPhone, a canceled match's reminders going with its notice, and on a real one the words written in time on a slow connection (R-18).

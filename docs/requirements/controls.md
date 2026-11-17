@@ -4,7 +4,7 @@ How the referee works the watch during a match: swipes for the team controls and
 
 ## Swipes and the game menu
 
-- **INP-2** A swipe down opens the home team's controls: goal (during play only), yellow card and red card. It works in every phase (EVT-7). With sideways team swipes (INP-10), a swipe right opens them instead.
+- **INP-2** A swipe down opens the home team's controls, the team menu (UI-6): Goal (during play only), Sin bin (with sin bins, EVT-12), Yellow card, Red card, Team official (EVT-15) and Injury (EVT-16). It works in every phase (EVT-7). With sideways team swipes (INP-10), a swipe right opens them instead.
 - **INP-1** A swipe up (from the bottom) opens the away team's controls, the same as INP-2. With sideways team swipes, a swipe left opens them instead.
   - With sin bins on, every team menu (in play, outside play and while suspended) is Goal, Sin bin, Yellow card, Red card, then the rest (EVT-12).
 - **INP-10** **Team swipes**, set for the account on the website and the phone apps (Settings, under Match screen; not on the watches): **Up and down** (the default; INP-1 to INP-3) or **Sideways**.
