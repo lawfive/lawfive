@@ -183,7 +183,6 @@ Still to do:
   - [Accounts](plans/accounts.md): signing in with Google or Apple, confirming email addresses, and ending other sessions on a password reset.
   - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
   - [Rosters and substitutions](plans/rosters.md) (EVT-13), with reading team sheets and care for minors' data.
-  - [More Garmin watches](plans/more-garmin-watches.md) (DEV-1, DEV-2): every touch watch with Connect IQ 5 or later, and the five-button watches without a touchscreen that have the memory, the fēnix 6 Pro and Forerunner 945 among them.
 - **The stores:** Connect IQ (in the store), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
 - **The paid hosted service,** once there is something worth paying for (A-4).
 

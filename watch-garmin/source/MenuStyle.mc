@@ -65,10 +65,21 @@ class TimedTitle extends WatchUi.Drawable {
         var h = dc.getHeight();
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
-        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, (h * 0.34).toNumber(), Graphics.FONT_XTINY, timeOfDay(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        var timeY = (h * 0.34).toNumber();
+        var textY = (h * 0.72).toNumber();
+        // A short title (the Venu Sq 2's) would overlap the lines: they stack from the bottom instead,
+        // and with room for only one, the name stands alone.
+        var line = dc.getFontHeight(Graphics.FONT_XTINY);
+        if (textY - timeY < line) {
+            textY = h - line / 2 - 1;
+            timeY = textY - line;
+        }
+        if (timeY >= line / 2) {
+            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, timeY, Graphics.FONT_XTINY, timeOfDay(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, (h * 0.72).toNumber(), Graphics.FONT_XTINY, _text, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(w / 2, textY, Graphics.FONT_XTINY, _text, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 }
 

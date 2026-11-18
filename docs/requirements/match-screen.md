@@ -34,7 +34,7 @@ How the watch app looks: the running screen and the choices it's built from, the
 - **UI-22** **The second clock** is one of the other two match clock styles (TMR-11), never the match clock's: Time left by default, or the time from 0 when the match clock is Time left. It holds at the period's end.
 - **UI-23** **The ring** follows the match clock: counting up, it fills clockwise from 12 o'clock in LawFive green; counting down, it starts full and empties. It runs over a dark track, starts again each period, and turns full orange from the period's length until the period ends. Round watches and Apple Watch (along its rounded edge) have it; square Garmin and Wear OS watches show the time of day instead.
 - **UI-25** **The time of day is on every screen**, in the watch's 12- or 24-hour format, kept current on a still screen.
-  - Menus (system menus and the app's team and goal-type menus) have it small and dim above the title. On Garmin a system menu's title scrolls away with its list.
+  - Menus (system menus and the app's team and goal-type menus) have it small and dim above the title. On Garmin a system menu's title scrolls away with its list, and where the system gives the title room for one line (the Venu Sq 2), the title stands alone.
   - Every other screen has it small and dim at the very bottom, as low as fits inside the edge, on Garmin in the font the watch carries for it (its smallest on screens under 360 pixels).
   - The running match has it only when chosen instead of the ring.
   - Apple Watch shows the system's clock at the top of every screen instead, which the app can't turn off.

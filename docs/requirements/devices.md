@@ -9,4 +9,6 @@ The Garmin watches the Garmin app runs on, and what their buttons and screens me
 
 ## Status
 
-Everything above is built: 90 Garmin models (137 builds with their regional versions), every control by touch on a touchscreen and by the buttons on a five-button watch, and the match's essentials by the two-button watches' buttons. Only the Venu 2 has run a real match; the rest are built and unit-tested in the simulator (R-6). The Connect IQ 3 watches allow 253 top-level names in an app, and LawFive is about 34 under that.
+Everything above is built: 90 Garmin models (137 builds with their regional versions), every control by touch on a touchscreen and by the buttons on a five-button watch, and the match's essentials by the two-button watches' buttons. Only the Venu 2 has run a real match; the rest are built and unit-tested in the simulator (R-6). In the simulator, a whole match ran by the buttons alone on the Forerunner 255 and on the Forerunner 945 (Connect IQ 3), and the new screen sizes (the fēnix 9 Pro 51 mm's 466 round, the Forerunner 255S's 218 round, the Venu Sq 2's 320 × 360) and the Instinct 3 AMOLED and vívoactive 6 were looked at. The Forerunner 255's 512 KB held a match with a track at a peak of 320 KB. The Connect IQ 3 watches allow 253 top-level names in an app, and LawFive is about 34 under that.
+
+Later: the touch watches on Connect IQ 3 (the first Venu and Venu Sq Music, the vívoactive 4, the D2 Air and the Legacy Hero and Saga editions), which have the memory but a 240 square screen among them, still to try.
