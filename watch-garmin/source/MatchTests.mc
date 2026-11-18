@@ -2262,6 +2262,25 @@ function testSyncRefusals(logger as Logger) as Boolean {
         kept.add(Application.Storage.getValue(keys[i]));
     }
     var problem = Sync.lastProblem;
+    // A failed assertion throws: the stored link and outboxes go back regardless, so a failing run
+    // can't leave the simulator linked with the test token (and every later match's full time syncing).
+    try {
+        syncRefusalCases();
+    } finally {
+        for (var i = 0; i < keys.size(); i++) {
+            if (kept[i] == null) {
+                Application.Storage.deleteValue(keys[i]);
+            } else {
+                Application.Storage.setValue(keys[i], kept[i] as Application.Storage.ValueType);
+            }
+        }
+        Sync.lastProblem = problem;
+    }
+    return true;
+}
+
+(:debug)
+function syncRefusalCases() as Void {
     var lawFive = [200, { "product" => "LawFive" }];
     var proxy = [-400, null];
     var nothing = [404, null];
@@ -2299,16 +2318,6 @@ function testSyncRefusals(logger as Logger) as Boolean {
     run = syncAgainst([[200, {}]], none, [[401, { "error" => "sign in first" }]]);
     Test.assertEqualMessage(run.asked(), "fee matches", "LawFive's 401");
     Test.assertMessage(Sync.token() == null, "unlinks at once");
-
-    for (var i = 0; i < keys.size(); i++) {
-        if (kept[i] == null) {
-            Application.Storage.deleteValue(keys[i]);
-        } else {
-            Application.Storage.setValue(keys[i], kept[i] as Application.Storage.ValueType);
-        }
-    }
-    Sync.lastProblem = problem;
-    return true;
 }
 
 //! One sync with a fee change waiting and nothing else, against a stand-in answering each path in turn.

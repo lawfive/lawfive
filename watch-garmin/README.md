@@ -53,6 +53,7 @@ sim_tap 690 398; sim_drag 690 380 690 560          # tap / swipe down, in screen
 
 - Use a test copy: its own app ID leaves the real app's settings, match and history alone.
 - After unit tests the simulator often goes blank. Quit it (`pkill -f ConnectIQ.app/Contents/MacOS/simulator`) and `sim_run` again.
+- An alert "There is no data connection. Please connect an Android device to ADB" means the app started a real sync: the simulator's stored data thinks it's linked (a test that sets a link token and fails before restoring it leaves it behind, so such tests restore in `finally`). The alert holds up `monkeydo`, and every match finished in the tests syncs again. Quit the simulator, click OK on the alerts (they stay up without it), and set aside `$TMPDIR/com.garmin.connectiq/GARMIN/APPS/DATA/SOCCERREF.*` to start unlinked.
 - The first key after loading an app is often dropped. Send a harmless one first (`sim_key 56`), and screenshot before acting on a menu position.
 - `sim_bounds` gives the window position. A full-size capture is 2× the window's points, and the watch image starts below the 28-point title bar.
 - To debug input, add `System.println` to the test copy only and read `bin/sim.log` (don't truncate it while the simulator writes).
