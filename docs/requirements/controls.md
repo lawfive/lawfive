@@ -25,7 +25,7 @@ How the referee works the watch during a match: swipes for the team controls and
 ## Buttons
 
 - **INP-5** Match actions work with the physical buttons as well as touch, because touch is unreliable in rain and sweat. On watches with fewer buttons (Venu), the essential actions (stoppage, end period) come first for the buttons.
-- **INP-4** With stoppage tracked (TMR-10), a physical button always starts and ends a stoppage. Tapping the screen to start and end one is a setting, off by default, because of the risk of stray taps.
+- **INP-4** With stoppage tracked (TMR-10), a physical button always starts and ends a stoppage. Tapping the screen to start and end one is a setting, off by default, because of the risk of stray taps. On a Garmin without a touchscreen (DEV-2) the setting isn't shown, and its phone setting does nothing.
 - **INP-7** **Button mapping** on Garmin's match screen:
 
   | Button | 5-button watches | Venu |
@@ -47,7 +47,7 @@ How the referee works the watch during a match: swipes for the team controls and
 - **INP-9** A tap never acts as the Start/Stop button, and each Start/Stop press acts once. Garmin touch watches report a tap both as Select and as a tap with a position, and the Start/Stop button both as a key and as Select, so taps are handled only by position.
 - **INP-12** **Touch lock**: a setting, off by default, that ignores taps and swipes on the running screen so only the buttons work. It's on watches with enough buttons for a match: **Touch lock** in Settings → Controls (and Garmin's phone settings), whose summary says "Touch lock" when it's on.
   - **Five-button Garmins** (Forerunner, fēnix, epix): while a period is played, the running screen takes no taps or swipes at all, not even to silence an alert or put "can return" away (EVT-12), and a swipe right that the watch sends as Back (R-1) does nothing. Up, Down, Start/Stop and Back work as in INP-7. The menus, number entry and confirmations they open still take touch, as do the kickoff, break, suspended, decide, shoot-out and full-time screens. No lock symbol shows on the running screen.
-  - Which Garmins: those that report both Up and Down among their buttons, so a new model needs no list. The Venu watches, whose teams are swipes (INP-5), don't show the row, and their phone setting does nothing.
+  - Which Garmins: touch watches that report both Up and Down among their buttons, so a new model needs no list. The Venu watches, whose teams are swipes (INP-5), and the watches without a touchscreen (DEV-2), with no touch to lock, don't show the row, and their phone setting does nothing.
   - **Apple Watch**: the system's **Water Lock**, turned on each time play's screen shows (at each kickoff, on resuming, and back from a menu or the number entry). The Digital Crown turns it off, and an app can't, so the referee turns the crown to use the screen, and it locks again on the way back to play. watchOS honors it only while the match's workout runs (WCH-7), so with Apple Health refused it does nothing.
   - **Wear OS**: not offered. Its watches have one or two buttons, the second the system's, so a match can't be run by buttons alone (INP-5), and the system's own touch or water lock can't be turned on by an app.
   - **Try a match**: the setting for the five-button Garmin and the Apple Watch, with the crown turning Water Lock off.
