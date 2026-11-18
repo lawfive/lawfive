@@ -4,11 +4,11 @@ The running screen's time of day (UI-25) is smaller than any font the watches ha
 
 | Screens | Size | Folder |
 |---|---|---|
-| 360 × 360 | 16 px | `resources-360` |
+| 360 × 360, and the Venu Sq 2's 320 × 360 | 16 px | `resources-360` |
 | 390 × 390 | 17 px | `resources-390` |
 | 416 × 416 | 18 px | `resources` |
 | 448 × 486 (Venu X1) | 19 px | `resources-venux1` |
-| 454 × 454 | 20 px | `resources-454` |
+| 454 × 454, and the fēnix 9 Pro 51 mm's 466 × 466 | 20 px | `resources-454` |
 
 `monkey.jungle` adds each folder for its screens. Screens under 360 pixels (the MIP fēnix models) use the watch's own smallest font, which is already small there. To remake one:
 

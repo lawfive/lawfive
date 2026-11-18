@@ -11,6 +11,11 @@ round-360x360.resourcePath = $(base.resourcePath);resources-360
 round-390x390.resourcePath = $(base.resourcePath);resources-390
 round-454x454.resourcePath = $(base.resourcePath);resources-454
 venux1.resourcePath = $(base.resourcePath);resources-venux1
+# The fēnix 9 Pro 51 mm's 466 round takes the 454's 20 px, and the Venu Sq 2's 320 x 360 the 360's 16 px,
+# by its height.
+round-466x466.resourcePath = $(base.resourcePath);resources-454
+venusq2.resourcePath = $(base.resourcePath);resources-360
+venusq2m.resourcePath = $(base.resourcePath);resources-360
 
 # UI-14: the app icon drawn at the size each watch's app list shows it (launcherIcon in its device
 # profile), by web/scripts/icons.ts. A watch not named here gets resources/'s SVG, scaled by the compiler.
@@ -28,6 +33,8 @@ fenix8solar51mm.resourcePath = $(fenix8solar51mm.resourcePath);resources-launche
 fenix9prosolar47mm.resourcePath = $(fenix9prosolar47mm.resourcePath);resources-launcher-40
 fenix9prosolar51mm.resourcePath = $(fenix9prosolar51mm.resourcePath);resources-launcher-40
 fr955.resourcePath = $(fr955.resourcePath);resources-launcher-40
+venusq2.resourcePath = $(venusq2.resourcePath);resources-launcher-40
+venusq2m.resourcePath = $(venusq2m.resourcePath);resources-launcher-40
 fr165.resourcePath = $(fr165.resourcePath);resources-launcher-54
 fr165m.resourcePath = $(fr165m.resourcePath);resources-launcher-54
 fr170.resourcePath = $(fr170.resourcePath);resources-launcher-54
@@ -62,6 +69,7 @@ fenix847mm.resourcePath = $(fenix847mm.resourcePath);resources-launcher-65
 fenix8pro47mm.resourcePath = $(fenix8pro47mm.resourcePath);resources-launcher-65
 fenix947mm.resourcePath = $(fenix947mm.resourcePath);resources-launcher-65
 fenix9pro47mm.resourcePath = $(fenix9pro47mm.resourcePath);resources-launcher-65
+fenix9pro51mm.resourcePath = $(fenix9pro51mm.resourcePath);resources-launcher-65
 fr57047mm.resourcePath = $(fr57047mm.resourcePath);resources-launcher-65
 fr965.resourcePath = $(fr965.resourcePath);resources-launcher-65
 fr970.resourcePath = $(fr970.resourcePath);resources-launcher-65
