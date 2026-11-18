@@ -529,7 +529,7 @@ function controlsSummary() as String {
     if (Settings.touchLock()) {
         return "Touch lock";
     }
-    return Settings.getBoolean("tapStoppage", false) ? "Tap for " + Settings.timerName("stoppageLabel", "stoppage") : "Buttons only";
+    return Settings.tapStoppage() ? "Tap for " + Settings.timerName("stoppageLabel", "stoppage") : "Buttons only";
 }
 
 class SettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
@@ -727,16 +727,20 @@ class AlertsMenuDelegate extends WatchUi.Menu2InputDelegate {
 // ---- Controls (UI-17, INP-4) ----
 
 //! How the match is run by hand. Team swipes are the account's (INP-10), not the watch's, so only
-//! Tap for stoppage, Card reasons (EVT-14) and, on a watch with Up and Down, Touch lock (INP-12) are here.
+//! Tap for stoppage (on a touch watch), Card reasons (EVT-14) and, on a touch watch with Up and Down,
+//! Touch lock (INP-12) are here.
 class ControlsMenu extends WatchUi.Menu2 {
     function initialize() {
         Menu2.initialize({:title => new TimedTitle("Controls")});
-        addItem(new WatchUi.ToggleMenuItem("Tap for " + Settings.timerName("stoppageLabel", "stoppage"), {:enabled => "Tap starts and ends it", :disabled => "Off"}, "tapStoppage",
-            Settings.getBoolean("tapStoppage", false), null));
+        // INP-4, DEV-2: a watch without a touchscreen has no taps to start a stoppage.
+        if (Settings.hasTouch()) {
+            addItem(new WatchUi.ToggleMenuItem("Tap for " + Settings.timerName("stoppageLabel", "stoppage"), {:enabled => "Tap starts and ends it", :disabled => "Off"}, "tapStoppage",
+                Settings.getBoolean("tapStoppage", false), null));
+        }
         addItem(new WatchUi.ToggleMenuItem("Card reasons", {:enabled => "Ask after the number", :disabled => "Off"}, "cardReasons",
             Settings.getBoolean("cardReasons", false), null));
-        // INP-12: not on the Venu, whose teams are swipes (INP-5).
-        if (Settings.hasTeamButtons()) {
+        // INP-12: not on the Venu, whose teams are swipes (INP-5), nor where there's no touch to lock.
+        if (Settings.touchLockOffered()) {
             addItem(new WatchUi.ToggleMenuItem("Touch lock", {:enabled => "Buttons only in play", :disabled => "Off"}, "touchLock",
                 Settings.getBoolean("touchLock", false), null));
         }

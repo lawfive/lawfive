@@ -74,7 +74,7 @@ const watchMark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -13 126 12
 `;
 const watch = new URL("watch-garmin/", repo);
 writeFileSync(new URL("resources/drawables/launcher_icon.svg", watch), watchMark);
-for (const size of [40, 54, 56, 60, 61, 65, 70]) {
+for (const size of [38, 40, 54, 56, 60, 61, 65, 70]) {
     const folder = new URL(`resources-launcher-${size}/drawables/`, watch);
     mkdirSync(folder, { recursive: true });
     writeFileSync(new URL("launcher_icon.png", folder), await draw(size, watchMark));

@@ -42,6 +42,10 @@
             <iq:product id="fr165m"/>
             <iq:product id="fr170"/>
             <iq:product id="fr170m"/>
+            <iq:product id="fr255"/>
+            <iq:product id="fr255m"/>
+            <iq:product id="fr255s"/>
+            <iq:product id="fr255sm"/>
             <iq:product id="fr265"/>
             <iq:product id="fr265s"/>
             <iq:product id="fr57042mm"/>
@@ -50,6 +54,9 @@
             <iq:product id="fr955"/>
             <iq:product id="fr965"/>
             <iq:product id="fr970"/>
+            <iq:product id="instinct3amoled45mm"/>
+            <iq:product id="instinct3amoled50mm"/>
+            <iq:product id="instinctcrossoveramoled"/>
             <iq:product id="marq2"/>
             <iq:product id="marq2aviator"/>
             <iq:product id="venu2"/>

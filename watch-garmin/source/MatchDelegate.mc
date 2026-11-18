@@ -250,7 +250,7 @@ class MatchDelegate extends TapAwareDelegate {
         } else if (match.phase == PHASE_RUNNING) {
             if (match.breakDue && _view.hits(_view.breakTarget, x, y)) {
                 match.startBreak(now);
-            } else if (Settings.getBoolean("tapStoppage", false)) {
+            } else if (Settings.tapStoppage()) {
                 match.toggleStoppage(now);
             }
         } else if (match.phase == PHASE_BREAK && _view.hits(_view.startTarget, x, y)) {

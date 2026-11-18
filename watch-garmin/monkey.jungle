@@ -19,6 +19,7 @@ venusq2m.resourcePath = $(base.resourcePath);resources-360
 
 # UI-14: the app icon drawn at the size each watch's app list shows it (launcherIcon in its device
 # profile), by web/scripts/icons.ts. A watch not named here gets resources/'s SVG, scaled by the compiler.
+instinctcrossoveramoled.resourcePath = $(instinctcrossoveramoled.resourcePath);resources-launcher-38
 enduro3.resourcePath = $(enduro3.resourcePath);resources-launcher-40
 fenix7.resourcePath = $(fenix7.resourcePath);resources-launcher-40
 fenix7pro.resourcePath = $(fenix7pro.resourcePath);resources-launcher-40
@@ -32,6 +33,10 @@ fenix8solar47mm.resourcePath = $(fenix8solar47mm.resourcePath);resources-launche
 fenix8solar51mm.resourcePath = $(fenix8solar51mm.resourcePath);resources-launcher-40
 fenix9prosolar47mm.resourcePath = $(fenix9prosolar47mm.resourcePath);resources-launcher-40
 fenix9prosolar51mm.resourcePath = $(fenix9prosolar51mm.resourcePath);resources-launcher-40
+fr255.resourcePath = $(fr255.resourcePath);resources-launcher-40
+fr255m.resourcePath = $(fr255m.resourcePath);resources-launcher-40
+fr255s.resourcePath = $(fr255s.resourcePath);resources-launcher-40
+fr255sm.resourcePath = $(fr255sm.resourcePath);resources-launcher-40
 fr955.resourcePath = $(fr955.resourcePath);resources-launcher-40
 venusq2.resourcePath = $(venusq2.resourcePath);resources-launcher-40
 venusq2m.resourcePath = $(venusq2m.resourcePath);resources-launcher-40
@@ -60,6 +65,8 @@ fenix9pro43mm.resourcePath = $(fenix9pro43mm.resourcePath);resources-launcher-60
 fenixe.resourcePath = $(fenixe.resourcePath);resources-launcher-60
 fr265.resourcePath = $(fr265.resourcePath);resources-launcher-60
 fr265s.resourcePath = $(fr265s.resourcePath);resources-launcher-60
+instinct3amoled45mm.resourcePath = $(instinct3amoled45mm.resourcePath);resources-launcher-60
+instinct3amoled50mm.resourcePath = $(instinct3amoled50mm.resourcePath);resources-launcher-60
 marq2.resourcePath = $(marq2.resourcePath);resources-launcher-60
 marq2aviator.resourcePath = $(marq2aviator.resourcePath);resources-launcher-60
 venu2s.resourcePath = $(venu2s.resourcePath);resources-launcher-61

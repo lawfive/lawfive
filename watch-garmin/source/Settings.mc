@@ -43,9 +43,25 @@ module Settings {
         return (System.getDeviceSettings().inputButtons & both) == both;
     }
 
+    //! DEV-2: a watch without a touchscreen (the fēnix 6 Pro, Forerunner 255 and 945) takes every
+    //! control by its buttons, so the touch settings have nothing to do there.
+    function hasTouch() as Boolean {
+        return System.getDeviceSettings().isTouchScreen;
+    }
+
+    //! INP-12: Touch lock is offered on a touch watch with Up and Down.
+    function touchLockOffered() as Boolean {
+        return hasTouch() && hasTeamButtons();
+    }
+
     //! INP-12: Touch lock, on and offered on this watch: taps and swipes do nothing on the running screen.
     function touchLock() as Boolean {
-        return getBoolean("touchLock", false) && hasTeamButtons();
+        return getBoolean("touchLock", false) && touchLockOffered();
+    }
+
+    //! INP-4: a tap starts and ends a stoppage, on a touch watch with the setting on.
+    function tapStoppage() as Boolean {
+        return getBoolean("tapStoppage", false) && hasTouch();
     }
 
     //! The longest title a menu row shows whole on the smallest round screens (Venu 2S, fenix 7S).

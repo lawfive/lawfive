@@ -2414,21 +2414,38 @@ function testOnePeriodWords(logger as Logger) as Boolean {
     return true;
 }
 
-//! INP-12: Touch lock is offered on a watch with Up and Down (the fr965), off by default; on one without
-//! them (a Venu or vívoactive), turning it on in the phone settings does nothing.
+//! INP-12: Touch lock is offered on a touch watch with Up and Down (the fr965), off by default; on one
+//! without them (a Venu or vívoactive) or without a touchscreen (DEV-2), turning it on in the phone
+//! settings does nothing.
 (:test)
 function testTouchLockSetting(logger as Logger) as Boolean {
     var saved = Application.Properties.getValue("touchLock");
     Application.Properties.setValue("touchLock", false);
     Test.assertMessage(!Settings.touchLock(), "off");
     Application.Properties.setValue("touchLock", true);
-    if (Settings.hasTeamButtons()) {
+    if (Settings.touchLockOffered()) {
         Test.assertMessage(Settings.touchLock(), "on");
         Test.assertEqualMessage(controlsSummary(), "Touch lock", "Settings says so");
     } else {
-        Test.assertMessage(!Settings.touchLock(), "no Up and Down, so no Touch lock");
+        Test.assertMessage(!Settings.touchLock(), "no Up and Down, or no touch, so no Touch lock");
     }
     Application.Properties.setValue("touchLock", saved instanceof Boolean ? saved : false);
+    return true;
+}
+
+//! INP-4, DEV-2: Tap for stoppage takes effect on a touch watch only, and Controls says so.
+(:test)
+function testTapStoppageSetting(logger as Logger) as Boolean {
+    var saved = Application.Properties.getValue("tapStoppage");
+    var savedLock = Application.Properties.getValue("touchLock");
+    Application.Properties.setValue("touchLock", false);
+    Application.Properties.setValue("tapStoppage", true);
+    Test.assertEqualMessage(Settings.tapStoppage(), Settings.hasTouch(), "on where there's touch");
+    Test.assertEqualMessage(controlsSummary(), Settings.hasTouch() ? "Tap for " + Settings.timerName("stoppageLabel", "stoppage") : "Buttons only", "Settings says so");
+    Application.Properties.setValue("tapStoppage", false);
+    Test.assertMessage(!Settings.tapStoppage(), "off");
+    Application.Properties.setValue("tapStoppage", saved instanceof Boolean ? saved : false);
+    Application.Properties.setValue("touchLock", savedLock instanceof Boolean ? savedLock : false);
     return true;
 }
 
