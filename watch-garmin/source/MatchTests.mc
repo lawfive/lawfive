@@ -2414,16 +2414,20 @@ function testOnePeriodWords(logger as Logger) as Boolean {
     return true;
 }
 
-//! INP-12: Touch lock is offered on a watch with Up and Down (this test runs on the fr965), off by default.
+//! INP-12: Touch lock is offered on a watch with Up and Down (the fr965), off by default; on one without
+//! them (a Venu or vívoactive), turning it on in the phone settings does nothing.
 (:test)
 function testTouchLockSetting(logger as Logger) as Boolean {
     var saved = Application.Properties.getValue("touchLock");
-    Test.assertMessage(Settings.hasTeamButtons(), "the fr965 has Up and Down");
     Application.Properties.setValue("touchLock", false);
     Test.assertMessage(!Settings.touchLock(), "off");
     Application.Properties.setValue("touchLock", true);
-    Test.assertMessage(Settings.touchLock(), "on");
-    Test.assertEqualMessage(controlsSummary(), "Touch lock", "Settings says so");
+    if (Settings.hasTeamButtons()) {
+        Test.assertMessage(Settings.touchLock(), "on");
+        Test.assertEqualMessage(controlsSummary(), "Touch lock", "Settings says so");
+    } else {
+        Test.assertMessage(!Settings.touchLock(), "no Up and Down, so no Touch lock");
+    }
     Application.Properties.setValue("touchLock", saved instanceof Boolean ? saved : false);
     return true;
 }

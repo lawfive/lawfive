@@ -6,7 +6,7 @@ Garmin Connect IQ (Monkey C). Read [README.md](README.md) for setup, commands, c
 
 1. Strict build for one watch: `monkeyc ... -d fr965 ... -l 3` (see the README's "Build and run").
 2. Unit tests pass (`monkeyc -t`, then `monkeydo ... -t`). Add tests in `source/MatchTests.mc` for match-logic changes; a rule all the watches share goes in `schema/match-cases/` instead (`pnpm generate` there, then `pnpm test:watches` from the root, WCH-2). Helpers there must be `(:debug)`; tests that finish a match must back up and restore the `"history"` storage key, tests that remember a format must restore `"lastFormat"`, and tests that queue uploads must restore `"outbox"`.
-3. Release build for every target: "46 OUT OF 46 DEVICES BUILT".
+3. Release build for every target: "79 OUT OF 79 DEVICES BUILT".
 4. For anything on screen or any input change, check in the simulator on a button watch (`fr965`) and a touch-first watch (`venu3` or `venu2`). Use `tools/sim/sim.sh` and a test copy (`sim_testcopy`) so the real app's data is untouched, then load the real build back afterward (`sim_run bin/LawFive-<device>.prg <device>`).
 
 For sync changes, also run the flow against the demo server (README, "Account sync"); that needs the simulator's HTTPS requirement off, so turn it back on afterward.
