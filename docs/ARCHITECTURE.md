@@ -184,6 +184,7 @@ Still to do:
   - [Assignor integrations](plans/assignor-integrations.md): more assignor systems' calendars, and connected assignor accounts.
   - [Files on venues, competitions and more](plans/attachments.md) (FILE-6, FILE-9 to FILE-15): agreed; the server and the website are built, the phones next.
   - [Rosters and substitutions](plans/rosters.md) (EVT-13), with reading team sheets and care for minors' data.
+  - [More Garmin watches](plans/more-garmin-watches.md) (DEV-1): every touchscreen watch with Connect IQ 5 or later.
 - **The stores:** Connect IQ (in the store), Google Play (APP-9) and the App Store (IOS-10, IOS-11).
 - **The paid hosted service,** once there is something worth paying for (A-4).
 
