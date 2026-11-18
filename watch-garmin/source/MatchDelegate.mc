@@ -145,7 +145,9 @@ class MatchDelegate extends TapAwareDelegate {
     }
 
     //! INP-10: touch watches such as the Venu turn a swipe right into Back, after the drag itself
-    //! has come here, so the drag tells that swipe apart from the Back button.
+    //! has come here, so the drag tells that swipe apart from the Back button. Left out of builds for
+    //! watches without a touchscreen (DEV-2), which may have no drag events, by `monkey.jungle`.
+    (:drag)
     function onDrag(dragEvent as WatchUi.DragEvent) as Boolean {
         var type = dragEvent.getType();
         var at = dragEvent.getCoordinates();

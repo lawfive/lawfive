@@ -32,12 +32,13 @@ function iconItem(label as String, sub as String?, id as Object, icon as Resourc
 //! own from (0, 0), and doesn't take a bitmap there directly (the app crashes), so it's a drawable
 //! that centres itself in that area. SYNC-16: a canceled or postponed match's is on red.
 class MenuIcon extends WatchUi.Drawable {
-    private var _bitmap as Graphics.BitmapType;
+    // A resource's bitmap, the type Connect IQ 3's watches have too (DEV-1).
+    private var _bitmap as WatchUi.BitmapResource;
     private var _circle as Number;
 
     function initialize(icon as ResourceId, circle as Number) {
         Drawable.initialize({});
-        _bitmap = WatchUi.loadResource(icon) as Graphics.BitmapType;
+        _bitmap = WatchUi.loadResource(icon) as WatchUi.BitmapResource;
         _circle = circle;
     }
 

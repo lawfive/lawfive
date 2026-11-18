@@ -22,7 +22,7 @@ KEY="${SIM_KEY:-$HOME/.lawfive/garmin/developer_key}"
 | Task | Command |
 |---|---|
 | Build for one watch (strict type checks) | `"$SDK/bin/monkeyc" -f monkey.jungle -d fr965 -y "$KEY" -o bin/LawFive.prg -l 3` |
-| Build every target (release package) | `"$SDK/bin/monkeyc" -e -r -f monkey.jungle -y "$KEY" -o bin/LawFive.iq -l 3` (expect "79 OUT OF 79 DEVICES BUILT": regional variants make 59 models into 79 builds) |
+| Build every target (release package) | `"$SDK/bin/monkeyc" -e -r -f monkey.jungle -y "$KEY" -o bin/LawFive.iq -l 3` (expect "137 OUT OF 137 DEVICES BUILT": regional variants make 90 models into 137 builds) |
 | Package for the Connect IQ Store | `tools/store/export.sh` (the version from git, committed code only), or `tools/store/export.sh --beta` for a private Beta App under its own app ID, kept in `~/.lawfive/garmin/beta-app-id`. Writes `bin/store/LawFive-<version>.iq` |
 | Run in the simulator | `open "$SDK/bin/ConnectIQ.app"`, then `"$SDK/bin/monkeydo" bin/LawFive.prg fr965` |
 | Build, load and switch the simulator to a watch | `tools/sim/run.sh venu3` (the simulator has no device menu; loading the app for a device switches it) |
@@ -31,7 +31,7 @@ KEY="${SIM_KEY:-$HOME/.lawfive/garmin/developer_key}"
 
 `install.sh` copies the release build to `GARMIN/APPS`; it needs `brew install libmtp`, with OpenMTP and Garmin Express closed. A sideloaded app gets no phone settings, only defaults (R-9); `--server https://lawfive.example.com` builds your own server in (SYNC-8), and `--test-matches` queues two made-up finished matches with tracks, once, for trying a sync. Its version comes from git (VER-1, `tools/version.sh watch`, with `+` for uncommitted changes), shown in Settings → About; other builds say `dev`.
 
-The device IDs used most are `fr965` (5 buttons and touch), `venu3` and `venu2` (2 buttons and touch). All targets are in [manifest.xml](manifest.xml).
+The device IDs used most are `fr965` (5 buttons and touch), `venu3` and `venu2` (2 buttons and touch), and `fr945` and `fenix6pro` (5 buttons, no touch, Connect IQ 3). All targets are in [manifest.xml](manifest.xml). The unit tests don't build for a Connect IQ 3 watch (see Pitfalls), so they run on a newer one.
 
 ## Test
 
@@ -169,4 +169,6 @@ Edited in the Garmin Connect app, or in the simulator under *File → Edit Persi
 - **AMOLED backlight.** `Attention.backlight(true)` throws `BacklightOnTooLongException` once held on too long; catch it (`Alerts.screenOn`).
 - **System widgets differ per watch.** `Menu2`, `Picker` and `Confirmation` look different on each (a white panel on Venu 2/3; one Picker digit column at a time). The app draws its own team menu, number entry and confirmations; other menus use `Menu2` (UI-6).
 - **Source paths are explicit.** The compiler otherwise scans the whole folder, so `bin/testcopy` breaks the build with "Redefinition of ..." errors. Keep `base.sourcePath` and `base.resourcePath` in [monkey.jungle](monkey.jungle) up to date.
+- **Connect IQ 3's 253 globals.** The fēnix 6 Pro, Forerunner 945 and the other Connect IQ 3 watches allow at most 253 top-level names (functions, classes, globals), counted after the compiler's optimizing. The app has about 220, so put new code in a class or module rather than at the top level. The release build fails for those watches past the limit ("Found ... members in module 'globals', exceeding the limit of 253"). The test build is past it already, which is why the unit tests run on a newer watch.
+- **No touchscreen.** A watch without one (DEV-2) gets every control from its buttons, as the five-button touch watches do; `Settings.hasTouch()` leaves out the touch settings, and `monkey.jungle` leaves `onDrag` out of its build, as Connect IQ 3 often has no drag events.
 - **Round screens.** Rows near the top and bottom are narrower; `MatchView.rowWidth(y)` gives the usable width, and layouts fall back to a smaller font.
