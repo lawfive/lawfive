@@ -31,6 +31,7 @@ Many features live in more than one place. [CONTRIBUTING.md](CONTRIBUTING.md#kee
   - New behavior gets a requirement with the next ID in its area; changed behavior edits its requirement. A requirement with no label is agreed; others are labeled Draft, Proposed, Later or Dropped. Never reuse, renumber or delete IDs.
   - Write it for a stranger: what the product does, in plain words. No history, no who-decided-what, no dates, no implementation detail the code already shows (see the requirements README).
   - Keep each file's Status current, and [risks.md](docs/requirements/risks.md), especially R-6 (what still needs checking on a real watch).
+- A plan in `docs/plans/` is a proposal with its requirements drafted. When it's built, its requirements are in `docs/requirements/` (what's left to check in that area's Status) and the plan is deleted, with its line in ARCHITECTURE.md's proposals.
 - Decisions the user makes are written into the requirement as how it is. Their dated record, if wanted, goes in `private/decisions.md`, not the repo. There's no changelog: commit messages are the record.
 - Design choices that need the user: ask, with options and a recommendation, rather than guessing.
 - Code comments reference requirement IDs (for example `// TMR-7: ...`). Keep that up, and match the surrounding style.

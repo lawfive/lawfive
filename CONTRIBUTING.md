@@ -14,7 +14,7 @@ You need Node 24 or later and pnpm. Run `pnpm install` at the root, then follow 
 
 ## Making a change
 
-1. **Behavior is written down first.** [docs/requirements/](docs/requirements/) says what LawFive does, area by area. A change in behavior changes its requirement in the same pull request, and code comments name the requirement they implement (`// TMR-7: ...`).
+1. **Behavior is written down first.** [docs/requirements/](docs/requirements/) says what LawFive does, area by area. A change in behavior changes its requirement in the same pull request, and code comments name the requirement they implement (`// TMR-7: ...`). A bigger change can start as a plan in [docs/plans/](docs/plans/), with its requirements drafted there. Once it's built, they move into the requirements, anything left to check goes in that area's Status, and the plan is deleted.
 2. **Keep every copy in step.** Many features live in more than one app; see the table below. A change to one is made in the others too, in the same piece of work, or the gap is written in that area's Status.
 3. **Follow the design.** [DESIGN.md](DESIGN.md) is how LawFive looks on every device. Read it before a visible change, and update it when the design language changes.
 4. **Keep the tests passing** in each part you change, and look at a visible change on screen (each README says how: screenshots for the website, snapshot pictures for the phones).
