@@ -356,6 +356,13 @@ class MatchEngineTest {
         assertEquals("extra time", periodName(2, 2, etPeriods = 1))
     }
 
+    // SET-9, SET-16: the format in short, with no break for one period or No break, as on Garmin.
+    @Test fun formatSummaries() {
+        assertEquals("2×45' · HT 15'", formatSummary(MatchSetup()))
+        assertEquals("1×20'", formatSummary(MatchSetup(numPeriods = 1, periodSec = 1200)))
+        assertEquals("2×45'", formatSummary(MatchSetup(halftimeSec = 0)))
+    }
+
     // TMR-15: a downloaded match's clock, stoppage tracking going with it, and the format Same as last keeps.
     @Test fun stoppingClockFromTheServer() {
         val runsOn = setupOf(buildJsonObject { put("id", JsonPrimitive("m1")) })

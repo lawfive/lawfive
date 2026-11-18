@@ -233,8 +233,11 @@ fun MatchFlow(button: SharedFlow<Unit>) {
                     // EVT-14: a card's reason before the send-off screen; goals and injuries never ask.
                     overlay = if (o.type == EVENT_YELLOW || o.type == EVENT_SIN_BIN || o.type == EVENT_RED) reasonOr(o.team, o.type == EVENT_RED, next) else next
                 }
-                // EVT-3, WCH-9: dismissing it records the event with no number, as on Garmin.
-                BackHandler { done(null) }
+                // EVT-3, WCH-9: dismissing it records the event with no number and no reason, straight back to the match, as on Garmin.
+                BackHandler {
+                    record(context, o.type, o.team, null)
+                    overlay = null
+                }
                 NumberEntry(numberTitle(o.type, match.teamName(o.team)), o.type, onDone = done)
             }
             is Overlay.Reason -> {

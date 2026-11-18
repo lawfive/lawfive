@@ -335,6 +335,19 @@ function testCardReasons(logger as Logger) as Boolean {
     return true;
 }
 
+//! EVT-3, EVT-14, WCH-9: with Card reasons on, the reason list follows a card's number or OK at 00, but Back
+//! from the number goes straight to the match; goals never ask, and with the setting off nothing does.
+(:test)
+function testReasonFollowsNumber(logger as Logger) as Boolean {
+    Test.assertMessage(reasonFollowsNumber(EVENT_YELLOW, 4, true), "after a caution's number");
+    Test.assertMessage(reasonFollowsNumber(EVENT_RED, 0, true), "after OK at 00");
+    Test.assertMessage(reasonFollowsNumber(EVENT_SIN_BIN, 7, true), "after a sin bin's number");
+    Test.assertMessage(!reasonFollowsNumber(EVENT_YELLOW, null, true), "not after Back");
+    Test.assertMessage(!reasonFollowsNumber(EVENT_GOAL, 9, true), "not for a goal");
+    Test.assertMessage(!reasonFollowsNumber(EVENT_YELLOW, 4, false), "not with Card reasons off");
+    return true;
+}
+
 (:test)
 function testSinBinSurvivesRestart(logger as Logger) as Boolean {
     var match = makeTestMatch(-1, 0);
@@ -2388,6 +2401,7 @@ function testOnePeriodWords(logger as Logger) as Boolean {
     Test.assertEqualMessage(Format.withPeriod(0, 2, "12:00"), "1H 12:00", "the label before the time");
     Test.assertEqualMessage(Format.summary(1, 1200, 300), "1x20'", "no break in the summary");
     Test.assertEqualMessage(Format.summary(2, 2700, 900), "2x45' · HT 15'", "halves as before");
+    Test.assertEqualMessage(Format.summary(2, 2700, 0), "2x45'", "no break, none in the summary (SET-9)");
     return true;
 }
 

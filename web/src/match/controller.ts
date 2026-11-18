@@ -474,8 +474,8 @@ export class TryMatch {
                 } else if (o.adjust) {
                     this.adjustBack(o.adjust);
                 } else {
-                    // EVT-3: dismissing records it without a number.
-                    this.record(o.type, o.team, 0, now);
+                    // EVT-3, WCH-9: dismissing records it without a number or a reason, straight back to the match.
+                    this.record(o.type, o.team, 0, now, true);
                 }
             }
         } else if (o.kind === "confirm") {
@@ -865,14 +865,17 @@ export class TryMatch {
         }
     }
 
-    private record(type: string, team: number, number: number, now: number) {
+    /** The goal or card with its number (0 for none); [dismissed] when Back left the number, which asks no reason (EVT-14). */
+    private record(type: string, team: number, number: number, now: number, dismissed = false) {
         this.overlay = undefined;
         const player = number > 0 ? number : undefined;
         // EVT-6: a second yellow, or a second sin bin (EVT-12), is a send-off: the red screen says so.
         const sendOff: Overlay | undefined = this.match.addEvent(type, team, player, now)
             ? { kind: "sendOff", why: type === "SB" ? "Second sin bin" : "Second yellow", team, player }
             : undefined;
-        if (type === "Y" || type === "R" || type === "SB") {
+        if (dismissed) {
+            this.overlay = sendOff;
+        } else if (type === "Y" || type === "R" || type === "SB") {
             this.askReason(team, type === "R", sendOff);
         } else {
             this.overlay = sendOff;

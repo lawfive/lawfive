@@ -144,18 +144,23 @@ struct HomePage: View {
             // SYNC-16: the next match's line is the next scheduled one, never one canceled or postponed.
             // UI-15: "3 coming up" (SYNC-16: scheduled ones), the last sync's problem in its place, or "Link to sync".
             NavigationLink { if state.linked { MatchesPage() } else { LinkPage() } } label: { RowLabel(label: "Matches", sub: s.matches.summary(linked: state.linked, problem: state.syncProblem), icon: "matches") }.buttonStyle(.plain)
-            NavigationLink { NewMatchPage() } label: { RowLabel(label: "New match", sub: "Quick · \(s.quick.summary)", icon: "plus") }.buttonStyle(.plain)
-            // UI-15: the last match played, as the Garmin's.
-            NavigationLink { HistoryPage() } label: { RowLabel(label: "History", sub: s.history.first.map { "Last: \(playedTitle($0))" } ?? "None yet", icon: "history") }.buttonStyle(.plain)
+            // UI-15: the half-time only where it fits.
+            NavigationLink { NewMatchPage() } label: { RowLabel(label: "New match", sub: "Quick · \(s.quick.summary)", shortSub: "Quick · \(s.quick.periodsSummary)", icon: "plus") }.buttonStyle(.plain)
+            // UI-15: the last match played, as the Garmin's, without "Last:" where the row is too narrow for it (40 mm).
+            NavigationLink { HistoryPage() } label: {
+                RowLabel(label: "History", sub: s.history.first.map { "Last: \(playedTitle($0))" } ?? "None yet", shortSub: s.history.first.map(playedTitle), icon: "history")
+            }.buttonStyle(.plain)
             NavigationLink { SettingsPage() } label: { RowLabel(label: "Settings", sub: state.linked ? "Linked" : "Not linked", icon: "settings") }.buttonStyle(.plain)
         }
     }
 }
 
-/// MenuRow's look, for NavigationLink; `subLines` for a sentence that wraps.
+/// MenuRow's look, for NavigationLink; `subLines` for a sentence that wraps, `shortSub` for one line that doesn't fit.
 struct RowLabel: View {
     let label: String
     var sub: String?
+    /// UI-15: in place of `sub` where it would be cut off; VoiceOver still reads `sub`.
+    var shortSub: String?
     var icon: String?
     var swatch: Int?
     var subLines = 1
@@ -173,7 +178,16 @@ struct RowLabel: View {
             if let swatch { Swatch(color: swatch).padding(.trailing, 2) }
             VStack(alignment: .leading, spacing: 0) {
                 Text(label).font(.barlow(15, .semibold)).foregroundStyle(C.text).lineLimit(1)
-                if let sub { Text(sub).font(.barlow(12, .regular)).foregroundStyle(subColor).lineLimit(subLines).fixedSize(horizontal: false, vertical: subLines > 1) }
+                if let sub, let shortSub {
+                    ViewThatFits(in: .horizontal) {
+                        Text(sub).lineLimit(1)
+                        Text(shortSub).lineLimit(1)
+                    }
+                    .font(.barlow(12, .regular)).foregroundStyle(subColor)
+                    .accessibilityLabel(sub)
+                } else if let sub {
+                    Text(sub).font(.barlow(12, .regular)).foregroundStyle(subColor).lineLimit(subLines).fixedSize(horizontal: false, vertical: subLines > 1)
+                }
             }
             Spacer(minLength: 0)
         }

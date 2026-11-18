@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { defaultScreen } from "@lawfive/schema";
 import { TryMatch } from "../src/match/controller.ts";
+import { formatSummary } from "../src/match/engine.ts";
 
 // DEMO: Try a match's controls do what the watch's own do (INP-1 to INP-10, VIB-6, EVT-3); the rules
 // underneath are the engine's, checked by the shared cases (matchCases.test.ts).
@@ -533,6 +534,18 @@ test("with Card reasons on, the codes come after the number, No reason first, th
     // A red's list is the send-offs', without the second caution's code.
     card(t, 4, "Red card", 5);
     assert.deepEqual(menu(t)?.rows.map((r) => r.label), ["No reason", "SFP", "VC", "S", "DGH", "DGF", "AL"]);
+    t.press("start", at(4));
+    // Back from the player number records the card with no number and no reason, straight back to the match (EVT-3, WCH-9).
+    t.press("down", at(5));
+    while (menu(t) && menu(t)!.rows[menu(t)!.focus].label !== "Yellow card") {
+        t.press("down", at(5));
+    }
+    t.press("start", at(5));
+    assert.equal(over(t)?.kind, "number");
+    t.press("back", at(5));
+    assert.equal(over(t), undefined, "no Reason list");
+    assert.equal(t.match.events.at(-1)?.type, "Y");
+    assert.equal(t.match.events.at(-1)?.player, undefined);
     // Off (the watch's default): no list.
     const off = new TryMatch(demo, { ...options, cardReasons: false });
     off.press("up", t0);
@@ -608,4 +621,10 @@ test("a stopping clock: Start stops it in orange with no pill, a goal stops it t
     t.press("back", at(20));
     assert.deepEqual(t.match.score, [1, 0]);
     assert.equal(t.match.clockStopped, true);
+});
+
+test("the format in short: no break for one period or No break, as on the watches (SET-9, SET-16)", () => {
+    assert.equal(formatSummary({ numPeriods: 2, periodSec: 2700, halftimeSec: 900 }), "2×45' · HT 15'");
+    assert.equal(formatSummary({ numPeriods: 1, periodSec: 1200, halftimeSec: 900 }), "1×20'");
+    assert.equal(formatSummary({ numPeriods: 2, periodSec: 2700, halftimeSec: 0 }), "2×45'");
 });

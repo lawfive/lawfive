@@ -6,7 +6,7 @@ What the referee records during a match: goals, cards, sin bins, injuries, stopp
 
 - **EVT-1** Goals, yellow cards and red cards are recorded with the team, period and match clock time.
 - **EVT-2** A goal updates the score on the screen.
-- **EVT-3** **The player number.** After a goal or card the watch asks for the player's number, tens then ones (UI-8): always for a card, and for a goal unless the match doesn't record scorers (EVT-10). Numbers are never required: dismissing the prompt, or OK at `00`, records the event without one.
+- **EVT-3** **The player number.** After a goal or card the watch asks for the player's number, tens then ones (UI-8): always for a card, and for a goal unless the match doesn't record scorers (EVT-10). Numbers are never required: dismissing the prompt, or OK at `00`, records the event without one. Dismissing it goes straight back to the match, with no reason asked (EVT-14).
   - Buttons: Up/Down change the digit; Start moves on, then confirms; Back on the second digit returns to the first, and on the first dismisses.
   - Touch: swipe up or down changes the digit, tap a digit to select it, tap the OK / No number pill to confirm (EVT-9).
 - **EVT-9** **Against stray touches** (rain, sweat, sleeves), the first tap on the OK / No number pill only arms it, turning it white with "Tap again"; a second tap within 3 s records the event. Any other input, or 3 s without one, disarms it. Start/Stop still confirms with one press. A full touch lock is INP-12.
@@ -31,9 +31,10 @@ What the referee records during a match: goals, cards, sin bins, injuries, stopp
   - When one ends, "AWY #7 can return" stays up until a button, which does nothing else (VIB-6, VIB-8). Waiting returns survive a restart of the app.
   - A second sin bin for the same number is a send-off, with the red screen (EVT-6). A sin bin and a caution don't combine. A red card, second yellow or second sin bin ends the countdown with no return. Undo takes one back (INP-6).
   - The match pages and report show them (a yellow card with an hourglass; a second, half and half). Edit result handles them for players, with the caution codes (RES-6), and the discipline stats count them (STAT-7).
-- **EVT-14** **Card reasons**, a watch setting in Settings → Controls (and Garmin's phone settings), off by default. After a card's number or an official's role, the watch lists the misconduct codes of the match's scheme (the competition's, else the account's, DATA-6; IFAB's before a sync or when not linked), each with a short meaning, No reason first.
+- **EVT-14** **Card reasons**, a watch setting in Settings → Controls (and Garmin's phone settings), off by default. After a card's number is confirmed (OK, or No number at `00`) or an official's role is chosen, the watch lists the misconduct codes of the match's scheme (the competition's, else the account's, DATA-6; IFAB's before a sync or when not linked), each with a short meaning, No reason first.
   - Cautions, second cautions, sin bins and officials' cautions offer the caution codes; a send-off offers the send-off codes, without the second caution's.
   - The card is recorded first, so it's never lost; Back means No reason. A second caution's red screen follows the list.
+  - Back from the player number records the card with no number and no reason, and goes straight back to the match (EVT-3, WCH-9).
   - The upload carries the codes beside the events, so a server without this still takes the match. Garmin's History list doesn't show codes.
 
 ## Officials, injuries and substitutions

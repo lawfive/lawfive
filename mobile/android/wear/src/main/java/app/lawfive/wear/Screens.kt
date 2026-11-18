@@ -170,9 +170,14 @@ private fun HomePage(push: (Page) -> Unit) {
                 push(if (AppState.linked) Page.Matches else Page.Link)
             }
         }
-        item { MenuRow("New match", "Quick · ${formatSummary(s.quick)}", R.drawable.ph_plus) { push(Page.NewMatch) } }
+        // UI-15: the half-time only where it fits.
+        item { MenuRow("New match", "Quick · ${formatSummary(s.quick)}", R.drawable.ph_plus, shortSub = "Quick · ${periodsSummary(s.quick)}") { push(Page.NewMatch) } }
         // UI-15: the last match played, as the Garmin's.
-        item { MenuRow("History", s.history.firstOrNull()?.let { "Last: ${playedTitle(it)}" } ?: "None yet", R.drawable.ph_history) { push(Page.History) } }
+        // UI-15: the last match played, as the Garmin's, without "Last:" where the row is too narrow for it.
+        item {
+            val last = s.history.firstOrNull()?.let(::playedTitle)
+            MenuRow("History", last?.let { "Last: $it" } ?: "None yet", R.drawable.ph_history, shortSub = last) { push(Page.History) }
+        }
         item { MenuRow("Settings", if (AppState.linked) "Linked" else "Not linked", R.drawable.ph_settings) { push(Page.Settings) } }
     }
 }

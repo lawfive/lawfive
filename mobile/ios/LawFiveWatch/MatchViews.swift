@@ -117,12 +117,18 @@ struct MatchFlow: View {
         }
     }
 
-    /// Back, by the X or a swipe right. EVT-3, WCH-9: leaving the player number records the event with no number, as on Garmin.
+    /// Back, by the X or a swipe right. EVT-3, WCH-9: leaving the player number records the event with no number and
+    /// no reason, and goes straight back to the match, as on Garmin.
     private func goBack() {
-        if case .number(let team, let type) = overlay { numberDone(team, type, nil) } else { overlay = backTarget }
+        if case .number(let team, let type) = overlay {
+            record(type, team, nil)
+            overlay = nil
+        } else {
+            overlay = backTarget
+        }
     }
 
-    /// The player number entered, or none (00, or leaving it): the event is recorded, then its reason or a send-off's screen.
+    /// The player number entered, or none (OK at 00): the event is recorded, then its reason or a send-off's screen.
     private func numberDone(_ team: Int, _ type: String, _ player: Int?) {
         let second = record(type, team, player)
         let red = second && player != nil ? SecondCard(team: team, player: player!, sinBin: type == EventType.sinBin) : nil

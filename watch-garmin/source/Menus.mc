@@ -481,7 +481,14 @@ class DigitEntryDelegate extends TapAwareDelegate {
     }
 }
 
-//! EVT-3: records the goal or card once the player number is entered; 00 or Back means no number.
+//! EVT-14: whether a card's reason list follows its player number: with Card reasons on, after OK (a number,
+//! or 00 for none), but not after Back (value null), which goes straight to the match (EVT-3, WCH-9).
+function reasonFollowsNumber(type as String, value as Number?, reasonsOn as Boolean) as Boolean {
+    return reasonsOn && value != null && isCard(type);
+}
+
+//! EVT-3: records the goal or card once the player number is entered; 00 or Back means no number, and Back
+//! goes straight back to the match, with no reason asked.
 class PlayerNumberEntry {
     private var _team as Number;
     private var _type as String;
@@ -495,7 +502,7 @@ class PlayerNumberEntry {
         var player = value == null || value == 0 ? null : value;
         var second = recordEvent(_type, _team, player);
         var match = getLawFiveApp().match;
-        if (match != null && isCard(_type) && asksReason()) {
+        if (match != null && reasonFollowsNumber(_type, value, asksReason())) {
             askReason(match, _team, _type.equals(EVENT_RED), second ? player : null, _type.equals(EVENT_SIN_BIN));
         } else if (second) {
             WatchUi.switchToView(new SendOffView(_team, player as Number, _type.equals(EVENT_SIN_BIN)), new SendOffDelegate(), WatchUi.SLIDE_IMMEDIATE);

@@ -106,10 +106,10 @@ export function periodLabel(period: number, numPeriods: number): string {
     return numPeriods === 1 ? "" : numPeriods === 2 ? `${period + 1}H` : numPeriods === 4 ? `Q${period + 1}` : `P${period + 1}`;
 }
 
-/** The format as the watches' kickoff screen sums it up: "2×45' · HT 15'", and "1×20'" for one period (SET-16). */
+/** The format as the watches' kickoff screen sums it up: "2×45' · HT 15'"; "1×20'" for one period (SET-16) and "2×45'" with no break (SET-9). */
 export function formatSummary(s: { numPeriods: number; periodSec: number; halftimeSec: number }): string {
     const periods = `${s.numPeriods}×${s.periodSec / 60}'`;
-    return s.numPeriods === 1 ? periods : `${periods} · HT ${s.halftimeSec / 60}'`;
+    return s.numPeriods === 1 || s.halftimeSec === 0 ? periods : `${periods} · HT ${s.halftimeSec / 60}'`;
 }
 
 /**

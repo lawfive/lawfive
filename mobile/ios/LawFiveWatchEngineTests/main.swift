@@ -263,6 +263,8 @@ do {
     equal(last.fullSummary, "4×10' · HT 15' · ET GG · Pens")
     // SET-16: one period has no break to sum up, and no label.
     equal(MatchSetup(numPeriods: 1, periodSec: 1200).summary, "1×20'")
+    // SET-9: nor does No break.
+    equal(MatchSetup(halftimeSec: 0).summary, "2×45'")
     equal(periodName(0, 1), "period")
     equal(withPeriod(0, 1, "12:00"), "12:00")
     equal(withPeriod(0, 2, "12:00"), "1H 12:00")

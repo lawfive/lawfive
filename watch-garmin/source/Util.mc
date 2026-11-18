@@ -93,10 +93,10 @@ module Format {
     }
 
     //! One-line format summary such as "2x45' · HT 15'" (SET-9); "1x20'" for one period, which has no
-    //! break but before extra time (SET-16).
+    //! break but before extra time (SET-16), and "2x45'" with no break.
     function summary(numPeriods as Number, periodSec as Number, halftimeSec as Number) as String {
         var periods = numPeriods.format("%d") + "x" + minutes(periodSec);
-        return numPeriods == 1 ? periods : periods + " · " + (numPeriods == 2 ? "HT " : "Brk ") + minutes(halftimeSec);
+        return numPeriods == 1 || halftimeSec == 0 ? periods : periods + " · " + (numPeriods == 2 ? "HT " : "Brk ") + minutes(halftimeSec);
     }
 }
 

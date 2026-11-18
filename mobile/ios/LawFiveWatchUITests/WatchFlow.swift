@@ -154,6 +154,10 @@ final class WatchFlow: XCTestCase {
         shot("no break")
         tap("No break")
         XCTAssertTrue(app.buttons["Half-time, No break"].waitForExistence(timeout: 5), app.debugDescription)
+        // SET-9, UI-19: the format in short has no break, as on Garmin.
+        XCTAssertTrue(app.buttons["Start match, 2×32'"].exists, app.debugDescription)
+        app.swipeDown()
+        shot("create match, no break")
         tap("Team size, 11")
         see("Players, 1 to 11")
         tap("Tens up")
@@ -435,7 +439,8 @@ final class WatchFlow: XCTestCase {
     }
 
     // EVT-14: with Card reasons on, the Reason list after the number (or the official's role): No reason first, the
-    // cautions' codes or the send-offs', the code in the events' words; Back gives none; a second yellow's red screen after it.
+    // cautions' codes or the send-offs', the code in the events' words; Back gives none; a second yellow's red screen after it;
+    // and none after Back from the number.
     func testCardReasons() {
         continueAfterFailure = false
         app.launchArguments = ["-reset", "1", "-noWorkout", "1", "-plain", "1", "-begin", "1", "-ago", "300", "-reasons", "ussf"]
@@ -490,6 +495,19 @@ final class WatchFlow: XCTestCase {
         see("1H")
         swipeForMenu()
         XCTAssertTrue(app.buttons["Undo last event, Yellow HOM head coach UB"].waitForExistence(timeout: 5))
+        app.buttons["Back"].firstMatch.tap()
+
+        // EVT-3, WCH-9: a swipe right from the player number records the card with no number and no reason, straight
+        // back to the match.
+        swipeUpForAway()
+        tap("Yellow card")
+        XCTAssertTrue(app.buttons["No number"].waitForExistence(timeout: 5))
+        swipe(CGVector(dx: 0.1, dy: 0.5), CGVector(dx: 0.9, dy: 0.5))
+        see("1H")
+        XCTAssertFalse(app.buttons["No reason"].exists, "no Reason list")
+        shot("back from the number")
+        swipeForMenu()
+        XCTAssertTrue(app.buttons["Undo last event, Yellow AWY"].waitForExistence(timeout: 5), "no number, no reason")
     }
 
     // EVT-14: Card reasons in Settings, Controls, off by default.

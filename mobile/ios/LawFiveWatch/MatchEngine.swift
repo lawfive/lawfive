@@ -219,11 +219,13 @@ struct MatchSetup: Codable, Equatable {
         return (trackStoppage || stops) && (breakStoppage || stops) ? periodSec / 2 : max((periodSec - breakLenSec) / 2, 0)
     }
 
-    /// "2×45' · HT 15'", and "1×20'" for one period, whose break is only before extra time (SET-16).
+    /// "2×45' · HT 15'"; "1×20'" for one period, whose break is only before extra time (SET-16), and "2×45'" with
+    /// no break (SET-9), as on Garmin.
     var summary: String {
-        let periods = "\(numPeriods)×\(periodSec / 60)'"
-        return numPeriods == 1 ? periods : "\(periods) · HT \(halftimeSec / 60)'"
+        numPeriods == 1 || halftimeSec == 0 ? periodsSummary : "\(periodsSummary) · HT \(halftimeSec / 60)'"
     }
+    /// UI-15: the periods alone, "2×45'", for a row with little room, as Garmin's.
+    var periodsSummary: String { "\(numPeriods)×\(periodSec / 60)'" }
     /// SET-13: "2×45' · HT 15' · ET · Pens", for Same as last.
     var fullSummary: String { summary + (!extraTime ? "" : goldenGoal == true ? " · ET GG" : " · ET") + (penalties ? " · Pens" : "") + (hasSinBins ? " · SB \(sinBinLength / 60)'" : "") + (stops ? " · Stop clock" : "") }
 

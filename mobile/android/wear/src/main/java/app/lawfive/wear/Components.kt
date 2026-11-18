@@ -58,11 +58,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -218,7 +220,10 @@ fun WatchList(title: String? = null, titleTeam: Int = -1, titleColor: Int = -1, 
  * sentence that wraps), or one in [subColor] (a canceled match's, SYNC-16).
  */
 @Composable
-fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? = null, textColor: Color = C.text, swatch: Int? = null, subLines: Int = 1, subColor: Color? = null, onClick: () -> Unit) {
+fun MenuRow(
+    label: String, sub: String? = null, icon: Int? = null, fill: Color? = null, textColor: Color = C.text, swatch: Int? = null, subLines: Int = 1, subColor: Color? = null,
+    shortSub: String? = null, onClick: () -> Unit,
+) {
     Row(
         Modifier.fillMaxWidth().then(if (subLines > 1) Modifier.heightIn(min = 54.dp) else Modifier.height(if (sub != null) 54.dp else 48.dp))
             .background(fill ?: C.row, RoundedCornerShape(24.dp))
@@ -238,7 +243,23 @@ fun MenuRow(label: String, sub: String? = null, icon: Int? = null, fill: Color? 
         }
         Column(Modifier.weight(1f)) {
             T(label, 14.5.sp, textColor, FontWeight.SemiBold, center = false, lines = 1)
-            if (sub != null) T(sub, 12.sp, subColor ?: if (fill != null) textColor else C.dim, if (subColor != null) FontWeight.Medium else FontWeight.Normal, center = false, lines = subLines)
+            if (sub != null) {
+                val color = subColor ?: if (fill != null) textColor else C.dim
+                val weight = if (subColor != null) FontWeight.Medium else FontWeight.Normal
+                if (shortSub != null && subLines == 1) {
+                    // UI-15: [shortSub] in place of [sub] where it would be cut off, on the smallest screens.
+                    BoxWithConstraints {
+                        val measurer = rememberTextMeasurer()
+                        val width = constraints.maxWidth
+                        val fits = remember(sub, width) {
+                            !measurer.measure(sub, TextStyle(fontSize = 12.sp, fontWeight = weight, fontFamily = Barlow, fontFeatureSettings = "tnum"), maxLines = 1, constraints = Constraints(maxWidth = width)).hasVisualOverflow
+                        }
+                        T(if (fits) sub else shortSub, 12.sp, color, weight, center = false, lines = 1)
+                    }
+                } else {
+                    T(sub, 12.sp, color, weight, center = false, lines = subLines)
+                }
+            }
         }
     }
 }

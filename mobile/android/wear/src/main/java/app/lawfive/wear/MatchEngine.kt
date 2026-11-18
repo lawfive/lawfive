@@ -1147,10 +1147,16 @@ fun halfwayBreakAtSec(f: MatchSetup): Int = when {
     else -> maxOf((f.periodSec - f.breakLenSec) / 2, 0)
 }
 
-/** The format in short, "2×45' · HT 15'", and "1×20'" for one period, whose break is only before extra time (SET-16). */
+/** UI-15: the periods alone, "2×45'", for a row with little room, as Garmin's. */
+fun periodsSummary(f: MatchSetup) = "${f.numPeriods}×${f.periodSec / 60}'"
+
+/**
+ * The format in short, "2×45' · HT 15'"; "1×20'" for one period, whose break is only before extra time (SET-16),
+ * and "2×45'" with no break (SET-9), as on Garmin.
+ */
 fun formatSummary(f: MatchSetup): String {
-    val periods = "${f.numPeriods}×${f.periodSec / 60}'"
-    return if (f.numPeriods == 1) periods else "$periods · HT ${f.halftimeSec / 60}'"
+    val periods = periodsSummary(f)
+    return if (f.numPeriods == 1 || f.halftimeSec == 0) periods else "$periods · HT ${f.halftimeSec / 60}'"
 }
 
 /**
