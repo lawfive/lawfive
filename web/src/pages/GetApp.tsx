@@ -19,13 +19,12 @@ const stores = [
 
 /**
  * APP-15: while neither store has it, the apps are in testing. Android testers join Google Play's test
- * themselves (its Google Group, then the test); iPhone testers are invited by writing in.
+ * themselves (its Google Group, then the test); iPhone testers through TestFlight's public link.
  */
 const inTesting = stores.every((s) => !s.url);
 const testersGroupUrl = "https://groups.google.com/g/lawfive-testers";
 const playTestUrl = "https://play.google.com/apps/testing/app.lawfive";
-const invitationUrl = "mailto:support@lawfive.app?subject=" + encodeURIComponent("Testing the LawFive iPhone app")
-    + "&body=" + encodeURIComponent("I'd like to test the LawFive app on my iPhone.");
+const testFlightUrl = "https://testflight.apple.com/join/BCymBUpN";
 
 /** How many times a new code takes the place of an expired one before asking. */
 const maxRenewals = 5;
@@ -150,8 +149,8 @@ function SignInCode() {
                                     In testing. Android: join the <a href={testersGroupUrl} target="_blank" rel="noreferrer">testers' group</a>, then{" "}
                                     <a href={playTestUrl} target="_blank" rel="noreferrer">the test</a>
                                     <span className="muted"> with the same Google account, and install it from Google Play.</span>{" "}
-                                    iPhone: <a href={invitationUrl}>ask for an invitation</a>
-                                    <span className="muted"> at support@lawfive.app.</span>
+                                    iPhone: open <a href={testFlightUrl} target="_blank" rel="noreferrer">the TestFlight invitation</a>
+                                    <span className="muted"> on the phone, and install it from TestFlight.</span>
                                 </span>
                             )}
                             <Stores />

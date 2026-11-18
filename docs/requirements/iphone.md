@@ -61,7 +61,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 
 ## Status
 
-Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds up for internal TestFlight testing. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair. What of IOS-14 a simulator and an iPad running it from TestFlight have shown is in R-18.
+Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds in TestFlight: internal testing, and open to anyone through TestFlight's public link (linked from the FAQ and Get the app) since its first external build passed Beta App Review. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair. What of IOS-14 a simulator and an iPad running it from TestFlight have shown is in R-18.
 
 Not built yet:
 
