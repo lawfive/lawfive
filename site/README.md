@@ -22,6 +22,7 @@ Without the build, the pages still work and show pictures where the playable par
 | `quiz.html` | The Laws quiz, playable. |
 | `try.html` | Try a match: the watch in the browser, with the match screen setup under it. |
 | `faq.html` | Questions and answers, as `<details>` that open. |
+| `get.html` | Get the app, at `lawfive.app/get`: the account, then how to install the iPhone, Android and Garmin apps, step by step, with what each needs (SITE-15). |
 | `privacy.html`, `terms.html`, `delete-account.html` | The legal pages. |
 | `support.html` | How to get help, at `lawfive.app/support`, the address given to the app stores. |
 | `permissions.html` | Every permission each app asks for, at `lawfive.app/permissions`, the page given to the stores' reviewers. |

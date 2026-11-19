@@ -5,7 +5,7 @@ Who can use a server, for self-hosters and the hosted service alike. Accounts ar
 ## Admins and sign-up
 
 - **USR-1** **Admins** are named by email in the server's `ADMIN_EMAILS` (not changeable in the web app), or made by another admin, who can also take it away; nobody changes their own. Admins invite people (USR-3), approve or decline new accounts (USR-4) and make admins; otherwise they use LawFive like anyone else and see only their own matches.
-- **USR-2** `SIGN_UP` says who can make an account: **open** (anyone; the default), **approval** (anyone, but an admin approves the account before it's used) or **closed** (by invitation only). The hosted service uses approval.
+- **USR-2** `SIGN_UP` says who can make an account: **open** (anyone; the default), **approval** (anyone, but an admin approves the account before it's used) or **closed** (by invitation only). The hosted service is open.
   - The sign-in page follows it: "Create an account", with a note when an admin approves new accounts, or "New accounts are by invitation." `/signup` opens on Create an account (the phones link there, APP-2), unless sign-up is closed.
   - An address in `ADMIN_EMAILS` signs up as anyone does, then waits for approval even when sign-up is open, unless it has an invitation (SEC-8).
 - **USR-8** **A new server's first account.** While nobody has an account, the website opens on the setup wizard (ADM-5), whatever `SIGN_UP` says. The first account is active and an admin, and needs the setup code from the server's logs, `ADMIN_EMAILS` or not (SEC-8). So a new server needs its logs but no other console.
