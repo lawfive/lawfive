@@ -18,7 +18,7 @@ final class FixtureServer: URLProtocol {
         let account = Fixtures.Account.allCases.first { url.host == "\($0.rawValue).fixtures.invalid" } ?? .demo
         let push = url.path.hasPrefix("/push/")
         let query = Dictionary((URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []).map { ($0.name, $0.value ?? "") }, uniquingKeysWith: { a, _ in a })
-        let (status, body) = FixtureServer.answer(request.httpMethod ?? "GET", push ? String(url.path.dropFirst(5)) : url.path, account: account, push: push, query: query)
+        let (status, body) = FixtureServer.answer(request.httpMethod ?? "GET", push ? String(url.path.dropFirst(5)) : url.path, account: account, push: push, query: query, host: url.host)
         let response = HTTPURLResponse(url: url, statusCode: status, httpVersion: "HTTP/1.1",
                                        headerFields: ["Content-Type": "application/json", "LawFive-Version": "fixtures"])!
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
@@ -40,7 +40,7 @@ final class FixtureServer: URLProtocol {
         }
     }
 
-    static func answer(_ method: String, _ path: String, account: Fixtures.Account, push: Bool = false, query: [String: String] = [:]) -> (Int, Data) {
+    static func answer(_ method: String, _ path: String, account: Fixtures.Account, push: Bool = false, query: [String: String] = [:], host: String? = nil) -> (Int, Data) {
         guard method == "GET" else { return missing }
         let file = { (name: String) in (try? Fixtures.data(account, name)).map { (200, $0) } ?? missing }
         switch path {
@@ -52,6 +52,9 @@ final class FixtureServer: URLProtocol {
             ] + (push ? ["push", "notices"] : [])]
             // Whole, maps too, so the app reads what it offers (GET /v1/meta as ServerMeta) for notifications' switches.
             if push { meta["maps"] = ["tileUrl": "https://tile.openstreetmap.org/{z}/{x}/{y}.png", "attribution": "OpenStreetMap"] }
+            // APP-29: new accounts by approval at an approval.… address, otherwise open, as the demo's.
+            meta["signUp"] = host?.hasPrefix("approval.") == true ? "approval" : "open"
+            if let host { meta["publicUrl"] = "https://\(host)" }
             return (200, json(meta))
         case "/v1/changes": return file("changes.json")
         case "/v1/stats": return file("stats.json")

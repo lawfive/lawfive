@@ -38,6 +38,7 @@ import app.lawfive.ui.LocalGraph
 import app.lawfive.ui.LocalNav
 import app.lawfive.ui.screens.Attempt
 import app.lawfive.ui.screens.CompetitionScreen
+import app.lawfive.ui.screens.CreateAccount
 import app.lawfive.ui.screens.Kept
 import app.lawfive.ui.screens.LicenseScreen
 import app.lawfive.ui.screens.LicenseTextsScreen
@@ -47,6 +48,7 @@ import app.lawfive.ui.screens.MatchScreen
 import app.lawfive.ui.screens.MatchesScreen
 import app.lawfive.ui.screens.QuizScreen
 import app.lawfive.ui.screens.SettingsScreen
+import app.lawfive.ui.screens.SignInFrame
 import app.lawfive.ui.screens.StatsScreen
 import app.lawfive.ui.screens.VenueScreen
 import app.lawfive.ui.theme.LawFiveTheme
@@ -166,6 +168,12 @@ class ScreenSnapshots {
         signIn(graph, "new-account")
         snap("matches-new", wait = "Get ready", foot = 120) { MatchesScreen() }
 
+        // APP-29: making an account on the phone: on the hosted service (its terms), on a server that
+        // approves new accounts, and for an address that has one already.
+        snap("sign-up", wait = "Create your account") { SignUp("api.lawfive.app", approval = false, exists = false) }
+        snap("sign-up-approval", wait = "approves new accounts") { SignUp("lawfive.example.com", approval = true, exists = false) }
+        snap("sign-up-exists", wait = "already an account") { SignUp("api.lawfive.app", approval = false, exists = true) }
+
         println("snapshots: ${timings.size} pictures in ${(System.nanoTime() - started) / 1_000_000_000} s, in ${out.absolutePath}")
         if (server.missing.isNotEmpty()) println("snapshots: asked for but not in the fixtures: ${server.missing.joinToString()}")
     }
@@ -189,6 +197,13 @@ class ScreenSnapshots {
         graph.onWatch.refresh()
         // FILE-13: the next 3 days' matches' files, as after a sync with signal.
         graph.keptFiles.refresh(graph.records.matches.first())
+    }
+
+    /** APP-29's form in the sign-in page, as it shows on that server. */
+    @Composable
+    private fun SignUp(host: String, approval: Boolean, exists: Boolean) = SignInFrame {
+        CreateAccount(host, approval, startEmail = if (exists) "jamie@example.com" else "", busy = false, error = null, exists = exists,
+            onCreate = { _, _, _ -> }, onSignIn = {}, onOtherServer = {})
     }
 
     /** The first of the demo's files on a kind of record (the fixtures' files-<kind>.json). */

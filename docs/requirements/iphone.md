@@ -20,7 +20,7 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 
 ## Signing in and sync
 
-- **IOS-2** **Signing in** as APP-2: the hosted service by default, or any address; email and password, a code from the website (APP-13), or an invitation (APP-14).
+- **IOS-2** **Signing in** as APP-2: the hosted service by default, or any address; email and password, a code from the website (APP-13), or an invitation (APP-14); or making an account on the phone (APP-29).
   - The session's token is kept in the keychain. The phone shows in the website's devices list as an iPhone with its iOS version.
   - Addresses are https, except that plain http works for a server on the local network, by its IP address or a name ending in `.local`, so a server at home works. A home server on another name (such as `.home.arpa`) needs its IP address; any other plain http address gets a message saying so.
   - Return in Email goes to the password (Next), and in the password signs in (Go). With a field focused, the page scrolls Sign in into view above the keyboard, on the smallest iPhones too.
@@ -62,6 +62,8 @@ The iPhone app does what the Android app does, by the same requirements ([androi
 ## Status
 
 Everything above but IOS-9's Bluetooth is built and checked on simulators (iOS 17 at the smallest width, and the current iOS), against the demo in light and dark and at the largest standard text size, and briefly on an iPad (R-12). It's on App Store Connect as LawFive Referee, with phone and watch builds in TestFlight: internal testing, and open to anyone through TestFlight's public link (linked from the FAQ and Get the app) since its first external build passed Beta App Review. Linking the paired Apple Watch from the iPhone (WCH-12) works on a simulator pair. What of IOS-14 a simulator and an iPad running it from TestFlight have shown is in R-18.
+
+Making an account on the phone (APP-29) is checked by a UI test against the demo (approval, then the address taken) and in snapshots, and isn't in a TestFlight build yet.
 
 Not built yet:
 

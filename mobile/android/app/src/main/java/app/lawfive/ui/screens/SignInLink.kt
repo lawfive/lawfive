@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,14 +30,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.lawfive.ui.components.Field
+import app.lawfive.ui.components.LinkButton
 import app.lawfive.ui.components.Ph
 import app.lawfive.ui.components.PhIcon
 import app.lawfive.ui.components.PrimaryButton
 import app.lawfive.ui.components.SecondaryButton
 import app.lawfive.ui.theme.colors
 
-// The panels in the sign-in card for signing in with a code (APP-13) and making an account from an
-// invitation (APP-14). SignInScreen holds what's happening; these only show it.
+// The panels in the sign-in card for signing in with a code (APP-13) and making an account, from an
+// invitation (APP-14) or not (APP-29). SignInScreen holds what's happening; these only show it.
 
 /** A rounded tile with an icon, as at the top of the web app's Link a watch and Get the app pages. */
 @Composable
@@ -86,43 +89,89 @@ fun InviteForm(
     var name by rememberSaveable { mutableStateOf(invitedName ?: "") }
     var email by rememberSaveable { mutableStateOf(invitedEmail ?: "") }
     var password by rememberSaveable { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         PanelHead(Ph.Mail, "$invitedBy invited you", "Make your account on $host")
-        Field("Name", name, { name = it })
-        if (invitedEmail != null) {
-            Column {
-                Text("Email", style = MaterialTheme.typography.bodySmall)
-                Text(invitedEmail, style = MaterialTheme.typography.titleMedium)
-                Text("The invitation is for this address.", style = MaterialTheme.typography.bodySmall, color = colors.muted)
-            }
-        } else {
-            Field("Email", email, { email = it }, keyboard = KeyboardType.Email)
-        }
-        Field("Password", password, { password = it }, password = !showPassword, keyboard = KeyboardType.Password, supporting = "At least 8 characters.",
-            trailing = {
-                androidx.compose.material3.IconButton({ showPassword = !showPassword }) {
-                    PhIcon(if (showPassword) Ph.EyeOff else Ph.Eye, if (showPassword) "Hide password" else "Show password", tint = colors.muted)
-                }
-            })
-        // SITE-5: the hosted service's; a self-hosted server has its own, or none.
-        if (host.endsWith("lawfive.app")) {
-            Text(
-                androidx.compose.ui.text.buildAnnotatedString {
-                    append("By making an account you agree to LawFive's ")
-                    withLink(androidx.compose.ui.text.LinkAnnotation.Url("https://lawfive.app/terms.html")) { append("terms") }
-                    append(" and ")
-                    withLink(androidx.compose.ui.text.LinkAnnotation.Url("https://lawfive.app/privacy.html")) { append("privacy policy") }
-                    append(".")
-                },
-                color = colors.muted, style = MaterialTheme.typography.bodySmall,
-            )
-        }
-        if (error != null) Text(error, color = colors.redText, style = MaterialTheme.typography.bodyMedium)
-        PrimaryButton(if (busy) "Making your account…" else "Create account", { onCreate(name.trim(), email.trim(), password) }, Modifier.fillMaxWidth(),
-            enabled = !busy && name.isNotBlank() && email.isNotBlank() && password.length >= 8)
+        AccountFields(host, name, { name = it }, email, { email = it }, password, { password = it }, fixedEmail = invitedEmail, approval = false,
+            busy = busy, error = error, onCreate = { onCreate(name.trim(), email.trim(), password) })
         SecondaryButton("Cancel", onCancel, Modifier.fillMaxWidth(), enabled = !busy)
     }
+}
+
+/**
+ * APP-29: making an account on the phone, on a server that takes new ones. Sign in, and Use another
+ * server, go back to signing in with the email typed here; so does Sign in instead, when the address
+ * already has an account (`exists`).
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun CreateAccount(
+    host: String, approval: Boolean, startEmail: String, busy: Boolean, error: String?, exists: Boolean,
+    onCreate: (name: String, email: String, password: String) -> Unit, onSignIn: (email: String) -> Unit, onOtherServer: (email: String) -> Unit,
+) {
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf(startEmail) }
+    var password by rememberSaveable { mutableStateOf("") }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        PanelHead(Ph.Invite, "Create your account", "On $host")
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { LinkButton("Use another server") { onOtherServer(email.trim()) } }
+        AccountFields(host, name, { name = it }, email, { email = it }, password, { password = it }, fixedEmail = null, approval = approval,
+            busy = busy, error = if (exists) "There's already an account with this email." else error,
+            onCreate = { onCreate(name.trim(), email.trim(), password) },
+            afterError = { if (exists) SecondaryButton("Sign in instead", { onSignIn(email.trim()) }, Modifier.fillMaxWidth()) })
+        // Wrapping whole, so a narrow phone with large text puts Sign in under the question. Sign in
+        // instead says the same once the address is known to have an account.
+        if (!exists) FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, itemVerticalAlignment = Alignment.CenterVertically) {
+            Text("Already have an account?", style = MaterialTheme.typography.bodyMedium, color = colors.muted)
+            LinkButton("Sign in") { onSignIn(email.trim()) }
+        }
+    }
+}
+
+/**
+ * The fields both forms share (APP-14, APP-29): Name, Email (or the invitation's, fixed), Password,
+ * then the approval note, the hosted service's terms, any problem, and Create account.
+ */
+@Composable
+private fun AccountFields(
+    host: String, name: String, onName: (String) -> Unit, email: String, onEmail: (String) -> Unit, password: String, onPassword: (String) -> Unit,
+    fixedEmail: String?, approval: Boolean, busy: Boolean, error: String?, onCreate: () -> Unit, afterError: @Composable () -> Unit = {},
+) {
+    var showPassword by remember { mutableStateOf(false) }
+    Field("Name", name, onName)
+    if (fixedEmail != null) {
+        Column {
+            Text("Email", style = MaterialTheme.typography.bodySmall)
+            Text(fixedEmail, style = MaterialTheme.typography.titleMedium)
+            Text("The invitation is for this address.", style = MaterialTheme.typography.bodySmall, color = colors.muted)
+        }
+    } else {
+        Field("Email", email, onEmail, keyboard = KeyboardType.Email)
+    }
+    Field("Password", password, onPassword, password = !showPassword, keyboard = KeyboardType.Password, supporting = "At least 8 characters.",
+        trailing = {
+            androidx.compose.material3.IconButton({ showPassword = !showPassword }) {
+                PhIcon(if (showPassword) Ph.EyeOff else Ph.Eye, if (showPassword) "Hide password" else "Show password", tint = colors.muted)
+            }
+        })
+    // USR-4: the account waits for an admin.
+    if (approval) Text("An admin of this server approves new accounts before they can be used.", color = colors.muted, style = MaterialTheme.typography.bodySmall)
+    // SITE-5: the hosted service's; a self-hosted server has its own, or none.
+    if (host.endsWith("lawfive.app")) {
+        Text(
+            androidx.compose.ui.text.buildAnnotatedString {
+                append("By making an account you agree to LawFive's ")
+                withLink(androidx.compose.ui.text.LinkAnnotation.Url("https://lawfive.app/terms.html")) { append("terms") }
+                append(" and ")
+                withLink(androidx.compose.ui.text.LinkAnnotation.Url("https://lawfive.app/privacy.html")) { append("privacy policy") }
+                append(".")
+            },
+            color = colors.muted, style = MaterialTheme.typography.bodySmall,
+        )
+    }
+    if (error != null) Text(error, color = colors.redText, style = MaterialTheme.typography.bodyMedium)
+    afterError()
+    PrimaryButton(if (busy) "Making your account…" else "Create account", onCreate, Modifier.fillMaxWidth(),
+        enabled = !busy && name.isNotBlank() && (fixedEmail ?: email).isNotBlank() && password.length >= 8)
 }
 
 /** Shows a code's dash without it being in the text, so typing never moves the cursor. */

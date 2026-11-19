@@ -8,7 +8,7 @@ enum Ph: String {
     case map, pin, watch, settings, more, check, stats, quiz, restart, download, play, mail, qr, mobile, undo, link, copy, share, clock, calendar
     case info, merge, upload, report, camera, photos, portrait, phone, globe, directions, bell, bellOff, sync, eye, eyeOff, money, sun, moon, cloud, cloudSun
     case cloudMoon, cloudRain, cloudSnow, cloudFog, cloudLightning, wind, thermometer, tag, hash, note, role, message, plan, assignor, palette, crop, turn
-    case distance, heart, sprint, speed, open, help, hourglass
+    case distance, heart, sprint, speed, open, help, hourglass, invite
     case pdf, xlsx, csv, docx, txt, fileImage, addFiles, openWith, keep, keepOff
 
     var image: Image { Image("ph_\(rawValue)").renderingMode(.template) }

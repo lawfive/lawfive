@@ -77,7 +77,7 @@ enum class Ph(@DrawableRes val res: Int) {
     Map(R.drawable.ph_map), Pin(R.drawable.ph_pin), Watch(R.drawable.ph_watch), Settings(R.drawable.ph_settings), More(R.drawable.ph_more),
     Check(R.drawable.ph_check), Stats(R.drawable.ph_stats), Quiz(R.drawable.ph_quiz), Restart(R.drawable.ph_restart), Download(R.drawable.ph_download), Play(R.drawable.ph_play), Mail(R.drawable.ph_mail),
     Qr(R.drawable.ph_qr), Mobile(R.drawable.ph_mobile), Undo(R.drawable.ph_undo), Link(R.drawable.ph_link), Copy(R.drawable.ph_copy), Share(R.drawable.ph_share), Clock(R.drawable.ph_clock), Calendar(R.drawable.ph_calendar),
-    Info(R.drawable.ph_info), Help(R.drawable.ph_help), Hourglass(R.drawable.ph_hourglass), Merge(R.drawable.ph_merge), Upload(R.drawable.ph_upload), Report(R.drawable.ph_report), Camera(R.drawable.ph_camera),
+    Info(R.drawable.ph_info), Help(R.drawable.ph_help), Invite(R.drawable.ph_invite), Hourglass(R.drawable.ph_hourglass), Merge(R.drawable.ph_merge), Upload(R.drawable.ph_upload), Report(R.drawable.ph_report), Camera(R.drawable.ph_camera),
     Photos(R.drawable.ph_photos), Portrait(R.drawable.ph_portrait), Phone(R.drawable.ph_phone), Globe(R.drawable.ph_globe), Plan(R.drawable.ph_plan),
     Directions(R.drawable.ph_directions), Bell(R.drawable.ph_bell), BellOff(R.drawable.ph_bell_off), Sync(R.drawable.ph_sync), Eye(R.drawable.ph_eye), EyeOff(R.drawable.ph_eye_off),
     Money(R.drawable.ph_money), Sun(R.drawable.ph_sun), Moon(R.drawable.ph_moon), Cloud(R.drawable.ph_cloud), CloudSun(R.drawable.ph_cloud_sun),

@@ -213,18 +213,44 @@ final class AppGraph {
         await meta()?.capabilities.contains("merging") == true
     }
 
-    /// A server's website, from GET /v1/meta's publicUrl: where its accounts are made (APP-2), unless it
-    /// takes no new ones, and where a forgotten password is reset (USR-7); nil for either when it doesn't say.
+    /// What a server says about new accounts, from GET /v1/meta: who may make one (USR-2), whether it's
+    /// new with no accounts yet (ADM-5), and where its website resets a forgotten password (USR-7, from
+    /// its publicUrl); nil or false for what it doesn't say, as when it can't be reached.
     struct Website: Equatable {
-        var signUp: URL?
+        /// "open", "approval" or "closed".
+        var signUp: String?
+        var firstAccount = false
         var forgotPassword: URL?
+
+        /// APP-29: Create an account is offered on a server that takes new accounts, once it's set up.
+        var takesNewAccounts: Bool { !firstAccount && (signUp == "open" || signUp == "approval") }
+
+        /// APP-2, APP-29: the line under the sign-in card.
+        var line: String {
+            if firstAccount { return "This server isn't set up yet. Open it in a browser to make the first account." }
+            if signUp == "closed" { return "New accounts on this server are by invitation. Scan yours with Scan a QR code." }
+            return "Have an invitation? Scan it with Scan a QR code."
+        }
+
+        init(signUp: String? = nil, firstAccount: Bool = false, forgotPassword: URL? = nil) {
+            self.signUp = signUp
+            self.firstAccount = firstAccount
+            self.forgotPassword = forgotPassword
+        }
+
+        init(meta: JSONValue?) {
+            guard meta?["product"]?.string == "LawFive" else { return }
+            signUp = meta?["signUp"]?.string
+            firstAccount = meta?["firstAccount"]?.bool ?? false
+            if var site = meta?["publicUrl"]?.string?.orNil, site.hasPrefix("https://") || site.hasPrefix("http://") {
+                while site.hasSuffix("/") { site.removeLast() }
+                forgotPassword = URL(string: site + "/forgot-password")
+            }
+        }
     }
 
     func website(_ server: String) async -> Website {
-        guard let meta = try? await api.call("GET", "/v1/meta", server: server), meta["product"]?.string == "LawFive",
-              var site = meta["publicUrl"]?.string?.orNil, site.hasPrefix("https://") || site.hasPrefix("http://") else { return Website() }
-        while site.hasSuffix("/") { site.removeLast() }
-        return Website(signUp: meta["signUp"]?.string == "closed" ? nil : URL(string: site + "/signup"), forgotPassword: URL(string: site + "/forgot-password"))
+        Website(meta: try? await api.call("GET", "/v1/meta", server: server))
     }
 
     /// The server's address if it's a LawFive server.
@@ -259,10 +285,12 @@ final class AppGraph {
         try await api.call("GET", "/v1/invite/\(token)", server: server)
     }
 
-    /// Makes an account with an invitation (APP-14) and signs in with it.
-    func signUpWithInvite(server: String, invite: String, name: String, email: String, password: String) async throws {
-        let body: JSONValue = .object(["name": .string(name), "email": .string(email), "password": .string(password), "invite": .string(invite)])
-        let (answer, response) = try await api.callRaw("POST", "/v1/auth/sign-up/email", body: body, server: server)
+    /// Makes an account and signs in with it: on a server that takes new accounts (APP-29), or with an
+    /// invitation (APP-14), whatever the server's sign-up setting. With approval, it signs in waiting (USR-4).
+    func signUp(server: String, name: String, email: String, password: String, invite: String? = nil) async throws {
+        var fields: [String: JSONValue] = ["name": .string(name), "email": .string(email), "password": .string(password)]
+        if let invite { fields["invite"] = .string(invite) }
+        let (answer, response) = try await api.callRaw("POST", "/v1/auth/sign-up/email", body: .object(fields), server: server)
         guard let token = response.value(forHTTPHeaderField: "set-auth-token") else { throw ServerError(status: 0, message: "The server didn't sign you in", body: nil) }
         await finishSignIn(server: server, token: token, user: answer?["user"], email: email)
     }

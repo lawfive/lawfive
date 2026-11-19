@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,7 +63,7 @@ import java.io.IOException
 
 // Signing in (APP-2): the server (the one built in, or any address, checked first), then email
 // and password; or a code from the web app, scanned or typed (APP-13), or an invitation (APP-14).
-// Other new accounts are made on the website.
+// On a server that takes new accounts, one can be made here too (APP-29).
 
 /** What the sign-in card shows instead of its form. */
 private sealed interface Panel {
@@ -70,6 +71,7 @@ private sealed interface Panel {
     data object EnterCode : Panel
     data class Confirm(val server: String, val code: String, val name: String, val email: String) : Panel
     data class Invite(val server: String, val token: String, val invitedBy: String, val name: String?, val email: String?) : Panel
+    data object Create : Panel
 }
 
 @Composable
@@ -82,11 +84,13 @@ fun SignInScreen() {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
-    // APP-2, USR-7: where the chosen server's website makes accounts (its publicUrl, from GET /v1/meta), unless it's
-    // closed to them, and where a forgotten password is reset.
-    var website by remember { mutableStateOf(app.lawfive.AppGraph.Website(null, null)) }
+    // APP-29, USR-7: whether the chosen server takes new accounts (from GET /v1/meta), and where a forgotten
+    // password is reset.
+    var website by remember { mutableStateOf(app.lawfive.AppGraph.Website()) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    // APP-29: the address being made an account for has one already.
+    var exists by remember { mutableStateOf(false) }
 
     // Android 17 asks before an app reaches the local network, where a server at home often is.
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -103,11 +107,11 @@ fun SignInScreen() {
     }
 
     LaunchedEffect(server) {
-        website = app.lawfive.AppGraph.Website(null, null)
+        website = app.lawfive.AppGraph.Website()
         if (server.isBlank()) return@LaunchedEffect
         // Typing an address: wait until it settles.
         kotlinx.coroutines.delay(600)
-        website = runCatching { graph.website(address(server)) }.getOrDefault(app.lawfive.AppGraph.Website(null, null))
+        website = runCatching { graph.website(address(server)) }.getOrDefault(app.lawfive.AppGraph.Website())
     }
 
     // APP-13, APP-14: a link from the scanner, a typed code or the web app's Open in the app button.
@@ -164,6 +168,185 @@ fun SignInScreen() {
             }
     }
 
+    SignInFrame(
+        under = {
+            // USR-7: a forgotten password is reset on the server's website, by a link it emails; with the
+            // sign-in form, or once making an account finds the address already has one (APP-29).
+            val signingIn = panel == null
+            if (signingIn || (panel == Panel.Create && exists)) website.forgotPassword?.let { reset ->
+                Text(
+                    androidx.compose.ui.text.buildAnnotatedString {
+                        withLink(androidx.compose.ui.text.LinkAnnotation.Url(reset, linkStyle())) { append("Forgot your password?") }
+                    },
+                    style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(bottom = 10.dp),
+                )
+            }
+            // APP-2, APP-29: how else to get an account here.
+            if (signingIn) Text(
+                when {
+                    website.firstAccount -> "This server isn't set up yet. Open it in a browser to make the first account."
+                    website.signUp == "closed" -> "New accounts on this server are by invitation. Scan yours with Scan a QR code."
+                    else -> "Have an invitation? Scan it with Scan a QR code."
+                },
+                style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center,
+            )
+        },
+    ) {
+        when (val shown = panel) {
+        Panel.Checking -> Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) { LoadingPitch() }
+        Panel.EnterCode -> EnterCode(server, { server = it; error = null }, busy, error,
+            onContinue = { code ->
+                error = null
+                val found = AppLink.serverOf(address(server), BuildConfig.DEBUG)?.let { url -> AppLink.normaliseCode(code)?.let { AppLink.SignIn(url, it) } }
+                if (found != null) graph.pendingLink.value = found else error = "Check the server's address. It needs to start with https."
+            },
+            onCancel = { panel = null; error = null })
+        is Panel.Confirm -> ConfirmSignIn(shown.server.substringAfter("://"), shown.name, shown.email, busy, error,
+            onConfirm = {
+                busy = true
+                error = null
+                scope.launch {
+                    try {
+                        graph.session.setServer(shown.server)
+                        graph.signInWithCode(shown.server, shown.code)
+                    } catch (e: ApiException) {
+                        error = e.message
+                    } catch (e: IOException) {
+                        error = "Couldn't reach ${shown.server.substringAfter("://")}. Check your connection."
+                    } finally {
+                        busy = false
+                    }
+                }
+            },
+            onCancel = { panel = null; error = null })
+        is Panel.Invite -> InviteForm(shown.server.substringAfter("://"), shown.invitedBy, shown.name, shown.email, busy, error,
+            onCreate = { name, mail, pass ->
+                busy = true
+                error = null
+                scope.launch {
+                    try {
+                        graph.session.setServer(shown.server)
+                        graph.signUpWithInvite(shown.server, shown.token, name, mail, pass)
+                    } catch (e: ApiException) {
+                        error = e.message
+                    } catch (e: IOException) {
+                        error = "Couldn't reach ${shown.server.substringAfter("://")}. Check your connection."
+                    } finally {
+                        busy = false
+                    }
+                }
+            },
+            onCancel = { panel = null; error = null })
+        Panel.Create -> {
+            fun back(typed: String) {
+                if (typed.isNotBlank()) email = typed
+                panel = null
+                error = null
+                exists = false
+            }
+            lateinit var create: (String, String, String) -> Unit
+            create = { name, mail, pass ->
+                busy = true
+                error = null
+                exists = false
+                scope.launch {
+                    try {
+                        val url = graph.checkServer(address(server))
+                        graph.session.setServer(url)
+                        graph.signUp(url, name, mail, pass)
+                    } catch (e: ApiException) {
+                        if (e.status == 422) exists = true else error = e.message
+                    } catch (e: IOException) {
+                        android.util.Log.w("LawFive", "Making an account: $e")
+                        if (!mayReachLocal()) {
+                            retry = { create(name, mail, pass) }
+                            askLocal.launch(localPermission)
+                        } else {
+                            error = "Couldn't reach ${address(server).removePrefix("https://")}. Check the address and your connection."
+                        }
+                    } finally {
+                        busy = false
+                    }
+                }
+            }
+            CreateAccount(address(server).removePrefix("https://"), website.signUp == "approval", email, busy, error, exists,
+                onCreate = create,
+                onSignIn = ::back,
+                onOtherServer = { back(it); choosing = true })
+        }
+        null -> {
+        if (choosing) {
+            Field("Server", server, { server = it; error = null }, placeholder = "lawfive.example.com", keyboard = KeyboardType.Uri,
+                supporting = "Your LawFive server's address, as you open it in a browser.")
+        } else {
+            Column {
+                Text("Server", style = MaterialTheme.typography.bodySmall)
+                Text(server.removePrefix("https://"), style = MaterialTheme.typography.titleMedium)
+                LinkButton("Use another server") { choosing = true }
+            }
+        }
+        Field("Email", email, { email = it; error = null }, keyboard = KeyboardType.Email)
+        Field("Password", password, { password = it; error = null }, password = !showPassword, keyboard = KeyboardType.Password,
+            trailing = {
+                androidx.compose.material3.IconButton({ showPassword = !showPassword }) {
+                    PhIcon(if (showPassword) Ph.EyeOff else Ph.Eye, if (showPassword) "Hide password" else "Show password", tint = colors.muted)
+                }
+            })
+        if (error != null) Text(error!!, color = colors.redText, style = MaterialTheme.typography.bodyMedium)
+        lateinit var signIn: () -> Unit
+        signIn = {
+            busy = true
+            error = null
+            scope.launch {
+                try {
+                    val url = graph.checkServer(address(server))
+                    graph.session.setServer(url)
+                    graph.signIn(url, email, password)
+                } catch (e: ApiException) {
+                    error = when (e.status) {
+                        401 -> "That email and password don't match an account."
+                        403 -> e.message
+                        0 -> e.message
+                        else -> e.message
+                    }
+                } catch (e: IOException) {
+                    android.util.Log.w("LawFive", "Signing in: $e")
+                    if (!mayReachLocal()) {
+                        retry = signIn
+                        askLocal.launch(localPermission)
+                    } else {
+                        error = "Couldn't reach ${address(server).removePrefix("https://")}. Check the address and your connection."
+                    }
+                } finally {
+                    busy = false
+                }
+            }
+        }
+        PrimaryButton(if (busy) "Signing in…" else "Sign in", enabled = !busy && server.isNotBlank() && email.isNotBlank() && password.isNotEmpty(), modifier = Modifier.fillMaxWidth(), onClick = signIn)
+        // APP-29: on a server that takes new accounts.
+        if (website.takesAccounts) {
+            SecondaryButton("Create an account", { error = null; exists = false; panel = Panel.Create }, Modifier.fillMaxWidth(), icon = Ph.Invite)
+        }
+        HorizontalDivider(Modifier.padding(vertical = 6.dp), color = colors.border)
+        SecondaryButton("Scan a QR code", { scan() }, Modifier.fillMaxWidth(), icon = Ph.Qr)
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            LinkButton("Enter a code") { error = null; panel = Panel.EnterCode }
+        }
+        }
+        }
+    }
+}
+
+/** A link in the words under the sign-in card. */
+@Composable
+private fun linkStyle() = androidx.compose.ui.text.TextLinkStyles(androidx.compose.ui.text.SpanStyle(
+    color = colors.brand, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+    textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline,
+))
+
+/** The sign-in page around its card: the lockup and line on the grass, the card, and what's `under` it. */
+@Composable
+fun SignInFrame(under: @Composable ColumnScope.() -> Unit = {}, card: @Composable ColumnScope.() -> Unit) {
     Box(Modifier.fillMaxSize().pitchStripes(colors.pitch, colors.pitchStripe).imePadding().verticalScroll(rememberScrollState()), contentAlignment = Alignment.TopCenter) {
         Column(Modifier.widthIn(max = 420.dp).padding(16.dp).statusBarsPadding().padding(top = 40.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             // WEB-25: the lockup, chalk on the grass.
@@ -172,138 +355,10 @@ fun SignInScreen() {
             Text("Your matches, on your wrist and everywhere else.", style = MaterialTheme.typography.bodyMedium, color = colors.muted, textAlign = TextAlign.Center)
             Gap(24)
             LfCard {
-                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    when (val shown = panel) {
-                    Panel.Checking -> Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) { LoadingPitch() }
-                    Panel.EnterCode -> EnterCode(server, { server = it; error = null }, busy, error,
-                        onContinue = { code ->
-                            error = null
-                            val found = AppLink.serverOf(address(server), BuildConfig.DEBUG)?.let { url -> AppLink.normaliseCode(code)?.let { AppLink.SignIn(url, it) } }
-                            if (found != null) graph.pendingLink.value = found else error = "Check the server's address. It needs to start with https."
-                        },
-                        onCancel = { panel = null; error = null })
-                    is Panel.Confirm -> ConfirmSignIn(shown.server.substringAfter("://"), shown.name, shown.email, busy, error,
-                        onConfirm = {
-                            busy = true
-                            error = null
-                            scope.launch {
-                                try {
-                                    graph.session.setServer(shown.server)
-                                    graph.signInWithCode(shown.server, shown.code)
-                                } catch (e: ApiException) {
-                                    error = e.message
-                                } catch (e: IOException) {
-                                    error = "Couldn't reach ${shown.server.substringAfter("://")}. Check your connection."
-                                } finally {
-                                    busy = false
-                                }
-                            }
-                        },
-                        onCancel = { panel = null; error = null })
-                    is Panel.Invite -> InviteForm(shown.server.substringAfter("://"), shown.invitedBy, shown.name, shown.email, busy, error,
-                        onCreate = { name, mail, pass ->
-                            busy = true
-                            error = null
-                            scope.launch {
-                                try {
-                                    graph.session.setServer(shown.server)
-                                    graph.signUpWithInvite(shown.server, shown.token, name, mail, pass)
-                                } catch (e: ApiException) {
-                                    error = e.message
-                                } catch (e: IOException) {
-                                    error = "Couldn't reach ${shown.server.substringAfter("://")}. Check your connection."
-                                } finally {
-                                    busy = false
-                                }
-                            }
-                        },
-                        onCancel = { panel = null; error = null })
-                    null -> {
-                    if (choosing) {
-                        Field("Server", server, { server = it; error = null }, placeholder = "lawfive.example.com", keyboard = KeyboardType.Uri,
-                            supporting = "Your LawFive server's address, as you open it in a browser.")
-                    } else {
-                        Column {
-                            Text("Server", style = MaterialTheme.typography.bodySmall)
-                            Text(server.removePrefix("https://"), style = MaterialTheme.typography.titleMedium)
-                            LinkButton("Use another server") { choosing = true }
-                        }
-                    }
-                    Field("Email", email, { email = it; error = null }, keyboard = KeyboardType.Email)
-                    Field("Password", password, { password = it; error = null }, password = !showPassword, keyboard = KeyboardType.Password,
-                        trailing = {
-                            androidx.compose.material3.IconButton({ showPassword = !showPassword }) {
-                                PhIcon(if (showPassword) Ph.EyeOff else Ph.Eye, if (showPassword) "Hide password" else "Show password", tint = colors.muted)
-                            }
-                        })
-                    if (error != null) Text(error!!, color = colors.redText, style = MaterialTheme.typography.bodyMedium)
-                    lateinit var signIn: () -> Unit
-                    signIn = {
-                        busy = true
-                        error = null
-                        scope.launch {
-                            try {
-                                val url = graph.checkServer(address(server))
-                                graph.session.setServer(url)
-                                graph.signIn(url, email, password)
-                            } catch (e: ApiException) {
-                                error = when (e.status) {
-                                    401 -> "That email and password don't match an account."
-                                    403 -> e.message
-                                    0 -> e.message
-                                    else -> e.message
-                                }
-                            } catch (e: IOException) {
-                                android.util.Log.w("LawFive", "Signing in: $e")
-                                if (!mayReachLocal()) {
-                                    retry = signIn
-                                    askLocal.launch(localPermission)
-                                } else {
-                                    error = "Couldn't reach ${address(server).removePrefix("https://")}. Check the address and your connection."
-                                }
-                            } finally {
-                                busy = false
-                            }
-                        }
-                    }
-                    PrimaryButton(if (busy) "Signing in…" else "Sign in", enabled = !busy && server.isNotBlank() && email.isNotBlank() && password.isNotEmpty(), modifier = Modifier.fillMaxWidth(), onClick = signIn)
-                    HorizontalDivider(Modifier.padding(vertical = 6.dp), color = colors.border)
-                    SecondaryButton("Scan a QR code", { scan() }, Modifier.fillMaxWidth(), icon = Ph.Qr)
-                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        LinkButton("Enter a code") { error = null; panel = Panel.EnterCode }
-                    }
-                    }
-                    }
-                }
+                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp), content = card)
             }
             Gap(14)
-            // APP-2: the server's own website, where its accounts are made, when it says where that is and takes new ones.
-            val signUpAt = website.signUp
-            val linkStyle = androidx.compose.ui.text.TextLinkStyles(androidx.compose.ui.text.SpanStyle(
-                color = colors.brand, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
-                textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline,
-            ))
-            // USR-7: a forgotten password is reset on the server's website, by a link it emails.
-            website.forgotPassword?.let { reset ->
-                Text(
-                    androidx.compose.ui.text.buildAnnotatedString {
-                        withLink(androidx.compose.ui.text.LinkAnnotation.Url(reset, linkStyle)) { append("Forgot your password?") }
-                    },
-                    style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, modifier = Modifier.padding(bottom = 10.dp),
-                )
-            }
-            Text(
-                androidx.compose.ui.text.buildAnnotatedString {
-                    append("New to LawFive? Scan your invitation, or ")
-                    if (signUpAt != null) {
-                        withLink(androidx.compose.ui.text.LinkAnnotation.Url(signUpAt, linkStyle)) { append("make an account on the website") }
-                    } else {
-                        append("make an account on the website")
-                    }
-                    append(" and sign in here.")
-                },
-                style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center,
-            )
+            under()
         }
     }
 }

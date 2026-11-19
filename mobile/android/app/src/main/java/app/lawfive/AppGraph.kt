@@ -188,19 +188,20 @@ class AppGraph(private val context: Context) {
     }
 
     /**
-     * APP-2: the page on a server's website where accounts are made (its publicUrl's /signup, from
-     * GET /v1/meta), or null when it doesn't say where its website is or takes no new accounts.
+     * What a server says about new accounts and its website, from GET /v1/meta: who can make an account
+     * (USR-2: open, approval or closed; null when it couldn't be asked), whether it's new with no account yet
+     * (ADM-5, made on its website with the setup code), and where a forgotten password is reset (USR-7).
      */
-    suspend fun signUpPage(server: String): String? = website(server).signUp
-
-    /** A server's website, from GET /v1/meta's publicUrl: where its accounts are made (APP-2), unless it takes no new ones, and where a forgotten password is reset (USR-7). */
-    data class Website(val signUp: String?, val forgotPassword: String?)
+    data class Website(val signUp: String? = null, val firstAccount: Boolean = false, val forgotPassword: String? = null) {
+        /** APP-29: making an account on the phone, on a server that takes new ones and is set up. */
+        val takesAccounts get() = (signUp == "open" || signUp == "approval") && !firstAccount
+    }
 
     suspend fun website(server: String): Website {
         val meta = api.call("GET", "/v1/meta", server = server)?.jsonObject
-        if (meta.str("product") != "LawFive") return Website(null, null)
-        val site = meta.str("publicUrl")?.trimEnd('/')?.takeIf { it.startsWith("https://") || it.startsWith("http://") } ?: return Website(null, null)
-        return Website(if (meta.str("signUp") == "closed") null else "$site/signup", "$site/forgot-password")
+        if (meta.str("product") != "LawFive") return Website()
+        val site = meta.str("publicUrl")?.trimEnd('/')?.takeIf { it.startsWith("https://") || it.startsWith("http://") }
+        return Website(meta.str("signUp"), meta.str("firstAccount") == "true", site?.let { "$it/forgot-password" })
     }
 
     /** Whose a sign-in code is (APP-13): their name and email, for the phone to ask first. */
@@ -221,9 +222,17 @@ class AppGraph(private val context: Context) {
     suspend fun lookUpInvite(server: String, token: String) = api.call("GET", "/v1/invite/$token", server = server)
 
     /** Makes an account with an invitation (APP-14) and signs in with it. */
-    suspend fun signUpWithInvite(server: String, invite: String, name: String, email: String, password: String) {
-        val body = JsonObject(mapOf("name" to JsonPrimitive(name), "email" to JsonPrimitive(email), "password" to JsonPrimitive(password), "invite" to JsonPrimitive(invite)))
-            .toString().toRequestBody("application/json".toMediaType())
+    suspend fun signUpWithInvite(server: String, invite: String, name: String, email: String, password: String) =
+        signUp(server, name, email, password, invite)
+
+    /**
+     * Makes an account and signs in with it (APP-29; APP-14 with an invitation). With approval it's
+     * pending, so the waiting page shows (USR-4). An address that has an account already answers 422.
+     */
+    suspend fun signUp(server: String, name: String, email: String, password: String, invite: String? = null) {
+        val fields = mapOf("name" to JsonPrimitive(name), "email" to JsonPrimitive(email), "password" to JsonPrimitive(password)) +
+            (invite?.let { mapOf("invite" to JsonPrimitive(it)) } ?: emptyMap())
+        val body = JsonObject(fields).toString().toRequestBody("application/json".toMediaType())
         val (answer, headers) = api.callRaw("POST", "/v1/auth/sign-up/email", body, server)
         val token = headers["set-auth-token"] ?: throw ApiException(0, "The server didn't sign you in", null)
         finishSignIn(server, token, answer?.jsonObject?.get("user")?.jsonObject, email)

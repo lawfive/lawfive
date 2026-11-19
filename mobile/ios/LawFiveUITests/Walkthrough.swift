@@ -45,18 +45,27 @@ final class Walkthrough: XCTestCase {
         app.buttons.matching(NSPredicate(format: "label == 'Sign in'")).firstMatch.tap()
         // iOS may offer to save the password, over the app, once it's signed in.
         _ = tabButton("Matches").waitForExistence(timeout: 20)
-        // On iOS 27 the question comes from the system's password service rather than SpringBoard.
+        notNowToSavingThePassword()
+        // APP-16: the first sync's screen covers the app until it's closed.
+        let done = app.buttons["Done"]
+        if done.waitForExistence(timeout: 12) { done.tap() }
+    }
+
+    /// iOS may offer to save the password, over the app, once it's signed in. On iOS 27 the question
+    /// comes from the system's password service rather than SpringBoard.
+    private func notNowToSavingThePassword() {
         let offers = [app] + ["com.apple.springboard", "com.apple.AuthenticationServicesCore.AuthenticationServicesAgent", "com.apple.Passwords", "com.apple.PasswordsUIService"].map { XCUIApplication(bundleIdentifier: $0) }
         for (i, offer) in offers.enumerated() {
             let notNow = offer.buttons["Not Now"]
             if notNow.waitForExistence(timeout: i < 2 ? 4 : 1.5) {
-                notNow.tap()
+                // Again if it was tapped while the question was still coming in.
+                for _ in 0..<3 where notNow.exists {
+                    notNow.tap()
+                    _ = notNow.waitForNonExistence(timeout: 2)
+                }
                 break
             }
         }
-        // APP-16: the first sync's screen covers the app until it's closed.
-        let done = app.buttons["Done"]
-        if done.waitForExistence(timeout: 12) { done.tap() }
     }
 
     /// Scrolls until it's on screen and clear of what lies over the page's foot (IOS-13): the tab bar
@@ -635,6 +644,67 @@ final class Walkthrough: XCTestCase {
         shot("42-delete-account")
         app.buttons["Keep my account"].tap()
         XCTAssertTrue(delete.waitForExistence(timeout: 5))
+    }
+
+    /// APP-29: making an account on the phone, on the demo server, whose sign-up is by approval: it signs in
+    /// waiting (USR-4); then the same address again finds the account, and Sign in instead keeps the email.
+    func testCreatingAnAccount() throws {
+        continueAfterFailure = false
+        app.launch()
+        guard app.textFields["Email"].waitForExistence(timeout: 8) else { throw XCTSkip("needs the app signed out") }
+        app.buttons["Use another server"].tap()
+        let field = app.textFields["Server"]
+        XCTAssertTrue(field.waitForExistence(timeout: 3))
+        // Emptied key by key from its end, as Select All's menu doesn't always come up in time.
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.5)).tap()
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
+        field.typeText(server)
+        let create = app.buttons["Create an account"]
+        XCTAssertTrue(create.waitForExistence(timeout: 8), "offered on a server that takes new accounts")
+        shot("signup-0-sign-in")
+        let mail = "phone-\(Int(Date().timeIntervalSince1970))@example.com"
+        func fill() {
+            create.tap()
+            XCTAssertTrue(app.staticTexts["Create your account"].waitForExistence(timeout: 3))
+            let name = app.textFields["Name"]
+            name.tap()
+            name.typeText("Phone Test")
+            let email = app.textFields["Email"]
+            email.tap()
+            email.typeText(mail)
+            // A new password's field in the simulator keeps only the last key typed (its strong-password
+            // handling), so the password goes in as a paste.
+            let password = app.secureTextFields["Password"]
+            UIPasteboard.general.string = "touchline-9"
+            password.tap()
+            password.press(forDuration: 1.2)
+            XCTAssertTrue(app.menuItems["Paste"].waitForExistence(timeout: 3))
+            app.menuItems["Paste"].tap()
+            XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label == 'Create account'")).firstMatch.isEnabled, "all three filled")
+        }
+        fill()
+        XCTAssertTrue(app.staticTexts["An admin of this server approves new accounts before they can be used."].exists)
+        shot("signup-1-form")
+        app.buttons.matching(NSPredicate(format: "label == 'Create account'")).firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["WAITING FOR APPROVAL"].waitForExistence(timeout: 15), "signed in, waiting")
+        notNowToSavingThePassword()
+        shot("signup-2-waiting")
+        // Again if the tap went to the password question on its way out.
+        for _ in 0..<3 where !create.exists {
+            if app.buttons["Sign out"].exists { app.buttons["Sign out"].tap() } else { notNowToSavingThePassword() }
+            _ = create.waitForExistence(timeout: 5)
+        }
+        XCTAssertTrue(create.exists, "signed out")
+        // Signing out keeps the server, so the second try is on the demo too, never the hosted service.
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", server.replacingOccurrences(of: "http://", with: ""))).firstMatch.exists, "still the demo")
+        fill()
+        app.buttons.matching(NSPredicate(format: "label == 'Create account'")).firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["There's already an account with this email."].waitForExistence(timeout: 10))
+        shot("signup-3-exists")
+        app.buttons["Sign in instead"].tap()
+        notNowToSavingThePassword()
+        XCTAssertEqual(app.textFields["Email"].value as? String, mail)
+        shot("signup-4-back")
     }
 
     /// IOS-10: deleting the account for real, from Settings, on a throwaway account given by

@@ -25,6 +25,10 @@ Or sign in with a password: choose **Use another server**, enter your server's a
 
 An invitation on **People** also shows as a QR code. Scanning it in the app opens the form to make an account on the phone. A phone's camera opens the web page instead, which also offers **Use the app instead**.
 
+## Making an account
+
+When your server takes new accounts (`SIGN_UP` is `open` or `approval`, [People and sign-up](/run/people/)), the sign-in screen has **Create an account** under **Sign in**. Choose **Use another server** first if the app isn't already pointed at yours. The account is made on your server and the phone is signed in at once, or waits on the approval page until an admin approves it. With sign-up `closed`, the app doesn't offer it, and new people need an invitation. A new server's first account is made on its website, with the setup code.
+
 ## Addresses
 
 | App | Which addresses work |

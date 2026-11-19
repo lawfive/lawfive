@@ -20,7 +20,14 @@ The Android phone app: most of what the website does, on match day, without sign
 - **APP-2** **Signing in**: choose the server (the hosted service, `https://api.lawfive.app`, by default; a build can have another built in; or any address, checked with `GET /v1/meta`, SYNC-9), then email and password, or a code from the website (APP-13). Forgot your password? is on the page.
   - The app stays signed in and shows in the website's devices list as "Android". Sign out is in Settings.
   - An account waiting for approval sees the waiting message; a suspended one is signed out. **Check again** that finds it approved syncs at once.
-  - Under the form: "New to LawFive? Scan your invitation, or make an account on the website and sign in here." The words link to the server's sign-up (USR-2) when the server gives its address and is open to sign-ups.
+  - Under the form, on a server that takes new accounts: "Have an invitation? Scan it with Scan a QR code." On one that doesn't (APP-29): "New accounts on this server are by invitation. Scan yours with Scan a QR code."
+- **APP-29** **Making an account.** On a server that takes new accounts (`signUp` open or approval in `GET /v1/meta`, USR-2), the sign-in card has **Create an account** under Sign in, above Scan a QR code. It opens a form in the card's place, as an invitation does (APP-14):
+  - "Create your account" over the server it's for, with **Use another server** (back to signing in, choosing the server); then Name, Email and Password ("At least 8 characters.", with Show), and **Create account**. **Already have an account? Sign in** goes back, keeping the email.
+  - With approval: "An admin of this server approves new accounts before they can be used." On the hosted service, the terms and privacy line (SITE-5).
+  - It's made with `POST /v1/auth/sign-up/email` and signs the phone in at once, as signing in does: straight to Matches, or the waiting page with approval (USR-4).
+  - An address that already has an account: "There's already an account with this email." with **Sign in instead**, back to signing in with the email filled in, in place of Already have an account, and "Forgot your password?" under the card. Any other refusal shows the server's words; no connection says so, as signing in does.
+  - The line under the card, and "Forgot your password?" otherwise, show only with the sign-in form.
+  - Not offered on a server closed to sign-ups, one that hasn't said (it couldn't be reached), or a new server with no accounts yet, whose first account is made on its website with the setup code (ADM-5): there the line under the card reads "This server isn't set up yet. Open it in a browser to make the first account."
 - **APP-13** **Signing in with a code.** The website's Get the app page (APP-15) shows a code as a QR code and in letters, eight characters as on the watch (SYNC-1), with the server's address.
   - It lasts two minutes and works once. A new one takes its place while the page is in view, up to five times, then Show a new code.
   - On the phone: **Scan a QR code** (Google's code scanner: needs Google Play services, no camera permission) or **Enter a code** (the server and the code).
@@ -112,6 +119,8 @@ The Android phone app: most of what the website does, on match day, without sign
 ## Status
 
 Everything above is built. The app is in use on a real phone with a Garmin watch, through the phone and linked from it; the look is checked on the emulator against the demo, light and dark, 412 dp and 320 dp wide, at larger text.
+
+Making an account on the phone (APP-29) is checked on the emulator against the demo (approval, then the address taken) and in snapshots, and isn't in a Play build yet.
 
 Not built yet:
 

@@ -13,6 +13,8 @@ An admin chooses this on the **People** page, or you can fix it with `SIGN_UP` i
 | `approval` | Anyone can sign up, but an admin approves each account before it can be used. |
 | `closed` | Only people an admin invites. |
 
+The website and the phone apps both follow it: with `open` or `approval`, people can make an account on the website or in the Android and iPhone apps.
+
 Everyone sees only their own matches. Admins are no exception: being an admin doesn't let anyone see other people's matches.
 
 :::caution[Upgrading from an older server]

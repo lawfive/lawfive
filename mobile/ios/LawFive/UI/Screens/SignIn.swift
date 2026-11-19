@@ -2,8 +2,8 @@ import SwiftUI
 import VisionKit
 
 // Signing in (IOS-2): the server (the one built in, or any address, checked first), then email and
-// password; or a code from the web app, scanned or typed (APP-13), or an invitation (APP-14). Other
-// new accounts are made on the website.
+// password; or a code from the web app, scanned or typed (APP-13), or an invitation (APP-14). On a
+// server that takes new accounts, one can be made here too (APP-29).
 
 /// What the sign-in card shows instead of its form.
 private enum Panel: Equatable {
@@ -11,10 +11,14 @@ private enum Panel: Equatable {
     case enterCode
     case confirm(server: String, code: String, name: String, email: String)
     case invite(server: String, token: String, invitedBy: String, name: String?, email: String?)
+    case signUp
 }
 
 /// IOS-2: what iOS refuses, in words.
 private let plainHttpRefused = "This server needs https. Plain http only works for a server on your own network, by its IP address or a name ending in .local."
+
+/// APP-29: making an account with an address that already has one.
+private let alreadyAnAccount = "There's already an account with this email."
 
 private func hostOf(_ server: String) -> String { server.replacingOccurrences(of: "^https?://", with: "", options: .regularExpression) }
 
@@ -30,15 +34,31 @@ struct SignInScreen: View {
     @State private var choosing = false
     @State private var email = ""
     @State private var password = ""
+    /// APP-29: making an account; the email is the sign-in form's, so it goes back with it.
+    @State private var name = ""
+    @State private var newPassword = ""
+    @State private var exists = false
     @State private var busy = false
     @State private var error: String?
     @State private var panel: Panel?
     @State private var scanning = false
     @State private var emailFocused = false
     @State private var passwordFocused = false
-    /// APP-2, USR-7: the shown server's website: where it makes accounts (its PUBLIC_URL's /signup), when it
-    /// has one and takes new accounts, and where a forgotten password is reset.
+    /// APP-29, USR-7: what the shown server says about new accounts, and where it resets a forgotten password.
     @State private var website = AppGraph.Website()
+
+    init() {}
+
+    /// Opened on making an account on a server (APP-29), as the snapshot pictures show it.
+    init(signingUpOn server: String, name: String = "", email: String = "", password: String = "", alreadyAnAccount exists: Bool = false) {
+        _server = State(initialValue: server)
+        _panel = State(initialValue: .signUp)
+        _name = State(initialValue: name)
+        _email = State(initialValue: email)
+        _newPassword = State(initialValue: password)
+        _exists = State(initialValue: exists)
+        _error = State(initialValue: exists ? alreadyAnAccount : nil)
+    }
 
     private var canSignIn: Bool { !busy && server.orNil != nil && email.orNil != nil && !password.isEmpty }
 
@@ -75,11 +95,13 @@ struct SignInScreen: View {
         graph.pendingLink = nil
     }
 
-    private func signIn() async {
+    /// Signing in or making an account (APP-29) sends a password: the server's checked first, and a
+    /// release build sends it over plain http only on the referee's own network (SEC-5).
+    private func withPassword(_ work: (String) async throws -> Void, refused: (ServerError) -> String) async {
         busy = true
         error = nil
+        exists = false
         defer { busy = false }
-        // SEC-5: a release build sends a password over plain http only on the referee's own network.
         if !AppInfo.isDebug, let parts = URLComponents(string: address(server)), parts.scheme == "http", !AppLink.isLocalNetwork(parts.host ?? "") {
             error = plainHttpRefused
             return
@@ -87,14 +109,36 @@ struct SignInScreen: View {
         do {
             let url = try await graph.checkServer(address(server))
             graph.session.setServer(url)
-            try await graph.signIn(server: url, email: email, password: password)
+            try await work(url)
         } catch let e as ServerError {
-            error = e.status == 401 ? "That email and password don't match an account." : e.message
+            error = refused(e)
         } catch URLError.appTransportSecurityRequiresSecureConnection {
             self.error = plainHttpRefused
         } catch {
             self.error = "Couldn't reach \(hostOf(address(server))). Check the address and your connection."
         }
+    }
+
+    private func signIn() async {
+        await withPassword({ try await graph.signIn(server: $0, email: email, password: password) }) {
+            $0.status == 401 ? "That email and password don't match an account." : $0.message
+        }
+    }
+
+    /// APP-29: signed in at once, as signing in does, or waiting with approval (USR-4).
+    private func createAccount() async {
+        let name = name.trimmingCharacters(in: .whitespaces), mail = email.trimmingCharacters(in: .whitespaces)
+        await withPassword({ try await graph.signUp(server: $0, name: name, email: mail, password: newPassword) }) {
+            exists = $0.status == 422
+            return exists ? alreadyAnAccount : $0.message
+        }
+    }
+
+    /// Back to signing in, keeping the email (APP-29).
+    private func backToSignIn() {
+        panel = nil
+        error = nil
+        exists = false
     }
 
     private func during(_ work: @escaping () async throws -> Void, server: String) {
@@ -119,23 +163,20 @@ struct SignInScreen: View {
                 Logo(size: 44)
                 Text("Your matches, on your wrist and everywhere else.").font(.barlow(15, .medium)).foregroundStyle(LF.muted).multilineTextAlignment(.center).padding(.top, 12)
                 LfCard(padding: 20) { card }.padding(.top, 24)
-                // USR-7: a forgotten password is reset on the server's website, by a link it emails.
-                if let reset = website.forgotPassword {
+                // USR-7: a forgotten password is reset on the server's website, by a link it emails; while
+                // making an account, only for an address that already has one (APP-29).
+                if let reset = website.forgotPassword, panel != .signUp || exists {
                     Link("Forgot your password?", destination: reset)
                         .font(.barlow(15, .semibold, relativeTo: .subheadline)).foregroundStyle(LF.brand).underline()
                         // 44 pt to tap (for gloves), as a button, though it reads as a line of words.
                         .padding(.horizontal, 12).frame(minHeight: 44).contentShape(Rectangle())
                         .padding(.top, 4)
                 }
-                Group {
-                    // The website's sign-up, when the server has one to link to.
-                    if let signUpURL = website.signUp, let words = try? AttributedString(markdown: "New to LawFive? Scan your invitation, or [make an account on the website](\(signUpURL.absoluteString)) and sign in here.") {
-                        Text(words)
-                    } else {
-                        Text("New to LawFive? Scan your invitation, or make an account on the website and sign in here.")
-                    }
+                // APP-2, APP-29: invitations, or why there's no Create an account.
+                if panel == nil {
+                    Text(website.line)
+                        .font(.lfBodySmall).foregroundStyle(LF.muted).multilineTextAlignment(.center).padding(.top, 14)
                 }
-                .font(.lfBodySmall).foregroundStyle(LF.muted).tint(LF.brand).multilineTextAlignment(.center).padding(.top, 14)
             }
             .frame(maxWidth: 420)
             .padding(16).padding(.top, 40)
@@ -202,11 +243,17 @@ struct SignInScreen: View {
                 })
             case .invite(let url, let token, let invitedBy, let name, let mail):
                 InviteForm(host: hostOf(url), invitedBy: invitedBy, invitedName: name, invitedEmail: mail, busy: busy, error: error, onCreate: { name, mail, pass in
-                    during({ try await graph.signUpWithInvite(server: url, invite: token, name: name, email: mail, password: pass) }, server: url)
+                    during({ try await graph.signUp(server: url, name: name, email: mail, password: pass, invite: token) }, server: url)
                 }, onCancel: {
                     panel = nil
                     error = nil
                 })
+            case .signUp:
+                SignUpForm(host: address(server).replacingOccurrences(of: "https://", with: ""), approval: website.signUp == "approval", name: $name, email: $email, password: $newPassword,
+                           busy: busy, error: error, exists: exists, onCreate: { Task { await createAccount() } }, onAnotherServer: {
+                    backToSignIn()
+                    choosing = true
+                }, onSignIn: backToSignIn)
             case nil:
                 form
             }
@@ -237,6 +284,13 @@ struct SignInScreen: View {
         }
         .id("signIn")
         Hairline().padding(.vertical, 6)
+        if website.takesNewAccounts {
+            SecondaryButton("Create an account", icon: .invite, wide: true) {
+                error = nil
+                exists = false
+                panel = .signUp
+            }
+        }
         SecondaryButton("Scan a QR code", icon: .qr, wide: true) {
             error = nil
             if ScanSheet.available {
@@ -372,6 +426,40 @@ private struct ConfirmSignIn: View {
     }
 }
 
+/// A new account's fields, with an invitation (APP-14) or without (APP-29): Name, Email (kept when the
+/// invitation is for one address) and Password, then any note, and the hosted service's terms (SITE-5).
+private struct AccountFields: View {
+    let host: String
+    @Binding var name: String
+    @Binding var email: String
+    @Binding var password: String
+    var fixedEmail: String?
+    var note: String?
+    var onSubmit: () -> Void = {}
+
+    var body: some View {
+        Field("Name", text: $name, capitalization: .words, contentType: .name)
+        if let fixedEmail {
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Email").font(.lfBodySmall).foregroundStyle(LF.muted)
+                Text(fixedEmail).font(.lfTitleMedium).foregroundStyle(LF.text)
+                Text("The invitation is for this address.").font(.lfBodySmall).foregroundStyle(LF.muted)
+            }
+        } else {
+            Field("Email", text: $email, keyboard: .emailAddress, capitalization: .never, contentType: .username)
+        }
+        Field("Password", text: $password, capitalization: .never, contentType: .newPassword, secure: true, supporting: "At least 8 characters.")
+            .submitLabel(.go)
+            .onSubmit(onSubmit)
+        if let note { Text(note).font(.lfBodySmall).foregroundStyle(LF.muted).fixedSize(horizontal: false, vertical: true) }
+        // SITE-5: the hosted service's; a self-hosted server has its own, or none.
+        if host.hasSuffix("lawfive.app") {
+            Text("By making an account you agree to LawFive's [terms](https://lawfive.app/terms.html) and [privacy policy](https://lawfive.app/privacy.html).")
+                .font(.lfBodySmall).foregroundStyle(LF.muted).tint(LF.brand)
+        }
+    }
+}
+
 /// The form for an invitation, as on the web's page; one for a single address keeps it.
 private struct InviteForm: View {
     let host: String
@@ -389,22 +477,7 @@ private struct InviteForm: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             PanelHead(icon: .mail, title: "\(invitedBy) invited you", line: "Make your account on \(host)")
-            Field("Name", text: $name, capitalization: .words, contentType: .name)
-            if let invitedEmail {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Email").font(.lfBodySmall).foregroundStyle(LF.muted)
-                    Text(invitedEmail).font(.lfTitleMedium).foregroundStyle(LF.text)
-                    Text("The invitation is for this address.").font(.lfBodySmall).foregroundStyle(LF.muted)
-                }
-            } else {
-                Field("Email", text: $email, keyboard: .emailAddress, capitalization: .never, contentType: .username)
-            }
-            Field("Password", text: $password, capitalization: .never, contentType: .newPassword, secure: true, supporting: "At least 8 characters.")
-            // SITE-5: the hosted service's; a self-hosted server has its own, or none.
-            if host.hasSuffix("lawfive.app") {
-                Text("By making an account you agree to LawFive's [terms](https://lawfive.app/terms.html) and [privacy policy](https://lawfive.app/privacy.html).")
-                    .font(.lfBodySmall).foregroundStyle(LF.muted).tint(LF.brand)
-            }
+            AccountFields(host: host, name: $name, email: $email, password: $password, fixedEmail: invitedEmail)
             if let error { Text(error).font(.lfBodyMedium).foregroundStyle(LF.redText) }
             PrimaryButton(busy ? "Making your account…" : "Create account", enabled: !busy && name.orNil != nil && (invitedEmail ?? email).orNil != nil && password.count >= 8, wide: true) {
                 onCreate(name.trimmingCharacters(in: .whitespaces), (invitedEmail ?? email).trimmingCharacters(in: .whitespaces), password)
@@ -412,6 +485,52 @@ private struct InviteForm: View {
             SecondaryButton("Cancel", enabled: !busy, wide: true, action: onCancel)
         }
         .onAppear { name = invitedName ?? "" }
+    }
+}
+
+/// APP-29: making an account on the server shown, in the sign-in card's place.
+private struct SignUpForm: View {
+    /// The server as the sign-in form shows it: its host, or its whole address over plain http.
+    let host: String
+    let approval: Bool
+    @Binding var name: String
+    @Binding var email: String
+    @Binding var password: String
+    let busy: Bool
+    let error: String?
+    /// The address already has an account: Sign in instead.
+    let exists: Bool
+    let onCreate: () -> Void
+    let onAnotherServer: () -> Void
+    let onSignIn: () -> Void
+
+    private var canCreate: Bool { !busy && name.orNil != nil && email.orNil != nil && password.count >= 8 }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(spacing: 0) {
+                PanelHead(icon: .invite, title: "Create your account", line: "On \(host)")
+                Button(action: onAnotherServer) { Text("Use another server").font(.lfLabelLarge).foregroundStyle(LF.brand).padding(.vertical, 6) }
+                    .buttonStyle(.plain).disabled(busy)
+            }
+            .frame(maxWidth: .infinity)
+            AccountFields(host: host, name: $name, email: $email, password: $password,
+                          note: approval ? "An admin of this server approves new accounts before they can be used." : nil,
+                          onSubmit: { if canCreate { onCreate() } })
+            if let error { Text(error).font(.lfBodyMedium).foregroundStyle(LF.redText).fixedSize(horizontal: false, vertical: true) }
+            if exists { SecondaryButton("Sign in instead", enabled: !busy, wide: true, action: onSignIn) }
+            PrimaryButton(busy ? "Making your account…" : "Create account", enabled: canCreate, wide: true, action: onCreate)
+            if !exists {
+                // On one line, or Sign in under the question where it doesn't fit (large text on a narrow phone).
+                let signIn = Button(action: onSignIn) { Text("Sign in").font(.lfLabelLarge).foregroundStyle(LF.brand).padding(.vertical, 6) }.buttonStyle(.plain).disabled(busy)
+                let question = Text("Already have an account?").font(.lfBodyMedium).foregroundStyle(LF.muted)
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 4) { question; signIn }
+                    VStack(spacing: 0) { question; signIn }
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
     }
 }
 

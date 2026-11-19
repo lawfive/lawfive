@@ -134,6 +134,27 @@ final class ScreenSnapshots: XCTestCase {
         try await Snapshots.take("license") { self.app(graph, tab: .more, [.settings, .licenses, .licenseTexts, .license("font:barlow")]) }
     }
 
+    /// APP-29: making an account on the hosted service (with its terms), on a server that approves new
+    /// accounts, and with an address that already has one, as RootView shows the signed-out phone.
+    func testSigningUp() async throws {
+        let graph = try await graph(.newAccount)
+        let signedOut = { (screen: SignInScreen) in
+            ZStack {
+                PitchStripes()
+                screen
+            }
+            .environment(graph)
+            .tint(LF.brand)
+        }
+        try await Snapshots.take("sign-up", settle: 1.2) {
+            signedOut(SignInScreen(signingUpOn: "https://api.lawfive.app", name: "Jamie Doyle", email: "jamie@example.com", password: "touchline"))
+        }
+        try await Snapshots.take("sign-up-approval", settle: 1.2) { signedOut(SignInScreen(signingUpOn: "https://approval.fixtures.invalid")) }
+        try await Snapshots.take("sign-up-exists", settle: 1.2) {
+            signedOut(SignInScreen(signingUpOn: "https://api.lawfive.app", name: "Jamie Doyle", email: "jamie@example.com", password: "touchline", alreadyAnAccount: true))
+        }
+    }
+
     /// A new match's form, as its sheet holds it (the sheet's own frame and the page behind aren't drawn).
     func testTheMatchForm() async throws {
         let graph = try await graph(.demo)

@@ -33,6 +33,8 @@ const icons: Record<string, string> = {
     distance: "Path", heart: "Heartbeat", sprint: "Lightning", speed: "Speedometer", open: "ArrowRight",
     // Help: lawfive.app's support page, from More and About.
     help: "Question",
+    // APP-29: Create an account, as the website's invite.
+    invite: "UserPlus",
     // EVT-12: a sin bin, on its yellow card, as Android's and the website's.
     hourglass: "HourglassMedium",
     // Files on a record (FILE-6, FILE-12, FILE-13): each kind's icon, as the website's, adding them, opening one in
